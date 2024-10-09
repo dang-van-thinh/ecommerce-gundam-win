@@ -18,4 +18,5 @@ Route::get('/', function () {
     return view('welcome');
 });
 
-Route::get("/home", [Controller::class, 'test'])->name("home");
+// Route::get("/home", [Controller::class, 'notification'])->name("home");
+Route::get("/test", [Controller::class, 'test'])->name("test");

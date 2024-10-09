@@ -863,7 +863,7 @@
 
                 <div>
                     <a class="" style="border: 1px solid white; color : white ; padding: 5px "
-                        href="{{ route('home') }}">Bấm
+                        href="{{ route('test') }}">Bấm
                         vào đây</a>
                 </div>
 
