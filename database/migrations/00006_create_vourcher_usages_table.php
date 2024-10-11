@@ -20,7 +20,7 @@ return new class extends Migration
             $table->string('vourcher_code');
             $table->dateTime('start_date');
             $table->dateTime('end_date');
-            $table->enum('status',[
+            $table->enum('status', [
                 'ACTIVE',
                 'IN_ACTIVE'
             ]);
