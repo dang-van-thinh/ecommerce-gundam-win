@@ -23,8 +23,8 @@ return new class extends Migration
             $table->decimal('max_order_value', 15, 2);
             $table->enum('status', ['ACTIVE', 'IN_ACTIVE'])->default('ACTIVE');
             $table->integer('vourcher_used');
-            $table->timestamp('start_date'); // start date , end date
-            $table->timestamp('end_date'); // start date , end date
+            $table->dateTime('start_date'); // start date , end date
+            $table->dateTime('end_date'); // start date , end date
         });
     }
 
