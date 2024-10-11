@@ -9,20 +9,20 @@
             @yield('title')
         </title>
 
-        @include('layouts.partials.css')
+        @include('admin.layouts.partials.css')
 
     </head>
 
     <body>
         <!-- Left Panel -->
-        @include('layouts.partials.left-panel')
+        @include('admin.layouts.partials.left-panel')
         <!-- /#left-panel -->
 
         <!-- Right Panel -->
         <div id="right-panel" class="right-panel">
             <!-- Header-->
             <header id="header" class="header">
-                @include('layouts.partials.header')
+                @include('admin.layouts.partials.header')
             </header>
             <!-- /#header -->
 
@@ -36,7 +36,7 @@
 
             <!-- Footer -->
             <footer class="site-footer">
-                @include('layouts.partials.footer')
+                @include('admin.layouts.partials.footer')
             </footer>
             <!-- /.site-footer -->
 
@@ -44,8 +44,8 @@
         <!-- /#right-panel -->
 
         <!-- Scripts -->
-        @include('layouts.partials.script')
-        @stack('scripts')
+        @include('admin.layouts.partials.script')
+        @stack('admin-scripts')
     </body>
 
 </html>
