@@ -18,8 +18,8 @@ return new class extends Migration
             $table->foreignIdFor(User::class)->constrained();
             $table->foreignIdFor(Vourcher::class)->constrained();
             $table->string('vourcher_code');
-            $table->timestamp('start_date');
-            $table->timestamp('end_date');
+            $table->dateTime('start_date');
+            $table->dateTime('end_date');
             $table->enum('status',[
                 'ACTIVE',
                 'IN_ACTIVE'
