@@ -14,7 +14,7 @@ class Product extends Model
     public function attributeValueProduct(){
          $this->hasMany(AttributeValueProduct::class);
     }
-    public function ProductImage(){
+    public function productImage(){
          $this->hasMany(ProductImage::class);
     }
     public function categoryProduct(){
