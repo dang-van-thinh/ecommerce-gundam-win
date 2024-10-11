@@ -13,7 +13,8 @@
         "laravel/framework": "^10.10",
         "laravel/sanctum": "^3.3",
         "laravel/tinker": "^2.8",
-        "yoeunes/toastr": "^2.3"
+        "php-flasher/flasher-sweetalert-laravel": "^1.15",
+        "php-flasher/flasher-toastr-laravel": "^1.15"
     },
     "require-dev": {
         "fakerphp/faker": "^1.9.1",
