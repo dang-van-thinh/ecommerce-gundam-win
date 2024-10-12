@@ -8,4 +8,10 @@ use Illuminate\Database\Eloquent\Model;
 class ImageArticle extends Model
 {
     use HasFactory;
+
+    protected $table = 'image_articles';
+    protected $fillable = [
+        'image_url',
+    ];
+
 }
