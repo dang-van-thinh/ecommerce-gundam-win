@@ -12,15 +12,15 @@ class Product extends Model
     protected $fillable = ['id', 'category_product_id', 'name', 'description', 'image', 'status', 'love', 'created_at', 'updated_at'];
     public $timestamps = false;
     public function attributeValueProduct(){
-         $this->hasMany(AttributeValueProduct::class);
+        return $this->hasMany(AttributeValueProduct::class);
     }
     public function productImage(){
-         $this->hasMany(ProductImage::class);
+        return $this->hasMany(ProductImage::class);
     }
     public function categoryProduct(){
-        $this->belongsTo(CategoryProduct::class,'category_product_id');
+        return $this->belongsTo(CategoryProduct::class,'category_product_id');
     }
     public function feedback(){
-        $this->hasMany(Feedback::class);
+        return $this->hasMany(Feedback::class);
    }
 }
