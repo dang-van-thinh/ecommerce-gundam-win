@@ -9,7 +9,7 @@ class Feedback extends Model
 {
     use HasFactory;
 
-    
+
     protected $table = "feedback";
 
     protected $filltable = [
@@ -26,11 +26,11 @@ class Feedback extends Model
     public $timestamps = false;
 
     public function product(){
-        $this->belongsTo(Product::class,'product_id');
+       return $this->belongsTo(Product::class,'product_id');
     }
 
     public function user(){
-        $this->belongsTo(User::class,'user_id');
+       return $this->belongsTo(User::class,'user_id');
     }
 
 }

@@ -23,11 +23,11 @@ class OrderItem extends Model
     ];
     public $timestamps = false;
     public function order() {
-        $this->belongsTo(Order::class, 'order_id');
+        return  $this->belongsTo(Order::class, 'order_id');
     }
-    
+
     public function attributeValueProduct(){
-        $this->belongsTo(AttributeValueProduct::class, 'attribute_value_products_id ');
+        return  $this->belongsTo(AttributeValueProduct::class, 'attribute_value_products_id ');
     }
 
 }
