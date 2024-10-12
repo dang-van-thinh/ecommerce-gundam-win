@@ -42,4 +42,11 @@ class User extends Authenticatable
         'email_verified_at' => 'datetime',
         'password' => 'hashed',
     ];
+
+
+      // Một người sẽ có nhiều VourcherUsage
+      public function voucherUsages()
+      {
+          return $this->hasMany(VoucherUsage::class);
+      }
 }
