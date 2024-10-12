@@ -13,10 +13,10 @@ class CommentPost extends Model
     public $timestamps = false;
 
     public function article(){
-        $this->belongsTo(Article::class,'article_id');
+        return $this->belongsTo(Article::class,'article_id');
     }
 
     public function user(){
-        $this->belongsTo(User::class,'user_id');
+        return $this->belongsTo(User::class,'user_id');
     }
 }
