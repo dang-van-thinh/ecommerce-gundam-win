@@ -45,6 +45,12 @@ class User extends Authenticatable
         'email_verified_at' => 'datetime',
         'password' => 'hashed',
     ];
+
+      // Một người sẽ có nhiều VourcherUsage
+      public function voucherUsages()
+      {
+          return $this->hasMany(VoucherUsage::class);
+      }
     public function roles()
     {
         return $this->belongsToMany(Role::class, 'user_roles');
