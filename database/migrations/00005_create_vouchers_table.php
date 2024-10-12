@@ -11,7 +11,7 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('vourchers', function (Blueprint $table) {
+        Schema::create('vouchers', function (Blueprint $table) {
             $table->id();
             $table->string('name');
             $table->string('description');
@@ -22,7 +22,7 @@ return new class extends Migration
             $table->decimal('min_order_value', 15, 2);
             $table->decimal('max_order_value', 15, 2);
             $table->enum('status', ['ACTIVE', 'IN_ACTIVE'])->default('ACTIVE');
-            $table->integer('vourcher_used');
+            $table->integer('voucher_used');
             $table->dateTime('start_date'); // start date , end date
             $table->dateTime('end_date'); // start date , end date
         });
@@ -33,6 +33,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('vourchers');
+        Schema::dropIfExists('vouchers');
     }
 };
