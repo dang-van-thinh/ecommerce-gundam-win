@@ -8,4 +8,12 @@ use Illuminate\Database\Eloquent\Model;
 class Refund extends Model
 {
     use HasFactory;
+
+    protected $table = "refunds";
+
+    protected $filltable = ['order_id', 'reason', 'descripton','image','status'];
+
+    public function order(){
+        $this->hasOne(Order::class);
+    }
 }
