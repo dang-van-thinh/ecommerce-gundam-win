@@ -18,9 +18,12 @@ class User extends Authenticatable
      * @var array<int, string>
      */
     protected $fillable = [
-        'name',
+        'full_name',
         'email',
         'password',
+        'image',
+        'phone',
+        'status',
     ];
 
     /**
@@ -43,10 +46,17 @@ class User extends Authenticatable
         'password' => 'hashed',
     ];
 
-
       // Một người sẽ có nhiều VourcherUsage
       public function voucherUsages()
       {
           return $this->hasMany(VoucherUsage::class);
       }
+    public function roles()
+    {
+        return $this->belongsToMany(Role::class, 'user_roles');
+    }
+    public function addressUsers()
+    {
+        return $this->hasMany(AddressUser::class);
+    }
 }
