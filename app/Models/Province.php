@@ -8,4 +8,15 @@ use Illuminate\Database\Eloquent\Model;
 class Province extends Model
 {
     use HasFactory;
+    protected $fillable = [
+        'name',
+    ];
+    public function addressUsers()
+    {
+        return $this->hasMany(AddressUser::class);
+    }
+    public function districts()
+    {
+        return $this->hasMany(District::class);
+    }
 }
