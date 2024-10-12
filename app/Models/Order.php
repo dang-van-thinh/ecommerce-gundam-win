@@ -24,14 +24,14 @@ class Order extends Model
     ];
     public $timestamps = false;
     public function orderItems(){
-        $this->haMany(OrderItem::class);
+        return  $this->haMany(OrderItem::class);
     }
 
     public function refund(){
-        $this->hasOne(Refund::class);
+        return  $this->hasOne(Refund::class);
     }
 
     public function addressUser(){
-        $this->belongsTo(AddressUser::class, 'address_user_id');
+        return $this->belongsTo(AddressUser::class, 'address_user_id');
     }
 }
