@@ -13,7 +13,7 @@ class Article extends Model
     public $timestamps = false;
 
     public function categoryArticle(){
-        $this->belongsTo(CategoryArticle::class,'category_article_id');
+        return $this->belongsTo(CategoryArticle::class,'category_article_id');
     }
 
     public function commentPost(){
