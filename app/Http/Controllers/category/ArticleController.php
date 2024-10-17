@@ -1,0 +1,69 @@
+<?php
+
+namespace App\Http\Controllers\category;
+
+use App\Http\Requests\categoryArticle\CreateCategoryArticleRequest;
+use App\Http\Requests\categoryArticle\UpdateCategoriArticleRequest;
+use Flasher\Prime\Notification\NotificationInterface;
+use App\Http\Controllers\Controller;
+use App\Models\CategoryArticle;
+class ArticleController extends Controller
+{
+    private $categoryArticle;
+    public function __construct()
+    {
+        $this->categoryArticle = [];
+    }
+    public function index()
+    {
+        $categories = CategoryArticle::query()
+            ->orderBy("id", "desc")
+            ->paginate(4);
+        $this->categoryArticle['listCategoryArticle'] = $categories;
+        return view("admin.pages.category.articles.index", $this->categoryArticle);
+    }
+    public function store(CreateCategoryArticleRequest $request)
+    {
+        $validatedData = $request->validated();
+        $cate = new CategoryArticle();
+        $cate->create($validatedData);
+        toastr("Thêm mới thành công", NotificationInterface::SUCCESS, "Thành công", [
+            "closeButton" => true,
+            "progressBar" => true,
+            "timeOut" => "3000",
+        ]);
+        return redirect()->route("category-article.index");
+    }
+    public function show(string $id)
+    {
+
+    }
+    public function edit(string $id)
+    {
+        $cate = CategoryArticle::find($id);
+        return view("admin.pages.category.articles.update", ["category" => $cate]);
+    }
+    public function update(UpdateCategoriArticleRequest $request, string $id)
+    {
+        $validatedData = $request->validated();
+        $cate = CategoryArticle::find($id);
+        $cate->update($validatedData);
+        toastr("Cập nhập thành công", NotificationInterface::SUCCESS, "Thành công", [
+            "closeButton" => true,
+            "progressBar" => true,
+            "timeOut" => "3000",
+        ]);
+        return redirect()->route("category-article.index");
+    }
+    public function destroy(string $id)
+    {
+        $cate = CategoryArticle::find($id);
+        $cate->delete();
+        toastr("Xóa thành công", NotificationInterface::SUCCESS, "Thành công", [
+            "closeButton" => true,
+            "progressBar" => true,
+            "timeOut" => "3000",
+        ]);
+        return redirect()->route("category-article.index");
+    }
+}

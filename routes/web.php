@@ -1,10 +1,12 @@
 <?php
 
-use App\Http\Controllers\Client\CartController;
-use App\Http\Controllers\Client\DetailProductController;
-use App\Http\Controllers\Client\HomeController;
-use App\Http\Controllers\Client\OrderController;
+use App\Http\Controllers\category\ArticleController;
+use App\Http\Controllers\category\ProductController;
 use App\Http\Controllers\Controller;
+use App\Http\Controllers\RoleController;
+use App\Http\Controllers\UserController;
+use App\Http\Controllers\VocuherController;
+
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -24,3 +26,8 @@ Route::get('/', function () {
 
 // Route::get("/home", [Controller::class, 'notification'])->name("home");
 Route::get("/test", [Controller::class, 'test'])->name("test");
+Route::resource('category-product', ProductController::class);
+Route::resource('category-article', ArticleController::class);
+Route::resource('roles', RoleController::class);
+Route::resource('users', UserController::class);
+Route::resource('voucher', VocuherController::class);
