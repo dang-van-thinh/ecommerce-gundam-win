@@ -1,24 +1,30 @@
 @extends('admin.layouts.master')
 
-@section('title', 'Quản lý Banner')
+
 
 @section('content')
-    <h1 class="mb-4">Quản lý Banner</h1>
 
-    <a href="{{ route('banner.create') }}" class="btn btn-success mb-3">Thêm mới banner</a>
-
-    <table class="table table-bordered table-hover">
-        <thead>
-            <tr>
-                <th scope="col">#</th>
-                <th scope="col">Ảnh Banner</th>
-                <th scope="col">Tiêu Đề</th>
-                <th scope="col">Link Dẫn</th>
-                <th scope="col">Phân Loại Banner</th>
-                <th scope="col">Hành Động</th>
-            </tr>
-        </thead>
-        <tbody>
+<div class="card">
+                    <div class="card-header">
+                        <strong class="card-title">Quản lý banner</strong>
+                       
+                    </div>
+                    <div class="d-flex justify-content-end py-3 pe-4">
+    <a href="{{ route('banner.create') }}" class="btn btn-success">Thêm mới banner</a>
+</div>
+                    <div class="card-body">
+                        <table class="table table-bordered">
+                        <thead>
+                                    <tr>
+                                        <th scope="col">#</th>
+                                        <th scope="col">Ảnh Banner</th>
+                                        <th scope="col">Tiêu Đề</th>
+                                        <th scope="col">Link Dẫn</th>
+                                        <th scope="col">Phân Loại Banner</th>
+                                        <th scope="col">Hành Động</th>
+                                    </tr>
+                                </thead>
+                             <tbody>
             @foreach ($banners as $index => $banner)
                 <tr>
                     <td>{{ $index + 1 }}</td>
@@ -105,5 +111,8 @@
                 </div>
             @endforeach
         </tbody>
-    </table>
+                        </table>
+                    </div>
+                </div>
+
 @endsection
