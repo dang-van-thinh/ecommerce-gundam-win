@@ -1,17 +1,17 @@
 <?php
 
-namespace App\Http\Requests;
+namespace App\Http\Requests\attrbutes;
 
 use Illuminate\Foundation\Http\FormRequest;
 
-class UserRequest extends FormRequest
+class UpdateAttributeRequest extends FormRequest
 {
     /**
      * Determine if the user is authorized to make this request.
      */
     public function authorize(): bool
     {
-        return false;
+        return true;
     }
 
     /**
@@ -22,7 +22,14 @@ class UserRequest extends FormRequest
     public function rules(): array
     {
         return [
-            //
+             'name' => 'required|string|max:100|regex:/^[\p{L}0-9\s]+$/u'
+        ];
+    }
+    public function messages()
+    {
+        return[
+            'name.required' => 'Trường tên là bắt buộc.',
+            'name.regex'=>'không chứa ký tự.'
         ];
     }
 }
