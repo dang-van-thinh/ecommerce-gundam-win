@@ -22,5 +22,5 @@ Route::get('/', function () {
 
 // Route::get("/home", [Controller::class, 'notification'])->name("home");
 Route::get("/test", [Controller::class, 'test'])->name("test");
-Route::resource('categoryproduct', ProductController::class);
-Route::resource('categoryarticle', ArticleController::class);
+Route::resource('category-product', ProductController::class);
+Route::resource('category-article', ArticleController::class);
