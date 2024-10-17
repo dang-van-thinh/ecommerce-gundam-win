@@ -7,6 +7,7 @@ use App\Http\Requests\user\StoreUserRequest;
 use App\Http\Requests\user\UpdateUserRequest;
 use App\Models\Role;
 use App\Models\User;
+use Flasher\Prime\Notification\NotificationInterface;
 use Illuminate\Support\Facades\Storage;
 
 class UserController extends Controller
@@ -45,15 +46,27 @@ class UserController extends Controller
 
             $user =  User::query()->create($data);
 
-            $user->roles()->sync($data['roles']);// đồng bộ
+            $user->roles()->sync($data['roles']); // đồng bộ
 
-            return back()
-                ->with('success', 'Thêm mới người dùng thành công');
+            toastr("Thêm mới người dùng thành công", NotificationInterface::SUCCESS, "Thành công", [
+                "closeButton" => true,
+                "progressBar" => true,
+                "timeOut" => "3000",
+                "color" => "red"
+            ]);
+
+            return back();
             //code...
         } catch (\Throwable $th) {
             //throw $th;
-            return back()
-                ->with('error', 'Thêm mới người dùng thất bại');
+            toastr("Thêm mới người dùng thất bại", NotificationInterface::ERROR, "Thất bại", [
+                "closeButton" => true,
+                "progressBar" => true,
+                "timeOut" => "3000",
+                "color" => "red"
+            ]);
+
+            return back();
         }
     }
 
@@ -101,13 +114,25 @@ class UserController extends Controller
                 Storage::delete($imagePath);
             }
 
-            return back()
-                ->with('success', 'Cập nhật người dùng thành công');
+            toastr("Cập nhật người dùng thành công", NotificationInterface::SUCCESS, "Thành công", [
+                "closeButton" => true,
+                "progressBar" => true,
+                "timeOut" => "3000",
+                "color" => "red"
+            ]);
+
+            return back();
             //code...
         } catch (\Throwable $th) {
             //throw $th;
-            return back()
-                ->with('success', 'Cập nhật người dùng thất bại');
+            toastr("Cập nhật người dùng thất bại", NotificationInterface::ERROR, "Thất bại", [
+                "closeButton" => true,
+                "progressBar" => true,
+                "timeOut" => "3000",
+                "color" => "red"
+            ]);
+
+            return back();
         }
     }
 
@@ -127,13 +152,25 @@ class UserController extends Controller
                 Storage::delete($imagePath);
             }
 
-            return back()
-                ->with('success', 'Xoá người dùng thành công');
+            toastr("Xoá người dùng thành công", NotificationInterface::SUCCESS, "Thành công", [
+                "closeButton" => true,
+                "progressBar" => true,
+                "timeOut" => "3000",
+                "color" => "red"
+            ]);
+
+            return back();
             //code...
         } catch (\Throwable $th) {
             //throw $th;
-            return back()
-                ->with('error', 'Xoá người dùng thất bại');
+            toastr("Xoá người dùng thất bại", NotificationInterface::ERROR, "Thất bại", [
+                "closeButton" => true,
+                "progressBar" => true,
+                "timeOut" => "3000",
+                "color" => "red"
+            ]);
+
+            return back();
         }
     }
 }
