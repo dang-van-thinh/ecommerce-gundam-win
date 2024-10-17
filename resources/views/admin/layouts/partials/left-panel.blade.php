@@ -14,6 +14,14 @@
                         <li><i class="fa fa-list"></i><a href="">Mẫu</a></li>
                     </ul>
                 </li>
+                <li class="menu-item-has-children dropdown">
+                    <a href="#" class="dropdown-toggle" data-toggle="dropdown" aria-haspopup="true"
+                        aria-expanded="false"><i class="menu-icon fa fa-book"></i>QL Danh mục</a>
+                    <ul class="sub-menu children dropdown-menu">
+                        <li><i class="fa fa-list"></i><a href="{{route('categoryproduct.index')}}">Danh mục sản phẩm</a></li>
+                        <li><i class="fa fa-list"></i><a href="{{route('categoryarticle.index')}}">Danh mục bài viết</a></li>
+                    </ul>
+                </li>
 
             </ul>
         </div>
