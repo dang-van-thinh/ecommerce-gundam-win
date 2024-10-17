@@ -14,6 +14,11 @@
                         <li><i class="fa fa-list"></i><a href="">Mẫu</a></li>
                     </ul>
                 </li>
+
+                <li class="menu-item-has-children ">
+                    <a href="{{ route('banner.index') }}" ><i class="menu-icon fa fa-book"></i>Quản lý Banner</a>
+                </li>
+
                 <li class="menu-item-has-children dropdown">
                     <a href="#" class="dropdown-toggle" data-toggle="dropdown" aria-haspopup="true"
                         aria-expanded="false"><i class="menu-icon fa fa-book"></i>QL Thuộc tính
@@ -57,6 +62,7 @@
                         <li><i class="fa fa-list"></i><a href="{{ route('voucher.index') }}">Danh sách giảm giá</a></li>
                     </ul>
                 </li>
+
 
             </ul>
         </div>

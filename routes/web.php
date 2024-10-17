@@ -1,5 +1,7 @@
 <?php
 
+
+use App\Http\Controllers\BannerController;
 use App\Http\Controllers\attributes\AttributeController;
 use App\Http\Controllers\attributes\AttributeValueController;
 use App\Http\Controllers\category\ArticleController;
@@ -28,6 +30,7 @@ Route::get('/', function () {
 // Route::get("/home", [Controller::class, 'notification'])->name("home");
 Route::get("/test", [Controller::class, 'test'])->name("test");
 
+Route::resource('banner', BannerController::class);
 Route::resource('attributes', AttributeController::class);
 Route::resource('attributeValues', AttributeValueController::class);
 Route::resource('category-product', ProductController::class);
@@ -35,4 +38,5 @@ Route::resource('category-article', ArticleController::class);
 Route::resource('roles', RoleController::class);
 Route::resource('users', UserController::class);
 Route::resource('voucher', VocuherController::class);
+
 
