@@ -14,7 +14,9 @@
                         <li><i class="fa fa-list"></i><a href="">Mẫu</a></li>
                     </ul>
                 </li>
-
+                <li class="menu-item-has-children ">
+                    <a href="{{ route('banner.index') }}" ><i class="menu-icon fa fa-book"></i>Quản lý Banner</a>
+                </li>
             </ul>
         </div>
     </nav>
