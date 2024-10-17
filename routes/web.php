@@ -21,11 +21,12 @@ Route::get('/', function () {
 
 // Route::get("/home", [Controller::class, 'notification'])->name("home");
 Route::get("/test", [Controller::class, 'test'])->name("test");
-Route::prefix('banner')->group(function () {
-    Route::get('/', [BannerController::class, 'index'])->name('banner.index');
-    Route::get('/create', [BannerController::class, 'create'])->name('banner.create');
-    Route::post('/', [BannerController::class, 'store'])->name('banner.store');
-    Route::get('/{id}/edit', [BannerController::class, 'edit'])->name('banner.edit');
-    Route::put('/{id}', [BannerController::class, 'update'])->name('banner.update');
-    Route::delete('/{id}', [BannerController::class, 'destroy'])->name('banner.destroy');
-});
+Route::resource('banner', BannerController::class);
+// Route::prefix('banner')->group(function () {
+//     Route::get('/', [BannerController::class, 'index'])->name('banner.index');
+//     Route::get('/create', [BannerController::class, 'create'])->name('banner.create');
+//     Route::post('/', [BannerController::class, 'store'])->name('banner.store');
+//     Route::get('/{id}/edit', [BannerController::class, 'edit'])->name('banner.edit');
+//     Route::put('/{id}', [BannerController::class, 'update'])->name('banner.update');
+//     Route::delete('/{id}', [BannerController::class, 'destroy'])->name('banner.destroy');
+// });
