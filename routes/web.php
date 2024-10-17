@@ -1,7 +1,15 @@
 <?php
 
+
 use App\Http\Controllers\BannerController;
+use App\Http\Controllers\attributes\AttributeController;
+use App\Http\Controllers\attributes\AttributeValueController;
+use App\Http\Controllers\category\ArticleController;
+use App\Http\Controllers\category\ProductController;
 use App\Http\Controllers\Controller;
+use App\Http\Controllers\RoleController;
+use App\Http\Controllers\UserController;
+use App\Http\Controllers\VocuherController;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -21,12 +29,14 @@ Route::get('/', function () {
 
 // Route::get("/home", [Controller::class, 'notification'])->name("home");
 Route::get("/test", [Controller::class, 'test'])->name("test");
+
 Route::resource('banner', BannerController::class);
-// Route::prefix('banner')->group(function () {
-//     Route::get('/', [BannerController::class, 'index'])->name('banner.index');
-//     Route::get('/create', [BannerController::class, 'create'])->name('banner.create');
-//     Route::post('/', [BannerController::class, 'store'])->name('banner.store');
-//     Route::get('/{id}/edit', [BannerController::class, 'edit'])->name('banner.edit');
-//     Route::put('/{id}', [BannerController::class, 'update'])->name('banner.update');
-//     Route::delete('/{id}', [BannerController::class, 'destroy'])->name('banner.destroy');
-// });
+Route::resource('attributes', AttributeController::class);
+Route::resource('attributeValues', AttributeValueController::class);
+Route::resource('category-product', ProductController::class);
+Route::resource('category-article', ArticleController::class);
+Route::resource('roles', RoleController::class);
+Route::resource('users', UserController::class);
+Route::resource('voucher', VocuherController::class);
+
+
