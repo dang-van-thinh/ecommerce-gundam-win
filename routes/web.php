@@ -1,5 +1,9 @@
 <?php
 
+use App\Http\Controllers\Client\CartController;
+use App\Http\Controllers\Client\DetailProductController;
+use App\Http\Controllers\Client\HomeController;
+use App\Http\Controllers\Client\OrderController;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Route;
 
