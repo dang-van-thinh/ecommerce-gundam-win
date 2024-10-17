@@ -13,7 +13,7 @@ class Controller extends BaseController
     use AuthorizesRequests, ValidatesRequests;
 
 
-    // ví dụ sử dụng toast cho các bạn nhé 
+    // ví dụ sử dụng toast cho các bạn nhé
     public function notification()
     {
         // toastr()->error('Hiển thị thông báo lỗi nè .', "Thông tin đăng nhập"); // notification
