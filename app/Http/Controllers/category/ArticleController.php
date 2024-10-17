@@ -2,13 +2,11 @@
 
 namespace App\Http\Controllers\category;
 
-use App\Http\Requests\category\CreateCategoryArticleRequest;
-use App\Http\Requests\category\UpdateCategoriArticleRequest;
+use App\Http\Requests\categoryArticle\CreateCategoryArticleRequest;
+use App\Http\Requests\categoryArticle\UpdateCategoriArticleRequest;
 use Flasher\Prime\Notification\NotificationInterface;
 use App\Http\Controllers\Controller;
 use App\Models\CategoryArticle;
-use Illuminate\Http\Request;
-
 class ArticleController extends Controller
 {
     private $categoryArticle;
@@ -18,24 +16,23 @@ class ArticleController extends Controller
     }
     public function index()
     {
-
         $categories = CategoryArticle::query()
-        ->orderBy("id","desc")
-        ->paginate(4);
+            ->orderBy("id", "desc")
+            ->paginate(4);
         $this->categoryArticle['listCategoryArticle'] = $categories;
-        return view("admin/pages/category/articles.index", $this->categoryArticle);
-    }
-    public function create()
-    {
-
+        return view("admin.pages.category.articles.index", $this->categoryArticle);
     }
     public function store(CreateCategoryArticleRequest $request)
     {
         $validatedData = $request->validated();
         $cate = new CategoryArticle();
-        $cate->fill( $validatedData );
-        $cate->save();
-        return redirect()->route("categoryarticle.index")->with("success","Thêm mới thành công");
+        $cate->create($validatedData);
+        toastr("Thêm mới thành công", NotificationInterface::SUCCESS, "Thành công", [
+            "closeButton" => true,
+            "progressBar" => true,
+            "timeOut" => "3000",
+        ]);
+        return redirect()->route("category-article.index");
     }
     public function show(string $id)
     {
@@ -44,20 +41,29 @@ class ArticleController extends Controller
     public function edit(string $id)
     {
         $cate = CategoryArticle::find($id);
-        return view("admin/pages/category/articles.update", ["category"=> $cate]);
+        return view("admin.pages.category.articles.update", ["category" => $cate]);
     }
     public function update(UpdateCategoriArticleRequest $request, string $id)
     {
         $validatedData = $request->validated();
         $cate = CategoryArticle::find($id);
-        $cate->fill( $validatedData );
-        $cate->save();
-        return redirect()->route("categoryarticle.index")->with("success","Sửa thành công sản phẩm");
+        $cate->update($validatedData);
+        toastr("Cập nhập thành công", NotificationInterface::SUCCESS, "Thành công", [
+            "closeButton" => true,
+            "progressBar" => true,
+            "timeOut" => "3000",
+        ]);
+        return redirect()->route("category-article.index");
     }
     public function destroy(string $id)
     {
         $cate = CategoryArticle::find($id);
         $cate->delete();
-        return redirect()->route("categoryarticle.index")->with("success","Xóa thành công");
+        toastr("Xóa thành công", NotificationInterface::SUCCESS, "Thành công", [
+            "closeButton" => true,
+            "progressBar" => true,
+            "timeOut" => "3000",
+        ]);
+        return redirect()->route("category-article.index");
     }
 }
