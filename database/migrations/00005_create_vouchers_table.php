@@ -16,13 +16,12 @@ return new class extends Migration
             $table->string('name');
             $table->string('description');
             $table->integer('limit');
-            $table->integer('quantity');
-            $table->enum('discount_type', ['percentage', 'fixed']);
+            $table->enum('discount_type', ['PERCENTAGE', 'FIXED']);
             $table->decimal('discount_value', 15, 2);
             $table->decimal('min_order_value', 15, 2);
             $table->decimal('max_order_value', 15, 2);
             $table->enum('status', ['ACTIVE', 'IN_ACTIVE'])->default('ACTIVE');
-            $table->integer('voucher_used');
+            $table->integer('voucher_used')->default(0);
             $table->dateTime('start_date'); // start date , end date
             $table->dateTime('end_date'); // start date , end date
         });
