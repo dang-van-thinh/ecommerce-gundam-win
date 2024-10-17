@@ -1,5 +1,6 @@
 <?php
-
+use App\Http\Controllers\attributes\AttributeController;
+use App\Http\Controllers\attributes\AttributeValueController;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Route;
 
@@ -20,3 +21,5 @@ Route::get('/', function () {
 
 // Route::get("/home", [Controller::class, 'notification'])->name("home");
 Route::get("/test", [Controller::class, 'test'])->name("test");
+Route::resource('attributes', AttributeController::class);
+Route::resource('attributeValues', AttributeValueController::class);
