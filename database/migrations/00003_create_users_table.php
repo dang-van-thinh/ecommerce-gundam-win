@@ -14,7 +14,7 @@ return new class extends Migration
         Schema::create('users', function (Blueprint $table) {
             $table->id();
             $table->string('full_name');
-            $table->string('image');
+            $table->string('image')->nullable();
             $table->string('phone',15);
             $table->enum('status',['ACTIVE','IN_ACTIVE'])->default('IN_ACTIVE');
             $table->string('email')->unique();
