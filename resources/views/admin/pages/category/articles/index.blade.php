@@ -1,15 +1,15 @@
 @extends('admin.layouts.master')
 @section('title')
-Trang danh mục sản phẩm
+Danh mục bài viết
 @endsection
 @section('content')
 <div class="row">
     <!-- Cột 1 -->
     <div class="col-lg-6">
         <div class="card">
-            <div class="card-header">Thêm danh mục sản phẩm</div>
+            <div class="card-header">Thêm danh mục bài viết</div>
             <div class="card-body card-block">
-                <form action="{{route('categoryarticle.store')}}" method="post" enctype="multipart/form-data" class="">
+                <form action="{{route('category-article.store')}}" method="post" enctype="multipart/form-data" class="">
                     @csrf
                     <div class="form-group">
                         <div class="input-group">
@@ -21,88 +21,52 @@ Trang danh mục sản phẩm
                             <div class="text-danger">{{ $message }}</div>
                         @enderror
                     </div>
-
                     <div class="form-actions form-group">
-                        <button type="submit" class="btn btn-success btn-sm"><i class="ti-save"></i> Submit</button>
+                        <button type="submit" class="btn btn-success btn-sm">Thêm mới</button>
                     </div>
             </div>
-                </form>
+            </form>
         </div>
     </div>
-
-<!-- Cột 2 -->
-<div class="col-lg-6">
-    <div class="card">
-        <div class="card-header">
-            <strong class="card-title">Danh mục sản phẩm</strong>
-        </div>
-        <div class="card-body">
-            <table class="table table-bordered">
-                <thead>
-                    <tr>
-                        <th scope="col" class="text-center">#</th>
-                        <th scope="col" class="text-center">Tên</th>
-                        <th scope="col" class="text-center">Hành động</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    @foreach ($listCategoryArticle as $index => $list)
+    <div class="col-lg-6">
+        <div class="card">
+            <div class="card-header">
+                <strong class="card-title">Danh mục bài viết</strong>
+            </div>
+            <div class="card-body">
+                <table class="table table-bordered">
+                    <thead>
                         <tr>
-                            <th scope="row" class="text-center">{{$index + 1}}</th>
-                            <td class="text-center">{{$list->name}}</td>
-                            <td class="text-center">
-                                <a href="{{ route('categoryarticle.edit', $list->id) }}" class="btn btn-warning"><i class="ti-slice"></i></a>
-                                <form action="{{ route('categoryarticle.destroy', $list->id) }}" method="POST"
-                                    style="display:inline;" id="delete-form-{{ $list->id }}">
-                                    @csrf
-                                    @method('DELETE')
-                                    <button type="button" class="btn btn-danger" onclick="confirmDelete({{ $list->id }})">
-                                        <i class="ti-trash"></i>
-                                    </button>
-                                </form>
-
-                                <script>
-                                    function confirmDelete(id) {
-                                        Swal.fire({
-                                            title: 'Bạn có chắc chắn muốn xóa không?',
-                                            text: "Hành động này sẽ không thể hoàn tác!",
-                                            icon: 'warning',
-                                            showCancelButton: true,
-                                            confirmButtonText: 'Có !',
-                                            cancelButtonText: 'Không !'
-                                        }).then((result) => {
-                                            if (result.isConfirmed) {
-                                                // Nếu xác nhận, gửi form
-                                                document.getElementById('delete-form-' + id).submit();
-                                            }
-                                        });
-                                    }
-                                </script>
-                            </td>
+                            <th scope="col" class="text-center">#</th>
+                            <th scope="col" class="text-center">Tên</th>
+                            <th scope="col" class="text-center">Hành động</th>
                         </tr>
-                    @endforeach
-                </tbody>
-            </table>
-            {{$listCategoryArticle->links()}}
+                    </thead>
+                    <tbody>
+                        @foreach ($listCategoryArticle as $index => $list)
+                            <tr>
+                                <th scope="row" class="text-center">{{$index + 1}}</th>
+                                <td class="text-center">{{$list->name}}</td>
+                                <td class="text-center">
+                                    <a href="{{ route('category-article.edit', $list->id) }}" class="btn btn-warning"><i
+                                            class="ti-slice"></i></a>
+                                    <form action="{{ route('category-article.destroy', $list->id) }}" method="POST"
+                                        style="display:inline;" id="delete-form-{{ $list->id }}">
+                                        @csrf
+                                        @method('DELETE')
+                                        <button type="button" class="btn btn-danger"
+                                            onclick="return confirm('Bạn có chắc chắn muốn xóa danh mục này không?') ? document.getElementById('delete-form-{{ $list->id }}').submit() : false;">
+                                            <i class="ti-trash"></i>
+                                        </button>
+                                    </form>
+                                </td>
+                            </tr>
+                        @endforeach
+                    </tbody>
+                </table>
+                {{$listCategoryArticle->links()}}
+            </div>
         </div>
     </div>
-</div>
-
 </div>
 @endsection
-
-<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
-
-@if (session('success'))
-    <script type="text/javascript">
-        Swal.fire({
-            title: 'Thành công!',
-            text: "{{ session('success') }}",
-            icon: 'success',
-            confirmButtonText: 'OK',
-            position: 'center'
-        });
-    </script>
-@endif
-
-
