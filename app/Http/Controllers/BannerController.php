@@ -1,9 +1,12 @@
 <?php
+
 namespace App\Http\Controllers;
 
 use App\Models\Banner;
 use Illuminate\Http\Request;
-
+use App\Http\Requests\BannerRequest;
+use Flasher\Prime\Notification\NotificationInterface;
+use Illuminate\Support\Facades\Storage;
 
 class BannerController extends Controller
 {
@@ -21,30 +24,28 @@ class BannerController extends Controller
     }
 
     // Lưu banner mới vào database
-    public function store(Request $request)
+    public function store(BannerRequest $request) // Use BannerRequest
     {
-        $validated = $request->validate([
-            'title' => 'required|string|max:255',
-            'image' => 'required|image|mimes:jpeg,png,jpg,gif|max:2048', // Validate image
-            'image_type' => 'required|in:header,content',
-            'link' => 'required|nullable|url',
-        ], [
-            'title.required' => 'Không được để trống',
-            'image.required' => 'Không được để trống hình ảnh',
-            'link.required' => 'Không được để trống'
-        ]);
+        $validated = $request->validated();
 
         // Handle the image upload
         if ($request->hasFile('image')) {
-            $path = $request->file('image')->store('banner', 'public'); // Save to public storage
-            $validated['image_url'] = $path; // Store the path in DB
+            $path = $request->file('image')->store('banner', 'public');
+            $validated['image_url'] = $path;
         }
 
         // Create the banner record
         Banner::create($validated);
+        toastr("Thêm thành công", NotificationInterface::SUCCESS, "Thành công", [
+            "closeButton" => true,
+            "progressBar" => true,
+            "timeOut" => "3000",
+            "color" => "red"
+        ]);
 
-        return redirect()->route('banner.index')->with('success', 'Banner added successfully');
+        return redirect()->route('banner.create');
     }
+
     // Hiển thị chi tiết banner
     public function show($id)
     {
@@ -60,38 +61,51 @@ class BannerController extends Controller
     }
 
     // Cập nhật banner
-    public function update(Request $request, $id)
+    public function update(BannerRequest $request, $id) // Use BannerRequest
     {
-        $validated = $request->validate([
-            'title' => 'string|max:255',
-            'image_url' => 'nullable|url',
-            'image_type' => 'in:header,content',
-            'link' => 'nullable|url',
-            'image_file' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048', // Validating the uploaded image
-        ]);
-    
+        $validated = $request->validated();
+
         $banners = Banner::findOrFail($id);
-    
+
         // Handle the image upload
-       
-            if ($request->hasFile('image')) {
-                $path = $request->file('image')->store('banner', 'public'); 
-                $validated['image_url'] = $path; 
-            } 
-    
+        if ($request->hasFile('image')) {
+            $path = $request->file('image')->store('banner', 'public');
+            $validated['image_url'] = $path;
+        }
+
         // Update the banner with the validated data
         $banners->update($validated);
-    
-        return redirect()->route('banner.index')->with('success', 'Banner updated successfully');
+        toastr("Cập nhật thành công", NotificationInterface::SUCCESS, "Thành công", [
+            "closeButton" => true,
+            "progressBar" => true,
+            "timeOut" => "3000",
+            "color" => "red"
+        ]);
+        return redirect()->route('banner.index');
     }
 
     // Xóa banner
     public function destroy($id)
     {
+        // Tìm bản ghi banner theo ID
         $banners = Banner::findOrFail($id);
+
+        // Xóa bản ghi khỏi database
         $banners->delete();
 
-        return redirect()->route('banner.index')->with('success', 'Banner deleted successfully');
+        // Xóa file ảnh nếu tồn tại
+        if ($banners->image_url && Storage::exists($banners->image_url)) {
+            Storage::delete($banners->image_url);
+        }
+
+        // Sử dụng session để truyền toastr thông báo thành công
+        toastr("Xóa thành công", NotificationInterface::SUCCESS, "Thành công", [
+            "closeButton" => true,
+            "progressBar" => true,
+            "timeOut" => "3000",
+            "color" => "red"
+        ]);
+
+        return redirect()->route('banner.index');
     }
 }
-?>
