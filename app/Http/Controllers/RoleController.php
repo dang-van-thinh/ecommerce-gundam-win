@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use App\Http\Requests\role\StoreRoleRequest;
 use App\Http\Requests\role\UpdateRoleRequest;
 use App\Models\Role;
+use Flasher\Prime\Notification\NotificationInterface;
 
 class RoleController extends Controller
 {
@@ -37,11 +38,24 @@ class RoleController extends Controller
         try {
             Role::query()->create($data);
 
-            return back()->with('success', 'Thêm mới vai trò thành công');
+            toastr("Thêm mới vai trò thành công", NotificationInterface::SUCCESS, "Thành công", [
+                "closeButton" => true,
+                "progressBar" => true,
+                "timeOut" => "3000",
+                "color" => "red"
+            ]);
+
+            return back();
             //code...
         } catch (\Throwable $th) {
             //throw $th;
-            return back()->with('error', 'Thêm mới vai trò thất bại');
+            toastr("Thêm mới vai trò thành công", NotificationInterface::ERROR, "Thất bại", [
+                "closeButton" => true,
+                "progressBar" => true,
+                "timeOut" => "3000",
+                "color" => "red"
+            ]);
+            return back();
         }
     }
 
@@ -71,11 +85,24 @@ class RoleController extends Controller
         try {
             $role->update($data);
 
-            return back()->with('success', 'Cập nhật vai trò thành công');
+            toastr("Cập nhật vai trò thành công", NotificationInterface::SUCCESS, "Thành công", [
+                "closeButton" => true,
+                "progressBar" => true,
+                "timeOut" => "3000",
+                "color" => "red"
+            ]);
+
+            return back();
             //code...
         } catch (\Throwable $th) {
             //throw $th;
-            return back()->with('error', 'Cập nhật vai trò thất bại');
+            toastr("Cập nhật vai trò thất bại", NotificationInterface::ERROR, "Thất bại", [
+                "closeButton" => true,
+                "progressBar" => true,
+                "timeOut" => "3000",
+                "color" => "red"
+            ]);
+            return back();
         }
     }
 
@@ -87,11 +114,24 @@ class RoleController extends Controller
         try {
             $role->delete();
 
-            return back()->with('success', 'Xoá vai trò thành công');
+            toastr("Xoá vai trò thành công", NotificationInterface::SUCCESS, "Thành công", [
+                "closeButton" => true,
+                "progressBar" => true,
+                "timeOut" => "3000",
+                "color" => "red"
+            ]);
+
+            return back();
             //code...
         } catch (\Throwable $th) {
             //throw $th;
-            return back()->with('error', 'Xoá vai trò thất bại');
+            toastr("Xoá vai trò thất bại", NotificationInterface::ERROR, "Thất bại", [
+                "closeButton" => true,
+                "progressBar" => true,
+                "timeOut" => "3000",
+                "color" => "red"
+            ]);
+            return back();
         }
     }
 }
