@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\Controller;
+use App\Http\Controllers\VocuherController;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -20,3 +21,5 @@ Route::get('/', function () {
 
 // Route::get("/home", [Controller::class, 'notification'])->name("home");
 Route::get("/test", [Controller::class, 'test'])->name("test");
+
+Route::resource('voucher', VocuherController::class);
