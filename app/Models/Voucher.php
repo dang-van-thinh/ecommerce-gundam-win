@@ -13,16 +13,16 @@ class Voucher extends Model
         'name',
         'description',
         'limit',
-        'quantity',
         'discount_type',
         'discount_value', 
         'min_order_value',
         'max_order_value',
         'status',
-        'vourcher_used',
+        'voucher_used',
         'start_date',
         'end_date',
     ];
+    public $timestamps = false; 
 
     // một Vourcher có nhiều VourcherUsage
     public function vourcherUsages()
