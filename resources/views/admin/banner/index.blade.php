@@ -92,12 +92,12 @@
                                     <div class="col-8">
 
                                         <p><strong>Tiêu đề:</strong> {{ $banner->title }}</p>
-                                        <p><strong>Type:</strong> {{ ucfirst($banner->image_type) }}</p>
+                                        <p><strong>Vị trí banner:</strong> {{ ucfirst($banner->image_type) }}</p>
                                         @if ($banner->link)
-                                        <p><strong>Link:</strong> <a href="{{ $banner->link }}" target="_blank">{{ $banner->link }}</a></p>
+                                        <p><strong>Đường dẫn đến bài viết/ sản phẩm:</strong> <a href="{{ $banner->link }}" target="_blank">{{ $banner->link }}</a></p>
                                         @endif
-                                        <p><strong>Created At:</strong> {{ $banner->created_at->format('d/m/Y') }}</p>
-                                        <p><strong>Updated At:</strong> {{ $banner->updated_at->format('d/m/Y') }}</p>
+                                        <p><strong>Được tạo:</strong> {{ $banner->created_at->format('d/m/Y') }}</p>
+                                        <p><strong>Cập nhật:</strong> {{ $banner->updated_at->format('d/m/Y') }}</p>
                                     </div>
                                 </div>
 
