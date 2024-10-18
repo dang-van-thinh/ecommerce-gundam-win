@@ -2,10 +2,10 @@
 
 namespace App\Http\Controllers\Admin;
 
-use App\Http\Requests\categoryArticle\CreateCategoryArticleRequest;
 use App\Http\Requests\categoryArticle\UpdateCategoriArticleRequest;
 use Flasher\Prime\Notification\NotificationInterface;
 use App\Http\Controllers\Controller;
+use App\Http\Requests\categoryArticle\CreateCategoryArticleRequest;
 use App\Models\CategoryArticle;
 
 class ArticleController extends Controller
@@ -17,6 +17,7 @@ class ArticleController extends Controller
             ->paginate(4);
         return view("admin.pages.category.articles.index", ['listCategoryArticle' => $categories]);
     }
+
     public function store(CreateCategoryArticleRequest $request)
     {
         $validatedData = $request->validated();

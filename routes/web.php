@@ -1,8 +1,6 @@
 <?php
 
-
-
-use App\Http\Controllers\BannerController;
+use App\Http\Controllers\Admin\BannerController;
 use App\Http\Controllers\Admin\ArticleController;
 use App\Http\Controllers\Admin\AttributeController;
 use App\Http\Controllers\Admin\AttributeValueController;
@@ -10,7 +8,6 @@ use App\Http\Controllers\Admin\ProductController;
 use App\Http\Controllers\Admin\RoleController;
 use App\Http\Controllers\Admin\UserController;
 use App\Http\Controllers\Admin\VocuherController;
-
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Route;
 
