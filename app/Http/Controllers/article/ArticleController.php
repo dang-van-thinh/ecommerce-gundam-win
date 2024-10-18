@@ -30,13 +30,9 @@ class ArticleController extends Controller
 
     public function store(CreateArticleRequest $request)
     {
-        $path = null;
-        if ($request->hasFile('image')) {
-            $image = $request->file('image');
-            $newName = time() . '.' . $image->getClientOriginalExtension();
+        $path = $request->file('image') ? $request->file('image')->store('images/category', 'public') : null;
 
-            $path = $image->storeAs('images', $newName, 'public');
-        }
+
         $data = [
             'category_article_id' => $request->category_article_id,
             'title' => $request->title,
@@ -44,12 +40,16 @@ class ArticleController extends Controller
             'content' => $request->content,
         ];
 
-        // dd($data);
-        Article::create($data);
 
-        // Chuyển hướng về trang danh sách bài viết với thông báo thành công
-        return redirect()->route("article.create")->with("success", "Thêm mới thành công");
+        Article::create($data);
+        toastr("Thêm mới thành công", NotificationInterface::SUCCESS, "Thành công", [
+            "closeButton" => true,
+            "progressBar" => true,
+            "timeOut" => "3000",
+        ]);
+        return redirect()->route("article.create");
     }
+
 
 
     public function show(string $id)
@@ -67,38 +67,37 @@ class ArticleController extends Controller
 
     public function update(UpdateArticleRequest $request, $id)
     {
-        // Tìm bài viết theo id
         $article = Article::findOrFail($id);
 
-        // Giữ lại ảnh cũ nếu không upload ảnh mới
         $path = $article->image;
 
-        if ($request->hasFile('image')) {
-            // Nếu có ảnh mới, xóa ảnh cũ
-            if ($article->image && Storage::disk('public')->exists($article->image)) {
-                Storage::disk('public')->delete($article->image);
-            }
+        $validatedData['image'] = $request->hasFile('image')
+            ? tap($request->file('image')->store('images/category', 'public'), function () use ($article) {
+                // Xóa hình ảnh cũ nếu tồn tại
+                if ($article->image && Storage::disk('public')->exists($article->image)) {
+                    Storage::disk('public')->delete($article->image);
+                }
+            })
+            : $path;
 
-            // Lưu ảnh mới và ghi đè đường dẫn ảnh
-            $image = $request->file('image');
-            $newName = time() . '.' . $image->getClientOriginalExtension();
-            $path = $image->storeAs('images', $newName, 'public');
-        }
-
-        // Cập nhật dữ liệu bài viết
         $data = [
             'category_article_id' => $request->category_article_id,
             'title' => $request->title,
-            'image' => $path, // Lưu ảnh mới hoặc giữ ảnh cũ
+            'image' => $validatedData['image'], // Lưu ảnh mới hoặc giữ ảnh cũ
             'content' => $request->content,
         ];
 
-        // Cập nhật thông tin bài viết trong cơ sở dữ liệu
         $article->update($data);
 
-        // Chuyển hướng về trang danh sách bài viết với thông báo thành công
-        return redirect()->route("article.index")->with("success", "Cập nhật bài viết thành công");
+        toastr("Cập nhật bài viết thành công", NotificationInterface::SUCCESS, "Thành công", [
+            "closeButton" => true,
+            "progressBar" => true,
+            "timeOut" => "3000",
+        ]);
+
+        return redirect()->route("article.index");
     }
+
 
 
     public function destroy(string $id)
