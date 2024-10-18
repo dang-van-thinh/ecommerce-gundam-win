@@ -3,11 +3,6 @@
 
 
 use App\Http\Controllers\BannerController;
-use App\Http\Controllers\attributes\AttributeController;
-use App\Http\Controllers\attributes\AttributeValueController;
-use App\Http\Controllers\category\ArticleController;
-use App\Http\Controllers\category\ProductController;
-
 use App\Http\Controllers\Admin\ArticleController;
 use App\Http\Controllers\Admin\AttributeController;
 use App\Http\Controllers\Admin\AttributeValueController;
@@ -45,7 +40,3 @@ Route::resource('category-article', ArticleController::class);
 Route::resource('roles', RoleController::class);
 Route::resource('users', UserController::class);
 Route::resource('voucher', VocuherController::class);
-<<<<<<< HEAD
-=======
-
->>>>>>> 480cd2c7c6fdddb6de32b5a93eaa60b510e428f9
