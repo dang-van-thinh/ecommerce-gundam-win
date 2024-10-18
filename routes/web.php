@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\Admin\AddersController;
 use App\Http\Controllers\Admin\BannerController;
 use App\Http\Controllers\Admin\AttributeController;
 use App\Http\Controllers\Admin\AttributeValueController;
@@ -37,3 +38,6 @@ Route::resource('category-article', CategoryArticleController::class);
 Route::resource('roles', RoleController::class);
 Route::resource('users', UserController::class);
 Route::resource('voucher', VocuherController::class);
+Route::get('/get-districts/{province_id}', [AddersController::class, 'getDistricts']);
+Route::get('/get-wards/{district_id}', [AddersController::class, 'getWards']);
+Route::resource('address', AddersController::class);
