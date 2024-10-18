@@ -38,5 +38,3 @@ Route::resource('category-article', ArticleController::class);
 Route::resource('roles', RoleController::class);
 Route::resource('users', UserController::class);
 Route::resource('voucher', VocuherController::class);
-
-
