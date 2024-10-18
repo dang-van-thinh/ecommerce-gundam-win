@@ -22,7 +22,7 @@ class CreateCategoryArticleRequest extends FormRequest
     public function rules(): array
     {
         return [
-            "name"=> "required|unique:category_articles|min:3|max:50",
+            "name" => "required|unique:category_articles|min:3|max:50",
         ];
     }
     public function messages(): array
