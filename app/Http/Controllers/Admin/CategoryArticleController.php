@@ -8,7 +8,7 @@ use App\Http\Controllers\Controller;
 use App\Http\Requests\categoryArticle\CreateCategoryArticleRequest;
 use App\Models\CategoryArticle;
 
-class ArticleController extends Controller
+class CategoryArticleController  extends Controller
 {
     public function index()
     {
