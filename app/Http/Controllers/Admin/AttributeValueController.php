@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Http\Controllers\attributes;
+namespace App\Http\Controllers\Admin;
 
 use App\Models\Attribute;
 use App\Models\AttributeValue;
