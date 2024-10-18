@@ -18,7 +18,9 @@
                 <li class="menu-item-has-children ">
                     <a href="{{ route('banner.index') }}" ><i class="menu-icon fa fa-book"></i>Quản lý Banner</a>
                 </li>
-
+                <li class="menu-item-has-children ">
+                    <a href="{{ route('address.index') }}" ><i class="menu-icon fa fa-book"></i>Vị trí</a>
+                </li>
                 <li class="menu-item-has-children dropdown">
                     <a href="#" class="dropdown-toggle" data-toggle="dropdown" aria-haspopup="true"
                         aria-expanded="false"><i class="menu-icon fa fa-book"></i>QL Thuộc tính
