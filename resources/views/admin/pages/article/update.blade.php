@@ -58,9 +58,10 @@
                             <div class="col-12 col-md-8">
                                 <input type="file" id="image" name="image" class="form-control">
                                 <!-- Hiển thị ảnh hiện tại nếu có -->
+                                <br>
                                 @if ($article->image)
-                                    <img src="{{ asset('storage/' . $article->image) }}" alt="Ảnh đại diện" width="100px"
-                                        height="100px">
+                                    <img src="{{ asset('storage/' . $article->image) }}" alt="Ảnh đại diện" width="200px"
+                                        height="200px">
                                 @endif
                                 @error('image')
                                     <div class="text-danger">{{ $message }}</div>
@@ -83,7 +84,7 @@
 
                         <!-- Nút Submit -->
                         <div class="form-actions form-group">
-                            <a href="{{ route('article.index') }}" class="btn btn-danger btn-sm">Quay lại</a>
+                            <a href="{{ route('article.index') }}" class="btn btn-primary btn-sm">Quay lại</a>
                             <button type="submit" class="btn btn-success btn-sm">Cập nhật</button>
                         </div>
                     </form>

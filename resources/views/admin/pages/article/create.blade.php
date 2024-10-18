@@ -7,7 +7,7 @@
         <div class="col-lg-12">
             <div class="card">
                 <div class="card-header">
-                    <strong>Basic Form</strong> Elements
+                    <strong>Thêm mới bài viết</strong>
                 </div>
                 <div class="card-body card-block">
                     <form action="{{ route('article.store') }}" method="post" enctype="multipart/form-data"
@@ -76,7 +76,7 @@
 
                         <!-- Nút Submit -->
                         <div class="form-actions form-group">
-                            <a href="{{ route('article.index') }}" class="btn btn-danger btn-sm">Quay lại</a>
+                            <a href="{{ route('article.index') }}" class="btn btn-primary btn-sm">Quay lại</a>
                             <button type="submit" class="btn btn-success btn-sm">Submit</button>
                         </div>
                     </form>
