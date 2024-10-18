@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Http\Controllers\article;
+namespace App\Http\Controllers\Admin;
 
 use App\Http\Requests\article\CreateArticleRequest;
 use App\Http\Requests\article\UpdateArticleRequest;
