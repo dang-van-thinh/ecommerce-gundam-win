@@ -8,7 +8,7 @@
         <div class="col-lg-12">
             <div class="card">
                 <div class="card-header">
-                    <strong class="card-title">Danh sách sản phẩm</strong>
+                    <strong class="card-title">Danh sách bài viết</strong>
                 </div>
                 <div class="card-body">
                     <table class="table table-bordered">
@@ -44,8 +44,8 @@
                                             @csrf
                                             @method('DELETE')
                                             <button type="button" class="btn btn-danger"
-                                                onclick="return confirm('Bạn có chắc chắn muốn xóa danh mục này không?') ? document.getElementById('delete-form-{{ $list->id }}').submit() : false;">
-                                                <i class="ti-trash"></i>
+                                                onclick="return confirm('Bạn có chắc chắn muốn xóa bài viết này không?') ? document.getElementById('delete-form-{{ $list->id }}').submit() : false;">
+                                                <i class="fa fa-trash"></i>
                                             </button>
                                         </form>
                                     </td>
