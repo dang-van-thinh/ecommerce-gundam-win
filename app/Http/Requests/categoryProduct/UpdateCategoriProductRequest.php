@@ -22,7 +22,7 @@ class UpdateCategoriProductRequest extends FormRequest
     public function rules(): array
     {
         return [
-            "name"=> "required|min:3|max:50",
+            "name"=> "required|unique:category_products|min:3|max:50",
             "description"=> "required",
             "image"=> "image|mimes:jpeg,png,jpg,gif"
         ];
@@ -31,6 +31,7 @@ class UpdateCategoriProductRequest extends FormRequest
     {
         return [
             'name.required' => 'Tên là bắt buộc.',
+            'name.unique' => 'Tên đã tồn tại.',
             'name.min' => 'Tên phải có ít nhất 3 ký tự.',
             'name.max' => 'Tên không được vượt quá 50 ký tự.',
             'description.required' => 'Tên là bắt buộc.',
