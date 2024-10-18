@@ -9,8 +9,15 @@ class Article extends Model
 {
     use HasFactory;
     protected $table = "articles";
-    protected $fillable = ['id', 'category_article_id ','title','content','image','created_at', 'updated_at'];
+    protected $fillable = [ 'category_article_id','title','content','image','created_at', 'updated_at'];
     public $timestamps = false;
+
+    public function loadAllArticle(){
+        $load = Article::query()
+        ->orderBy('id','asc')
+        ->paginate(9);
+        return $load;
+    }
 
     public function categoryArticle(){
         return $this->belongsTo(CategoryArticle::class,'category_article_id');
