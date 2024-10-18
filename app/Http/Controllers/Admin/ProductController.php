@@ -1,5 +1,5 @@
 <?php
-namespace App\Http\Controllers\category;
+namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
 use App\Http\Requests\categoryProduct\CreateCategoryProductRequest;
