@@ -4,7 +4,7 @@ namespace App\Http\Requests\categoryArticle;
 
 use Illuminate\Foundation\Http\FormRequest;
 
-class CreateCategoryArticleRequest extends FormRequest
+class UpdateCategoriArticleRequest extends FormRequest
 {
     /**
      * Determine if the user is authorized to make this request.
