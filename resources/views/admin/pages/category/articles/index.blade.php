@@ -49,15 +49,14 @@
                                     <th scope="row" class="text-center">{{ $index + 1 }}</th>
                                     <td class="text-center">{{ $list->name }}</td>
                                     <td class="text-center">
-                                        <a href="{{ route('category-article.edit', $list->id) }}" class="btn btn-warning"><i
-                                                class="ti-slice"></i></a>
+                                        <a href="{{ route('category-article.edit', $list->id) }}" class="btn btn-warning">Sửa</a>
                                         <form action="{{ route('category-article.destroy', $list->id) }}" method="POST"
                                             style="display:inline;" id="delete-form-{{ $list->id }}">
                                             @csrf
                                             @method('DELETE')
                                             <button type="button" class="btn btn-danger"
                                                 onclick="return confirm('Bạn có chắc chắn muốn xóa danh mục này không?') ? document.getElementById('delete-form-{{ $list->id }}').submit() : false;">
-                                                <i class="ti-trash"></i>
+                                               Xóa
                                             </button>
                                         </form>
                                     </td>
