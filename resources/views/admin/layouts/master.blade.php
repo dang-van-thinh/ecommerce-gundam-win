@@ -1,50 +1,51 @@
 <!doctype html>
 <html lang="en">
 
-    <head>
-        <meta charset="UTF-8">
-        <meta name="viewport" content="width=device-width, initial-scale=1.0">
-        <meta http-equiv="X-UA-Compatible" content="ie=edge">
-        <title>
-            @yield('title')
-        </title>
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>
+        @yield('title')
+    </title>
 
-        @include('admin.layouts.partials.css')
-    </head>
+    @include('admin.layouts.partials.css')
 
-    <body>
-        <!-- Left Panel -->
-        @include('admin.layouts.partials.left-panel')
-        <!-- /#left-panel -->
+</head>
 
-        <!-- Right Panel -->
-        <div id="right-panel" class="right-panel">
-            <!-- Header-->
-            <header id="header" class="header">
-                @include('admin.layouts.partials.header')
-            </header>
-            <!-- /#header -->
+<body>
+    <!-- Left Panel -->
+    @include('admin.layouts.partials.left-panel')
+    <!-- /#left-panel -->
 
-            <!-- Content -->
-            <main class="content py-3" style="min-height : 80vh">
-                @yield('content')
-            </main>
-            <!-- /.content -->
+    <!-- Right Panel -->
+    <div id="right-panel" class="right-panel">
+        <!-- Header-->
+        <header id="header" class="header">
+            @include('admin.layouts.partials.header')
+        </header>
+        <!-- /#header -->
 
-            <div class="clearfix"></div>
+        <!-- Content -->
+        <main class="content py-3" style="min-height : 80vh">
+            @yield('content')
+        </main>
+        <!-- /.content -->
 
-            <!-- Footer -->
-            <footer class="site-footer">
-                @include('admin.layouts.partials.footer')
-            </footer>
-            <!-- /.site-footer -->
+        <div class="clearfix"></div>
 
-        </div>
-        <!-- /#right-panel -->
+        <!-- Footer -->
+        <footer class="site-footer">
+            @include('admin.layouts.partials.footer')
+        </footer>
+        <!-- /.site-footer -->
 
-        <!-- Scripts -->
-        @include('admin.layouts.partials.script')
-        @stack('admin-scripts')
-    </body>
+    </div>
+    <!-- /#right-panel -->
+
+    <!-- Scripts -->
+    @include('admin.layouts.partials.script')
+    @stack('admin-scripts')
+</body>
 
 </html>
