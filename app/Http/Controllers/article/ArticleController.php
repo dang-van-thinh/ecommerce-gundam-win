@@ -10,6 +10,7 @@ use App\Http\Controllers\Controller;
 use App\Models\CategoryArticle;
 use App\Models\Article;
 
+
 class ArticleController extends Controller
 {
     public function index()
@@ -32,7 +33,6 @@ class ArticleController extends Controller
     {
         $path = $request->file('image') ? $request->file('image')->store('images/category', 'public') : null;
 
-
         $data = [
             'category_article_id' => $request->category_article_id,
             'title' => $request->title,
@@ -40,17 +40,14 @@ class ArticleController extends Controller
             'content' => $request->content,
         ];
 
-
         Article::create($data);
-        toastr("Thêm mới thành công", NotificationInterface::SUCCESS, "Thành công", [
+        toastr("Chúc mừng bạn đã thêm thành công", NotificationInterface::SUCCESS, "Thêm thành công", [
             "closeButton" => true,
             "progressBar" => true,
             "timeOut" => "3000",
         ]);
         return redirect()->route("article.create");
     }
-
-
 
     public function show(string $id)
     {
@@ -89,7 +86,7 @@ class ArticleController extends Controller
 
         $article->update($data);
 
-        toastr("Cập nhật bài viết thành công", NotificationInterface::SUCCESS, "Thành công", [
+        toastr("Chúc mừng bạn đã cập nhật thành công", NotificationInterface::SUCCESS, "Cập nhật thành công", [
             "closeButton" => true,
             "progressBar" => true,
             "timeOut" => "3000",
@@ -105,7 +102,7 @@ class ArticleController extends Controller
         $article = Article::find($id);
         Storage::disk('public')->delete($article->image);
         $article->delete();
-        toastr("Xóa thành công", NotificationInterface::SUCCESS, "Thành công", [
+        toastr("Chúc mừng bạn đã xóa thành công", NotificationInterface::SUCCESS, "Xóa thành công", [
             "closeButton" => true,
             "progressBar" => true,
             "timeOut" => "3000",
