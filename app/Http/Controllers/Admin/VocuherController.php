@@ -1,13 +1,11 @@
 <?php
 
-namespace App\Http\Controllers;
+namespace App\Http\Controllers\Admin;
 
-
+use App\Http\Controllers\Controller;
 use App\Models\Voucher;
 use App\Http\Requests\voucher\CreateVoucherRequest;
-
 use Flasher\Prime\Notification\NotificationInterface;
-
 use Carbon\Carbon;
 
 class VocuherController extends Controller

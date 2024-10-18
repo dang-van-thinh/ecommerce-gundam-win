@@ -1,11 +1,10 @@
 <?php
 
-namespace App\Http\Controllers\attributes;
+namespace App\Http\Controllers\Admin;
 use App\Models\Attribute;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\attrbutes\UpdateAttributeRequest;
 use App\Http\Requests\attributes\AttributeRequest;
-use Illuminate\Http\Request;
 use Flasher\Prime\Notification\NotificationInterface;
 
 class AttributeController extends Controller
