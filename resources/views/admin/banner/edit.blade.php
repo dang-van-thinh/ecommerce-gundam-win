@@ -1,7 +1,7 @@
-{{-- resources/views/admin/banner/edit.blade.php --}}
+
 @extends('admin.layouts.master')
 
-@section('title', 'Edit Banner')
+@section('title', 'Chỉnh sửa Banner')
 
 @section('content')
 
