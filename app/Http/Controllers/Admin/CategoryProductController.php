@@ -8,7 +8,7 @@ use App\Models\CategoryProduct;
 use Flasher\Prime\Notification\NotificationInterface;
 use Illuminate\Support\Facades\Storage;
 
-class ProductController extends Controller
+class CategoryProductController extends Controller
 {
     public function index()
     {
