@@ -68,10 +68,23 @@ class BannerController extends Controller
         $banners = Banner::findOrFail($id);
 
         // Handle the image upload
-        if ($request->hasFile('image')) {
-            $path = $request->file('image')->store('banner', 'public');
-            $validated['image_url'] = $path;
+        // if ($request->hasFile('image')) {
+        //     $path = $request->file('image')->store('banner', 'public');
+        //     $validated['image_url'] = $path;
+        // }
+         // Kiểm tra xem có upload file ảnh mới không
+    if ($request->hasFile('image')) {
+        // Xóa ảnh cũ nếu có
+        if ($banners->image_url && Storage::disk('public')->exists($banners->image_url)) {
+            Storage::disk('public')->delete($banners->image_url);
         }
+
+        // Lưu ảnh mới
+        $path = $request->file('image')->store('banner', 'public');
+        $validated['image_url'] = $path;
+    }
+
+    
 
         // Update the banner with the validated data
         $banners->update($validated);
