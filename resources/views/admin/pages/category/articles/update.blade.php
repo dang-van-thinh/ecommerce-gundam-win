@@ -8,7 +8,7 @@ Trang danh mục sản phẩm
     <!-- Cột 1 -->
     <div class="col-lg-6">
         <div class="card">
-            <div class="card-header text-center">Sửa danh mục sản phẩm</div>
+            <div class="card-header text-center">Sửa danh mục bài viết</div>
             <div class="card-body card-block">
                 <form action="{{ route('category-article.update', $category->id) }}" method="post"
                     enctype="multipart/form-data" class="">
