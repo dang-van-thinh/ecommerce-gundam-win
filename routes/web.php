@@ -1,6 +1,14 @@
 <?php
 
 use App\Http\Controllers\article\ArticleController;
+use App\Http\Controllers\Admin\BannerController;
+use App\Http\Controllers\Admin\ArticleController;
+use App\Http\Controllers\Admin\AttributeController;
+use App\Http\Controllers\Admin\AttributeValueController;
+use App\Http\Controllers\Admin\ProductController;
+use App\Http\Controllers\Admin\RoleController;
+use App\Http\Controllers\Admin\UserController;
+use App\Http\Controllers\Admin\VocuherController;
 use App\Http\Controllers\Controller;
 use App\Models\Article;
 use Illuminate\Support\Facades\Route;
@@ -22,5 +30,12 @@ Route::get('/', function () {
 
 // Route::get("/home", [Controller::class, 'notification'])->name("home");
 Route::get("/test", [Controller::class, 'test'])->name("test");
-
 Route::resource('article', ArticleController::class);
+Route::resource('banner', BannerController::class);
+Route::resource('attributes', AttributeController::class);
+Route::resource('attributeValues', AttributeValueController::class);
+Route::resource('category-product', ProductController::class);
+Route::resource('category-article', ArticleController::class);
+Route::resource('roles', RoleController::class);
+Route::resource('users', UserController::class);
+Route::resource('voucher', VocuherController::class);
