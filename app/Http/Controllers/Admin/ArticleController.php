@@ -1,26 +1,21 @@
 <?php
 
-namespace App\Http\Controllers\category;
+namespace App\Http\Controllers\Admin;
 
 use App\Http\Requests\categoryArticle\CreateCategoryArticleRequest;
 use App\Http\Requests\categoryArticle\UpdateCategoriArticleRequest;
 use Flasher\Prime\Notification\NotificationInterface;
 use App\Http\Controllers\Controller;
 use App\Models\CategoryArticle;
+
 class ArticleController extends Controller
 {
-    private $categoryArticle;
-    public function __construct()
-    {
-        $this->categoryArticle = [];
-    }
     public function index()
     {
         $categories = CategoryArticle::query()
             ->orderBy("id", "desc")
             ->paginate(4);
-        $this->categoryArticle['listCategoryArticle'] = $categories;
-        return view("admin.pages.category.articles.index", $this->categoryArticle);
+        return view("admin.pages.category.articles.index", ['listCategoryArticle' => $categories]);
     }
     public function store(CreateCategoryArticleRequest $request)
     {
@@ -34,10 +29,7 @@ class ArticleController extends Controller
         ]);
         return redirect()->route("category-article.index");
     }
-    public function show(string $id)
-    {
-
-    }
+    public function show(string $id) {}
     public function edit(string $id)
     {
         $cate = CategoryArticle::find($id);
