@@ -10,7 +10,6 @@
         </title>
 
         @include('admin.layouts.partials.css')
-
     </head>
 
     <body>
