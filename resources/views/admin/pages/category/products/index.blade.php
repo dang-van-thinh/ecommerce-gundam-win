@@ -12,6 +12,7 @@ Danh mục sản phẩm
                     class="">
                     @csrf
                     <div class="form-group">
+                    <label for="full_name" class="form-label">Tên danh mục</label>
                         <div class="input-group">
                             <input type="text" id="name" name="name" placeholder="Tên danh mục" class="form-control"
                                 value="{{ old('name') }}">
@@ -22,6 +23,7 @@ Danh mục sản phẩm
                     </div>
 
                     <div class="form-group">
+                    <label for="full_name" class="form-label">Mô tả</label>
                         <div class="input-group">
                             <input type="text" id="description" name="description" value="{{ old('description') }}"
                                 placeholder="Mô tả" class="form-control">
@@ -30,8 +32,8 @@ Danh mục sản phẩm
                             <div class="text-danger">{{ $message }}</div>
                         @enderror
                     </div>
-
                     <div class="form-group">
+                    <label for="full_name" class="form-label">Hình ảnh</label>
                         <div class="input-group">
                             <input type="file" id="image" name="image" placeholder="Hình ảnh" class="form-control">
                         </div>

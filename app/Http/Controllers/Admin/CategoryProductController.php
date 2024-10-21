@@ -2,8 +2,8 @@
 namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
-use App\Http\Requests\categoryProduct\CreateCategoryProductRequest;
-use App\Http\Requests\categoryProduct\UpdateCategoriProductRequest;
+use App\Http\Requests\Admin\categoryProduct\CreateCategoryProductRequest;
+use App\Http\Requests\Admin\categoryProduct\UpdateCategoriProductRequest;
 use App\Models\CategoryProduct;
 use Flasher\Prime\Notification\NotificationInterface;
 use Illuminate\Support\Facades\Storage;
