@@ -21,7 +21,9 @@ use App\Http\Controllers\Client\OrderController;
 use App\Http\Controllers\Client\ProductController;
 use App\Http\Controllers\Client\WishListController;
 use App\Http\Controllers\Controller;
-use App\Models\Product;
+
+use App\Http\Controllers\RefundController;
+use App\Models\Article;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -53,6 +55,9 @@ Route::resource('category-article', CategoryArticleController::class);
 Route::resource('roles', RoleController::class);
 Route::resource('users', UserController::class);
 Route::resource('voucher', VocuherController::class);
+Route::resource('refund', RefundController::class);
+
+
 
 // client
 Route::get('/', [HomeController::class, 'index'])->name('home');
