@@ -4,7 +4,7 @@ namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
 use App\Models\Voucher;
-use App\Http\Requests\voucher\CreateVoucherRequest;
+use App\Http\Requests\Admin\voucher\CreateVoucherRequest;
 use Flasher\Prime\Notification\NotificationInterface;
 use Carbon\Carbon;
 
