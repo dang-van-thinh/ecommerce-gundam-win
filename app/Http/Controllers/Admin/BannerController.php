@@ -3,8 +3,8 @@
 namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
+use App\Http\Requests\Admin\banner\BannerRequest;
 use App\Models\Banner;
-use App\Http\Requests\BannerRequest;
 use Flasher\Prime\Notification\NotificationInterface;
 use Illuminate\Support\Facades\Storage;
 
@@ -14,13 +14,13 @@ class BannerController extends Controller
     public function index()
     {
         $banners = Banner::all();
-        return view('admin.banner.index', compact('banners'));
+        return view('admin.pages.banner.index', compact('banners'));
     }
 
     // Hiển thị form tạo mới banner
     public function create()
     {
-        return view('admin.banner.create');
+        return view('admin.pages.banner.create');
     }
 
     // Lưu banner mới vào database
@@ -50,19 +50,20 @@ class BannerController extends Controller
     public function show($id)
     {
         $banners = Banner::findOrFail($id);
-        return view('admin.banner.show', compact('banners'));
+        return view('admin.pages.banner.show', compact('banners'));
     }
 
     // Hiển thị form chỉnh sửa banner
     public function edit($id)
     {
         $banners = Banner::findOrFail($id);
-        return view('admin.banner.edit', compact('banners'));
+        return view('admin.pages.banner.edit', compact('banners'));
     }
 
     // Cập nhật banner
     public function update(BannerRequest $request, $id) // Use BannerRequest
     {
+        dd($request->all());
         $validated = $request->validated();
 
         $banners = Banner::findOrFail($id);
@@ -78,8 +79,6 @@ class BannerController extends Controller
             $path = $request->file('image')->store('banner', 'public');
             $validated['image_url'] = $path;
         }
-
-
 
         // Update the banner with the validated data
         $banners->update($validated);
