@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\Admin;
 
+
 use Flasher\Prime\Notification\NotificationInterface;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Admin\categoryArticle\CreateCategoryArticleRequest;

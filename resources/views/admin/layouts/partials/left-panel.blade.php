@@ -22,11 +22,9 @@
                         <li><i class="fa fa-list"></i><a href="{{ route('article.index') }}">Danh sách bài viết</a></li>
                     </ul>
                 </li>
-
                 <li class="menu-item-has-children ">
                     <a href="{{ route('banner.index') }}"><i class="menu-icon fa fa-book"></i>Quản lý Banner</a>
                 </li>
-
                 <li class="menu-item-has-children dropdown">
                     <a href="#" class="dropdown-toggle" data-toggle="dropdown" aria-haspopup="true"
                         aria-expanded="false"><i class="menu-icon fa fa-book"></i>QL Thuộc tính
