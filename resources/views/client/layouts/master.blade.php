@@ -9,15 +9,23 @@
     </head>
 
     <body class="skeleton_body">
+        <!--bottom to top-->
         <div class="tap-top">
-            <div><i class="fa-solid fa-angle-up"></i></div>
+            <div>
+                <i class="fa-solid fa-angle-up"></i>
+            </div>
         </div>
-        <span class="cursor"><span class="cursor-move-inner"><span class="cursor-inner"></span></span><span
-                class="cursor-move-outer"><span class="cursor-outer"></span></span></span>
+        <!-- hieu ung chuot
+        <span class="cursor">
+            <span class="cursor-move-inner"><span class="cursor-inner"></span></span><span
+                class="cursor-move-outer"><span class="cursor-outer"></span></span>
+        </span> -->
+
         <!-- Load trang trang truoc khi co du lieu-->
         <div class="skeleton_loader">
             @include('client.layouts.partials.header.loader')
         </div>
+
         <!-- header khi co du lieu-->
         <header>
             <!-- Quảng cáo header -->
@@ -116,6 +124,7 @@
                 </div>
             </div>
         </div>
+        <!--add cart success-->
         <div class="modal theme-modal fade cart-modal" id="addtocart" tabindex="-1" role="dialog" aria-modal="true">
             <div class="modal-dialog modal-lg modal-dialog-centered" role="document">
                 <div class="modal-content">
@@ -196,7 +205,8 @@
                 </div>
             </div>
         </div>
-        <div class="offcanvas offcanvas-end shopping-details" id="offcanvasRight" tabindex="-1"
+        <!-- cart item
+            <div class="offcanvas offcanvas-end shopping-details" id="offcanvasRight" tabindex="-1"
             aria-labelledby="offcanvasRightLabel">
             <div class="offcanvas-header">
                 <h4 class="offcanvas-title" id="offcanvasRightLabel">Shopping Cart</h4><button class="btn-close"
@@ -294,7 +304,9 @@
                 <div class="cart-button"> <a class="btn btn_outline" href="cart.html"> View Cart</a><a
                         class="btn btn_black" href="check-out.html"> Checkout</a></div>
             </div>
-        </div>
+        </div> -->
+
+        <!--Search-->
         <div class="offcanvas offcanvas-top search-details" id="offcanvasTop" tabindex="-1"
             aria-labelledby="offcanvasTopLabel">
             <div class="offcanvas-header"><button class="btn-close" type="button" data-bs-dismiss="offcanvas"
