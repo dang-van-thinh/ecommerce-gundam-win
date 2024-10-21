@@ -10,8 +10,21 @@ use App\Http\Controllers\Admin\CategoryProductController;
 use App\Http\Controllers\Admin\RoleController;
 use App\Http\Controllers\Admin\UserController;
 use App\Http\Controllers\Admin\VocuherController;
+use App\Http\Controllers\AuthController;
+use App\Http\Controllers\Client\BlogController;
+use App\Http\Controllers\Client\CartController;
+use App\Http\Controllers\Client\CheckOutController;
+use App\Http\Controllers\Client\CollectionBlogController;
+use App\Http\Controllers\Client\CollectionProductController;
+use App\Http\Controllers\Client\ContactController;
 use App\Http\Controllers\Client\HomeController;
+use App\Http\Controllers\Client\OrderController;
+use App\Http\Controllers\Client\ProductController;
+use App\Http\Controllers\Client\WishListController;
 use App\Http\Controllers\Controller;
+
+use App\Http\Controllers\RefundController;
+use App\Models\Article;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -25,12 +38,15 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
-Route::get('/', function () {
-    return view('welcome');
-});
+// test
 
+// Route::get('/', function () {
+//     return view('welcome');
+// });
 // Route::get("/home", [Controller::class, 'notification'])->name("home");
 Route::get("/test", [Controller::class, 'test'])->name("test");
+
+// admin
 Route::resource('article', ArticleController::class);
 Route::resource('banner', BannerController::class);
 Route::resource('attributes', AttributeController::class);
@@ -40,10 +56,6 @@ Route::resource('category-article', CategoryArticleController::class);
 Route::resource('roles', RoleController::class);
 Route::resource('users', UserController::class);
 Route::resource('voucher', VocuherController::class);
-Route::get('/get-districts/{province_id}', [AddersController::class, 'getDistricts']);
-Route::get('/get-wards/{district_id}', [AddersController::class, 'getWards']);
-Route::resource('address', AddersController::class);
 
 // client
 Route::get('/', [HomeController::class, 'index'])->name('home');
-
