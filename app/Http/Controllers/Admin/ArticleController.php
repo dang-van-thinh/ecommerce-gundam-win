@@ -2,8 +2,8 @@
 
 namespace App\Http\Controllers\Admin;
 
-use App\Http\Requests\article\CreateArticleRequest;
-use App\Http\Requests\article\UpdateArticleRequest;
+use App\Http\Requests\Admin\article\CreateArticleRequest;
+use App\Http\Requests\Admin\article\UpdateArticleRequest;
 use Flasher\Prime\Notification\NotificationInterface;
 use Illuminate\Support\Facades\Storage;
 use App\Http\Controllers\Controller;
