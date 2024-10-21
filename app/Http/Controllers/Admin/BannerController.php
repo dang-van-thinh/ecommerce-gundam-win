@@ -3,8 +3,9 @@
 namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
+use App\Http\Requests\Admin\banner\BannerRequest;
+use App\Http\Requests\Admin\banner\BannerRequest2;
 use App\Models\Banner;
-use App\Http\Requests\BannerRequest;
 use Flasher\Prime\Notification\NotificationInterface;
 use Illuminate\Support\Facades\Storage;
 
@@ -61,7 +62,7 @@ class BannerController extends Controller
     }
 
     // Cập nhật banner
-    public function update(BannerRequest $request, $id) // Use BannerRequest
+    public function update(BannerRequest2 $request, $id) 
     {
         $validated = $request->validated();
 
