@@ -9,8 +9,19 @@ use App\Http\Controllers\Admin\CategoryProductController;
 use App\Http\Controllers\Admin\RoleController;
 use App\Http\Controllers\Admin\UserController;
 use App\Http\Controllers\Admin\VocuherController;
+use App\Http\Controllers\AuthController;
+use App\Http\Controllers\Client\BlogController;
+use App\Http\Controllers\Client\CartController;
+use App\Http\Controllers\Client\CheckOutController;
+use App\Http\Controllers\Client\CollectionBlogController;
+use App\Http\Controllers\Client\CollectionProductController;
+use App\Http\Controllers\Client\ContactController;
 use App\Http\Controllers\Client\HomeController;
+use App\Http\Controllers\Client\OrderController;
+use App\Http\Controllers\Client\ProductController;
+use App\Http\Controllers\Client\WishListController;
 use App\Http\Controllers\Controller;
+use App\Models\Product;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -24,12 +35,15 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
-Route::get('/', function () {
-    return view('welcome');
-});
+// test
 
+// Route::get('/', function () {
+//     return view('welcome');
+// });
 // Route::get("/home", [Controller::class, 'notification'])->name("home");
 Route::get("/test", [Controller::class, 'test'])->name("test");
+
+// admin
 Route::resource('article', ArticleController::class);
 Route::resource('banner', BannerController::class);
 Route::resource('attributes', AttributeController::class);
@@ -42,3 +56,19 @@ Route::resource('voucher', VocuherController::class);
 
 // client
 Route::get('/', [HomeController::class, 'index'])->name('home');
+Route::get('/product', [ProductController::class, 'index'])->name('product');
+Route::get('/collection-product', [CollectionProductController::class, 'index'])->name('collection-product');
+Route::get('/collection-blog', [CollectionBlogController::class, 'index'])->name('collection-blog');
+Route::get('/blog', [BlogController::class, 'index'])->name('blog');
+Route::get('/contact', [ContactController::class, 'index'])->name('contact');
+Route::get('/cart', [CartController::class, 'index'])->name('cart');
+Route::get('/wish-list', [WishListController::class, 'index'])->name('wish-list');
+Route::get('/check-out', [CheckOutController::class, 'index'])->name('check-out');
+Route::get('/order-success', [OrderController::class, 'index'])->name('order-success');
+
+// auth
+Route::prefix('auth')->name('auth.')->group(function () {
+    Route::get('/login', [AuthController::class, 'loginView'])->name('login-view');
+    Route::get('/register', [AuthController::class, 'registerView'])->name(name: 'register-view');
+    Route::get('/foget-password', [AuthController::class, 'fogetPasswordView'])->name(name: 'foget-password-view');
+});
