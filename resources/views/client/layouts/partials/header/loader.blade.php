@@ -16,13 +16,19 @@
                 </div>
             </div>
             <div class="col-12">
-                <div class="main-menu"> <a class="brand-logo" href="#"> <img class="img-fluid for-light"
-                            src="../assets/images/logo/logo.png" alt="logo" /><img class="img-fluid for-dark"
-                            src="../assets/images/logo/logo-white-1.png" alt="logo" /></a>
+                <div class="main-menu">
+                    <a class="brand-logo" href="#">
+                        <img class="img-fluid for-light" src="/template/client/assets/images/logo/logo.png"
+                            alt="logo" />
+                        <img class="img-fluid for-dark" src="/template/client/assets/images/logo/logo-white-1.png"
+                            alt="logo" />
+                    </a>
                     <nav id="main-nav-1">
                         <ul class="nav-menu sm-horizontal">
-                            <li class="mobile-back text-end">Back<i class="fa-solid fa-angle-right ps-2"
-                                    aria-hidden="true"></i></li>
+                            <li class="mobile-back text-end">
+                                Back
+                                <i class="fa-solid fa-angle-right ps-2" aria-hidden="true"></i>
+                            </li>
                             <li> <a class="nav-link" href="#">Home </a></li>
                             <li> <a class="nav-link" href="#">Shop</a></li>
                             <li> <a class="nav-link" href="#">Catalog </a></li>

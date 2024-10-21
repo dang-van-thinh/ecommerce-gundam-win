@@ -3,12 +3,18 @@
         <div class="col-12 p-0">
             <div class="mobile-fix-option">
                 <ul>
-                    <li> <a href="index.html"><i class="iconsax" data-icon="home-1"></i>Home</a></li>
+                    <li>
+                        <a href="index.html"><i class="iconsax" data-icon="home-1"></i>Trang chủ</a>
+                    </li>
                     <li><a href="search.html"><i class="iconsax" data-icon="search-normal-2"></i>Search</a>
                     </li>
                     <li class="shopping-cart"> <a href="cart.html"><i class="iconsax"
                                 data-icon="shopping-cart"></i>Cart</a></li>
-                    <li><a href="wishlist.html"><i class="iconsax" data-icon="heart"></i>My Wish</a></li>
+                    <li>
+                        <a href="wishlist.html">
+                            <i class="iconsax" data-icon="heart"></i>My Wish
+                        </a>
+                    </li>
                     <li> <a href="dashboard.html"><i class="iconsax" data-icon="user-2"></i>Account</a>
                     </li>
                 </ul>
@@ -25,41 +31,28 @@
             </div>
         </div>
         <div class="col-12">
-            <div class="main-menu"> <a class="brand-logo" href="index.html"> <img class="img-fluid for-light"
-                        src="/template/client/assets/images/logo/logo.png" alt="logo" /><img
-                        class="img-fluid for-dark" src="/template/client/assets/images/logo/logo-white-1.png"
-                        alt="logo" /></a>
+            <div class="main-menu">
+                <a class="brand-logo" href="index.html">
+                    <img class="img-fluid for-light" src="/template/client/assets/images/logo/logo.png"
+                        alt="logo" />
+                    <img class="img-fluid for-dark" src="/template/client/assets/images/logo/logo-white-1.png"
+                        alt="logo" />
+                </a>
                 <nav id="main-nav">
                     <ul class="nav-menu sm-horizontal theme-scrollbar" id="sm-horizontal">
                         <li class="mobile-back" id="mobile-back">Back<i class="fa-solid fa-angle-right ps-2"
-                                aria-hidden="true"></i></li>
-                        <li> <a class="nav-link" href="#">Home <span> <i
-                                        class="fa-solid fa-angle-down"></i></span></a>
-                            <div class="mega-menu">
-                                <div class="row gy-3">
-                                    <div class="col-xl-3"><a class="layout-images" href="index.html" target="_blank">
-                                            <div class="layout-box img-1"> </div>
-                                            <h5>Layout 1</h5>
-                                        </a></div>
-                                    <div class="col-xl-3"> <a class="layout-images" href="layout-2.html"
-                                            target="_blank">
-                                            <div class="layout-box img-2"></div>
-                                            <h5>Layout 2</h5>
-                                        </a></div>
-                                    <div class="col-xl-3"><a class="layout-images" href="layout-3.html" target="_blank">
-                                            <div class="layout-box img-3"></div>
-                                            <h5>Layout 3</h5>
-                                        </a></div>
-                                    <div class="col-xl-3"> <a class="layout-images" href="layout-4.html"
-                                            target="_blank">
-                                            <div class="layout-box img-4"></div>
-                                            <h5>Layout 4</h5>
-                                        </a></div>
-                                </div>
-                            </div>
+                                aria-hidden="true"></i>
                         </li>
-                        <li> <a class="nav-link" href="#">Shop<span> <i
-                                        class="fa-solid fa-angle-down"></i></span></a>
+                        <li>
+                            <a class="nav-link" href="{{ route('home') }}">Trang chủ
+                            </a>
+                        </li>
+                        <li>
+                            <a class="nav-link" href="#">Shop
+                                <span>
+                                    <i class="fa-solid fa-angle-down"></i>
+                                </span>
+                            </a>
                             <ul class="nav-submenu">
                                 <li> <a href="collection-left-sidebar.html">Collection Left Sidebar</a>
                                 </li>
@@ -130,12 +123,16 @@
                                 <div class="row gy-4 align-items-center">
                                     <div class="col-xl-5">
                                         <div class="mega-img">
-                                            <div class="img-1"><img class="img-fluid"
+                                            <div class="img-1">
+                                                <img class="img-fluid"
                                                     src="/template/client/assets/images/mega-menu/5.jpg"
-                                                    alt="" /></div>
-                                            <div class="img-1"><img class="img-fluid"
+                                                    alt="" />
+                                            </div>
+                                            <div class="img-1">
+                                                <img class="img-fluid"
                                                     src="/template/client/assets/images/mega-menu/6.jpg"
-                                                    alt="" /></div>
+                                                    alt="" />
+                                            </div>
                                         </div>
                                     </div>
                                     <div class="col-xl-2 px-0">
@@ -194,33 +191,44 @@
                                 <li> <a href="blog-no-sidebar.html">Blog No Sidebar</a></li>
                             </ul>
                         </li>
-                        <li> <a class="nav-link" href="contact.html">Contact </a></li>
+                        <li> <a class="nav-link" href="{{ route('contact') }}">Liên hệ </a></li>
                     </ul>
                 </nav>
                 <div class="sub_header">
                     <div class="toggle-nav" id="toggle-nav"><i class="fa-solid fa-bars-staggered sidebar-bar"></i>
                     </div>
                     <ul class="justify-content-end">
-                        <li> <button href="#" data-bs-toggle="offcanvas" data-bs-target="#offcanvasTop"
-                                aria-controls="offcanvasTop"><i class="iconsax"
-                                    data-icon="search-normal-2"></i></button></li>
-                        <li> <a href="wishlist.html"><i class="iconsax" data-icon="heart"></i><span
-                                    class="cart_qty_cls">2</span></a></li>
-                        <li class="onhover-div"><a href="#"><i class="iconsax" data-icon="user-2"></i></a>
+                        <li>
+                            <button href="#" data-bs-toggle="offcanvas" data-bs-target="#offcanvasTop"
+                                aria-controls="offcanvasTop">
+                                <i class="iconsax" data-icon="search-normal-2"></i>
+                            </button>
+                        </li>
+                        <li>
+                            <a href="{{ route('wish-list') }}">
+                                <i class="iconsax" data-icon="heart"></i>
+                                <span class="cart_qty_cls">2</span>
+                            </a>
+                        </li>
+                        <li class="onhover-div">
+                            <a href="#">
+                                <i class="iconsax" data-icon="user-2"></i>
+                            </a>
                             <div class="onhover-show-div user">
                                 <ul>
-                                    <li> <a href="login.html">Login </a></li>
-                                    <li> <a href="sign-up.html">Register</a></li>
+                                    <li> <a href="{{ route('auth.login-view') }}">Đăng nhập </a></li>
+                                    <li> <a href="{{ route('auth.register-view') }}">Đăng ký</a></li>
                                 </ul>
                             </div>
                         </li>
-                        <li class="onhover-div shopping-cart"> <a class="p-0" href="#"
-                                data-bs-toggle="offcanvas" data-bs-target="#offcanvasRight"
-                                aria-controls="offcanvasRight">
-                                <div class="shoping-prize"><i class="iconsax pe-2" data-icon="basket-2">
-                                    </i>0
-                                    items</div>
-                            </a></li>
+                        <li class="onhover-div shopping-cart">
+                            <a class="p-0" href="{{ route('cart') }}">
+                                <div class="shoping-prize">
+                                    <i class="iconsax pe-2" data-icon="basket-2"></i>
+                                    1
+                                </div>
+                            </a>
+                        </li>
                     </ul>
                 </div>
             </div>
