@@ -2,10 +2,11 @@
 
 namespace App\Http\Controllers\Admin;
 
-use App\Http\Requests\Admin\categoryArticle\UpdateCategoriArticleRequest;
+
 use Flasher\Prime\Notification\NotificationInterface;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Admin\categoryArticle\CreateCategoryArticleRequest;
+use App\Http\Requests\Admin\categoryArticle\UpdateCategoriArticleRequest;
 use App\Models\CategoryArticle;
 
 class CategoryArticleController  extends Controller
