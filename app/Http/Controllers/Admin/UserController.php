@@ -3,8 +3,8 @@
 namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
-use App\Http\Requests\user\StoreUserRequest;
-use App\Http\Requests\user\UpdateUserRequest;
+use App\Http\Requests\Admin\user\StoreUserRequest;
+use App\Http\Requests\Admin\user\UpdateUserRequest;
 use App\Models\Role;
 use App\Models\User;
 use Flasher\Prime\Notification\NotificationInterface;

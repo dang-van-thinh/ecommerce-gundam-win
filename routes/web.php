@@ -1,6 +1,5 @@
 <?php
 
-use App\Http\Controllers\Admin\AddersController;
 use App\Http\Controllers\Admin\ArticleController;
 use App\Http\Controllers\Admin\BannerController;
 use App\Http\Controllers\Admin\AttributeController;

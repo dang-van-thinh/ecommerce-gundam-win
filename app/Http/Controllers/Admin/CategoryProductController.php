@@ -1,4 +1,5 @@
 <?php
+
 namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
@@ -37,7 +38,8 @@ class CategoryProductController extends Controller
         $validatedData = $request->validated();
         $category = CategoryProduct::findOrFail($id);
         $validatedData['image'] = $request->hasFile('image') ? tap($request->file('image')->store('images/category', 'public'), function () use ($category) {
-            Storage::disk('public')->delete($category->image); }) : $category->image;
+            Storage::disk('public')->delete($category->image);
+        }) : $category->image;
         $category->update($validatedData);
         toastr("Cập nhập thành công", NotificationInterface::SUCCESS, "Thành công", [
             "closeButton" => true,
