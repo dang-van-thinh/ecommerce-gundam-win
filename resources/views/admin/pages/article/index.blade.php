@@ -15,6 +15,7 @@
                         <thead>
                             <tr>
                                 <th scope="col">#</th>
+                                <th scope="col">Category</th>
                                 <th scope="col">Tile</th>
                                 <th scope="col">Image</th>
                                 <th scope="col">Content</th>
@@ -29,13 +30,13 @@
                             @foreach ($listArticle as $index => $list)
                                 <tr>
                                     <th scope="row" class="text-center">{{ $index + 1 }}</th>
+                                    <td class="text-center">{{ $list->categoryArticle->name ?? 'Không có danh mục' }}</td>
                                     <td class="text-center">{{ $list->title }}</td>
                                     <td class="text-center">
                                         <img src="{{ asset('storage/' . $list->image) }}" alt="" width="100px"
                                             height="100px">
                                     </td>
-                                    <td class="text-center">{{ $list->content }}</td>
-
+                                    <td class="text-center">{{ strip_tags($list->content) }}</td>
                                     <td class="text-center">
                                         <a href="{{ route('article.edit', $list->id) }}" class="btn btn-warning">
                                             <i class="fa fa-pencil"></i></a>
