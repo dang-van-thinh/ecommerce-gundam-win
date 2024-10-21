@@ -39,7 +39,14 @@ Phiếu Giảm Giá
                         Giảm theo giá cố định
                         @endif
                     </td>
-                    <td>{{$voucher->discount_value}}</td>
+                    <td>
+                        @if($voucher->discount_type === 'PERCENTAGE')
+                        {{ number_format($voucher->discount_value, 0)}}%
+                        @endif
+
+                        @if($voucher->discount_type === 'FIXED')
+                        {{ number_format($voucher->discount_value, 0, ',', '.') }} VND
+                        @endif</td>
                     <td>
                         @if($voucher->status === 'ACTIVE')
                         Hoạt động
