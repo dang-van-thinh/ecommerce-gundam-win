@@ -3,6 +3,14 @@
 @section('title', 'Quản lí Banner')
 
 @section('content')
+<style>
+td {
+  white-space: nowrap;     /* Keep text on one line */
+  overflow: hidden;        /* Hide overflowed content */
+  text-overflow: ellipsis; /* Show '...' for clipped text */
+  max-width: 200px;        /* Set a maximum width for the text */
+}
+</style>
 
 <div class="card">
     <div class="card-header">
@@ -13,15 +21,15 @@
         <a href="{{ route('banner.create') }}" class="btn btn-success">Thêm mới banner</a>
     </div>
     <div class="card-body">
-        <table class="table table-bordered">
+        <table style="table-layout: fixed; width: 100%;" class="table table-bordered">
             <thead>
                 <tr>
-                    <th scope="col">#</th>
-                    <th scope="col">Ảnh Banner</th>
-                    <th scope="col">Tiêu Đề</th>
-                    <th scope="col">Link Dẫn</th>
-                    <th scope="col">Phân Loại Banner</th>
-                    <th scope="col">Hành Động</th>
+                    <th scope="col" width= "5px">#</th>
+                    <th scope="col" width= "40px">Ảnh Banner</th>
+                    <th scope="col" width= "30px"  style="text-overflow: ellipsis;">Tiêu Đề</th>
+                    <th scope="col" width="120px">Link Dẫn</th>
+                    <th scope="col" width= "40px">Phân Loại Banner</th>
+                    <th scope="col" width= "40px">Hành Động</th>
                 </tr>
             </thead>
             <tbody>
