@@ -10,6 +10,7 @@ use App\Http\Controllers\Admin\RoleController;
 use App\Http\Controllers\Admin\UserController;
 use App\Http\Controllers\Admin\VocuherController;
 use App\Http\Controllers\Controller;
+use App\Http\Controllers\RefundController;
 use App\Models\Article;
 use Illuminate\Support\Facades\Route;
 
@@ -39,4 +40,7 @@ Route::resource('category-article', CategoryArticleController::class);
 Route::resource('roles', RoleController::class);
 Route::resource('users', UserController::class);
 Route::resource('voucher', VocuherController::class);
+Route::resource('refund', RefundController::class);
+
+
 
