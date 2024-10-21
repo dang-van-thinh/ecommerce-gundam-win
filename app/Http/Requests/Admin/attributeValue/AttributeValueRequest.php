@@ -24,7 +24,7 @@ class AttributeValueRequest extends FormRequest
         $id = $this->route('attributeValues');
         return [
              'attribute_id' => 'required|exists:attributes,id',
-              'name' => 'required|string|max:100|regex:/^[\p{L}0-9\s]+$/u|unique:attribute_values,name'.$id,
+              'name' => 'required|string|max:100|regex:/^[\p{L}0-9\s:\/]+$/u|unique:attribute_values,name'.$id,
         ];
     }
 

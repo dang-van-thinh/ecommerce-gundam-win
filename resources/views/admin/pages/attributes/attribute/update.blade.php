@@ -8,7 +8,7 @@ Trang này để thử cho ae nhé :)))
         <div class="card-header"><strong>Sửa Thuộc tính</strong></div>
         <div class="card-body card-block">
             <div class="row form-group">
-                <div class="col-8">
+                <div class="col">
                     <form action="{{ route('attributes.update',$attribute->id) }}" method="POST">
                         @csrf
                         @method('PUT')
