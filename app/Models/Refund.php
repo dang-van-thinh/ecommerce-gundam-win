@@ -11,9 +11,10 @@ class Refund extends Model
 
     protected $table = "refunds";
 
-    protected $filltable = ['order_id', 'reason', 'descripton','image','status'];
+    protected $fillable = ['order_id', 'reason', 'description', 'image', 'status'];
 
-    public function order(){
-        return  $this->hasOne(Order::class);
+    public function order()
+    {
+        return $this->belongsTo(Order::class, 'order_id');
     }
 }
