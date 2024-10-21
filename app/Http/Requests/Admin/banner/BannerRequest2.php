@@ -1,23 +1,25 @@
 <?php
 
-namespace App\Http\Requests;
+namespace App\Http\Requests\Admin\banner;
 
 use Illuminate\Foundation\Http\FormRequest;
 
-class BannerRequest extends FormRequest
+class BannerRequest2 extends FormRequest
 {
-    // Determine if the user is authorized to make this request.
-    public function authorize()
+    /**
+     * Determine if the user is authorized to make this request.
+     */
+    public function authorize(): bool
     {
         return true;
     }
 
-    // Define validation rules
+
     public function rules()
     {
         return [
             'title' => 'required|string|max:255',
-            'image' => 'required|image|mimes:jpeg,png,jpg,gif|max:2048',
+            'image' => 'image|mimes:jpeg,png,jpg,gif|max:2048',
             'image_type' => 'required|in:header,content',
             'link' => 'nullable|url',
         ];
