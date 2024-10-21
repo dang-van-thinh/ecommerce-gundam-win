@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Http\Requests\categoryArticle;
+namespace App\Http\Requests\Admin\categoryArticle;
 
 use Illuminate\Foundation\Http\FormRequest;
 
@@ -21,8 +21,9 @@ class UpdateCategoriArticleRequest extends FormRequest
      */
     public function rules(): array
     {
+        $id = $this->route('category_article');
         return [
-            "name"=> "required|unique:category_articles|min:3|max:50",
+            "name"=> "required|min:3|max:50|unique:category_articles,name," .$id,
         ];
     }
     public function messages(): array
