@@ -13,9 +13,8 @@
                     <form action="{{ route('article.update', $article->id) }}" method="post" enctype="multipart/form-data"
                         class="form-horizontal">
                         @csrf
-                        @method('PUT') <!-- Thêm phương thức PUT cho cập nhật -->
+                        @method('PUT')
 
-                        <!-- Chọn danh mục -->
                         <div class="row form-group">
                             <div class="col col-md-2">
                                 <label for="category_article_id" class="form-control-label">Danh mục bài viết</label>
@@ -36,7 +35,6 @@
                             </div>
                         </div>
 
-                        <!-- Nhập tiêu đề -->
                         <div class="row form-group">
                             <div class="col col-md-2">
                                 <label for="title" class="form-control-label">Tiêu đề bài viết</label>
@@ -50,18 +48,16 @@
                             </div>
                         </div>
 
-                        <!-- Upload ảnh -->
                         <div class="row form-group">
                             <div class="col col-md-2">
                                 <label for="image" class="form-control-label">Ảnh đại diện bài viết</label>
                             </div>
                             <div class="col-12 col-md-8">
                                 <input type="file" id="image" name="image" class="form-control">
-                                <!-- Hiển thị ảnh hiện tại nếu có -->
                                 <br>
                                 @if ($article->image)
-                                    <img src="{{ asset('storage/' . $article->image) }}" alt="Ảnh đại diện" width="200px"
-                                        height="200px">
+                                    <img src="{{ asset('storage/' . $article->image) }}" alt="Ảnh đại diện" width="100px"
+                                        height="100px">
                                 @endif
                                 @error('image')
                                     <div class="text-danger">{{ $message }}</div>
@@ -69,7 +65,6 @@
                             </div>
                         </div>
 
-                        <!-- Nội dung bài viết với CKEditor 5 -->
                         <div class="row form-group">
                             <div class="col col-md-2">
                                 <label for="content" class="form-control-label">Nội dung bài viết</label>
@@ -93,13 +88,11 @@
         </div>
     </div>
 
-    <!-- Nhúng CKEditor 5 phiên bản mới nhất -->
-    <script src="https://cdn.ckeditor.com/ckeditor5/39.0.0/classic/ckeditor.js"></script>
+    <script src="//cdn.ckeditor.com/4.22.1/full/ckeditor.js"></script>
     <script>
-        ClassicEditor
-            .create(document.querySelector('#content'))
-            .catch(error => {
-                console.error(error);
-            });
+        CKEDITOR.replace('content', {
+            width: '100%',
+            height: '500px'
+        });
     </script>
 @endsection
