@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Admin;
 use App\Http\Controllers\Controller;
 use App\Models\Voucher;
 use App\Http\Requests\Admin\voucher\CreateVoucherRequest;
+use App\Http\Requests\Admin\voucher\UpdateVoucherRequest;
 use Flasher\Prime\Notification\NotificationInterface;
 use Carbon\Carbon;
 
@@ -35,6 +36,9 @@ class VocuherController extends Controller
             'max_order_value' => $request->max_order_value,
             'status' => $request->status,
         ]);
+        if ($request->discount_type == 'PERCENTAGE' && $request->discount_value > 100) {
+            return back()->withErrors(['discount_value' => 'Giá trị giảm theo phần trăm không được lớn hơn 100.'])->withInput();
+        }
 
         toastr("Thêm thành công dữ liệu voucher", NotificationInterface::SUCCESS, "Thành công !", [
             "closeButton" => true,
@@ -52,7 +56,7 @@ class VocuherController extends Controller
         return view('admin.pages.voucher.edit', compact('voucher'));
     }
 
-    public function update(CreateVoucherRequest $request, string $id)
+    public function update(UpdateVoucherRequest $request, string $id)
     {
         $voucher = Voucher::findOrFail($id);
 
@@ -68,6 +72,10 @@ class VocuherController extends Controller
             'max_order_value' => $request->max_order_value,
             'status' => $request->status,
         ];
+        if ($request->discount_type == 'PERCENTAGE' && $request->discount_value > 100) {
+            return back()->withErrors(['discount_value' => 'Giá trị giảm theo phần trăm không được lớn hơn 100.'])->withInput();
+        }
+
         $updateSuccess = $voucher->update($dataUpdate);
 
         if ($updateSuccess) {
