@@ -9,11 +9,11 @@ Trang này để thử cho ae nhé :)))
             <div class="card-header"><strong>Thêm thuộc tính</strong></div>
             <div class="card-body card-block">
                 <div class="row form-group">
-                    <div class="col-8">
+                    <div class="col">
                         <form action="{{ route('attributes.store') }}" method="POST">
                             @csrf
                             <div class="form-group">
-                                <input type="text" name="name" class="form-control" placeholder="name...">
+                                <input type="text" name="name" class="form-control" placeholder="Tên thuộc tính">
                                 @error('name')
                                 <div class="text-danger">{{ $message }}</div>
                                 @enderror
