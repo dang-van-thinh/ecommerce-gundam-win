@@ -19,12 +19,12 @@
                         aria-expanded="false"><i class="menu-icon fa fa-book"></i>QL Bài viết</a>
                     <ul class="sub-menu children dropdown-menu">
                         {{-- <li><i class="fa fa-list"></i><a href="{{route('article.create')}}">Thêm mới bài viết</a></li> --}}
-                        <li><i class="fa fa-list"></i><a href="{{route('article.index')}}">Danh sách bài viết</a></li>
+                        <li><i class="fa fa-list"></i><a href="{{ route('article.index') }}">Danh sách bài viết</a></li>
                     </ul>
                 </li>
 
                 <li class="menu-item-has-children ">
-                    <a href="{{ route('banner.index') }}" ><i class="menu-icon fa fa-book"></i>Quản lý Banner</a>
+                    <a href="{{ route('banner.index') }}"><i class="menu-icon fa fa-book"></i>Quản lý Banner</a>
                 </li>
                 <li class="menu-item-has-children ">
                     <a href="{{ route('address.index') }}" ><i class="menu-icon fa fa-book"></i>Vị trí</a>
@@ -35,7 +35,8 @@
                     </a>
                     <ul class="sub-menu children dropdown-menu">
                         <li><i class="fa fa-list"></i><a href="{{ route('attributes.index') }}">Thuộc tính</a></li>
-                        <li><i class="fa fa-list"></i><a href="{{ route('attributeValues.index') }}">Giá trị thuộc tính</a></li>
+                        <li><i class="fa fa-list"></i><a href="{{ route('attributeValues.index') }}">Giá trị thuộc
+                                tính</a></li>
                     </ul>
                 </li>
 
@@ -70,6 +71,14 @@
                         aria-expanded="false"><i class="menu-icon fa fa-book"></i>QL Phiếu Giảm Giá</a>
                     <ul class="sub-menu children dropdown-menu">
                         <li><i class="fa fa-list"></i><a href="{{ route('voucher.index') }}">Danh sách giảm giá</a></li>
+                    </ul>
+                </li>
+
+                <li class="menu-item-has-children dropdown">
+                    <a href="#" class="dropdown-toggle" data-toggle="dropdown" aria-haspopup="true"
+                        aria-expanded="false"><i class="menu-icon fa fa-book"></i>QL hoàn hàng</a>
+                    <ul class="sub-menu children dropdown-menu">
+                        <li><i class="fa fa-list"></i><a href="{{ route('refund.index') }}">Danh sách hoàn hàng</a></li>
                     </ul>
                 </li>
 
