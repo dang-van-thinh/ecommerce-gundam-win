@@ -15,11 +15,10 @@ class ArticleController extends Controller
 {
     public function index()
     {
-
-        $article = Article::query()
+        $article = Article::with('categoryArticle')
             ->orderBy('id', 'desc')
-            ->paginate(4);
-        return view("admin/pages/article.index", ['listArticle' => $article]);
+            ->paginate(20);
+        return view("admin.pages.article.index", ['listArticle' => $article]);
     }
 
     public function create()

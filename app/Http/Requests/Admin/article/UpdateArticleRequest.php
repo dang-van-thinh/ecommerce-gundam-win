@@ -25,7 +25,6 @@ class UpdateArticleRequest extends FormRequest
             'title' => 'required|string|max:255',
             'content' => 'required|string',
             'category_article_id' => 'required',
-            // Ảnh không bắt buộc nhưng nếu có thì phải đúng định dạng và kích thước
             'image' => 'nullable|image|mimes:jpeg,png,jpg,gif,svg|max:2048',
         ];
     }
