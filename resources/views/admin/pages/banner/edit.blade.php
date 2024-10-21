@@ -25,7 +25,6 @@
                 </div>
             </div>
 
-
             <div class="row">
                 <div class="col-md-6">
                     <label for="image_type" class="form-label">Chọn vị trí hình ảnh:</label>
@@ -56,7 +55,6 @@
                     <span class="text-danger">{{ $message }}</span>
                     @enderror
                 </div>
-
             </div>
             <div class="row">
                 <div class="col-md-6">
