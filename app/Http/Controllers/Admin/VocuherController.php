@@ -12,7 +12,7 @@ class VocuherController extends Controller
 {
     public function index()
     {
-        $getAllVoucher = Voucher::latest('id')->paginate(1);
+        $getAllVoucher = Voucher::latest('id')->paginate(10);
         return view('admin.pages.voucher.index', compact('getAllVoucher'));
     }
 
@@ -60,8 +60,8 @@ class VocuherController extends Controller
             'name' => $request->name,
             'description' => $request->description,
             'limit' => $request->limit,
-            'start_date' => Carbon::parse($request->start_date)->format('Y-m-d'),
-            'end_date' => Carbon::parse($request->end_date)->format('Y-m-d'),
+            'start_date' => $request->start_date,
+            'end_date' => $request->end_date,
             'discount_type' => $request->discount_type,
             'discount_value' => $request->discount_value,
             'min_order_value' => $request->min_order_value,
