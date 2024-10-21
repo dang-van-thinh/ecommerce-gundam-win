@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Http\Requests\attributes;
+namespace App\Http\Requests\Admin\attributes;
 
 use Illuminate\Foundation\Http\FormRequest;
 
@@ -27,9 +27,9 @@ class AttributeRequest extends FormRequest
     }
     public function messages()
     {
-        return[
+        return [
             'name.required' => 'Trường tên là bắt buộc.',
-            'name.regex'=>'không chứa ký tự.'
+            'name.regex' => 'không chứa ký tự.'
         ];
     }
 }
