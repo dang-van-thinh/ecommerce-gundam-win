@@ -5,13 +5,13 @@ namespace App\Http\Controllers\Admin;
 use App\Models\Attribute;
 use App\Models\AttributeValue;
 use App\Http\Controllers\Controller;
-use App\Http\Requests\attrbuteValue\UpdateAttributvalueRequest;
-use App\Http\Requests\attributeValue\AttributeValueRequest;
+use App\Http\Requests\Admin\attributeValue\UpdateAttributvalueRequest;
+use App\Http\Requests\Admin\attributeValue\AttributeValueRequest;
 use Flasher\Prime\Notification\NotificationInterface;
 
 class AttributeValueController extends Controller
 {
-   
+
     public function index()
     {
         $attributeModel =  Attribute::query()
