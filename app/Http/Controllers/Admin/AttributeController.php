@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use App\Http\Requests\Admin\attributes\AttributeRequest;
 use App\Http\Requests\Admin\attributes\UpdateAttributeRequest;
 use Flasher\Prime\Notification\NotificationInterface;
+use Illuminate\Database\QueryException;
 
 class AttributeController extends Controller
 {
@@ -54,13 +55,22 @@ class AttributeController extends Controller
 
     public function destroy(string $id)
     {
-        $attribute = Attribute::findOrFail($id);
-        $attribute->delete();
-        toastr("Chúc mừng bạn cập nhật mới thành công ", NotificationInterface::SUCCESS, "Cập nhật thành công ", [
-            "closeButton" => true,
-            "progressBar" => true,
-            "timeOut" => "3000",
-        ]);
-        return redirect()->route('attributes.index');
-    }
+        try {
+            $attribute = Attribute::findOrFail($id);
+            $attribute->delete();
+            toastr("Thuộc tính đã được xóa thành công!", NotificationInterface::SUCCESS, "Thành công", [
+                "closeButton" => true,
+                "progressBar" => true,
+                "timeOut" => "3000",
+            ]);
+            return back();
+        } catch (QueryException $exception) {
+            toastr("Không thể xóa thuộc tính này do đã được sử dụng!", NotificationInterface::ERROR, "Thất bại", [
+                "closeButton" => true,
+                "progressBar" => true,
+                "timeOut" => "3000",
+            ]);
+            return back();
+        }
+    } 
 }
