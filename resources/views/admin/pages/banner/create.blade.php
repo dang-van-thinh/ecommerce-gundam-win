@@ -22,7 +22,7 @@
             <div class="row">
                 <div class="col-md-6">
                     <label for="image" class="form-label">Chọn ảnh:</label>
-                    <input type="file" name="image" id="image" class="form-control" accept="image/*">
+                    <input type="file" name="image" id="image" class="form-control" accept="image/*" >
                     @error('image')
                     <div class="text-danger">{{ $message }}</div>
                     @enderror
