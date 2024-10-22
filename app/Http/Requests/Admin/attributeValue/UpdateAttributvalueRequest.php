@@ -23,7 +23,7 @@ class UpdateAttributvalueRequest extends FormRequest
     {
         return [
             'attribute_id' => 'required|exists:attributes,id',
-            'name' => 'required|string|max:100|regex:/^[\p{L}0-9\s]+$/u'
+            'name' => 'required|string|max:100|regex:/^[\p{L}0-9\s:\/]+$/u'
         ];
     }
     public function messages()
