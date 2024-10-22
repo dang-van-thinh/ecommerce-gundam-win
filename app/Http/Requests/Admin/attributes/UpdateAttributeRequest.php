@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Http\Requests\attrbutes;
+namespace App\Http\Requests\Admin\attributes;
 
 use Illuminate\Foundation\Http\FormRequest;
 
@@ -21,15 +21,17 @@ class UpdateAttributeRequest extends FormRequest
      */
     public function rules(): array
     {
+        $id = $this->route('attributes');
         return [
-             'name' => 'required|string|max:100|regex:/^[\p{L}0-9\s]+$/u'
+             'name' => 'required|string|max:100|regex:/^[\p{L}0-9\s]+$/u|unique:attributes,name'.$id,
         ];
     }
     public function messages()
     {
         return[
             'name.required' => 'Trường tên là bắt buộc.',
-            'name.regex'=>'không chứa ký tự.'
+            'name.regex'=>'không chứa ký tự.',
+            'name.unique' => 'Tên đã được tồn tại'
         ];
     }
 }
