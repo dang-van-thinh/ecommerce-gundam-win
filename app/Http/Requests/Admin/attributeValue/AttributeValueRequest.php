@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Http\Requests\attributeValue;
+namespace App\Http\Requests\Admin\attributeValue;
 
 use Illuminate\Foundation\Http\FormRequest;
 
@@ -21,9 +21,10 @@ class AttributeValueRequest extends FormRequest
      */
     public function rules(): array
     {
+        $id = $this->route('attributeValues');
         return [
              'attribute_id' => 'required|exists:attributes,id',
-              'name' => 'required|string|max:100|regex:/^[\p{L}0-9\s]+$/u'
+              'name' => 'required|string|max:100|regex:/^[\p{L}0-9\s]+$/u|unique:attribute_values,name'.$id,
         ];
     }
 
@@ -32,7 +33,8 @@ class AttributeValueRequest extends FormRequest
         return[
             'attribute_id' => 'Trường thuộc tính không được để',
             'name.required' => 'Trường tên là bắt buộc.',
-            'name.regex' => 'không chứa kí tự'
+            'name.regex' => 'không chứa kí tự',
+            'name.unique' => 'Tên đã tồn tại'
         ];
     }
 }

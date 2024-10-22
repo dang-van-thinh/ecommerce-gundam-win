@@ -15,6 +15,7 @@ Trang danh mục sản phẩm
                     @method('PUT')
                     @csrf
                     <div class="form-group">
+                    <label for="full_name" class="form-label">Tên danh mục</label>
                         <div class="input-group">
                             <input type="text" id="name" name="name" placeholder="{{ $category->name }}"
                                 class="form-control" value="{{ old('name', $category->name) }}">

@@ -15,6 +15,7 @@ Trang danh mục sản phẩm
                     @method('PUT')
                     @csrf
                     <div class="form-group">
+                    <label for="full_name" class="form-label">Tên danh mục</label>
                         <div class="input-group">
                             <input type="text" id="name" name="name" placeholder="{{ $category->name }}"
                                 class="form-control" value="{{ old('name', $category->name) }}">
@@ -26,6 +27,7 @@ Trang danh mục sản phẩm
                     </div>
 
                     <div class="form-group">
+                    <label for="full_name" class="form-label">Mô tả</label>
                         <div class="input-group">
                             <input type="text" id="description" name="description"
                                 placeholder="{{ $category->description }}" class="form-control"
@@ -38,6 +40,7 @@ Trang danh mục sản phẩm
                     </div>
 
                     <div class="form-group">
+                    <label for="full_name" class="form-label">Hình ảnh</label>
                         <div class="input-group">
                             <input type="file" id="image" name="image" class="form-control">
                         </div>

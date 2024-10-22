@@ -25,7 +25,6 @@
                 </div>
             </div>
 
-
             <div class="row">
                 <div class="col-md-6">
                     <label for="image_type" class="form-label">Chọn vị trí hình ảnh:</label>
@@ -54,7 +53,6 @@
                     <input type="file" id="image_file" name="image" class="form-control">
                     
                 </div>
-
             </div>
             <div class="row">
                 <div class="col-md-6">

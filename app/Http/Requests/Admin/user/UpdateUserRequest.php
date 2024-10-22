@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Http\Requests\user;
+namespace App\Http\Requests\Admin\user;
 
 use Illuminate\Foundation\Http\FormRequest;
 
@@ -30,7 +30,7 @@ class UpdateUserRequest extends FormRequest
             'image'     => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048',
             'phone'     => 'required|digits_between:10,15|unique:users,phone,' . $id,
             'status'    => 'required|in:ACTIVE,IN_ACTIVE',
-            
+
             'roles'     => 'required|array',
             'roles.*'   => 'exists:roles,id',
         ];
@@ -55,6 +55,8 @@ class UpdateUserRequest extends FormRequest
 
             'phone.required'     => 'Số điện thoại là bắt buộc.',
             'phone.digits_between' => 'Số điện thoại phải có từ 10 đến 15 chữ số.',
+            'phone.unique'       => 'Số điện thoại tồn tại trong hệ thống.',
+
 
             'status.required'    => 'Trạng thái là bắt buộc.',
             'status.in'          => 'Trạng thái phải là Hoạt động hoặc Ngưng hoạt động.',
