@@ -29,7 +29,7 @@ class BannerRequest extends FormRequest
         return [
             'title.required' => 'Không được để trống',
             'image.required' => 'Không được để trống hình ảnh',
-            'link.required' => 'Không được để trống',
+            // 'link.required' => 'Không được để trống',
         ];
     }
 }
