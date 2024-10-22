@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Http\Requests\attrbuteValue;
+namespace App\Http\Requests\Admin\attributeValue;
 
 use Illuminate\Foundation\Http\FormRequest;
 
@@ -23,12 +23,12 @@ class UpdateAttributvalueRequest extends FormRequest
     {
         return [
             'attribute_id' => 'required|exists:attributes,id',
-             'name' => 'required|string|max:100|regex:/^[\p{L}0-9\s]+$/u'
+            'name' => 'required|string|max:100|regex:/^[\p{L}0-9\s]+$/u'
         ];
     }
     public function messages()
     {
-        return[
+        return [
             'attribute_id' => 'Trường thuộc tính không được để',
             'name.required' => 'Trường tên là bắt buộc.',
             'name.regex' => 'không chứa kí tự'

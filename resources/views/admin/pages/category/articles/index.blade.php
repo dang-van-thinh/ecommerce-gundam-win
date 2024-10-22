@@ -13,6 +13,7 @@
                         class="">
                         @csrf
                         <div class="form-group">
+                        <label for="full_name" class="form-label">Tên danh mục</label>
                             <div class="input-group">
                                 <input type="text" id="name" name="name" placeholder="Tên danh mục"
                                     class="form-control" value="{{ old('name') }}">
