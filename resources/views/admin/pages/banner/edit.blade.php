@@ -51,9 +51,7 @@
                 <div class="col-md-6">
                     <label for="image" class="form-label">Chọn ảnh:</label>
                     <input type="file" id="image_file" name="image" class="form-control">
-                    @error('image_file')
-                    <span class="text-danger">{{ $message }}</span>
-                    @enderror
+                    
                 </div>
             </div>
             <div class="row">
