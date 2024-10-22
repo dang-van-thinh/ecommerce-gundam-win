@@ -58,20 +58,19 @@ class AttributeController extends Controller
         try {
             $attribute = Attribute::findOrFail($id);
             $attribute->delete();
-            toastr("Thuộc tính đã được xóa thành công!", NotificationInterface::SUCCESS, "Thành công ", [
+            toastr("Thuộc tính đã được xóa thành công!", NotificationInterface::SUCCESS, "Thành công", [
                 "closeButton" => true,
                 "progressBar" => true,
                 "timeOut" => "3000",
             ]);
-    
-        } catch (QueryException $id) {
-            toastr("Không thể xóa thuộc tính này do đã được sử dụng!", NotificationInterface::SUCCESS, "Lỗi ", [
+            return back();
+        } catch (QueryException $exception) {
+            toastr("Không thể xóa thuộc tính này do đã được sử dụng!", NotificationInterface::ERROR, "Thất bại", [
                 "closeButton" => true,
                 "progressBar" => true,
                 "timeOut" => "3000",
             ]);
+            return back();
         }
-        return redirect()->route('attributes.index');
-    }
-    
+    } 
 }
