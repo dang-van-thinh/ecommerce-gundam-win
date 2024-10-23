@@ -15,8 +15,8 @@ Phiếu giảm Giá
                 <div class="col-6">
                     <div class="form-group">
                         <label for="name" class="form-control-label">Tên loại voucher</label>
-                        <input type="text" name="name" value="{{ old('name', $voucher->name) }}"
-                            placeholder="Tên loại voucher.." class="form-control">
+                        <input type="text" name="name" value="{{ $voucher->name}}" placeholder="Tên loại voucher.."
+                            class="form-control">
                         @if ($errors->has('name'))
                         <div class="form-text badge text-danger">
                             {{ $errors->first('name') }}
@@ -25,7 +25,7 @@ Phiếu giảm Giá
                     </div>
                     <div class="form-group">
                         <label for="description" class="form-control-label">Mô tả về voucher</label>
-                        <input type="text" name="description" value="{{ old('description', $voucher->description) }}"
+                        <input type="text" name="description" value="{{ $voucher->description }}"
                             placeholder="Mô tả về voucher.." class="form-control">
                         @if ($errors->has('description'))
                         <div class="form-text badge text-danger">
@@ -35,8 +35,8 @@ Phiếu giảm Giá
                     </div>
                     <div class="form-group">
                         <label for="start_date" class="form-control-label">Ngày bắt đầu</label>
-                        <input type="datetime-local" name="start_date"
-                            value="{{ old('start_date', $voucher->start_date) }}" class="form-control">
+                        <input type="datetime-local" name="start_date" value="{{ $voucher->start_date }}"
+                            class="form-control">
                         @if ($errors->has('start_date'))
                         <div class="form-text badge text-danger">
                             {{ $errors->first('start_date') }}
@@ -45,7 +45,7 @@ Phiếu giảm Giá
                     </div>
                     <div class="form-group">
                         <label for="end_date" class="form-control-label">Ngày kết thúc</label>
-                        <input type="datetime-local" name="end_date" value="{{ old('end_date', $voucher->end_date) }}"
+                        <input type="datetime-local" name="end_date" value="{{ $voucher->end_date }}"
                             class="form-control">
                         @if ($errors->has('end_date'))
                         <div class="form-text badge text-danger">
@@ -55,8 +55,8 @@ Phiếu giảm Giá
                     </div>
                     <div class="form-group">
                         <label for="limit" class="form-control-label">Số lượng voucher</label>
-                        <input type="number" name="limit" value="{{ old('limit', $voucher->limit) }}"
-                            placeholder="Số lượng voucher.." class="form-control">
+                        <input type="number" name="limit" value="{{ $voucher->limit }}" placeholder="Số lượng voucher.."
+                            class="form-control">
                         @if ($errors->has('limit'))
                         <div class="form-text badge text-danger">
                             {{ $errors->first('limit') }}
@@ -83,9 +83,8 @@ Phiếu giảm Giá
                     </div>
                     <div class="form-group">
                         <label for="discount_value" class="form-control-label">Giá trị giảm</label>
-                        <input type="number" name="discount_value"
-                            value="{{ old('discount_value', $voucher->discount_value) }}" placeholder="Giá trị giảm.."
-                            class="form-control">
+                        <input type="number" name="discount_value" value="{{  $voucher->discount_value }}"
+                            placeholder="Giá trị giảm.." class="form-control">
                         @if ($errors->has('discount_value'))
                         <div class="form-text badge text-danger">
                             {{ $errors->first('discount_value') }}
@@ -94,8 +93,7 @@ Phiếu giảm Giá
                     </div>
                     <div class="form-group">
                         <label for="min_order_value" class="form-control-label">Giá trị đơn hàng tối thiểu</label>
-                        <input type="number" name="min_order_value"
-                            value="{{ old('min_order_value', $voucher->min_order_value) }}"
+                        <input type="number" name="min_order_value" value="{{ $voucher->min_order_value }}"
                             placeholder="Giá trị đơn hàng tối thiểu.." class="form-control">
                         @if ($errors->has('min_order_value'))
                         <div class="form-text badge text-danger">
@@ -105,8 +103,7 @@ Phiếu giảm Giá
                     </div>
                     <div class="form-group">
                         <label for="max_order_value" class="form-control-label">Giá trị đơn hàng tối đa</label>
-                        <input type="number" name="max_order_value"
-                            value="{{ old('max_order_value', $voucher->max_order_value) }}"
+                        <input type="number" name="max_order_value" value="{{ $voucher->max_order_value }}"
                             placeholder="Giá trị đơn hàng tối đa.." class="form-control">
                         @if ($errors->has('max_order_value'))
                         <div class="form-text badge text-danger">
