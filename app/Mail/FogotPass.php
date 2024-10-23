@@ -9,17 +9,19 @@ use Illuminate\Mail\Mailables\Content;
 use Illuminate\Mail\Mailables\Envelope;
 use Illuminate\Queue\SerializesModels;
 
-class VerifyAccount extends Mailable
+class FogotPass extends Mailable
 {
     use Queueable, SerializesModels;
-
     /**
      * Create a new message instance.
      */
-    public $account;
-    public function __construct($user)
+    public $user;
+    public $newPassword;
+
+    public function __construct($user, $newPassword)
     {
-        $this->account = $user;
+        $this->user = $user;
+        $this->newPassword = $newPassword;
     }
 
     /**
@@ -28,7 +30,7 @@ class VerifyAccount extends Mailable
     public function envelope(): Envelope
     {
         return new Envelope(
-            subject: 'Xác thực email đăng ký',
+            subject: 'Lấy lại mật khẩu',
         );
     }
 
@@ -38,7 +40,7 @@ class VerifyAccount extends Mailable
     public function content(): Content
     {
         return new Content(
-            view: 'client.pages.email.verifyaccount',
+            view: 'client.pages.email.fogotpass',
         );
     }
 

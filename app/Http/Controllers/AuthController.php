@@ -2,14 +2,19 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Requests\Auth\FogetPassRequest;
 use App\Http\Requests\Auth\LoginRequest;
 use App\Http\Requests\Auth\RegisterRequest;
+use App\Mail\FogotPass;
 use App\Mail\VerifyAccount;
 use App\Models\User;
 use Auth;
+use Cookie;
 use Flasher\Prime\Notification\NotificationInterface;
+use Hash;
 use Illuminate\Http\Request;
 use Mail;
+use Str;
 class AuthController extends Controller
 {
     public function loginView()
@@ -55,6 +60,11 @@ class AuthController extends Controller
         }
         // Thực hiện đăng nhập người dùng nếu thông tin đăng nhập đúng
         if (Auth::attempt($credentials)) {
+            if ($request->has('remember')) {
+                // Tạo cookie với email và mật khẩu (mật khẩu có thể không nên lưu trực tiếp vì lý do bảo mật)
+                Cookie::queue('email', $request->email, 604800); // 1 tuần
+                // Không nên lưu mật khẩu trong cookie vì lý do bảo mật
+            }
             // Thông báo đăng nhập thành công
             toastr("Xin chào bạn đến với GunDamWin", NotificationInterface::SUCCESS, "Đăng nhập thành công", [
                 "closeButton" => true,
@@ -140,4 +150,53 @@ class AuthController extends Controller
         // Trả về trang quên mật khẩu từ view 'client.pages.auth.foget-password'
         return view('client.pages.auth.foget-password');
     }
+    public function checkfogetPasswordView(FogetPassRequest $request)
+{
+    // Tìm người dùng dựa vào email đã nhập
+    $user = User::where('email', $request->email)->first();
+
+    // Kiểm tra nếu người dùng tồn tại
+    if ($user) {
+        // Kiểm tra thời gian yêu cầu đặt lại mật khẩu lần trước (15 phút)
+        $timeLimit = now()->subMinutes(15);
+        if ($user->remember_token && $user->remember_token < $timeLimit) {
+            toastr('Bạn đã yêu cầu lấy lại mật khẩu gần đây, vui lòng thử lại sau 15 phút.', NotificationInterface::WARNING, 'Yêu cầu quá nhiều', [
+                "closeButton" => true,
+                "progressBar" => true,
+                "timeOut" => "3000",
+            ]);
+            return back();
+        }
+
+        // Tạo mật khẩu mới ngẫu nhiên gồm 8 ký tự
+        $newPassword = Str::random(8);
+
+        // Cập nhật mật khẩu mới cho người dùng (mã hóa mật khẩu)
+        $user->update([
+            'password' => Hash::make($newPassword),
+            'remember_token' => now(),
+        ]);
+
+        // Gửi email chứa mật khẩu mới
+        Mail::to($user->email)->send(new FogotPass($user, $newPassword));
+
+        // Thông báo thành công
+        toastr('Vui lòng kiểm tra email để nhận mật khẩu mới', NotificationInterface::SUCCESS, 'Lấy lại mật khẩu thành công', [
+            "closeButton" => true,
+            "progressBar" => true,
+            "timeOut" => "3000",
+        ]);
+    } else {
+        // Nếu không tìm thấy tài khoản, thông báo lỗi
+        toastr('Email không tồn tại trong hệ thống', NotificationInterface::ERROR, 'Lấy lại mật khẩu thất bại', [
+            "closeButton" => true,
+            "progressBar" => true,
+            "timeOut" => "3000",
+        ]);
+        return back();
+    }
+
+    // Chuyển hướng lại trang đăng nhập
+    return redirect()->route('auth.login-view');
+}
 }
