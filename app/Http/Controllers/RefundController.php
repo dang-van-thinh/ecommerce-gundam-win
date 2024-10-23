@@ -13,7 +13,7 @@ class RefundController extends Controller
     {
         $refund = Refund::with('order')
             ->orderBy('id', 'desc')
-            ->paginate(20);
+            ->paginate(10);
         return view('admin.pages.refund.index', ['listRefund' => $refund]);
     }
 

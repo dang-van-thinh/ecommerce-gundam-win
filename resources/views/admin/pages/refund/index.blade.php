@@ -14,12 +14,12 @@
                         <thead>
                             <tr>
                                 <th scope="col">#</th>
-                                <th scope="col">Order ID</th>
-                                <th scope="col">Reason</th>
-                                <th scope="col">Description</th>
-                                <th scope="col">Image</th>
-                                <th scope="col">Status</th>
-                                <th scope="col">Action</th>
+                                <th scope="col">ID đơn hàng</th>
+                                <th scope="col">Lý do</th>
+                                <th scope="col">Mô tả</th>
+                                <th scope="col">Hình ảnh</th>
+                                <th scope="col">Trạng thái</th>
+                                <th scope="col">Hành động</th>
                             </tr>
                         </thead>
                         <tbody>
@@ -51,8 +51,11 @@
                         </tbody>
                     </table>
                 </div>
+                <div class="d-flex justify-content-center">
+                    {{ $listRefund->links() }}
+                </div>
             </div>
-            {{ $listRefund->links() }}
         </div>
     </div>
 @endsection
+
