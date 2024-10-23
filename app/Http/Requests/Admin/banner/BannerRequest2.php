@@ -21,7 +21,7 @@ class BannerRequest2 extends FormRequest
             'title' => 'required|string|max:255',
             'image' => 'image|mimes:jpeg,png,jpg,gif|max:2048',
             'image_type' => 'required|in:header,content',
-            'link' => 'nullable|url',
+            'link' => 'required|nullable|url',
         ];
     }
 
