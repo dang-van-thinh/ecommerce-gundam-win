@@ -12,7 +12,8 @@
             <div class="row">
                 <div class="col-md-6">
                     <label for="title" class="form-label">Tiêu đề ảnh:</label>
-                    <input type="text" name="title" class="form-control" placeholder="Title">
+                    <input type="text" name="title" class="form-control" 
+                    placeholder="Tiêu đề ảnh" value="{{ old('title') }}" >
                     @error('title')
                     <div class="text-danger">{{ $message }}</div>
                     @enderror
@@ -22,7 +23,10 @@
             <div class="row">
                 <div class="col-md-6">
                     <label for="image" class="form-label">Chọn ảnh:</label>
-                    <input type="file" name="image" id="image" class="form-control" accept="image/*" >
+                    <input type="file" name="image" id="image" class="form-control" accept="image/*">
+                    @if (old('image'))
+            <input type="hidden" name="old_image" value="{{ old('image') }}">
+                    @endif
                     @error('image')
                     <div class="text-danger">{{ $message }}</div>
                     @enderror
@@ -31,9 +35,9 @@
             <div class="row">
                 <div class="col-md-6">
                     <label for="image_type" class="form-label">Chọn vị trí hình ảnh:</label>
-                    <select name="image_type" class="form-select" required>
-                        <option value="header">Header</option>
-                        <option value="content">Content</option>
+                    <select name="image_type" class="form-select">
+                    <option value="header" {{ old('image_type') == 'header' ? 'selected' : '' }}>Header</option>
+                    <option value="content" {{ old('image_type') == 'content' ? 'selected' : '' }}>Content</option>
                     </select>
                     @error('image_type')
                     <div class="text-danger">{{ $message }}</div>
@@ -43,7 +47,7 @@
             <div class="row">
                 <div class="col-md-6">
                     <label for="link" class="form-label">Đường dẫn sản phẩm/ bài viết:</label>
-                    <input type="url" name="link" class="form-control" placeholder="Link">
+                    <input type="url" name="link" class="form-control" placeholder="Link" value="{{ old('link') }}">
                     @error('link')
                     <div class="text-danger">{{ $message }}</div>
                     @enderror
