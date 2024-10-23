@@ -9,7 +9,7 @@ use Illuminate\Support\Facades\Storage;
 use App\Http\Controllers\Controller;
 use App\Models\CategoryArticle;
 use App\Models\Article;
-
+use App\Models\ImageArticle;
 
 class ArticleController extends Controller
 {
@@ -17,20 +17,21 @@ class ArticleController extends Controller
     {
         $article = Article::with('categoryArticle')
             ->orderBy('id', 'desc')
-            ->paginate(20);
+            ->paginate(10);
         return view("admin.pages.article.index", ['listArticle' => $article]);
     }
 
     public function create()
     {
+        $listImageArticle = ImageArticle::orderBy('id', 'desc')->get();
         $categories = CategoryArticle::all();
-        // Trả về view với danh sách danh mục
-        return view('admin.pages.article.create', compact('categories'));
+
+        return view('admin.pages.article.create', compact('categories', 'listImageArticle'));
     }
 
     public function store(CreateArticleRequest $request)
     {
-        $path = $request->file('image') ? $request->file('image')->store('images/category', 'public') : null;
+        $path = $request->file('image') ? $request->file('image')->store('images/article', 'public') : null;
 
         $data = [
             'category_article_id' => $request->category_article_id,
