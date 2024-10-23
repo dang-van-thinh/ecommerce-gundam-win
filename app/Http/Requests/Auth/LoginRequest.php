@@ -1,10 +1,10 @@
 <?php
 
-namespace App\Http\Requests\Admin\attributeValue;
+namespace App\Http\Requests\Auth;
 
 use Illuminate\Foundation\Http\FormRequest;
 
-class UpdateAttributvalueRequest extends FormRequest
+class LoginRequest extends FormRequest
 {
     /**
      * Determine if the user is authorized to make this request.
@@ -22,16 +22,17 @@ class UpdateAttributvalueRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'attribute_id' => 'required|exists:attributes,id',
-            'name' => 'required|string|max:100|regex:/^[\p{L}0-9\s:\/]+$/u'
+            'email' => 'required|string|email|max:255',
+            'password' => 'required|string|min:8',
         ];
     }
-    public function messages()
+    public function messages(): array
     {
         return [
-            'attribute_id' => 'Trường thuộc tính không được để',
-            'name.required' => 'Trường tên là bắt buộc.',
-            'name.regex' => 'không chứa kí tự'
+            'email.required' => 'Email là bắt buộc.',
+            'email.email' => 'Email không hợp lệ.',
+            'password.required' => 'Mật khẩu là bắt buộc.',
+            'password.min' => 'Mật khẩu phải có ít nhất 8 ký tự.',
         ];
     }
 }
