@@ -9,7 +9,7 @@
             <div class="card-header"><strong>Thêm Thuộc tính</strong></div>
             <div class="card-body card-block">
                 <div class="row form-group">
-                    <div class="col-8">
+                    <div class="col">
                         <form action="{{ route('attributeValues.store') }}" method="POST">
                             @csrf
                             <div class="form-group">
@@ -26,7 +26,7 @@
                             </div>
                             <div class="form-group">
                                 <label for="name">Tên</label>
-                                <input type="text" name="name" class="form-control" value="{{ old('name') }}">
+                                <input type="text" name="name" class="form-control" placeholder="Tên giá thuộc tính">
                                 @error('name')
                                 <div class="text-danger">{{ $message }}</div>
                                 @enderror

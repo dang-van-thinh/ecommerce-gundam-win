@@ -21,8 +21,9 @@ class UpdateCategoriProductRequest extends FormRequest
      */
     public function rules(): array
     {
+        $id = $this->route('category_product');
         return [
-            "name"=> "required|unique:category_products|min:3|max:50",
+            "name"=> "required|min:3|max:50|unique:category_products,name," . $id,
             "description"=> "required",
             "image"=> "image|mimes:jpeg,png,jpg,gif"
         ];
