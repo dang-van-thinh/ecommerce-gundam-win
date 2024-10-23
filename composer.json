@@ -13,6 +13,7 @@
         "laravel/framework": "^10.10",
         "laravel/sanctum": "^3.3",
         "laravel/tinker": "^2.8",
+        "laravel/ui": "^4.5",
         "php-flasher/flasher-laravel": "^1.15",
         "php-flasher/flasher-sweetalert-laravel": "^1.15",
         "php-flasher/flasher-toastr-laravel": "^1.15"
