@@ -6,6 +6,7 @@ use App\Http\Controllers\Admin\AttributeController;
 use App\Http\Controllers\Admin\AttributeValueController;
 use App\Http\Controllers\Admin\CategoryArticleController;
 use App\Http\Controllers\Admin\CategoryProductController;
+use App\Http\Controllers\Admin\ImageArticleController;
 use App\Http\Controllers\Admin\RoleController;
 use App\Http\Controllers\Admin\UserController;
 use App\Http\Controllers\Admin\VocuherController;
@@ -56,6 +57,8 @@ Route::resource('roles', RoleController::class);
 Route::resource('users', UserController::class);
 Route::resource('voucher', VocuherController::class);
 Route::resource('refund', RefundController::class);
+Route::resource('imagearticle', ImageArticleController::class);
+Route::get('/images/paginate', [ImageArticleController::class, 'paginate'])->name('imagearticle.paginate');
 
 
 
