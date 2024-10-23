@@ -64,7 +64,7 @@ class BannerController extends Controller
     // Cập nhật banner
     public function update(BannerRequest2 $request, $id) 
     {
-        dd($request->all());
+       
         $validated = $request->validated();
 
         $banners = Banner::findOrFail($id);
