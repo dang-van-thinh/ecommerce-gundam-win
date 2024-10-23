@@ -20,49 +20,45 @@
                 <div class="col-xxl-4 col-lg-6 mx-auto">
                     <div class="log-in-box">
                         <div class="log-in-title">
-                            <h4>Welcome To katie</h4>
-                            <p>Register Your Account</p>
+                        <h4>Chào mừng đến với GunDam Win</h4>
+                        <p>Đăng nhập tài khoản</p>
                         </div>
                         <div class="login-box">
-                            <form class="row g-3">
+                            <form class="row g-3" action="{{route('auth.login-post')}}" method="POST">
+                                @csrf
                                 <div class="col-12">
-                                    <div class="form-floating"><input class="form-control" id="floatingInputValue"
-                                            type="email" placeholder="name@example.com" value="test@example.com"><label
-                                            for="floatingInputValue">Enter Your Email</label></div>
+                                    <div class="form-floating"><input class="form-control"name="email" value="{{old('email')}}" id="floatingInputValue"
+                                            type="email" placeholder="Nhập email của bạn"><label
+                                            for="floatingInputValue">Nhập email</label></div>
+                                            @error('email')
+                                    <div class="text-danger">{{ $message }}</div>
+                                @enderror
                                 </div>
                                 <div class="col-12">
-                                    <div class="form-floating"><input class="form-control" id="floatingInputValue1"
-                                            type="password" placeholder="Password" value="password"><label
-                                            for="floatingInputValue1">Enter Your Password</label></div>
+                                    <div class="form-floating"><input class="form-control" name="password" value="{{old('password')}}" id="floatingInputValue1"
+                                            type="password" placeholder="Mật khẩu"><label
+                                            for="floatingInputValue1">Nhập mật khẩu</label></div>
+                                            @error('password')
+                                    <div class="text-danger">{{ $message }}</div>
+                                @enderror
                                 </div>
                                 <div class="col-12">
                                     <div class="forgot-box">
                                         <div>
                                             <input class="custom-checkbox me-2" id="category1" type="checkbox"
                                                 name="text">
-                                            <label for="category1">Remember me</label>
+                                            <label for="category1">Nhớ mật khẩu</label>
                                         </div>
-                                        <a href="{{ route('auth.foget-password-view') }}">Forgot Password?</a>
+                                        <a href="{{ route('auth.foget-password-view') }}">Quên mật khẩu?</a>
                                     </div>
                                 </div>
                                 <div class="col-12"> <button class="btn login btn_black sm" type="submit"
-                                        data-bs-dismiss="modal" aria-label="Close">Log In</button></div>
+                                        data-bs-dismiss="modal" aria-label="Close">Đăng nhập</button></div>
                             </form>
-                        </div>
-                        <div class="other-log-in">
-                            <h6>OR</h6>
-                        </div>
-                        <div class="log-in-button">
-                            <ul>
-                                <li> <a href="https://www.google.com/" target="_blank"> <i class="fa-brands fa-google me-2">
-                                        </i>Google</a></li>
-                                <li> <a href="https://www.facebook.com/" target="_blank"><i
-                                            class="fa-brands fa-facebook-f me-2"></i>Facebook </a></li>
-                            </ul>
                         </div>
                         <div class="other-log-in"></div>
                         <div class="sign-up-box">
-                            <p>Don't have an account?</p><a href="sign-up.html">Sign Up</a>
+                            <p>Bạn không có tài khoản?</p><a href="{{ route('auth.register-view') }}">Đăng ký</a>
                         </div>
                     </div>
                 </div>

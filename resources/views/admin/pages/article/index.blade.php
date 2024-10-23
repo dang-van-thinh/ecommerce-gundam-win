@@ -4,22 +4,20 @@
 @endsection
 @section('content')
     <div>
-
         <div class="col-lg-12">
             <div class="card">
                 <div class="card-header">
                     <strong class="card-title">Danh sách bài viết</strong>
                 </div>
                 <div class="card-body">
-                    <table class="table table-bordered">
+                    <table style="table-layout: fixed; width: 100%;" class="table table-bordered">
                         <thead>
                             <tr>
-                                <th scope="col">#</th>
-                                <th scope="col">Category</th>
-                                <th scope="col">Tile</th>
-                                <th scope="col">Image</th>
-                                <th scope="col">Content</th>
-                                <th scope="col">Action</th>
+                                <th scope="col" width="15px">#</th>
+                                <th scope="col" width="50px">Danh mục</th>
+                                <th scope="col" width="200px">Tiêu đề</th>
+                                <th scope="col" width="80px">Hình ảnh đại diện</th>
+                                <th scope="col" width="40px">Hành động</th>
                             </tr>
                         </thead>
                         <tbody>
@@ -36,7 +34,6 @@
                                         <img src="{{ asset('storage/' . $list->image) }}" alt="" width="100px"
                                             height="100px">
                                     </td>
-                                    <td class="text-center">{{ strip_tags($list->content) }}</td>
                                     <td class="text-center">
                                         <a href="{{ route('article.edit', $list->id) }}" class="btn btn-warning">
                                             <i class="fa fa-pencil"></i></a>
@@ -54,6 +51,9 @@
                             @endforeach
                         </tbody>
                     </table>
+                </div>
+                <div class="d-flex justify-content-center">
+                    {{ $listArticle->links() }}
                 </div>
             </div>
         </div>
