@@ -74,6 +74,9 @@ Route::get('/order-success', [OrderController::class, 'index'])->name('order-suc
 // auth
 Route::prefix('auth')->name('auth.')->group(function () {
     Route::get('/login', [AuthController::class, 'loginView'])->name('login-view');
-    Route::get('/register', [AuthController::class, 'registerView'])->name(name: 'register-view');
-    Route::get('/foget-password', [AuthController::class, 'fogetPasswordView'])->name(name: 'foget-password-view');
+    Route::post('/postlogin', [AuthController::class, 'storeLogin'])->name('login-post');
+    Route::get('/register', [AuthController::class, 'registerView'])->name('register-view');
+    Route::post('/register', [AuthController::class, 'storeRegister'])->name('register-post');
+    Route::get('/foget-password', [AuthController::class, 'fogetPasswordView'])->name('foget-password-view');
+    Route::get('/verify-account/{email}', [AuthController::class, 'verify'])->name('verify-account');
 });
