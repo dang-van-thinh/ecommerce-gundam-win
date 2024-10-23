@@ -7,6 +7,7 @@ use App\Http\Controllers\Admin\AttributeValueController;
 use App\Http\Controllers\Admin\CategoryArticleController;
 use App\Http\Controllers\Admin\CategoryProductController;
 use App\Http\Controllers\Admin\ProductController as AdminProductController;
+use App\Http\Controllers\Admin\ImageArticleController;
 use App\Http\Controllers\Admin\RoleController;
 use App\Http\Controllers\Admin\UserController;
 use App\Http\Controllers\Admin\VocuherController;
@@ -58,6 +59,10 @@ Route::resource('users', UserController::class);
 Route::resource('voucher', VocuherController::class);
 Route::resource('refund', RefundController::class);
 Route::resource('products',AdminProductController::class);
+Route::resource('imagearticle', ImageArticleController::class);
+Route::get('/images/paginate', [ImageArticleController::class, 'paginate'])->name('imagearticle.paginate');
+
+
 
 // client
 Route::get('/', [HomeController::class, 'index'])->name('home');
@@ -74,6 +79,9 @@ Route::get('/order-success', [OrderController::class, 'index'])->name('order-suc
 // auth
 Route::prefix('auth')->name('auth.')->group(function () {
     Route::get('/login', [AuthController::class, 'loginView'])->name('login-view');
-    Route::get('/register', [AuthController::class, 'registerView'])->name(name: 'register-view');
-    Route::get('/foget-password', [AuthController::class, 'fogetPasswordView'])->name(name: 'foget-password-view');
+    Route::post('/postlogin', [AuthController::class, 'storeLogin'])->name('login-post');
+    Route::get('/register', [AuthController::class, 'registerView'])->name('register-view');
+    Route::post('/register', [AuthController::class, 'storeRegister'])->name('register-post');
+    Route::get('/foget-password', [AuthController::class, 'fogetPasswordView'])->name('foget-password-view');
+    Route::get('/verify-account/{email}', [AuthController::class, 'verify'])->name('verify-account');
 });
