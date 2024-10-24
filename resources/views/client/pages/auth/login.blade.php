@@ -35,7 +35,7 @@
                                 @enderror
                                 </div>
                                 <div class="col-12">
-                                    <div class="form-floating"><input class="form-control" name="password" value="{{old('password')}}" id="floatingInputValue1"
+                                    <div class="form-floating"><input class="form-control" name="password" value="{{old('password', Cookie::get('password')) }}" id="floatingInputValue1"
                                             type="password" placeholder="Mật khẩu"><label
                                             for="floatingInputValue1">Nhập mật khẩu</label></div>
                                             @error('password')
