@@ -27,7 +27,7 @@
                             <form class="row g-3" action="{{route('auth.login-post')}}" method="POST">
                                 @csrf
                                 <div class="col-12">
-                                    <div class="form-floating"><input class="form-control"name="email" value="{{old('email')}}" id="floatingInputValue"
+                                    <div class="form-floating"><input class="form-control"name="email" value="{{ old('email', Cookie::get('email')) }}" id="floatingInputValue"
                                             type="email" placeholder="Nhập email của bạn"><label
                                             for="floatingInputValue">Nhập email</label></div>
                                             @error('email')
@@ -35,7 +35,7 @@
                                 @enderror
                                 </div>
                                 <div class="col-12">
-                                    <div class="form-floating"><input class="form-control" name="password" value="{{old('password')}}" id="floatingInputValue1"
+                                    <div class="form-floating"><input class="form-control" name="password" value="{{old('password', Cookie::get('password')) }}" id="floatingInputValue1"
                                             type="password" placeholder="Mật khẩu"><label
                                             for="floatingInputValue1">Nhập mật khẩu</label></div>
                                             @error('password')
@@ -45,9 +45,8 @@
                                 <div class="col-12">
                                     <div class="forgot-box">
                                         <div>
-                                            <input class="custom-checkbox me-2" id="category1" type="checkbox"
-                                                name="text">
-                                            <label for="category1">Nhớ mật khẩu</label>
+                                        <input type="checkbox" class="custom-checkbox me-2" id="remember-me" name="remember" value="1">
+                                        <label for="remember-me">Nhớ mật khẩu</label>
                                         </div>
                                         <a href="{{ route('auth.foget-password-view') }}">Quên mật khẩu?</a>
                                     </div>

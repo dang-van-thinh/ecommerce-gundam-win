@@ -83,5 +83,6 @@ Route::prefix('auth')->name('auth.')->group(function () {
     Route::get('/register', [AuthController::class, 'registerView'])->name('register-view');
     Route::post('/register', [AuthController::class, 'storeRegister'])->name('register-post');
     Route::get('/foget-password', [AuthController::class, 'fogetPasswordView'])->name('foget-password-view');
+    Route::post('/foget-password', [AuthController::class,'checkfogetPasswordView']);
     Route::get('/verify-account/{email}', [AuthController::class, 'verify'])->name('verify-account');
 });
