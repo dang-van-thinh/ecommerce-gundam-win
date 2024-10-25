@@ -21,6 +21,7 @@ use App\Http\Controllers\Client\ContactController;
 use App\Http\Controllers\Client\HomeController;
 use App\Http\Controllers\Client\OrderController;
 use App\Http\Controllers\Client\ProductController;
+use App\Http\Controllers\Client\ProfileController;
 use App\Http\Controllers\Client\WishListController;
 use App\Http\Controllers\Controller;
 
@@ -58,7 +59,7 @@ Route::resource('roles', RoleController::class);
 Route::resource('users', UserController::class);
 Route::resource('voucher', VocuherController::class);
 Route::resource('refund', RefundController::class);
-Route::resource('products',AdminProductController::class);
+Route::resource('products', AdminProductController::class);
 Route::resource('imagearticle', ImageArticleController::class);
 Route::get('/images/paginate', [ImageArticleController::class, 'paginate'])->name('imagearticle.paginate');
 
@@ -75,6 +76,12 @@ Route::get('/cart', [CartController::class, 'index'])->name('cart');
 Route::get('/wish-list', [WishListController::class, 'index'])->name('wish-list');
 Route::get('/check-out', [CheckOutController::class, 'index'])->name('check-out');
 Route::get('/order-success', [OrderController::class, 'index'])->name('order-success');
+//profile
+Route::prefix('profile')->name('profile.')->group(function () {
+    Route::get('/', [ProfileController::class, 'infomation'])->name('infomation');
+    Route::get('/order-history', [ProfileController::class, 'orderHistory'])->name('order-history');
+    Route::get('/address', [ProfileController::class, 'address'])->name('address');
+});
 
 // auth
 Route::prefix('auth')->name('auth.')->group(function () {
