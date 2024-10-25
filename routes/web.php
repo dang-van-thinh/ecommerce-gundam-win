@@ -58,7 +58,7 @@ Route::resource('roles', RoleController::class);
 Route::resource('users', UserController::class);
 Route::resource('voucher', VocuherController::class);
 Route::resource('refund', RefundController::class);
-Route::resource('products',AdminProductController::class);
+Route::resource('products', AdminProductController::class);
 Route::resource('imagearticle', ImageArticleController::class);
 Route::get('/images/paginate', [ImageArticleController::class, 'paginate'])->name('imagearticle.paginate');
 
@@ -66,7 +66,7 @@ Route::get('/images/paginate', [ImageArticleController::class, 'paginate'])->nam
 
 // client
 Route::get('/', [HomeController::class, 'index'])->name('home');
-Route::get('/product', [ProductController::class, 'index'])->name('product');
+Route::get('/product/{id}', [ProductController::class, 'index'])->name('product');
 Route::get('/collection-product', [CollectionProductController::class, 'index'])->name('collection-product');
 Route::get('/collection-blog', [CollectionBlogController::class, 'index'])->name('collection-blog');
 Route::get('/blog', [BlogController::class, 'index'])->name('blog');
