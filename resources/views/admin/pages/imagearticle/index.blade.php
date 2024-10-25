@@ -10,9 +10,9 @@
                     <strong class="card-title">Danh sách hình ảnh bài viết</strong>
                 </div>
                 <div class="card-body">
-                    <div style="text-align: right;">
+                    {{-- <div style="text-align: right;">
                         <a href="{{ route('imagearticle.create') }}" class="btn btn-success">Thêm mới</a>
-                    </div>
+                    </div> --}}
                     <br>
                     <table style="table-layout: fixed; width: 100%;" class="table table-bordered">
                         <thead>
