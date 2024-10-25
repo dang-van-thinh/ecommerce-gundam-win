@@ -21,6 +21,15 @@
                             @enderror
                         </div>
 
+                        <div class="mb-3">
+                            <label for="code" class="form-label">Mã sản phẩm</label>
+                            <input type="text" name="code" id="code" class="form-control"
+                                value="{{ old('code') }}" required>
+                            @error('code')
+                                <p class="text-danger">{{ $message }}</p>
+                            @enderror
+                        </div>
+
                         <div class="mb-4">
                             <label for="description" class="form-label">Mô tả</label>
                             <textarea name="description" id="description" class="form-control" cols="30" rows="10">{{ old('description') }}</textarea>
@@ -77,7 +86,6 @@
                 <div class="col-12">
                     <h3>Thuộc tính sản phẩm:</h3>
                     <div id="attribute-selection">
-                        {{-- @dd($attributes->toArray()) --}}
                         @foreach ($attributes as $attribute)
                             <div class="form-group">
                                 <label>{{ $attribute->name }}:</label>
@@ -117,6 +125,10 @@
             });
 
             $('#generate-variants').on('click', function() {
+                if ($('.attribute-select option:selected').length === 0) {
+                    alert('Vui lòng chọn ít nhất một thuộc tính!');
+                    return;
+                }
                 generateVariants();
             });
         });
@@ -151,18 +163,29 @@
                 const variantDiv = document.createElement('div');
                 variantDiv.classList.add('variant');
                 variantDiv.innerHTML = `
-            <h4>Biến thể ${index + 1}</h4>
-            <p>Thuộc tính: ${variant.map(v => v.name).join(', ')}</p>
-            <div class="form-group">
-                <label>Giá:</label>
-                <input type="number" name="variants[${index}][price]" class="form-control" required min=0>
-            </div>
-            <div class="form-group">
-                <label>Số lượng:</label>
-                <input type="number" name="variants[${index}][quantity]" class="form-control" required min=0>
-            </div>
-            ${variant.map(v => `<input type="hidden" name="variants[${index}][attributes][]" value="${v.id}">`).join('')}
-        `;
+                        <div class="mb-4 border p-3">
+                            <h4>Biến thể ${index + 1}</h4>
+                            <p>Thuộc tính: ${variant.map(v => v.name).join(', ')}</p>
+                            <div class="form-group">
+                                <label>Giá:</label>
+                                <input type="number" name="variants[${index}][price]" class="form-control" required min=0>
+                            </div>
+                            <div class="form-group">
+                                <label>Số lượng:</label>
+                                <input type="number" name="variants[${index}][quantity]" class="form-control" required min=0>
+                            </div>
+                            ${variant.map(v => `<input type="hidden" name="variants[${index}][attributes][]" value="${v.id}">`).join('')}
+                            <div class="text-end">  <!-- Thêm div để căn lề phải -->
+                                <button type="button" class="btn btn-danger btn-sm remove-variant">Xóa biến thể</button>
+                            </div>
+                        </div>
+                    `;
+
+                // Thêm sự kiện xóa cho nút xóa
+                variantDiv.querySelector('.remove-variant').addEventListener('click', function() {
+                    variantDiv.remove();
+                });
+
                 variantsDiv.appendChild(variantDiv);
             });
         }
