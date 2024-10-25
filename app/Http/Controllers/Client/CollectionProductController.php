@@ -3,12 +3,15 @@
 namespace App\Http\Controllers\Client;
 
 use App\Http\Controllers\Controller;
-use Illuminate\Http\Request;
+use App\Models\Product;
 
 class CollectionProductController extends Controller
 {
     public function index()
     {
-        return view('client.pages.collection-product.index');
+        $products = Product::with(['productImages', 'categoryProduct', 'productVariants'])
+            ->latest('id')->get();
+        // dd($products);
+        return view('client.pages.collection-product.index', compact('products'));
     }
 }
