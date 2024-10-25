@@ -18,18 +18,21 @@
                 <table class="table table-bordered">
                     <thead>
                         <tr>
-                            <th scope="col">ID</th>
+                            <th scope="col">STT</th>
+                            <th scope="col">Mã sản phẩm</th>
                             <th scope="col">Ảnh</th>
                             <th scope="col">Tên</th>
+                            <th scope="col">Giá</th>
                             <th scope="col">Trạng thái</th>
                             <th scope="col">Danh mục</th>
                             <th scope="col">Thao tác</th>
                         </tr>
                     </thead>
                     <tbody>
-                        @foreach ($data as $product)
+                        @foreach ($data as $key => $product)
                             <tr class="">
-                                <td scope="row">{{ $product->id }}</td>
+                                <td scope="row">{{ $key + 1 }}</td>
+                                <td>{{ $product->code }}</td>
                                 <td>
                                     @if ($product->image)
                                         <img src="{{ '/storage/' . $product->image }}" alt="" width="50px">
@@ -37,13 +40,26 @@
                                 </td>
                                 <td>{{ $product->name }}</td>
                                 <td>
+                                    @php
+                                        $minPrice = $product->productVariants->min('price'); // Tính giá tối thiểu
+                                        $maxPrice = $product->productVariants->max('price'); // Tính giá tối đa
+                                    @endphp
+                                    @if ($product->productVariants->count() === 1)
+                                        {{ number_format($minPrice, 0, ',', '.') }} VND
+                                    @else
+                                        {{ number_format($minPrice, 0, ',', '.') }} -
+                                        {{ number_format($maxPrice, 0, ',', '.') }} VND
+                                    @endif
+                                </td>
+                                </td>
+                                <td>
                                     @if ($product->status == 'ACTIVE')
                                         <span class="badge bg-primary">Hoạt động</span>
                                     @else
                                         <span class="badge bg-secondary">Ngưng hoạt động!</span>
                                     @endif
                                 </td>
-                                
+
                                 <td>{{ $product->categoryProduct->name }}</td>
                                 <td>
                                     <div class="d-flex justify-content-center">
