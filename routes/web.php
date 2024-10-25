@@ -67,21 +67,30 @@ Route::get('/images/paginate', [ImageArticleController::class, 'paginate'])->nam
 
 // client
 Route::get('/', [HomeController::class, 'index'])->name('home');
-Route::get('/product', [ProductController::class, 'index'])->name('product');
+Route::get('/product/{id}', [ProductController::class, 'index'])->name('product');
 Route::get('/collection-product', [CollectionProductController::class, 'index'])->name('collection-product');
+
+<!--Phần này giữ hay bỏ thì nhìn route  nhé - chọn 1 trong 2-->
 Route::get('/collection-blog', [CollectionBlogController::class, 'index'])->name('collection-blog');
-Route::get('/blog', [BlogController::class, 'index'])->name('blog');
+Route::get('/blog/{id}', [BlogController::class, 'index'])->name('blog');
+<!--->
 Route::get('/contact', [ContactController::class, 'index'])->name('contact');
 Route::get('/cart', [CartController::class, 'index'])->name('cart');
 Route::get('/wish-list', [WishListController::class, 'index'])->name('wish-list');
 Route::get('/check-out', [CheckOutController::class, 'index'])->name('check-out');
 Route::get('/order-success', [OrderController::class, 'index'])->name('order-success');
+
 //profile
 Route::prefix('profile')->name('profile.')->group(function () {
     Route::get('/', [ProfileController::class, 'infomation'])->name('infomation');
     Route::get('/order-history', [ProfileController::class, 'orderHistory'])->name('order-history');
     Route::get('/address', [ProfileController::class, 'address'])->name('address');
 });
+
+<!--Phần này giữ hay bỏ thì nhìn route trên của t nhé - chọn 1 trong 2-->
+Route::get('/category-blog/{id}', [CollectionBlogController::class, 'articlesByCategory'])->name('category-articles');
+Route::get('/blog/category-blog/{id}', [BlogController::class, 'articlesByCategory'])->name('category-blog');
+
 
 // auth
 Route::prefix('auth')->name('auth.')->group(function () {
@@ -90,5 +99,6 @@ Route::prefix('auth')->name('auth.')->group(function () {
     Route::get('/register', [AuthController::class, 'registerView'])->name('register-view');
     Route::post('/register', [AuthController::class, 'storeRegister'])->name('register-post');
     Route::get('/foget-password', [AuthController::class, 'fogetPasswordView'])->name('foget-password-view');
+    Route::post('/foget-password', [AuthController::class,'checkfogetPasswordView']);
     Route::get('/verify-account/{email}', [AuthController::class, 'verify'])->name('verify-account');
 });
