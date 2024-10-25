@@ -22,7 +22,8 @@
                                             src="/template/client/assets/images/other-img/blog-details.jpg" alt="">
                                     </div>
                                 </div>
-                                <div class="blog-content"><span class="blog-date">May 9, 2018 Stylish </span><a
+                                <div class="blog-content">
+                                    <span class="blog-date">May 9, 2018 Stylish </span><a
                                         href="blog-details.html">
                                         <h4>How Black Trans Women Are Redefining Beauty Standards</h4>
                                     </a>
