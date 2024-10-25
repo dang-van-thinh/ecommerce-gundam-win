@@ -6,6 +6,7 @@ use App\Http\Controllers\Admin\AttributeController;
 use App\Http\Controllers\Admin\AttributeValueController;
 use App\Http\Controllers\Admin\CategoryArticleController;
 use App\Http\Controllers\Admin\CategoryProductController;
+use App\Http\Controllers\Admin\ProductController as AdminProductController;
 use App\Http\Controllers\Admin\ImageArticleController;
 use App\Http\Controllers\Admin\RoleController;
 use App\Http\Controllers\Admin\UserController;
@@ -57,12 +58,13 @@ Route::resource('roles', RoleController::class);
 Route::resource('users', UserController::class);
 Route::resource('voucher', VocuherController::class);
 Route::resource('refund', RefundController::class);
+Route::resource('products', AdminProductController::class);
 Route::resource('imagearticle', ImageArticleController::class);
 
 
 // client
 Route::get('/', [HomeController::class, 'index'])->name('home');
-Route::get('/product', [ProductController::class, 'index'])->name('product');
+Route::get('/product/{id}', [ProductController::class, 'index'])->name('product');
 Route::get('/collection-product', [CollectionProductController::class, 'index'])->name('collection-product');
 Route::get('/collection-blog', [CollectionBlogController::class, 'index'])->name('collection-blog');
 Route::get('/blog', [BlogController::class, 'index'])->name('blog');
@@ -79,5 +81,6 @@ Route::prefix('auth')->name('auth.')->group(function () {
     Route::get('/register', [AuthController::class, 'registerView'])->name('register-view');
     Route::post('/register', [AuthController::class, 'storeRegister'])->name('register-post');
     Route::get('/foget-password', [AuthController::class, 'fogetPasswordView'])->name('foget-password-view');
+    Route::post('/foget-password', [AuthController::class,'checkfogetPasswordView']);
     Route::get('/verify-account/{email}', [AuthController::class, 'verify'])->name('verify-account');
 });
