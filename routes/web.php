@@ -61,8 +61,6 @@ Route::resource('voucher', VocuherController::class);
 Route::resource('refund', RefundController::class);
 Route::resource('products', AdminProductController::class);
 Route::resource('imagearticle', ImageArticleController::class);
-Route::get('/images/paginate', [ImageArticleController::class, 'paginate'])->name('imagearticle.paginate');
-
 
 
 // client

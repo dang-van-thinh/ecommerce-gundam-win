@@ -2,18 +2,20 @@
 
 namespace App\Http\Controllers\Admin;
 
-use App\Http\Requests\Admin\ImageArticle\CreateImageArticleRequest; // Đảm bảo đúng namespace với chữ hoa
+use App\Http\Requests\Admin\ImageArticle\CreateImageArticleRequest;
 use Illuminate\Support\Facades\Storage;
 use App\Models\ImageArticle;
 use App\Http\Controllers\Controller;
 use Flasher\Prime\Notification\NotificationInterface;
+use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Request as FacadesRequest;
+use Illuminate\Support\Facades\Validator;
 
 class ImageArticleController extends Controller
 {
     public function index()
     {
         $imageArticle = ImageArticle::latest('id')->paginate(5);
-        // dd($imageArticle);
         return view('admin.pages.imagearticle.index', ['listImageArticle' => $imageArticle]);
     }
 
@@ -22,51 +24,99 @@ class ImageArticleController extends Controller
         return view('admin.pages.imagearticle.create');
     }
 
-    public function store(CreateImageArticleRequest $request)
+    public function store(Request $request)
     {
+        // Validate dữ liệu
+        // dd($request->all());
+        $validator = Validator::make($request->all(), [
+            'images' => 'required|array',
+            'images.*' => 'image|mimes:jpeg,png,jpg,gif,svg|max:2048',
+        ], [
+            //bạn nào xem thì thông cảo chỗ này giúp mk nhé nó check được 
+            // k phải là ảnh nhưng nó chưa hiện được thông báo ra mk ngồi mấy tiếng mà chưa đc
+            // 'images.array' => 'Phải là một mảng ảnh',
+            // 'images.required' => 'Vui lòng chọn một hình ảnh.',
+            // 'images.*.image' => 'Tệp tải lên phải là hình ảnh.',
+            // 'images.mimes' => 'Hình ảnh phải có định dạng jpeg, png, jpg hoặc gif.',
+            // 'images.max' => 'Kích thước hình ảnh không được vượt quá 2MB.',
+            'images.required' => 'Vui lòng chọn một hình ảnh',
+            // 'images.array' => 'Phải là một mảng ảnh',
+            'images.*.image' => 'Tệp tải lên phải là hình ảnh',
+            'images.*.mimes' => 'Định dạng ảnh phải là jpeg, png, jpg, gif, svg',
+            'images.*.max' => 'Kích thước ảnh phải nhỏ hơn 2MB',
+        ]);
+
+        if ($validator->fails()) {
+            $fail = $validator->errors();
+
+            // dd($fail->get('images'));
+            // Trả về JSON khi có lỗi xác thực
+            return response()->json([
+                'success' => false,
+                'errors' => $validator->errors()->get('images')
+            ], 422);
+        }
+
+        // Kiểm tra xem có hình ảnh nào được tải lên không
         if ($request->hasFile('images')) {
             $imagePaths = [];
-        
+            $errors = []; // Mảng để lưu trữ thông báo lỗi
+
+            // Lưu tất cả các hình ảnh vào thư mục và lấy đường dẫn
             foreach ($request->file('images') as $image) {
-                $path = $image->store('images/imagearticle', 'public');
-                $imagePaths[] = $path;
+                try {
+                    $path = $image->store('images/imagearticle', 'public');
+                    $imagePaths[] = $path;
+
+                    // Lưu vào cơ sở dữ liệu
+                    ImageArticle::create(['image_url' => $path]);
+                } catch (\Exception $e) {
+                    // Nếu có lỗi trong quá trình lưu ảnh, thêm thông báo lỗi vào mảng
+                    $errors[] = 'Không thể tải ảnh: ' . $e->getMessage();
+                }
             }
-        
-            foreach ($imagePaths as $path) {
-                ImageArticle::create(['image_url' => $path]);
-            }
-        
-            // Lấy danh sách hình ảnh đã cập nhật
+
+            // Lấy danh sách hình ảnh vừa được thêm
             $listImageArticle = ImageArticle::latest('id')->get();
-        
-            return response()->json([
-                'success' => true,
-                'images' => $listImageArticle,
-            ]);
+
+            // Nếu không có lỗi, trả về phản hồi thành công
+            if (empty($errors)) {
+                return response()->json([
+                    'success' => true,
+                    'images' => $listImageArticle,
+                ]);
+            } else {
+                // Nếu có lỗi, trả về phản hồi với thông báo lỗi
+                return response()->json([
+                    'success' => false,
+                    'errors' => $errors,
+                    'images' => $listImageArticle, // Vẫn trả về danh sách hình ảnh đã thêm được
+                ], 400);
+            }
         }
-        
-        return response()->json(['success' => false, 'message' => 'No images uploaded'], 400);
-    }
-    
-    
-    public function show()
-    {
-        $imageArticle = ImageArticle::latest('id')->paginate(5);
-        // dd($imageArticle);
-        return view('admin.pages.imagearticle.show', ['listImageArticle' => $imageArticle]);
+
+        // Trả về phản hồi JSON với thông báo lỗi nếu không có hình ảnh nào được tải lên
+        return response()->json(['success' => false, 'message' => 'Không có ảnh nào được tải lên'], 400);
     }
 
+    public function show($id)
+    {
+        $imageArticle = ImageArticle::findOrFail($id);
+        return view('admin.pages.imagearticle.show', compact('imageArticle'));
+    }
 
     public function destroy(string $id)
     {
-        $imageArticle = ImageArticle::find($id);
-        Storage::disk('public')->delete($imageArticle->image_url);
-        $imageArticle->delete();
+        $imageArticle = ImageArticle::findOrFail($id); // Dùng findOrFail để tự động xử lý lỗi nếu không tìm thấy
+        Storage::disk('public')->delete($imageArticle->image_url); // Xóa file trên disk
+        $imageArticle->delete(); // Xóa bản ghi trong database
+
         toastr("Chúc mừng bạn đã xóa thành công", NotificationInterface::SUCCESS, "Xóa thành công", [
             "closeButton" => true,
             "progressBar" => true,
             "timeOut" => "3000",
         ]);
+
         return redirect()->route("imagearticle.index");
     }
 }

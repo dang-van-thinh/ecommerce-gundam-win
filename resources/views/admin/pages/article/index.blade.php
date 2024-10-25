@@ -13,7 +13,7 @@
                     <table style="table-layout: fixed; width: 100%;" class="table table-bordered">
                         <thead>
                             <tr>
-                                <th scope="col" width="15px">#</th>
+                                <th scope="col" width="15px">STT</th>
                                 <th scope="col" width="50px">Danh mục</th>
                                 <th scope="col" width="200px">Tiêu đề</th>
                                 <th scope="col" width="80px">Hình ảnh đại diện</th>
