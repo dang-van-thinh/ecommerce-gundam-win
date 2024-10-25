@@ -6,6 +6,8 @@
             @yield('title')
         </title>
         @include('client.layouts.partials.css')
+        @stack('css')
+
     </head>
 
     <body class="skeleton_body">
@@ -34,7 +36,8 @@
                         href="collection-left-sidebar.html"> SHOP NOW</a></p>
             </div> --}}
             <!-- menu logo cac kieu-->
-            @include('client.layouts.partials.header.header-menu')
+            {{-- @include('client.layouts.partials.header.header-menu') --}}
+            <x-header-component />
         </header>
         <!-- content -->
         @yield('content')
@@ -544,6 +547,7 @@
         </div>
     </div>Bootstrap js -->
         @include('client.layouts.partials.script')
+        @stack('scripts')
     </body>
 
 </html>

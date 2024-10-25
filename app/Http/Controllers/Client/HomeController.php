@@ -10,4 +10,6 @@ class HomeController extends Controller
     {
         return view('client.pages.home.index');
     }
+    public function loadAllCollection() {
+    }
 }
