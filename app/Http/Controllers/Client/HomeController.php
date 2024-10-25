@@ -15,4 +15,6 @@ class HomeController extends Controller
             ->get(); // Trả về danh sách sản phẩm
         return view('client.pages.home.index', compact('products'));
     }
+    public function loadAllCollection() {
+    }
 }
