@@ -48,9 +48,10 @@
         </div>
         <div class="col-xxl-3 col-4 d-none d-lg-block">
             <div class="special-offer-slider">
-                <h4>Special Offer</h4>
+                <h4>Sản phẩm yêu thích nhất</h4>
                 <div class="swiper special-offer-slide">
                     <div class="swiper-wrapper trending-products">
+                        @foreach($products as $product)
                         <div class="swiper-slide product-box-3">
                             <div class="img-wrapper">
                                 <div class="label-block"><span class="lable-1">NEW</span><a
@@ -58,21 +59,34 @@
                                             class="iconsax" data-icon="heart" aria-hidden="true"
                                             data-bs-toggle="tooltip" data-bs-title="Add to Wishlist"></i></a>
                                 </div>
-                                <div class="product-image ratio_apos"><a class="pro-first" href="product.html">
-                                        <img class="bg-img" src="/template/client/assets/images/product/product-3/5.jpg"
-                                            alt="product" /></a><a class="pro-sec" href="product.html">
-                                        <img class="bg-img" src="/template/client/assets/images/product/product-3/6.jpg"
-                                            alt="product" /></a></div>
-                                <div class="cart-info-icon"> <a href="#" data-bs-toggle="modal"
-                                        data-bs-target="#addtocart" tabindex="0"><i class="iconsax"
-                                            data-icon="basket-2" aria-hidden="true" data-bs-toggle="tooltip"
-                                            data-bs-title="Add to card">
-                                        </i></a><a href="compare.html" tabindex="0"><i class="iconsax"
-                                            data-icon="arrow-up-down" aria-hidden="true" data-bs-toggle="tooltip"
-                                            data-bs-title="Compare"></i></a><a href="#" data-bs-toggle="modal"
-                                        data-bs-target="#quick-view" tabindex="0"><i class="iconsax" data-icon="eye"
-                                            aria-hidden="true" data-bs-toggle="tooltip"
-                                            data-bs-title="Quick View"></i></a>
+                                <div class="product-image ratio_apos">
+                                    <a class="pro-first" href="{{ route('product', $product->id) }}">
+                                        <img class="bg-img" src="{{ '/storage/' . $product->image}}" alt="product" />
+                                    </a>
+                                    @php
+                                    $firstImage = $product->productImages->first();
+                                    @endphp
+                                    <a class="pro-sec" href="{{ route('product', $product->id) }}">
+                                        <img class="bg-img" src="{{'/storage/' . $firstImage->image_url}}"
+                                            alt="product" />
+                                    </a>
+                                </div>
+                                <div class="cart-info-icon">
+                                    <a href="#" data-bs-toggle="modal" data-bs-target="#addtocart" tabindex="0">
+                                        <i class="iconsax" data-icon="basket-2" aria-hidden="true"
+                                            data-bs-toggle="tooltip" data-bs-title="Add to card">
+                                        </i>
+                                    </a>
+                                    {{-- <a href="compare.html" tabindex="0">
+                                        <i class="iconsax" data-icon="arrow-up-down" aria-hidden="true"
+                                            data-bs-toggle="tooltip" data-bs-title="Compare">
+                                        </i>
+                                    </a> --}}
+                                    <a href="#" data-bs-toggle="modal" data-bs-target="#quick-view" tabindex="0"><i
+                                            class="iconsax" data-icon="eye" aria-hidden="true" data-bs-toggle="tooltip"
+                                            data-bs-title="Quick View">
+                                        </i>
+                                    </a>
                                 </div>
                             </div>
                             <div class="product-detail">
@@ -83,13 +97,21 @@
                                     <li><i class="fa-solid fa-star-half-stroke"></i></li>
                                     <li><i class="fa-regular fa-star"></i></li>
                                     <li>4.3</li>
-                                </ul><a href="product.html">
-                                    <h6>Greciilooks Women's Stylish Top</h6>
+                                </ul><a href="{{ route('product', $product->id) }}">
+                                    <h6>{{ $product->name}}</h6>
                                 </a>
-                                <p>$100.00 <del>$140.00</del><span>-20%</span></p>
+                                <p>
+                                    @if ($product->productVariants->count() === 1)
+                                    {{ number_format($product->productVariants->first()->price, 0, ',', '.') }}₫
+                                    @else
+                                    {{ number_format($product->productVariants->min('price'), 0, ',', '.') }}₫ -
+                                    {{ number_format($product->productVariants->max('price'), 0, ',', '.') }}₫
+                                    @endif
+                                </p>
                             </div>
                         </div>
-                        <div class="swiper-slide product-box-3">
+                        @endforeach
+                        {{-- <div class="swiper-slide product-box-3">
                             <div class="img-wrapper">
                                 <div class="label-block"><span class="lable-1">NEW</span><a
                                         class="label-2 wishlist-icon" href="javascript:void(0)" tabindex="0"><i
@@ -97,21 +119,19 @@
                                             data-bs-toggle="tooltip" data-bs-title="Add to Wishlist"></i></a>
                                 </div>
                                 <div class="product-image ratio_apos"><a class="pro-first" href="product.html">
-                                        <img class="bg-img"
-                                            src="/template/client/assets/images/product/product-3/8.jpg"
+                                        <img class="bg-img" src="/template/client/assets/images/product/product-3/8.jpg"
                                             alt="product" /></a><a class="pro-sec" href="product.html">
                                         <img class="bg-img"
                                             src="/template/client/assets/images/product/product-3/12.jpg"
                                             alt="product" /></a></div>
                                 <div class="cart-info-icon"> <a href="#" data-bs-toggle="modal"
-                                        data-bs-target="#addtocart" tabindex="0"><i class="iconsax"
-                                            data-icon="basket-2" aria-hidden="true" data-bs-toggle="tooltip"
-                                            data-bs-title="Add to card">
+                                        data-bs-target="#addtocart" tabindex="0"><i class="iconsax" data-icon="basket-2"
+                                            aria-hidden="true" data-bs-toggle="tooltip" data-bs-title="Add to card">
                                         </i></a><a href="compare.html" tabindex="0"><i class="iconsax"
                                             data-icon="arrow-up-down" aria-hidden="true" data-bs-toggle="tooltip"
                                             data-bs-title="Compare"></i></a><a href="#" data-bs-toggle="modal"
-                                        data-bs-target="#quick-view" tabindex="0"><i class="iconsax"
-                                            data-icon="eye" aria-hidden="true" data-bs-toggle="tooltip"
+                                        data-bs-target="#quick-view" tabindex="0"><i class="iconsax" data-icon="eye"
+                                            aria-hidden="true" data-bs-toggle="tooltip"
                                             data-bs-title="Quick View"></i></a></div>
                                 <div class="countdown">
                                     <ul class="clockdiv2">
@@ -154,7 +174,7 @@
                                 </a>
                                 <p>$100.00 <del>$18.00 </del></p>
                             </div>
-                        </div>
+                        </div> --}}
                     </div>
                     <div class="swiper-button-prev"></div>
                     <div class="swiper-button-next"></div>
