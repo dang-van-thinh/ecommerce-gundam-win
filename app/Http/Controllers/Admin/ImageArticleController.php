@@ -52,7 +52,7 @@ class ImageArticleController extends Controller
     public function show()
     {
         $imageArticle = ImageArticle::latest('id')->paginate(5);
-        dd($imageArticle);
+        // dd($imageArticle);
         return view('admin.pages.imagearticle.show', ['listImageArticle' => $imageArticle]);
     }
 
