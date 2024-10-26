@@ -122,17 +122,30 @@
                                     </ul>
                                 </div>
                             @endif
-
-
-
                         </li>
                         <li class="onhover-div shopping-cart">
-                            <a class="p-0" href="{{ route('cart') }}">
-                                <div class="shoping-prize">
-                                    <i class="iconsax pe-2" data-icon="basket-2"></i>
-                                    1
+                            @if (Auth::id())
+                                <a class="p-0" href="{{ route('cart') }}">
+                                    <div class="shoping-prize">
+                                        <i class="iconsax pe-2" data-icon="basket-2"></i>
+                                        1
+                                    </div>
+                                </a>
+                            @else
+                                <!--Nếu người dùng chưa đăng nhập nhé-->
+                                <div class="p-0">
+                                    <div class="shoping-prize">
+                                        <i class="iconsax pe-2" data-icon="basket-2"></i> 1
+                                    </div>
                                 </div>
-                            </a>
+                                <div class="onhover-show-div user" style="width:200px">
+                                    <ul>
+                                        <li>
+                                            <p>Vui lòng đăng nhập !</p>
+                                        </li>
+                                    </ul>
+                                </div>
+                            @endif
                         </li>
                     </ul>
                 </div>
