@@ -27,36 +27,26 @@ class ImageArticleController extends Controller
     public function store(Request $request)
     {
         // Validate dữ liệu
-        // dd($request->all());
         $validator = Validator::make($request->all(), [
-            'images' => 'required|array',
-            'images.*' => 'image|mimes:jpeg,png,jpg,gif,svg|max:2048',
+            'images' => 'required', // Kiểm tra nếu có trường images
+            'images.*' => 'image|mimes:jpeg,png,jpg,gif,svg|max:2048', // Xác thực từng file ảnh
         ], [
-            //bạn nào xem thì thông cảo chỗ này giúp mk nhé nó check được 
-            // k phải là ảnh nhưng nó chưa hiện được thông báo ra mk ngồi mấy tiếng mà chưa đc
-            // 'images.array' => 'Phải là một mảng ảnh',
-            // 'images.required' => 'Vui lòng chọn một hình ảnh.',
-            // 'images.*.image' => 'Tệp tải lên phải là hình ảnh.',
-            // 'images.mimes' => 'Hình ảnh phải có định dạng jpeg, png, jpg hoặc gif.',
-            // 'images.max' => 'Kích thước hình ảnh không được vượt quá 2MB.',
             'images.required' => 'Vui lòng chọn một hình ảnh',
-            // 'images.array' => 'Phải là một mảng ảnh',
             'images.*.image' => 'Tệp tải lên phải là hình ảnh',
             'images.*.mimes' => 'Định dạng ảnh phải là jpeg, png, jpg, gif, svg',
             'images.*.max' => 'Kích thước ảnh phải nhỏ hơn 2MB',
-        ]);
-
+        ]);       
         if ($validator->fails()) {
-            $fail = $validator->errors();
-
-            // dd($fail->get('images'));
-            // Trả về JSON khi có lỗi xác thực
-            return response()->json([
-                'success' => false,
-                'errors' => $validator->errors()->get('images')
-            ], 422);
-        }
-
+            $errors = $validator->errors();
+        
+            // Kiểm tra nếu $errors có thông tin lỗi
+            if ($errors->isNotEmpty()) {
+                return response()->json([
+                    'success' => false,
+                    'errors' => $errors->all(), // Lấy tất cả lỗi cho cả `images` và `images.*`
+                ], 422);
+            }
+        }       
         // Kiểm tra xem có hình ảnh nào được tải lên không
         if ($request->hasFile('images')) {
             $imagePaths = [];
