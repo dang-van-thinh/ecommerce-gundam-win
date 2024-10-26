@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Http\Requests\Auth\FogetPassRequest;
 use App\Http\Requests\Auth\LoginRequest;
 use App\Http\Requests\Auth\RegisterRequest;
+use App\Http\Requests\Auth\ChangePassRequest;
 use App\Mail\FogotPass;
 use App\Mail\VerifyAccount;
 use App\Models\User;
@@ -63,7 +64,7 @@ class AuthController extends Controller
             if ($request->has('remember')) {
                 // Tạo cookie với email và mật khẩu
                 Cookie::queue('email', $request->email, 604800);
-                Cookie::queue('password', $request->password,604800);
+                Cookie::queue('password', $request->password, 604800);
             }
             // Thông báo đăng nhập thành công
             toastr("Xin chào bạn đến với GunDamWin", NotificationInterface::SUCCESS, "Đăng nhập thành công", [
@@ -166,15 +167,18 @@ class AuthController extends Controller
                 ]);
                 return back();
             }
+
             // Nếu vượt quá thời gian giới hạn, tiến hành cập nhật mật khẩu
             $newPassword = Str::random(8);
+
             // Cập nhật mật khẩu mới cho người dùng (mã hóa mật khẩu)
-            $user->update([
-                'password' => Hash::make($newPassword),
-                'updated_at' => now(),
-            ]);
+            $user->password = Hash::make($newPassword);
+            $user->updated_at = now(); // Cập nhật thời gian thực
+            $user->save(); // Lưu tất cả thay đổi
+
             // Gửi email chứa mật khẩu mới
             Mail::to($user->email)->send(new FogotPass($user, $newPassword));
+
             // Thông báo thành công
             toastr('Vui lòng kiểm tra email để nhận mật khẩu mới', NotificationInterface::SUCCESS, 'Lấy lại mật khẩu thành công', [
                 "closeButton" => true,
@@ -190,7 +194,87 @@ class AuthController extends Controller
             ]);
             return back();
         }
+
+        // Đăng xuất người dùng hiện tại
+        Auth::logout();
+
+        // Xóa cookie nếu đã lưu thông tin đăng nhập
+        Cookie::queue(Cookie::forget('email'));
+        Cookie::queue(Cookie::forget('password'));
+
         // Chuyển hướng lại trang đăng nhập
         return redirect()->route('auth.login-view');
+    }
+
+    public function logout(Request $request)
+    {
+        // Đăng xuất người dùng hiện tại
+        Auth::logout();
+
+        // Xóa cookie nếu đã lưu thông tin đăng nhập
+        Cookie::queue(Cookie::forget('email'));
+        Cookie::queue(Cookie::forget('password'));
+
+        // Thông báo đăng xuất thành công
+        toastr("Bạn đã đăng xuất thành công", NotificationInterface::SUCCESS, "Đăng xuất", [
+            "closeButton" => true,
+            "progressBar" => true,
+            "timeOut" => "3000",
+        ]);
+
+        // Chuyển hướng về trang đăng nhập hoặc trang chủ
+        return redirect()->route('auth.login-view');
+    }
+    public function changePassword(ChangePassRequest $request)
+    {
+        $user = Auth::user();
+        // Kiểm tra nếu mật khẩu mới trùng với mật khẩu hiện tại
+        if (Hash::check($request->new_password, $user->password)) {
+            return back()->withErrors(['new_password' => 'Mật khẩu mới không được trùng với mật khẩu hiện tại.']);
+        }
+
+        // Kiểm tra mật khẩu hiện tại
+        if (!Hash::check($request->current_password, $user->password)) {
+            // Khởi tạo số lần cố gắng đổi mật khẩu
+            $attempts = session('password_change_attempts', 0) + 1;
+            session(['password_change_attempts' => $attempts]);
+
+            // Kiểm tra nếu đã vượt quá 5 lần cố gắng
+            if ($attempts >= 5) {
+                // Đặt trạng thái người dùng là IN_ACTIVE
+                $user->update(['status' => 'IN_ACTIVE']); // Cập nhật trạng thái người dùng
+
+                // Đăng xuất người dùng hiện tại
+                Auth::logout();
+                Cookie::queue(Cookie::forget('email'));
+                Cookie::queue(Cookie::forget('password'));
+
+                // Hiển thị thông báo khóa tài khoản
+                sweetalert("Bạn đã nhập mật khẩu không chính xác 5 lần. Tài khoản đã bị khóa.", NotificationInterface::ERROR, [
+                    'position' => "center",
+                    'timeOut' => '',
+                    'closeButton' => false,
+                ]);
+                return redirect()->route('auth.login-view');
+            }
+
+            return back()->withErrors(['current_password' => 'Mật khẩu hiện tại không chính xác. Bạn còn ' . (5 - $attempts) . ' lần thử']);
+        }
+
+        // Đặt lại số lần cố gắng
+        session(['password_change_attempts' => 0]);
+
+        // Cập nhật mật khẩu mới
+        $user->update(['password' => Hash::make($request->new_password)]); // Sử dụng mật khẩu mới từ request
+
+        // Hiển thị thông báo thành công
+        sweetalert("Thay đổi mật khẩu thành công", NotificationInterface::INFO, [
+            'position' => "center",
+            'timeOut' => '',
+            'closeButton' => false,
+            'icon' => "success",
+        ]);
+
+        return back();
     }
 }

@@ -99,4 +99,6 @@ Route::prefix('auth')->name('auth.')->group(function () {
     Route::get('/foget-password', [AuthController::class, 'fogetPasswordView'])->name('foget-password-view');
     Route::post('/foget-password', [AuthController::class,'checkfogetPasswordView']);
     Route::get('/verify-account/{email}', [AuthController::class, 'verify'])->name('verify-account');
+    Route::post('/logout', [AuthController::class, 'logout'])->name('logout');
+    Route::post('/profile/change-password', [AuthController::class, 'changePassword'])->name('profile.change-password');
 });
