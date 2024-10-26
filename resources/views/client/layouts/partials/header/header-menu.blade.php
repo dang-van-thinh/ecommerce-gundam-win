@@ -104,22 +104,27 @@
                             <a href="#">
                                 <i class="iconsax" data-icon="user-2"></i>
                             </a>
-                            <!--Nếu người dùng chưa đăng nhập nhé-->
-                            <div class="onhover-show-div user">
-                                <ul>
-                                    <li> <a href="{{ route('auth.login-view') }}">Đăng nhập </a></li>
-                                    <li> <a href="{{ route('auth.register-view') }}">Đăng ký</a></li>
-                                </ul>
-                            </div>
-                            <!--Còn đây là người dùng đăng nhập rồi nhé nhé , tắt cái này thì bật cái kia và ngược lại nhé fen :))-->
+                            @if (Auth::id())
+                                <!--Còn đây là người dùng đăng nhập rồi nhé nhé , tắt cái này thì bật cái kia và ngược lại nhé fen :))-->
+                                <div class="onhover-show-div user" style="width: 200px">
+                                    <ul>
+                                        <li> <a href="{{ route('profile.infomation') }}">Thông tin tài khoản </a></li>
+                                        <li> <a href="{{ route('profile.order-history') }}">Lịch sử mua hàng</a></li>
+                                        <li> <a href="">Đăng xuất</a></li>
+                                    </ul>
+                                </div>
+                            @else
+                                <!--Nếu người dùng chưa đăng nhập nhé-->
+                                <div class="onhover-show-div user">
+                                    <ul>
+                                        <li> <a href="{{ route('auth.login-view') }}">Đăng nhập </a></li>
+                                        <li> <a href="{{ route('auth.register-view') }}">Đăng ký</a></li>
+                                    </ul>
+                                </div>
+                            @endif
 
-                            {{-- <div class="onhover-show-div user" style="width: 200px">
-                                <ul>
-                                    <li> <a href="{{ route('profile.infomation') }}">Thông tin tài khoản </a></li>
-                                    <li> <a href="{{ route('profile.order-history') }}">Lịch sử mua hàng</a></li>
-                                    <li> <a href="">Đăng xuất</a></li>
-                                </ul>
-                            </div> --}}
+
+
                         </li>
                         <li class="onhover-div shopping-cart">
                             <a class="p-0" href="{{ route('cart') }}">
