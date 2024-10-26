@@ -201,9 +201,20 @@ class ProductController extends Controller
                     }
                 }
 
-                // 4. Cập nhật hoặc tạo mới các biến thể sản phẩm
+                // 4. Xoá các biến thể không cần thiết
+                if ($request->has('delete_variants')) {
+                    ProductVariant::whereIn('id', $request->delete_variants)->delete();
+                }
+
+                // 5. Cập nhật hoặc tạo mới các biến thể sản phẩm còn tồn tại
                 if ($request->has('variants')) {
                     foreach ($request->variants as $variantData) {
+                        // Kiểm tra nếu biến thể đã bị xóa thì bỏ qua
+                        if (in_array($variantData['id'], $request->delete_variants ?? [])) {
+                            continue;
+                        }
+
+                        // Tiến hành cập nhật biến thể
                         $variant = ProductVariant::updateOrCreate(
                             ['id' => $variantData['id'], 'product_id' => $product->id],
                             [
@@ -219,7 +230,7 @@ class ProductController extends Controller
                     }
                 }
 
-                // 5. Xử lý thêm biến thể mới
+                // 6. Xử lý thêm biến thể mới
                 if ($request->has('new_variants')) {
                     foreach ($request->new_variants as $newVariantData) {
                         $newVariant = ProductVariant::create([
@@ -254,6 +265,7 @@ class ProductController extends Controller
             return redirect()->back();
         }
     }
+
 
 
     /**
