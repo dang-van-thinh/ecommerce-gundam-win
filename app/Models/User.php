@@ -46,11 +46,11 @@ class User extends Authenticatable implements MustVerifyEmail
         'password' => 'hashed',
     ];
 
-      // Một người sẽ có nhiều VourcherUsage
-      public function voucherUsages()
-      {
-          return $this->hasMany(VoucherUsage::class);
-      }
+    // Một người sẽ có nhiều VourcherUsage
+    public function voucherUsages()
+    {
+        return $this->hasMany(VoucherUsage::class);
+    }
     public function roles()
     {
         return $this->belongsToMany(Role::class, 'user_roles');
@@ -58,5 +58,9 @@ class User extends Authenticatable implements MustVerifyEmail
     public function addressUsers()
     {
         return $this->hasMany(AddressUser::class);
+    }
+    public function carts()
+    {
+        return $this->hasMany(Cart::class);
     }
 }

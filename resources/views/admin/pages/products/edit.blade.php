@@ -6,7 +6,7 @@
 
 @section('content')
     <div class="card">
-        <div class="card-header"><strong>Cập nhật sản phẩm</strong></div>
+        <div class="card-header"><strong>Cập nhật sản phẩm: </strong>{{ $product->name }}</div>
         <div class="card-body card-block">
             <form action="{{ route('products.update', $product) }}" method="post" enctype="multipart/form-data">
                 @csrf
@@ -104,9 +104,7 @@
                         <div class="variant mb-4 border p-3">
                             <h4>Biến thể {{ $index + 1 }}</h4>
                             <div class="mt-2">
-                                <strong>Thuộc tính:</strong>
-                                <!-- Hiển thị các thuộc tính của biến thể -->
-                                {{ $variant->attributeValues->pluck('name')->implode(', ') }}
+                                <strong>Thuộc tính:</strong> {{ $variant->attributeValues->pluck('name')->implode(', ') }}
                             </div>
                             <div class="form-group mb-2">
                                 <label>Giá:</label>
@@ -118,10 +116,16 @@
                                 <input type="number" name="variants[{{ $variant->id }}][quantity]" class="form-control"
                                     value="{{ $variant->quantity }}" required min="0">
                             </div>
-                            <!-- Truyền thông tin ID biến thể vào input hidden -->
                             <input type="hidden" name="variants[{{ $variant->id }}][id]" value="{{ $variant->id }}">
                             <input type="hidden" class="existing-variant-attributes"
                                 value="{{ $variant->attributeValues->pluck('id')->implode('-') }}">
+
+                            <!-- Nút xoá biến thể -->
+                            <div class="text-end">
+                                <button type="button" class="btn btn-danger btn-sm remove-variant"
+                                    data-variant-id="{{ $variant->id }}">Xoá biến thể
+                                </button>
+                            </div>
                         </div>
                     @endforeach
                 </div>
@@ -171,79 +175,100 @@
             $('#generate-variants').on('click', function() {
                 generateVariants();
             });
+
+            $(document).on('click', '.remove-variant', function() {
+                const variantId = $(this).data('variant-id');
+                $(this).closest('.variant').hide();
+                $('<input>').attr({
+                    type: 'hidden',
+                    name: 'delete_variants[]',
+                    value: variantId
+                }).appendTo('form');
+            });
         });
 
         function generateVariants() {
-    const attributeSelects = document.querySelectorAll('.attribute-select');
-    let combinations = [];
+            const attributeSelects = document.querySelectorAll('.attribute-select');
+            let combinations = [];
 
-    // Thu thập các giá trị thuộc tính đã chọn
-    attributeSelects.forEach(select => {
-        let selectedValues = Array.from(select.selectedOptions).map(option => ({
-            id: option.value,
-            name: option.text
-        }));
-        if (selectedValues.length > 0) {
-            combinations.push(selectedValues);
+            attributeSelects.forEach(select => {
+                let selectedValues = Array.from(select.selectedOptions).map(option => ({
+                    id: option.value,
+                    name: option.text
+                }));
+                if (selectedValues.length > 0) {
+                    combinations.push(selectedValues);
+                }
+            });
+
+            // Kiểm tra xem có tồn tại biến thể hiện có nào không
+            const existingAttributes = document.querySelectorAll('.existing-variant-attributes');
+            const existingAttributesCount = existingAttributes.length > 0 ?
+                existingAttributes[0].value.split('-').length :
+                0;
+
+            if (existingAttributesCount > 0 && combinations.length !== existingAttributesCount) {
+                alert('Số lượng thuộc tính mới không khớp với các biến thể hiện có. Vui lòng chọn lại.');
+                return;
+            }
+
+            if (combinations.length === 0) {
+                alert('Vui lòng chọn ít nhất một thuộc tính!');
+                return;
+            }
+
+            const variants = combinations.length === 1 ?
+                combinations[0].map(value => [value]) :
+                cartesianProduct(combinations);
+
+            const variantsDiv = document.getElementById('new-variants');
+            variantsDiv.innerHTML = '';
+
+            variants.forEach((variant, index) => {
+                const attributeIds = variant.map(v => v.id).sort().join('-');
+                const existingVariants = Array.from(existingAttributes).map(input => input.value);
+
+                if (!existingVariants.includes(attributeIds)) {
+                    const variantIndex = document.querySelectorAll('.variant').length;
+                    const variantDiv = document.createElement('div');
+                    variantDiv.classList.add('variant', 'border', 'p-3', 'position-relative');
+
+                    variantDiv.innerHTML = `
+                                <div class="position-relative">
+                                    <div class="d-flex justify-content-between">
+                                        <h4>Biến thể mới ${variantIndex + 1}</h4>
+                                    </div>
+                                    <p>Thuộc tính: ${variant.map(v => v.name).join(', ')}</p>
+                                    <div class="form-group">
+                                        <label>Giá:</label>
+                                        <input type="number" name="new_variants[${variantIndex}][price]" class="form-control" required min="0">
+                                    </div>
+                                    <div class="form-group">
+                                        <label>Số lượng:</label>
+                                        <input type="number" name="new_variants[${variantIndex}][quantity]" class="form-control" required min="0">
+                                    </div>
+                                    ${variant.map(v => `<input type="hidden" name="new_variants[${variantIndex}][attributes][]" value="${v.id}">`).join('')}
+
+                                    <div class="text-end"> 
+                                        <button type="button" class="btn btn-danger btn-sm remove-variant">Xóa biến thể</button>
+                                    </div>
+                                </div>
+                            `;
+
+                    variantsDiv.appendChild(variantDiv);
+                } else {
+                    const attributeNames = variant.map(v => v.name).join(', ');
+                    alert(`Biến thể với thuộc tính ${attributeNames} đã tồn tại.`);
+                }
+            });
+
+            // Gán sự kiện cho nút "Xoá" của các biến thể mới
+            $(document).on('click', '.remove-new-variant', function() {
+                $(this).closest('.variant').remove();
+            });
         }
-    });
-
-    // Kiểm tra số lượng thuộc tính đã chọn so với các biến thể hiện có
-    const existingAttributesCount = document.querySelectorAll('.existing-variant-attributes')[0]?.value.split('-').length;
-    if (combinations.length > 0 && combinations.length !== existingAttributesCount) {
-        alert('Số lượng thuộc tính mới không khớp với các biến thể hiện có. Vui lòng chọn lại.');
-        return; // Ngăn không cho thêm biến thể mới
-    }
-
-    if (combinations.length === 0) {
-        alert('Vui lòng chọn ít nhất một thuộc tính!');
-        return;
-    }
-
-    // Tạo tổ hợp thuộc tính (Cartesian product)
-    const variants = combinations.length === 1 ?
-        combinations[0].map(value => [value]) :
-        cartesianProduct(combinations);
-
-    const variantsDiv = document.getElementById('new-variants');
-    variantsDiv.innerHTML = ''; // Xóa các biến thể mới trước đó
-
-    // Kiểm tra biến thể mới so với các biến thể hiện có
-    variants.forEach((variant, index) => {
-        const attributeIds = variant.map(v => v.id).sort().join('-');
-
-        // Kiểm tra trùng lặp với các biến thể hiện có (đã load từ CSDL)
-        const existingVariants = Array.from(document.querySelectorAll('.existing-variant-attributes'))
-            .map(input => input.value);
-
-        if (existingVariants.includes(attributeIds)) {
-            alert(`Biến thể với thuộc tính ${variant.map(v => v.name).join(', ')} đã tồn tại.`);
-        } else {
-            // Nếu biến thể chưa tồn tại, thêm nó vào danh sách
-            const variantIndex = document.querySelectorAll('.variant').length;
-            const variantDiv = document.createElement('div');
-            variantDiv.classList.add('variant', 'mb-4', 'border', 'p-3');
-            variantDiv.innerHTML = `
-                        <h4>Biến thể mới ${variantIndex + 1}</h4>
-                        <p>Thuộc tính: ${variant.map(v => v.name).join(', ')}</p>
-                        <div class="form-group">
-                            <label>Giá:</label>
-                            <input type="number" name="new_variants[${variantIndex}][price]" class="form-control" required min="0">
-                        </div>
-                        <div class="form-group">
-                            <label>Số lượng:</label>
-                            <input type="number" name="new_variants[${variantIndex}][quantity]" class="form-control" required min="0">
-                        </div>
-                        ${variant.map(v => `<input type="hidden" name="new_variants[${variantIndex}][attributes][]" value="${v.id}">`).join('')}
-                    `;
-
-            variantsDiv.appendChild(variantDiv);
-        }
-    });
-}
 
 
-        // Tạo tổ hợp Cartesian (tổ hợp tất cả các giá trị thuộc tính đã chọn)
         function cartesianProduct(arr) {
             return arr.reduce((a, b) => a.flatMap(d => b.map(e => [d, e].flat())));
         }
