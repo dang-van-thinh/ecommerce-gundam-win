@@ -5,8 +5,8 @@
         <div class="profile-bg-img"></div>
         <div class="dashboard-left-sidebar-close"><i class="fa-solid fa-xmark"></i></div>
         <div class="profile-contain">
-            <div class="profile-image"> <img class="img-fluid" src="/template/client/assets/images/user/12.jpg"
-                    alt=""></div>
+            <div class="profile-image"> <img class="img-fluid" src="/template/client/assets/images/user/12.jpg" alt="">
+            </div>
             <div class="profile-name">
                 <h4>John Doe</h4>
                 <h6>john.customer@example.com</h6><span data-bs-toggle="modal" data-bs-target="#edit-box"
@@ -46,9 +46,8 @@
             </button>
         </li> --}}
         {{-- <li>
-            <button class="nav-link" id="saved-card-tab" data-bs-toggle="pill" data-bs-target="#saved-card"
-                role="tab" aria-controls="saved-card" aria-selected="false"> <i class="iconsax"
-                    data-icon="bank-card"></i>Saved
+            <button class="nav-link" id="saved-card-tab" data-bs-toggle="pill" data-bs-target="#saved-card" role="tab"
+                aria-controls="saved-card" aria-selected="false"> <i class="iconsax" data-icon="bank-card"></i>Saved
                 Card</button>
         </li> --}}
 
@@ -58,8 +57,13 @@
                 <i class="iconsax" data-icon="security-user"></i>Privacy</button>
         </li> --}}
     </ul>
-    <div class="logout-button"> <a class="btn btn_black sm" data-bs-toggle="modal" data-bs-target="#Confirmation-modal"
-            title="Quick View" tabindex="0">
-            <i class="iconsax me-1" data-icon="logout-1"></i> Đăng xuất </a>
-    </div>
+    <div class="logout-button" style="display: flex; justify-content: center; align-items: center;">
+    <form action="{{ route('auth.logout') }}" method="POST">
+        @csrf
+        <button type="submit" style="width: 250px; border-radius: 20px;"  class="btn btn_black sm logout-btn" title="Đăng xuất">
+            <i class="iconsax me-1" data-icon="logout-1"></i> Đăng xuất
+        </button>
+    </form>
+</div>
+
 </div>
