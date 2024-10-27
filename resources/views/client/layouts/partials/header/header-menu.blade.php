@@ -105,12 +105,22 @@
                                 <i class="iconsax" data-icon="user-2"></i>
                             </a>
                             @if (Auth::id())
-                                <!--Còn đây là người dùng đăng nhập rồi nhé nhé , tắt cái này thì bật cái kia và ngược lại nhé fen :))-->
-                                <div class="onhover-show-div user" style="width: 200px">
+                                <!-- Người dùng đã đăng nhập -->
+                                <div class="onhover-show-div user" style="width: 200px;">
                                     <ul>
-                                        <li> <a href="{{ route('profile.infomation') }}">Thông tin tài khoản </a></li>
-                                        <li> <a href="{{ route('profile.order-history') }}">Lịch sử mua hàng</a></li>
-                                        <li> <a href="">Đăng xuất</a></li>
+                                        <li><a href="{{ route('profile.infomation') }}">Thông tin tài khoản</a></li>
+                                        <li><a href="{{ route('profile.order-history') }}">Lịch sử mua hàng</a></li>
+                                        <li>
+                                            <!-- Form đăng xuất để xử lý bằng phương thức POST -->
+                                            <form action="{{ route('auth.logout') }}" method="POST"
+                                                style="display: inline;">
+                                                @csrf
+                                                <button type="submit" title="Đăng xuất"
+                                                    style="background: none; border: none; padding: 0; cursor: pointer; text-decoration: none;">
+                                                    <a>Đăng xuất</a>
+                                                </button>
+                                            </form>
+                                        </li>
                                     </ul>
                                 </div>
                             @else
