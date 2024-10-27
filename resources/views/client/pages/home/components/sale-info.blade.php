@@ -51,15 +51,15 @@
                 <h4>Sản phẩm yêu thích nhất</h4>
                 <div class="swiper special-offer-slide">
                     <div class="swiper-wrapper trending-products">
-                        @foreach($products as $product)
-                        <div class="swiper-slide product-box-3">
-                            <div class="img-wrapper">
-                                <div class="label-block"><span class="lable-1">NEW</span><a
-                                        class="label-2 wishlist-icon" href="javascript:void(0)" tabindex="0"><i
-                                            class="iconsax" data-icon="heart" aria-hidden="true"
-                                            data-bs-toggle="tooltip" data-bs-title="Add to Wishlist"></i></a>
-                                </div>
-                                <div class="product-image ratio_apos">
+                        @foreach ($products as $product)
+                            <div class="swiper-slide product-box-3">
+                                <div class="img-wrapper">
+                                    <div class="label-block"><span class="lable-1">NEW</span><a
+                                            class="label-2 wishlist-icon" href="javascript:void(0)" tabindex="0"><i
+                                                class="iconsax" data-icon="heart" aria-hidden="true"
+                                                data-bs-toggle="tooltip" data-bs-title="Add to Wishlist"></i></a>
+                                    </div>
+                                    {{-- <div class="product-image ratio_apos">
                                     <a class="pro-first" href="{{ route('product', $product->id) }}">
                                         <img class="bg-img" src="{{ '/storage/' . $product->image}}" alt="product" />
                                     </a>
@@ -70,46 +70,47 @@
                                         <img class="bg-img" src="{{'/storage/' . $firstImage->image_url}}"
                                             alt="product" />
                                     </a>
-                                </div>
-                                <div class="cart-info-icon">
-                                    <a href="#" data-bs-toggle="modal" data-bs-target="#addtocart" tabindex="0">
-                                        <i class="iconsax" data-icon="basket-2" aria-hidden="true"
-                                            data-bs-toggle="tooltip" data-bs-title="Add to card">
-                                        </i>
-                                    </a>
-                                    {{-- <a href="compare.html" tabindex="0">
+                                </div> --}}
+                                    <div class="cart-info-icon">
+                                        <a href="#" data-bs-toggle="modal" data-bs-target="#addtocart"
+                                            tabindex="0">
+                                            <i class="iconsax" data-icon="basket-2" aria-hidden="true"
+                                                data-bs-toggle="tooltip" data-bs-title="Add to card">
+                                            </i>
+                                        </a>
+                                        {{-- <a href="compare.html" tabindex="0">
                                         <i class="iconsax" data-icon="arrow-up-down" aria-hidden="true"
                                             data-bs-toggle="tooltip" data-bs-title="Compare">
                                         </i>
                                     </a> --}}
-                                    <a href="#" data-bs-toggle="modal" data-bs-target="#quick-view" tabindex="0"><i
-                                            class="iconsax" data-icon="eye" aria-hidden="true" data-bs-toggle="tooltip"
-                                            data-bs-title="Quick View">
-                                        </i>
+                                        <a href="#" data-bs-toggle="modal" data-bs-target="#quick-view"
+                                            tabindex="0"><i class="iconsax" data-icon="eye" aria-hidden="true"
+                                                data-bs-toggle="tooltip" data-bs-title="Quick View">
+                                            </i>
+                                        </a>
+                                    </div>
+                                </div>
+                                <div class="product-detail">
+                                    <ul class="rating">
+                                        <li><i class="fa-solid fa-star"></i></li>
+                                        <li><i class="fa-solid fa-star"></i></li>
+                                        <li><i class="fa-solid fa-star"></i></li>
+                                        <li><i class="fa-solid fa-star-half-stroke"></i></li>
+                                        <li><i class="fa-regular fa-star"></i></li>
+                                        <li>4.3</li>
+                                    </ul><a href="{{ route('product', $product->id) }}">
+                                        <h6>{{ $product->name }}</h6>
                                     </a>
+                                    <p>
+                                        @if ($product->productVariants->count() === 1)
+                                            {{ number_format($product->productVariants->first()->price, 0, ',', '.') }}₫
+                                        @else
+                                            {{ number_format($product->productVariants->min('price'), 0, ',', '.') }}₫ -
+                                            {{ number_format($product->productVariants->max('price'), 0, ',', '.') }}₫
+                                        @endif
+                                    </p>
                                 </div>
                             </div>
-                            <div class="product-detail">
-                                <ul class="rating">
-                                    <li><i class="fa-solid fa-star"></i></li>
-                                    <li><i class="fa-solid fa-star"></i></li>
-                                    <li><i class="fa-solid fa-star"></i></li>
-                                    <li><i class="fa-solid fa-star-half-stroke"></i></li>
-                                    <li><i class="fa-regular fa-star"></i></li>
-                                    <li>4.3</li>
-                                </ul><a href="{{ route('product', $product->id) }}">
-                                    <h6>{{ $product->name}}</h6>
-                                </a>
-                                <p>
-                                    @if ($product->productVariants->count() === 1)
-                                    {{ number_format($product->productVariants->first()->price, 0, ',', '.') }}₫
-                                    @else
-                                    {{ number_format($product->productVariants->min('price'), 0, ',', '.') }}₫ -
-                                    {{ number_format($product->productVariants->max('price'), 0, ',', '.') }}₫
-                                    @endif
-                                </p>
-                            </div>
-                        </div>
                         @endforeach
                         {{-- <div class="swiper-slide product-box-3">
                             <div class="img-wrapper">
