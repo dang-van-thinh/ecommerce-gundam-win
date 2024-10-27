@@ -24,7 +24,7 @@ use App\Http\Controllers\Client\ProductController;
 use App\Http\Controllers\Client\ProfileController;
 use App\Http\Controllers\Client\WishListController;
 use App\Http\Controllers\Controller;
-
+use App\Http\Controllers\DefaultController;
 use App\Http\Controllers\RefundController;
 use App\Models\Article;
 use Illuminate\Support\Facades\Route;
@@ -90,6 +90,8 @@ Route::get('/category-blog/{id}', [CollectionBlogController::class, 'articlesByC
 Route::get('/blog/category-blog/{id}', [BlogController::class, 'articlesByCategory'])->name('category-blog');
 
 
+Route::get('/404', [DefaultController::class, 'pageNotFound'])->name('404');
+
 // auth
 Route::prefix('auth')->name('auth.')->group(function () {
     Route::get('/login', [AuthController::class, 'loginView'])->name('login-view');
@@ -97,7 +99,7 @@ Route::prefix('auth')->name('auth.')->group(function () {
     Route::get('/register', [AuthController::class, 'registerView'])->name('register-view');
     Route::post('/register', [AuthController::class, 'storeRegister'])->name('register-post');
     Route::get('/foget-password', [AuthController::class, 'fogetPasswordView'])->name('foget-password-view');
-    Route::post('/foget-password', [AuthController::class,'checkfogetPasswordView']);
+    Route::post('/foget-password', [AuthController::class, 'checkfogetPasswordView']);
     Route::get('/verify-account/{email}', [AuthController::class, 'verify'])->name('verify-account');
     Route::post('/logout', [AuthController::class, 'logout'])->name('logout');
     Route::post('/profile/change-password', [AuthController::class, 'changePassword'])->name('profile.change-password');
