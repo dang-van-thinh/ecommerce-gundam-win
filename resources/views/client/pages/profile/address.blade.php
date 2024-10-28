@@ -93,4 +93,7 @@
             </div>
         </div>
     </div>
+
+    @include('client.pages.profile.layouts.components.edit-address')
+    @include('client.pages.profile.layouts.components.add-address')
 @endsection

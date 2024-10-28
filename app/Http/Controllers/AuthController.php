@@ -17,6 +17,8 @@ use Illuminate\Http\Request;
 use Mail;
 use Str;
 use Carbon\Carbon;
+use Illuminate\Support\Facades\DB;
+
 class AuthController extends Controller
 {
     public function loginView()
@@ -25,57 +27,66 @@ class AuthController extends Controller
         return view('client.pages.auth.login');
     }
     public function storeLogin(LoginRequest $request)
-{
-    $credentials = $request->only('email', 'password');
-    $user = User::where('email', $credentials['email'])->first();
-    // Kiểm tra xem tài khoản có tồn tại không
-    if (!$user) {
-        toastr("Tài khoản không tồn tại", NotificationInterface::ERROR, "Đăng nhập thất bại");
-        return back();
-    }
-    if ($user->status !== 'ACTIVE') {
-        // Lưu thông báo vào session
-        toastr("Tài khoản đã bị khóa.", NotificationInterface::ERROR, "Cảnh báo", [
-            "closeButton" => true,
-            "progressBar" => true,
-            "timeOut" => "3000",
-        ]);
-        return redirect()->route('auth.login-view');
-    }
-    if ($user->email_verified_at == null) {
-        Mail::to($user->email)->send(new VerifyAccount($user));
-        // Thông báo đăng ký thành công và yêu cầu xác thực email
-        toastr("Vui lòng kiểm tra email để xác thực tài khoản", NotificationInterface::SUCCESS, "Xác thực email", [
-            "closeButton" => true,
-            "progressBar" => true,
-            "timeOut" => "3000",
-        ]);
-        // Chuyển hướng người dùng đến trang đăng nhập
-        return back();
-    }
-    // Kiểm tra thời gian gần đây nhất cố gắng đăng nhập
-    if ($user->last_login_attempt) {
-        $lastLoginAttempt = Carbon::parse($user->last_login_attempt);
-        // Kiểm tra thời gian hết hạn
-        if ($lastLoginAttempt->addMinutes(15) > now() && $user->login_attempts >= 10) {
-            toastr("Tài khoản đã bị khóa do nhập sai quá nhiều lần. Vui lòng liên hệ shop để mở.", NotificationInterface::ERROR);
+    {
+        $credentials = $request->only('email', 'password');
+        $user = User::where('email', $credentials['email'])->first();
+        // Kiểm tra xem tài khoản có tồn tại không
+        if (!$user) {
+            toastr("Tài khoản không tồn tại", NotificationInterface::ERROR, "Đăng nhập thất bại");
             return back();
         }
-    }
+        if ($user->status !== 'ACTIVE') {
+            // Lưu thông báo vào session
+            toastr("Tài khoản đã bị khóa.", NotificationInterface::ERROR, "Cảnh báo", [
+                "closeButton" => true,
+                "progressBar" => true,
+                "timeOut" => "3000",
+            ]);
+            return redirect()->route('auth.login-view');
+        }
+        if ($user->email_verified_at == null) {
+            Mail::to($user->email)->send(new VerifyAccount($user));
+            // Thông báo đăng ký thành công và yêu cầu xác thực email
+            toastr("Vui lòng kiểm tra email để xác thực tài khoản", NotificationInterface::SUCCESS, "Xác thực email", [
+                "closeButton" => true,
+                "progressBar" => true,
+                "timeOut" => "3000",
+            ]);
+            // Chuyển hướng người dùng đến trang đăng nhập
+            return back();
+        }
+        // Kiểm tra thời gian gần đây nhất cố gắng đăng nhập
+        if ($user->last_login_attempt) {
+            $lastLoginAttempt = Carbon::parse($user->last_login_attempt);
+            // Kiểm tra thời gian hết hạn
+            if ($lastLoginAttempt->addMinutes(15) > now() && $user->login_attempts >= 10) {
+                toastr("Tài khoản đã bị khóa do nhập sai quá nhiều lần. Vui lòng liên hệ shop để mở.", NotificationInterface::ERROR);
+                return back();
+            }
+        }
         // Thực hiện đăng nhập
         if (Auth::attempt($credentials)) {
             if ($request->has('remember')) {
-            // Lưu email vào cookie với thời gian sống là 60 phút
-            cookie()->queue(cookie('email', $request->email, 60));
-            // Lưu mật khẩu vào cookie với thời gian sống là 60 phút (nên xem xét lại vì lý do bảo mật)
-            cookie()->queue(cookie('password', $request->password, 60));
-        }
+                // Lưu email vào cookie với thời gian sống là 60 phút
+                cookie()->queue(cookie('email', $request->email, 60));
+                // Lưu mật khẩu vào cookie với thời gian sống là 60 phút (nên xem xét lại vì lý do bảo mật)
+                cookie()->queue(cookie('password', $request->password, 60));
+            }
             // Nếu đăng nhập thành công
             $user->login_attempts = 0; // Reset số lần cố gắng đăng nhập
             $user->last_login_attempt = null; // Reset thời gian cố gắng đăng nhập
             $user->save();
 
-            toastr("Đăng nhập thành công", NotificationInterface::SUCCESS ,"Thành công");
+
+
+            // dang nhap tai khoan admin thi ban sang admin
+            // if (Auth::id() == 2) {
+            //     toastr("Đăng nhập thành công", NotificationInterface::SUCCESS, "Thành công");
+            //     return redirect()->route('test');
+            // }
+
+
+            toastr("Đăng nhập thành công", NotificationInterface::SUCCESS, "Thành công");
             return redirect()->route('home');
         } else {
             // Nếu đăng nhập không thành công
@@ -87,11 +98,11 @@ class AuthController extends Controller
                 $user->status = 'IN_ACTIVE'; // Khóa tài khoản
                 $user->save();
 
-                toastr("Tài khoản đã bị khóa do nhập sai quá nhiều lần.", NotificationInterface::ERROR,"Lỗi");
+                toastr("Tài khoản đã bị khóa do nhập sai quá nhiều lần.", NotificationInterface::ERROR, "Lỗi");
                 return back();
             }
 
-            toastr("Thông tin tài khoản hoặc mật khẩu không chính xác", NotificationInterface::ERROR,"Lỗi");
+            toastr("Thông tin tài khoản hoặc mật khẩu không chính xác", NotificationInterface::ERROR, "Lỗi");
             return back();
         }
     }
