@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Admin\products\StoreProductRequest;
+use App\Http\Requests\Admin\products\UpdateProductRequest;
 use App\Models\Attribute;
 use App\Models\CategoryProduct;
 use App\Models\Product;
@@ -163,8 +164,10 @@ class ProductController extends Controller
     /**
      * Update the specified resource in storage.
      */
-    public function update(Request $request, Product $product)
+    public function update(UpdateProductRequest $request, Product $product)
     {
+
+        // dd($request->all());
         try {
             DB::transaction(function () use ($request, $product) {
                 // 1. Cập nhật ảnh sản phẩm
@@ -203,45 +206,47 @@ class ProductController extends Controller
 
                 // 4. Xoá các biến thể không cần thiết
                 if ($request->has('delete_variants')) {
+                    // In ra giá trị delete_variants để kiểm tra
                     ProductVariant::whereIn('id', $request->delete_variants)->delete();
                 }
+    
+                
 
                 // 5. Cập nhật hoặc tạo mới các biến thể sản phẩm còn tồn tại
                 if ($request->has('variants')) {
                     foreach ($request->variants as $variantData) {
                         // Kiểm tra nếu biến thể đã bị xóa thì bỏ qua
-                        if (in_array($variantData['id'], $request->delete_variants ?? [])) {
+                        if (in_array($variantData['id'] ?? null, $request->delete_variants ?? [])) {
                             continue;
                         }
 
-                        // Tiến hành cập nhật biến thể
-                        $variant = ProductVariant::updateOrCreate(
-                            ['id' => $variantData['id'], 'product_id' => $product->id],
-                            [
+                        // Kiểm tra nếu không có 'id' trong $variantData
+                        if (!isset($variantData['id'])) {
+                            // Xử lý trường hợp không có 'id' (có thể tạo mới)
+                            $variant = ProductVariant::create([
+                                'product_id' => $product->id,
                                 'price' => $variantData['price'],
                                 'quantity' => $variantData['quantity'],
-                            ]
-                        );
+                            ]);
 
-                        // Cập nhật thuộc tính biến thể
-                        if (isset($variantData['attributes'])) {
-                            $variant->attributeValues()->sync($variantData['attributes']);
-                        }
-                    }
-                }
+                            // Cập nhật thuộc tính biến thể
+                            if (isset($variantData['attributes'])) {
+                                $variant->attributeValues()->sync($variantData['attributes']);
+                            }
+                        } else {
+                            // Tiến hành cập nhật biến thể nếu 'id' tồn tại
+                            $variant = ProductVariant::updateOrCreate(
+                                ['id' => $variantData['id'], 'product_id' => $product->id],
+                                [
+                                    'price' => $variantData['price'],
+                                    'quantity' => $variantData['quantity'],
+                                ]
+                            );
 
-                // 6. Xử lý thêm biến thể mới
-                if ($request->has('new_variants')) {
-                    foreach ($request->new_variants as $newVariantData) {
-                        $newVariant = ProductVariant::create([
-                            'product_id' => $product->id,
-                            'price' => $newVariantData['price'],
-                            'quantity' => $newVariantData['quantity'],
-                        ]);
-
-                        // Liên kết thuộc tính mới
-                        if (isset($newVariantData['attributes'])) {
-                            $newVariant->attributeValues()->sync($newVariantData['attributes']);
+                            // Cập nhật thuộc tính biến thể
+                            if (isset($variantData['attributes'])) {
+                                $variant->attributeValues()->sync($variantData['attributes']);
+                            }
                         }
                     }
                 }
@@ -265,6 +270,7 @@ class ProductController extends Controller
             return redirect()->back();
         }
     }
+
 
 
 
