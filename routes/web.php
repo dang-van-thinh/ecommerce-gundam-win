@@ -46,49 +46,53 @@ use Illuminate\Support\Facades\Route;
 //     return view('welcome');
 // });
 // Route::get("/home", [Controller::class, 'notification'])->name("home");
-// Route::get("/test", [Controller::class, 'test'])->name("test");
+Route::get("/test", [Controller::class, 'test'])->name("test");
 
 // admin
-Route::resource('article', ArticleController::class);
-Route::resource('banner', BannerController::class);
-Route::resource('attributes', AttributeController::class);
-Route::resource('attributeValues', AttributeValueController::class);
-Route::resource('category-product', CategoryProductController::class);
-Route::resource('category-article', CategoryArticleController::class);
-Route::resource('roles', RoleController::class);
-Route::resource('users', UserController::class);
-Route::resource('voucher', VocuherController::class);
-Route::resource('refund', RefundController::class);
-Route::resource('products', AdminProductController::class);
-Route::resource('imagearticle', ImageArticleController::class);
-
-
-// client
-Route::get('/', [HomeController::class, 'index'])->name('home');
-Route::get('/product/{id}', [ProductController::class, 'index'])->name('product');
-Route::get('/collection-product', [CollectionProductController::class, 'index'])->name('collection-product');
-
-// <!--Phần này giữ hay bỏ thì nhìn route  nhé - chọn 1 trong 2-->
-Route::get('/collection-blog', [CollectionBlogController::class, 'index'])->name('collection-blog');
-Route::get('/blog/{id}', [BlogController::class, 'index'])->name('blog');
-// <!--->
-Route::get('/contact', [ContactController::class, 'index'])->name('contact');
-Route::get('/cart', [CartController::class, 'index'])->name('cart');
-Route::get('/wish-list', [WishListController::class, 'index'])->name('wish-list');
-Route::get('/check-out', [CheckOutController::class, 'index'])->name('check-out');
-Route::get('/order-success', [OrderController::class, 'index'])->name('order-success');
-
-//profile
-Route::prefix('profile')->name('profile.')->group(function () {
-    Route::get('/', [ProfileController::class, 'infomation'])->name('infomation');
-    Route::get('/order-history', [ProfileController::class, 'orderHistory'])->name('order-history');
-    Route::get('/address', [ProfileController::class, 'address'])->name('address');
+Route::prefix('/admin')->middleware(['auth', 'checkRole:2'])->group(function () {
+    Route::resource('article', ArticleController::class);
+    Route::resource('banner', BannerController::class);
+    Route::resource('attributes', AttributeController::class);
+    Route::resource('attributeValues', AttributeValueController::class);
+    Route::resource('category-product', CategoryProductController::class);
+    Route::resource('category-article', CategoryArticleController::class);
+    Route::resource('roles', RoleController::class);
+    Route::resource('users', UserController::class);
+    Route::resource('voucher', VocuherController::class);
+    Route::resource('refund', RefundController::class);
+    Route::resource('products', AdminProductController::class);
+    Route::resource('imagearticle', ImageArticleController::class);
 });
 
-// <!--Phần này giữ hay bỏ thì nhìn route trên của t nhé - chọn 1 trong 2-->
+// client
+Route::prefix('')->middleware(['auth', 'checkAccountStatus', 'checkRole:2'])->group(function () {
+    // <!-Trang khác-->
+    Route::get('/cart', [CartController::class, 'index'])->name('cart');
+    Route::get('/check-out', [CheckOutController::class, 'index'])->name('check-out');
+    Route::get('/order-success', [OrderController::class, 'index'])->name('order-success');
+    //profile
+    Route::prefix('profile')->name('profile.')->group(function () {
+        Route::get('/', [ProfileController::class, 'infomation'])->name('infomation');
+        Route::get('/order-history', [ProfileController::class, 'orderHistory'])->name('order-history');
+        Route::get('/address', [ProfileController::class, 'address'])->name('address');
+    });
+    // <!--Phần này giữ hay bỏ thì nhìn route trên của t nhé - chọn 1 trong 2-->
+});
+Route::get('/wish-list', [WishListController::class, 'index'])->name('wish-list');
+Route::get('/collection-product', [CollectionProductController::class, 'index'])->name('collection-product');
+// <!--Phần này giữ hay bỏ thì nhìn route  nhé - chọn 1 trong 2-->
+
+Route::get('/', [HomeController::class, 'index'])->name('home');
+Route::get('/product/{id}', [ProductController::class, 'index'])->name('product');
+Route::get('/contact', [ContactController::class, 'index'])->name('contact');
+
+
 Route::get('/category-blog/{id}', [CollectionBlogController::class, 'articlesByCategory'])->name('category-articles');
 Route::get('/blog/category-blog/{id}', [BlogController::class, 'articlesByCategory'])->name('category-blog');
 
+
+Route::get('/collection-blog', [CollectionBlogController::class, 'index'])->name('collection-blog');
+Route::get('/blog/{id}', [BlogController::class, 'index'])->name('blog');
 
 Route::get('/404', [DefaultController::class, 'pageNotFound'])->name('404');
 
@@ -106,7 +110,7 @@ Route::prefix('auth')->name('auth.')->group(function () {
 });
 
 // hiện tại quy ước 1 là user 2 là admin ae nào ngược đời thì sửa lại nhé=))
-Route::middleware(['auth','checkAccountStatus','checkRole:2'])->group(function () {
+Route::middleware(['auth', 'checkAccountStatus', 'checkRole:2'])->group(function () {
     // Các route yêu cầu đăng nhập
     Route::get("/test", [Controller::class, 'test'])->name("test");
 });
