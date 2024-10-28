@@ -1,234 +1,224 @@
 @extends('client.layouts.master')
 @section('title')
-Chi tiết sản phẩm
+    Chi tiết sản phẩm
 @endsection
+@push('css')
+    <style>
+        /* Flex container settings */
+        .d-flex.flex-column {
+            gap: 15px;
+            margin-top: 20px;
+        }
+
+        .d-flex.flex-row {
+            align-items: center;
+            margin-bottom: 10px;
+        }
+
+        /* Heading styling */
+        .d-flex.flex-row h5 {
+            margin-right: 15px;
+            margin-top: 10px;
+            font-size: 18px;
+            color: #333;
+            font-weight: 600;
+        }
+
+        /* List and button styles */
+        .box ul {
+            list-style: none;
+            padding: 0;
+            display: flex;
+            gap: 10px;
+        }
+
+        .box ul button {
+            width: 100px;
+            height: 30px;
+            padding: 0;
+        }
+
+        .variant-option {
+            padding: 10px;
+            background-color: white;
+            border: 1px solid #f5f5f5;
+            border-radius: 4px;
+            margin-right: 10px;
+            cursor: pointer;
+            transition: background-color 0.3s, color 0.3s;
+        }
+
+        .variant-option:hover {
+            border-color: #ff6f61;
+            color: red;
+        }
+
+        /* Selected variant style */
+        .variant-option.selected {
+            background-color: #333;
+            color: #fff;
+            border-color: #333;
+        }
+    </style>
+@endpush
 @section('content')
-<style>
-    /* Đặt một số khoảng cách giữa các hạng mục */
-    .d-flex.flex-column {
-        gap: 15px;
-        margin-top: 20px;
-    }
-
-    /* Canh chỉnh hàng */
-    .d-flex.flex-row {
-        align-items: center;
-        margin-bottom: 10px;
-    }
-
-    /* Tiêu đề hạng mục thuộc tính */
-    .d-flex.flex-row h5 {
-        margin-right: 15px;
-        margin-top: 10px;
-        font-size: 18px;
-        color: #333;
-        font-weight: 600;
-    }
-
-
-
-    /* Các nút màu sắc */
-    .box ul {
-        list-style: none;
-        padding: 0;
-        display: flex;
-        gap: 10px;
-    }
-
-    .box ul button {
-        width: 100px;
-        height: 30px;
-        padding: 0;
-    }
-
-    /* Khoảng cách giữa các màu sắc */
-    .box ul.color-variant {
-        gap: 8px;
-    }
-
-    .variant-option {
-        padding: 10px;
-        background-color: white;
-        border: 1px solid #f5f5f5;
-        border-radius: 4px;
-        margin-right: 10px;
-        cursor: pointer;
-        transition: background-color 0.3s, color 0.3s;
-    }
-
-    .variant-option:hover {
-        border-color: #ff6f61;
-        color: red;
-    }
-
-    /* Nút biến thể khi được chọn */
-    .variant-option.selected {
-        background-color: #333;
-        color: #fff;
-        border-color: #333;
-    }
-</style>
-@include('client.pages.components.breadcrumb', [
-'pageHeader' => 'Sản phẩm : '. $product->name,
-'parent' => [
-'route' => 'https://facebook.com',
-'name' => 'Trang chủ',
-],
-])
-<section class="section-b-space product-thumbnail-page pt-0">
-    <div class="custom-container container">
-        <div class="row gy-4">
-            <div class="col-lg-6">
-                <div class="row sticky">
-                    <div class="col-sm-2 col-3">
-                        <div class="swiper product-slider product-slider-img">
-                            <div class="swiper-wrapper">
-                                @foreach($product->productImages as $productImage)
-                                <div class="swiper-slide">
-                                    <img src="{{ '/storage/' . $productImage->image_url}}" alt="">
+    @include('client.pages.components.breadcrumb', [
+        'pageHeader' => 'Sản phẩm : ' . $product->name,
+        'parent' => [
+            'route' => 'http://127.0.0.1:8000/',
+            'name' => 'Trang chủ',
+        ],
+    ])
+    <section class="section-b-space product-thumbnail-page pt-0">
+        <div class="custom-container container">
+            <div class="row gy-4">
+                <div class="col-lg-6">
+                    <div class="row sticky">
+                        <div class="col-sm-2 col-3">
+                            <div class="swiper product-slider product-slider-img">
+                                <div class="swiper-wrapper">
+                                    @foreach ($product->productImages as $productImage)
+                                        <div class="swiper-slide">
+                                            <img src="{{ '/storage/' . $productImage->image_url }}" alt="">
+                                        </div>
+                                    @endforeach
                                 </div>
-                                @endforeach
                             </div>
                         </div>
-                    </div>
-                    <div class="col-sm-10 col-9">
-                        <div class="swiper product-slider-thumb product-slider-img-1">
-                            <div class="swiper-wrapper ratio_square-2">
-                                @foreach($product->productImages as $productImage)
-                                <div class="swiper-slide">
-                                    <img class="bg-img" src="{{ '/storage/' . $productImage->image_url}}" alt="">
+                        <div class="col-sm-10 col-9">
+                            <div class="swiper product-slider-thumb product-slider-img-1">
+                                <div class="swiper-wrapper ratio_square-2">
+                                    @foreach ($product->productImages as $productImage)
+                                        <div class="swiper-slide">
+                                            <img class="bg-img" src="{{ '/storage/' . $productImage->image_url }}"
+                                                alt="">
+                                        </div>
+                                    @endforeach
                                 </div>
-                                @endforeach
                             </div>
                         </div>
                     </div>
                 </div>
-            </div>
-            <div class="col-lg-6">
-                <div class="product-detail-box">
-                    <div class="product-option">
-                        <div class="move-fast-box d-flex align-items-center gap-1"><img
-                                src="/template/client/assets/images/gif/fire.gif" alt="">
-                            <p>Move fast!</p>
-                        </div>
-                        <h3>{{ $product->name }}</h3>
-                        <p>
-                            {{ number_format($product->productVariants->min('price'), 0, ',', '.') }} -
-                            {{number_format($product->productVariants->max('price'), 0, ',', '.') }}₫
-                            {{-- <span class="offer-btn">25% off</span> --}}
-                        </p>
-                        <div class="rating">
-                            <ul>
-                                <li> <i class="fa-solid fa-star"> </i><i class="fa-solid fa-star"> </i><i
-                                        class="fa-solid fa-star"> </i><i class="fa-solid fa-star-half-stroke"></i><i
-                                        class="fa-regular fa-star"></i></li>
-                                <li>(4.7) Rating</li>
-                            </ul>
-                        </div>
-                        <div class="buy-box border-buttom">
-                            <ul>
-                                <li> <span data-bs-toggle="modal" data-bs-target="#size-chart" title="Quick View"
-                                        tabindex="0"><i class="iconsax me-2" data-icon="ruler"></i>Size Chart</span>
-                                </li>
-                                <li> <span data-bs-toggle="modal" data-bs-target="#terms-conditions-modal"
-                                        title="Quick View" tabindex="0"><i class="iconsax me-2"
-                                            data-icon="truck"></i>Delivery & return</span></li>
-                                <li> <span data-bs-toggle="modal" data-bs-target="#question-box" title="Quick View"
-                                        tabindex="0"><i class="iconsax me-2" data-icon="question-message"></i>Ask a
-                                        Question</span></li>
-                            </ul>
-                        </div>
-                        <div class="d-flex flex-column">
-                            @php
-                            // Nhóm các giá trị thuộc tính theo tên thuộc tính
-                            $groupedAttributes = collect($attributes)->groupBy('attribute_name');
-                            @endphp
-
-                            @foreach($groupedAttributes as $attributeName => $values)
-                            <div class="d-flex flex-row">
-                                <h5>{{ $attributeName }}</h5>
-                                <div class="box">
-                                    <ul class="variant">
-                                        @php
-                                        // Lưu trữ giá trị đã hiển thị để ngăn ngừa trùng lặp
-                                        $displayedValues = [];
-                                        @endphp
-                                        @foreach($values as $value)
-                                        @if(!in_array($value->attribute_value_name, $displayedValues) &&
-                                        $value->quantity > 0)
-                                        <!-- Kiểm tra số lượng lớn hơn 0 -->
-                                        <button class="variant-option" data-value="{{ $value->attribute_value_id }}">
-                                            {{ $value->attribute_value_name }}
-                                        </button>
-                                        @php
-                                        // Thêm giá trị vào danh sách đã hiển thị
-                                        $displayedValues[] = $value->attribute_value_name;
-                                        @endphp
-                                        @endif
-                                        @endforeach
-                                    </ul>
-                                </div>
+                <div class="col-lg-6">
+                    <div class="product-detail-box">
+                        <div class="product-option">
+                            <div class="move-fast-box d-flex align-items-center gap-1"><img
+                                    src="/template/client/assets/images/gif/fire.gif" alt="">
+                                <p>Move fast!</p>
                             </div>
-                            @endforeach
+                            <h3>{{ $product->name }}</h3>
+                            <p id="variant-price">
+                                @if ($product->productVariants->count() === 1)
+                                    {{ number_format($product->productVariants->first()->price, 0, ',', '.') }}₫
+                                @else
+                                    {{ number_format($product->productVariants->min('price'), 0, ',', '.') }}₫
+                                    -
+                                    {{ number_format($product->productVariants->max('price'), 0, ',', '.') }}₫
+                                @endif
+                                {{-- <span class="offer-btn">25% off</span> --}}
+                            </p>
+                            <div class="rating">
+                                <ul>
+                                    <li> <i class="fa-solid fa-star"> </i><i class="fa-solid fa-star"> </i><i
+                                            class="fa-solid fa-star"> </i><i class="fa-solid fa-star-half-stroke"></i><i
+                                            class="fa-regular fa-star"></i></li>
+                                    <li>(4.7) Rating</li>
+                                </ul>
+                            </div>
+                            <div class="buy-box border-buttom">
+                                <ul>
+                                    <li> <span data-bs-toggle="modal" data-bs-target="#size-chart" title="Quick View"
+                                            tabindex="0"><i class="iconsax me-2" data-icon="ruler"></i>Size Chart</span>
+                                    </li>
+                                    <li> <span data-bs-toggle="modal" data-bs-target="#terms-conditions-modal"
+                                            title="Quick View" tabindex="0"><i class="iconsax me-2"
+                                                data-icon="truck"></i>Delivery & return</span></li>
+                                    <li> <span data-bs-toggle="modal" data-bs-target="#question-box" title="Quick View"
+                                            tabindex="0"><i class="iconsax me-2" data-icon="question-message"></i>Ask a
+                                            Question</span></li>
+                                </ul>
+                            </div>
+                            <div class="d-flex flex-column">
 
-                        </div>
-                        <div class="quantity-box d-flex align-items-center gap-3">
-                            <div class="quantity"><button class="minus" type="button"><i
-                                        class="fa-solid fa-minus"></i></button><input type="number" value="1" min="1"
-                                    max="20"><button class="plus" type="button"><i
-                                        class="fa-solid fa-plus"></i></button></div>
-                            <div class="d-flex align-items-center w-100 gap-3"> <a class="btn btn_black sm" href="#"
-                                    data-bs-toggle="offcanvas" data-bs-target="#offcanvasRight"
-                                    aria-controls="offcanvasRight">Thêm Vào Giỏ Hàng</a><a class="btn btn_outline sm"
-                                    href="#">Mua Ngay</a></div>
-                        </div>
-                        <div class="buy-box">
-                            <ul>
-                                <li>
-                                    <a href="wishlist.html">
-                                        <i class="fa-regular fa-heart me-2"></i>Yêu thích sản phẩm
-                                    </a>
-                                </li>
-                                {{-- <li> <a href="compare.html"> <i class="fa-solid fa-arrows-rotate me-2"></i>Add To
+                                <div class="product-variants">
+                                    <div class="d-flex flex-row">
+                                        <h5>Thuộc tính:</h5>
+                                        <div class="box">
+                                            <ul class="variant" id="variant-options">
+                                                @foreach ($product->productVariants as $index => $variant)
+                                                    <button class="variant-option" data-price="{{ $variant->price }}"
+                                                        data-quantity="{{ $variant->quantity }}">
+                                                        {{ $variant->attributeValues->pluck('name')->implode(' - ') }}
+                                                    </button>
+                                                @endforeach
+                                            </ul>
+                                        </div>
+                                    </div>
+                                    <div>
+                                        <h5>Số lượng : <span id="variant-quantity"></span></h5>
+                                    </div>
+
+                                </div>
+
+
+                            </div>
+                            <div class="quantity-box d-flex align-items-center gap-3">
+                                <div class="quantity"><button class="minus" type="button"><i
+                                            class="fa-solid fa-minus"></i></button><input type="number" value="1"
+                                        min="1" max="20"><button class="plus" type="button"><i
+                                            class="fa-solid fa-plus"></i></button></div>
+                                <div class="d-flex align-items-center w-100 gap-3"> <a class="btn btn_black sm"
+                                        href="#" data-bs-toggle="offcanvas" data-bs-target="#offcanvasRight"
+                                        aria-controls="offcanvasRight">Thêm Vào Giỏ Hàng</a><a class="btn btn_outline sm"
+                                        href="#">Mua Ngay</a></div>
+                            </div>
+                            <div class="buy-box">
+                                <ul>
+                                    <li>
+                                        <a href="wishlist.html">
+                                            <i class="fa-regular fa-heart me-2"></i>Yêu thích sản phẩm
+                                        </a>
+                                    </li>
+                                    {{-- <li> <a href="compare.html"> <i class="fa-solid fa-arrows-rotate me-2"></i>Add To
                                         Compare</a></li>
                                 <li> <a href="#" data-bs-toggle="modal" data-bs-target="#social-box" title="Quick View"
                                         tabindex="0"><i class="fa-solid fa-share-nodes me-2"></i>Share</a></li> --}}
-                            </ul>
-                        </div>
-                        <div class="sale-box">
-                            <div class="d-flex align-items-center gap-2"><img
-                                    src="/template/client/assets/images/gif/timer.gif" alt="">
-                                <p>Limited Time Left! Hurry, Sale Ending!</p>
-                            </div>
-                            <div class="countdown">
-                                <ul class="clockdiv1">
-                                    <li>
-                                        <div class="timer">
-                                            <div class="days"></div>
-                                        </div><span class="title">Days</span>
-                                    </li>
-                                    <li>:</li>
-                                    <li>
-                                        <div class="timer">
-                                            <div class="hours"></div>
-                                        </div><span class="title">Hours</span>
-                                    </li>
-                                    <li>:</li>
-                                    <li>
-                                        <div class="timer">
-                                            <div class="minutes"></div>
-                                        </div><span class="title">Min</span>
-                                    </li>
-                                    <li>:</li>
-                                    <li>
-                                        <div class="timer">
-                                            <div class="seconds"></div>
-                                        </div><span class="title">Sec</span>
-                                    </li>
                                 </ul>
                             </div>
-                        </div>
-                        {{-- <div class="dz-info">
+                            <div class="sale-box">
+                                <div class="d-flex align-items-center gap-2"><img
+                                        src="/template/client/assets/images/gif/timer.gif" alt="">
+                                    <p>Limited Time Left! Hurry, Sale Ending!</p>
+                                </div>
+                                <div class="countdown">
+                                    <ul class="clockdiv1">
+                                        <li>
+                                            <div class="timer">
+                                                <div class="days"></div>
+                                            </div><span class="title">Days</span>
+                                        </li>
+                                        <li>:</li>
+                                        <li>
+                                            <div class="timer">
+                                                <div class="hours"></div>
+                                            </div><span class="title">Hours</span>
+                                        </li>
+                                        <li>:</li>
+                                        <li>
+                                            <div class="timer">
+                                                <div class="minutes"></div>
+                                            </div><span class="title">Min</span>
+                                        </li>
+                                        <li>:</li>
+                                        <li>
+                                            <div class="timer">
+                                                <div class="seconds"></div>
+                                            </div><span class="title">Sec</span>
+                                        </li>
+                                    </ul>
+                                </div>
+                            </div>
+                            {{-- <div class="dz-info">
                             <ul>
                                 <li>
                                     <div class="d-flex align-items-center gap-2">
@@ -260,41 +250,42 @@ Chi tiết sản phẩm
                             <h5>Secure Checkout </h5><img class="img-fluid"
                                 src="/template/client/assets/images/other-img/secure_payments.png" alt="">
                         </div> --}}
+                        </div>
                     </div>
                 </div>
             </div>
         </div>
-    </div>
-    <div class="product-section-box x-small-section pt-0">
-        <div class="custom-container container">
-            <div class="row">
-                <div class="col-12">
-                    <ul class="product-tab theme-scrollbar nav nav-tabs nav-underline" id="Product" role="tablist">
-                        <li class="nav-item" role="presentation"><button class="nav-link active" id="Description-tab"
-                                data-bs-toggle="tab" data-bs-target="#Description-tab-pane" role="tab"
-                                aria-controls="Description-tab-pane" aria-selected="true">Chi tiết sản phẩm</button>
-                        </li>
-                        {{-- <li class="nav-item" role="presentation"><button class="nav-link" id="specification-tab"
+        <div class="product-section-box x-small-section pt-0">
+            <div class="custom-container container">
+                <div class="row">
+                    <div class="col-12">
+                        <ul class="product-tab theme-scrollbar nav nav-tabs nav-underline" id="Product" role="tablist">
+                            <li class="nav-item" role="presentation"><button class="nav-link active"
+                                    id="Description-tab" data-bs-toggle="tab" data-bs-target="#Description-tab-pane"
+                                    role="tab" aria-controls="Description-tab-pane" aria-selected="true">Chi tiết sản
+                                    phẩm</button>
+                            </li>
+                            {{-- <li class="nav-item" role="presentation"><button class="nav-link" id="specification-tab"
                                 data-bs-toggle="tab" data-bs-target="#specification-tab-pane" role="tab"
                                 aria-controls="specification-tab-pane" aria-selected="false">Thông số kỹ thuật</button>
                         </li>
                         <li class="nav-item" role="presentation"><button class="nav-link" id="question-tab"
                                 data-bs-toggle="tab" data-bs-target="#question-tab-pane" role="tab"
                                 aria-controls="question-tab-pane" aria-selected="false">Q & A</button></li> --}}
-                        <li class="nav-item" role="presentation"><button class="nav-link" id="Reviews-tab"
-                                data-bs-toggle="tab" data-bs-target="#Reviews-tab-pane" role="tab"
-                                aria-controls="Reviews-tab-pane" aria-selected="false">Đánh giá sản phẩm</button></li>
-                    </ul>
-                    <div class="tab-content product-content" id="ProductContent">
-                        <div class="tab-pane fade show active" id="Description-tab-pane" role="tabpanel"
-                            aria-labelledby="Description-tab" tabindex="0">
-                            <div class="row gy-4">
-                                <div class="col-12">
-                                    {!! $product->description !!}
+                            <li class="nav-item" role="presentation"><button class="nav-link" id="Reviews-tab"
+                                    data-bs-toggle="tab" data-bs-target="#Reviews-tab-pane" role="tab"
+                                    aria-controls="Reviews-tab-pane" aria-selected="false">Đánh giá sản phẩm</button></li>
+                        </ul>
+                        <div class="tab-content product-content" id="ProductContent">
+                            <div class="tab-pane fade show active" id="Description-tab-pane" role="tabpanel"
+                                aria-labelledby="Description-tab" tabindex="0">
+                                <div class="row gy-4">
+                                    <div class="col-12">
+                                        {!! $product->description !!}
+                                    </div>
                                 </div>
                             </div>
-                        </div>
-                        {{-- <div class="tab-pane fade" id="specification-tab-pane" role="tabpanel"
+                            {{-- <div class="tab-pane fade" id="specification-tab-pane" role="tabpanel"
                             aria-labelledby="specification-tab" tabindex="0">
                             <p>I like to be real. I don't like things to be staged or fussy. Grunge is a hippied
                                 romantic version of punk. I have my favourite fashion decade, yes, yes, yes: '60s.
@@ -449,183 +440,188 @@ Chi tiết sản phẩm
                                 </ul>
                             </div>
                         </div> --}}
-                        <div class="tab-pane fade" id="Reviews-tab-pane" role="tabpanel" aria-labelledby="Reviews-tab"
-                            tabindex="0">
-                            <div class="row gy-4">
-                                <div class="col-lg-4">
-                                    <div class="review-right">
-                                        <div class="customer-rating">
-                                            <div class="global-rating">
-                                                <div>
-                                                    <h5>4.5</h5>
+                            <div class="tab-pane fade" id="Reviews-tab-pane" role="tabpanel"
+                                aria-labelledby="Reviews-tab" tabindex="0">
+                                <div class="row gy-4">
+                                    <div class="col-lg-4">
+                                        <div class="review-right">
+                                            <div class="customer-rating">
+                                                <div class="global-rating">
+                                                    <div>
+                                                        <h5>4.5</h5>
+                                                    </div>
+                                                    <div>
+                                                        <h6>Average Ratings</h6>
+                                                        <ul class="rating mb p-0">
+                                                            <li><i class="fa-solid fa-star"></i></li>
+                                                            <li><i class="fa-solid fa-star"></i></li>
+                                                            <li><i class="fa-solid fa-star"></i></li>
+                                                            <li><i class="fa-solid fa-star"></i></li>
+                                                            <li><i class="fa-regular fa-star"></i></li>
+                                                            <li><span>(14)</span></li>
+                                                        </ul>
+                                                    </div>
                                                 </div>
-                                                <div>
-                                                    <h6>Average Ratings</h6>
-                                                    <ul class="rating mb p-0">
-                                                        <li><i class="fa-solid fa-star"></i></li>
-                                                        <li><i class="fa-solid fa-star"></i></li>
-                                                        <li><i class="fa-solid fa-star"></i></li>
-                                                        <li><i class="fa-solid fa-star"></i></li>
-                                                        <li><i class="fa-regular fa-star"></i></li>
-                                                        <li><span>(14)</span></li>
-                                                    </ul>
-                                                </div>
+                                                <ul class="rating-progess">
+                                                    <li>
+                                                        <p>5 Star</p>
+                                                        <div class="progress" role="progressbar"
+                                                            aria-label="Animated striped example" aria-valuenow="75"
+                                                            aria-valuemin="0" aria-valuemax="100">
+                                                            <div class="progress-bar progress-bar-striped progress-bar-animated"
+                                                                style="width: 80%"></div>
+                                                        </div>
+                                                        <p>80%</p>
+                                                    </li>
+                                                    <li>
+                                                        <p>4 Star</p>
+                                                        <div class="progress" role="progressbar"
+                                                            aria-label="Animated striped example" aria-valuenow="75"
+                                                            aria-valuemin="0" aria-valuemax="100">
+                                                            <div class="progress-bar progress-bar-striped progress-bar-animated"
+                                                                style="width: 70%"></div>
+                                                        </div>
+                                                        <p>70%</p>
+                                                    </li>
+                                                    <li>
+                                                        <p>3 Star</p>
+                                                        <div class="progress" role="progressbar"
+                                                            aria-label="Animated striped example" aria-valuenow="75"
+                                                            aria-valuemin="0" aria-valuemax="100">
+                                                            <div class="progress-bar progress-bar-striped progress-bar-animated"
+                                                                style="width: 55%"></div>
+                                                        </div>
+                                                        <p>55%</p>
+                                                    </li>
+                                                    <li>
+                                                        <p>2 Star</p>
+                                                        <div class="progress" role="progressbar"
+                                                            aria-label="Animated striped example" aria-valuenow="75"
+                                                            aria-valuemin="0" aria-valuemax="100">
+                                                            <div class="progress-bar progress-bar-striped progress-bar-animated"
+                                                                style="width: 40%"></div>
+                                                        </div>
+                                                        <p>40%</p>
+                                                    </li>
+                                                    <li>
+                                                        <p>1 Star</p>
+                                                        <div class="progress" role="progressbar"
+                                                            aria-label="Animated striped example" aria-valuenow="75"
+                                                            aria-valuemin="0" aria-valuemax="100">
+                                                            <div class="progress-bar progress-bar-striped progress-bar-animated"
+                                                                style="width: 25%"></div>
+                                                        </div>
+                                                        <p>25%</p>
+                                                    </li>
+                                                </ul><button class="btn reviews-modal" data-bs-toggle="modal"
+                                                    data-bs-target="#Reviews-modal" title="Quick View"
+                                                    tabindex="0">Write a
+                                                    review</button>
                                             </div>
-                                            <ul class="rating-progess">
-                                                <li>
-                                                    <p>5 Star</p>
-                                                    <div class="progress" role="progressbar"
-                                                        aria-label="Animated striped example" aria-valuenow="75"
-                                                        aria-valuemin="0" aria-valuemax="100">
-                                                        <div class="progress-bar progress-bar-striped progress-bar-animated"
-                                                            style="width: 80%"></div>
-                                                    </div>
-                                                    <p>80%</p>
-                                                </li>
-                                                <li>
-                                                    <p>4 Star</p>
-                                                    <div class="progress" role="progressbar"
-                                                        aria-label="Animated striped example" aria-valuenow="75"
-                                                        aria-valuemin="0" aria-valuemax="100">
-                                                        <div class="progress-bar progress-bar-striped progress-bar-animated"
-                                                            style="width: 70%"></div>
-                                                    </div>
-                                                    <p>70%</p>
-                                                </li>
-                                                <li>
-                                                    <p>3 Star</p>
-                                                    <div class="progress" role="progressbar"
-                                                        aria-label="Animated striped example" aria-valuenow="75"
-                                                        aria-valuemin="0" aria-valuemax="100">
-                                                        <div class="progress-bar progress-bar-striped progress-bar-animated"
-                                                            style="width: 55%"></div>
-                                                    </div>
-                                                    <p>55%</p>
-                                                </li>
-                                                <li>
-                                                    <p>2 Star</p>
-                                                    <div class="progress" role="progressbar"
-                                                        aria-label="Animated striped example" aria-valuenow="75"
-                                                        aria-valuemin="0" aria-valuemax="100">
-                                                        <div class="progress-bar progress-bar-striped progress-bar-animated"
-                                                            style="width: 40%"></div>
-                                                    </div>
-                                                    <p>40%</p>
-                                                </li>
-                                                <li>
-                                                    <p>1 Star</p>
-                                                    <div class="progress" role="progressbar"
-                                                        aria-label="Animated striped example" aria-valuenow="75"
-                                                        aria-valuemin="0" aria-valuemax="100">
-                                                        <div class="progress-bar progress-bar-striped progress-bar-animated"
-                                                            style="width: 25%"></div>
-                                                    </div>
-                                                    <p>25%</p>
-                                                </li>
-                                            </ul><button class="btn reviews-modal" data-bs-toggle="modal"
-                                                data-bs-target="#Reviews-modal" title="Quick View" tabindex="0">Write a
-                                                review</button>
                                         </div>
                                     </div>
-                                </div>
-                                <div class="col-lg-8">
-                                    <div class="comments-box">
-                                        <h5>Comments </h5>
-                                        <ul class="theme-scrollbar">
-                                            <li>
-                                                <div class="comment-items">
-                                                    <div class="user-img"> <img
-                                                            src="/template/client/assets/images/user/1.jpg" alt="">
-                                                    </div>
-                                                    <div class="user-content">
-                                                        <div class="user-info">
-                                                            <div class="d-flex justify-content-between gap-3">
-                                                                <h6> <i class="iconsax" data-icon="user-1"></i>Michel
-                                                                    Poe</h6><span>
-                                                                    <i class="iconsax" data-icon="clock"></i>Mar 29,
-                                                                    2022</span>
-                                                            </div>
-                                                            <ul class="rating mb p-0">
-                                                                <li><i class="fa-solid fa-star"></i></li>
-                                                                <li><i class="fa-solid fa-star"></i></li>
-                                                                <li><i class="fa-solid fa-star"></i></li>
-                                                                <li><i class="fa-solid fa-star"></i></li>
-                                                                <li><i class="fa-regular fa-star"></i></li>
-                                                            </ul>
+                                    <div class="col-lg-8">
+                                        <div class="comments-box">
+                                            <h5>Comments </h5>
+                                            <ul class="theme-scrollbar">
+                                                <li>
+                                                    <div class="comment-items">
+                                                        <div class="user-img"> <img
+                                                                src="/template/client/assets/images/user/1.jpg"
+                                                                alt="">
                                                         </div>
-                                                        <p>Khaki cotton blend military jacket flattering fit mock
-                                                            horn buttons and patch pockets showerproof black
-                                                            lightgrey. Printed lining patch pockets jersey blazer
-                                                            built in pocket square wool casual quilted jacket
-                                                            without hood azure.</p><a href="#"> <span> <i
-                                                                    class="iconsax" data-icon="undo"></i>
-                                                                Replay</span></a>
-                                                    </div>
-                                                </div>
-                                            </li>
-                                            <li class="reply">
-                                                <div class="comment-items">
-                                                    <div class="user-img"> <img
-                                                            src="/template/client/assets/images/user/2.jpg" alt="">
-                                                    </div>
-                                                    <div class="user-content">
-                                                        <div class="user-info">
-                                                            <div class="d-flex justify-content-between gap-3">
-                                                                <h6> <i class="iconsax" data-icon="user-1"></i>Michel
-                                                                    Poe</h6><span>
-                                                                    <i class="iconsax" data-icon="clock"></i>Mar 29,
-                                                                    2022</span>
+                                                        <div class="user-content">
+                                                            <div class="user-info">
+                                                                <div class="d-flex justify-content-between gap-3">
+                                                                    <h6> <i class="iconsax" data-icon="user-1"></i>Michel
+                                                                        Poe</h6><span>
+                                                                        <i class="iconsax" data-icon="clock"></i>Mar 29,
+                                                                        2022</span>
+                                                                </div>
+                                                                <ul class="rating mb p-0">
+                                                                    <li><i class="fa-solid fa-star"></i></li>
+                                                                    <li><i class="fa-solid fa-star"></i></li>
+                                                                    <li><i class="fa-solid fa-star"></i></li>
+                                                                    <li><i class="fa-solid fa-star"></i></li>
+                                                                    <li><i class="fa-regular fa-star"></i></li>
+                                                                </ul>
                                                             </div>
-                                                            <ul class="rating mb p-0">
-                                                                <li><i class="fa-solid fa-star"></i></li>
-                                                                <li><i class="fa-solid fa-star"></i></li>
-                                                                <li><i class="fa-solid fa-star"></i></li>
-                                                                <li><i class="fa-solid fa-star"></i></li>
-                                                                <li><i class="fa-regular fa-star"></i></li>
-                                                            </ul>
+                                                            <p>Khaki cotton blend military jacket flattering fit mock
+                                                                horn buttons and patch pockets showerproof black
+                                                                lightgrey. Printed lining patch pockets jersey blazer
+                                                                built in pocket square wool casual quilted jacket
+                                                                without hood azure.</p><a href="#"> <span> <i
+                                                                        class="iconsax" data-icon="undo"></i>
+                                                                    Replay</span></a>
                                                         </div>
-                                                        <p>Khaki cotton blend military jacket flattering fit mock
-                                                            horn buttons and patch pockets showerproof black
-                                                            lightgrey. Printed lining patch pockets jersey blazer
-                                                            built in pocket square wool casual quilted jacket
-                                                            without hood azure.</p><a href="#"> <span> <i
-                                                                    class="iconsax" data-icon="undo"></i>
-                                                                Replay</span></a>
                                                     </div>
-                                                </div>
-                                            </li>
-                                            <li>
-                                                <div class="comment-items">
-                                                    <div class="user-img"> <img
-                                                            src="/template/client/assets/images/user/3.jpg" alt="">
-                                                    </div>
-                                                    <div class="user-content">
-                                                        <div class="user-info">
-                                                            <div class="d-flex justify-content-between gap-3">
-                                                                <h6> <i class="iconsax" data-icon="user-1"></i>Michel
-                                                                    Poe</h6><span>
-                                                                    <i class="iconsax" data-icon="clock"></i>Mar 29,
-                                                                    2022</span>
+                                                </li>
+                                                <li class="reply">
+                                                    <div class="comment-items">
+                                                        <div class="user-img"> <img
+                                                                src="/template/client/assets/images/user/2.jpg"
+                                                                alt="">
+                                                        </div>
+                                                        <div class="user-content">
+                                                            <div class="user-info">
+                                                                <div class="d-flex justify-content-between gap-3">
+                                                                    <h6> <i class="iconsax" data-icon="user-1"></i>Michel
+                                                                        Poe</h6><span>
+                                                                        <i class="iconsax" data-icon="clock"></i>Mar 29,
+                                                                        2022</span>
+                                                                </div>
+                                                                <ul class="rating mb p-0">
+                                                                    <li><i class="fa-solid fa-star"></i></li>
+                                                                    <li><i class="fa-solid fa-star"></i></li>
+                                                                    <li><i class="fa-solid fa-star"></i></li>
+                                                                    <li><i class="fa-solid fa-star"></i></li>
+                                                                    <li><i class="fa-regular fa-star"></i></li>
+                                                                </ul>
                                                             </div>
-                                                            <ul class="rating mb p-0">
-                                                                <li><i class="fa-solid fa-star"></i></li>
-                                                                <li><i class="fa-solid fa-star"></i></li>
-                                                                <li><i class="fa-solid fa-star"></i></li>
-                                                                <li><i class="fa-solid fa-star"></i></li>
-                                                                <li><i class="fa-regular fa-star"></i></li>
-                                                            </ul>
+                                                            <p>Khaki cotton blend military jacket flattering fit mock
+                                                                horn buttons and patch pockets showerproof black
+                                                                lightgrey. Printed lining patch pockets jersey blazer
+                                                                built in pocket square wool casual quilted jacket
+                                                                without hood azure.</p><a href="#"> <span> <i
+                                                                        class="iconsax" data-icon="undo"></i>
+                                                                    Replay</span></a>
                                                         </div>
-                                                        <p>Khaki cotton blend military jacket flattering fit mock
-                                                            horn buttons and patch pockets showerproof black
-                                                            lightgrey. Printed lining patch pockets jersey blazer
-                                                            built in pocket square wool casual quilted jacket
-                                                            without hood azure.</p><a href="#"> <span> <i
-                                                                    class="iconsax" data-icon="undo"></i>
-                                                                Replay</span></a>
                                                     </div>
-                                                </div>
-                                            </li>
-                                        </ul>
+                                                </li>
+                                                <li>
+                                                    <div class="comment-items">
+                                                        <div class="user-img"> <img
+                                                                src="/template/client/assets/images/user/3.jpg"
+                                                                alt="">
+                                                        </div>
+                                                        <div class="user-content">
+                                                            <div class="user-info">
+                                                                <div class="d-flex justify-content-between gap-3">
+                                                                    <h6> <i class="iconsax" data-icon="user-1"></i>Michel
+                                                                        Poe</h6><span>
+                                                                        <i class="iconsax" data-icon="clock"></i>Mar 29,
+                                                                        2022</span>
+                                                                </div>
+                                                                <ul class="rating mb p-0">
+                                                                    <li><i class="fa-solid fa-star"></i></li>
+                                                                    <li><i class="fa-solid fa-star"></i></li>
+                                                                    <li><i class="fa-solid fa-star"></i></li>
+                                                                    <li><i class="fa-solid fa-star"></i></li>
+                                                                    <li><i class="fa-regular fa-star"></i></li>
+                                                                </ul>
+                                                            </div>
+                                                            <p>Khaki cotton blend military jacket flattering fit mock
+                                                                horn buttons and patch pockets showerproof black
+                                                                lightgrey. Printed lining patch pockets jersey blazer
+                                                                built in pocket square wool casual quilted jacket
+                                                                without hood azure.</p><a href="#"> <span> <i
+                                                                        class="iconsax" data-icon="undo"></i>
+                                                                    Replay</span></a>
+                                                        </div>
+                                                    </div>
+                                                </li>
+                                            </ul>
+                                        </div>
                                     </div>
                                 </div>
                             </div>
@@ -634,111 +630,80 @@ Chi tiết sản phẩm
                 </div>
             </div>
         </div>
-    </div>
-</section>
-<section class="section-b-space pt-0">
-    <div class="custom-container product-contain container">
-        <div class="title text-start">
-            <h3>Sản phẩm liên quan</h3><svg>
-                <use href="/template/client/assets/svg/icon-sprite.svg#main-line"></use>
-            </svg>
-        </div>
-        <div class="swiper special-offer-slide-2">
-            <div class="swiper-wrapper ratio1_3">
-                @foreach($relatedProducts as $product)
-                <div class="swiper-slide">
-                    <div class="product-box-3">
-                        <div class="img-wrapper">
-                            <div class="label-block">
-                                <span class="lable-1">NEW</span>
-                                <a class="label-2 wishlist-icon" href="javascript:void(0)" tabindex="0">
-                                    <i class="iconsax" data-icon="heart" aria-hidden="true" data-bs-toggle="tooltip"
-                                        data-bs-title="Add to Wishlist"></i>
-                                </a>
+    </section>
+    <section class="section-b-space pt-0">
+        <div class="custom-container product-contain container">
+            <div class="title text-start">
+                <h3>Sản phẩm liên quan</h3><svg>
+                    <use href="/template/client/assets/svg/icon-sprite.svg#main-line"></use>
+                </svg>
+            </div>
+            <div class="swiper special-offer-slide-2">
+                <div class="swiper-wrapper ratio1_3">
+                    @foreach ($relatedProducts as $product)
+                        <div class="swiper-slide">
+                            <div class="product-box-3">
+                                <div class="img-wrapper">
+                                    <div class="label-block">
+                                        <span class="lable-1">NEW</span>
+                                        <a class="label-2 wishlist-icon" href="javascript:void(0)" tabindex="0">
+                                            <i class="iconsax" data-icon="heart" aria-hidden="true"
+                                                data-bs-toggle="tooltip" data-bs-title="Add to Wishlist"></i>
+                                        </a>
+                                    </div>
+                                    <div class="product-image">
+                                        <a class="pro-first" href="{{ route('product', $product->id) }}">
+                                            <img class="bg-img" src="{{ '/storage/' . $product->image }}"
+                                                alt="product">
+                                        </a>
+                                        @php
+                                            $firstImage = $product->productImages->first();
+                                        @endphp
+                                        <a class="pro-sec" href="{{ route('product', $product->id) }}">
+                                            <img class="bg-img" src="{{ '/storage/' . $firstImage->image_url }}"
+                                                alt="product">
+                                        </a>
+                                    </div>
+                                    <div class="cart-info-icon">
+                                        <a href="#" data-bs-toggle="modal" data-bs-target="#addtocart"
+                                            tabindex="0">
+                                            <i class="iconsax" data-icon="basket-2" aria-hidden="true"
+                                                data-bs-toggle="tooltip" data-bs-title="Add to cart">
+                                            </i>
+                                        </a>
+                                        <a href="#" data-bs-toggle="modal" data-bs-target="#quick-view"
+                                            tabindex="0">
+                                            <i class="iconsax" data-icon="eye" aria-hidden="true"
+                                                data-bs-toggle="tooltip" data-bs-title="Quick View">
+                                            </i>
+                                        </a>
+                                    </div>
+                                </div>
+                                <div class="product-detail">
+                                    <ul class="rating">
+                                        <li><i class="fa-solid fa-star"></i></li>
+                                        <li><i class="fa-solid fa-star"></i></li>
+                                        <li><i class="fa-solid fa-star"></i></li>
+                                        <li><i class="fa-solid fa-star-half-stroke"></i></li>
+                                        <li><i class="fa-regular fa-star"></i></li>
+                                        <li>4.3</li>
+                                    </ul><a href="{{ route('product', $product->id) }}">
+                                        <h6>{{ $product->name }}</h6>
+                                    </a>
+                                    <p>
+                                        @if ($product->productVariants->count() === 1)
+                                            {{ number_format($product->productVariants->first()->price, 0, ',', '.') }}₫
+                                        @else
+                                            {{ number_format($product->productVariants->min('price'), 0, ',', '.') }}₫
+                                            -
+                                            {{ number_format($product->productVariants->max('price'), 0, ',', '.') }}₫
+                                        @endif
+                                    </p>
+                                </div>
                             </div>
-                            <div class="product-image">
-                                <a class="pro-first" href="{{ route('product', $product->id) }}">
-                                    <img class="bg-img" src="{{ '/storage/' . $product->image}}" alt="product">
-                                </a>
-                                @php
-                                $firstImage = $product->productImages->first();
-                                @endphp
-                                <a class="pro-sec" href="{{ route('product', $product->id) }}">
-                                    <img class="bg-img" src="{{ '/storage/' . $firstImage->image_url }}" alt="product">
-                                </a>
-                            </div>
-                            <div class="cart-info-icon">
-                                <a href="#" data-bs-toggle="modal" data-bs-target="#addtocart" tabindex="0">
-                                    <i class="iconsax" data-icon="basket-2" aria-hidden="true" data-bs-toggle="tooltip"
-                                        data-bs-title="Add to cart">
-                                    </i>
-                                </a>
-                                {{-- <a href="compare.html" tabindex="0">
-                                    <i class="iconsax" data-icon="arrow-up-down" aria-hidden="true"
-                                        data-bs-toggle="tooltip" data-bs-title="Compare">
-                                    </i>
-                                </a> --}}
-                                <a href="#" data-bs-toggle="modal" data-bs-target="#quick-view" tabindex="0">
-                                    <i class="iconsax" data-icon="eye" aria-hidden="true" data-bs-toggle="tooltip"
-                                        data-bs-title="Quick View">
-                                    </i>
-                                </a>
-                            </div>
-                            {{-- <div class="countdown">
-                                <ul class="clockdiv2">
-                                    <li>
-                                        <div class="timer">
-                                            <div class="days"></div>
-                                        </div><span class="title">Days</span>
-                                    </li>
-                                    <li class="dot"> <span>:</span></li>
-                                    <li>
-                                        <div class="timer">
-                                            <div class="hours"></div>
-                                        </div><span class="title">Hours</span>
-                                    </li>
-                                    <li class="dot"> <span>:</span></li>
-                                    <li>
-                                        <div class="timer">
-                                            <div class="minutes"></div>
-                                        </div><span class="title">Min</span>
-                                    </li>
-                                    <li class="dot"> <span>:</span></li>
-                                    <li>
-                                        <div class="timer">
-                                            <div class="seconds"></div>
-                                        </div><span class="title">Sec</span>
-                                    </li>
-                                </ul>
-                            </div> --}}
                         </div>
-                        <div class="product-detail">
-                            <ul class="rating">
-                                <li><i class="fa-solid fa-star"></i></li>
-                                <li><i class="fa-solid fa-star"></i></li>
-                                <li><i class="fa-solid fa-star"></i></li>
-                                <li><i class="fa-solid fa-star-half-stroke"></i></li>
-                                <li><i class="fa-regular fa-star"></i></li>
-                                <li>4.3</li>
-                            </ul><a href="{{ route('product', $product->id) }}">
-                                <h6>{{$product->name}}</h6>
-                            </a>
-                            <p>
-                                @if ($product->productVariants->count() === 1)
-                                <!-- Nếu chỉ có 1 biến thể giá -->
-                                {{ number_format($product->productVariants->first()->price, 0, ',', '.') }}₫
-                                @else
-                                <!-- Nếu có nhiều biến thể giá -->
-                                {{ number_format($product->productVariants->min('price'), 0, ',', '.') }}₫ -
-                                {{ number_format($product->productVariants->max('price'), 0, ',', '.') }}₫
-                                @endif
-                                {{-- <span>-20%</span> --}}
-                            </p>
-                        </div>
-                    </div>
-                </div>
-                @endforeach
-                {{-- <div class="swiper-slide">
+                    @endforeach
+                    {{-- <div class="swiper-slide">
                     <div class="product-box-3">
                         <div class="img-wrapper">
                             <div class="label-block"><span class="lable-1">NEW</span><a class="label-2 wishlist-icon"
@@ -940,27 +905,42 @@ Chi tiết sản phẩm
                         </div>
                     </div>
                 </div> --}}
+                </div>
             </div>
         </div>
-    </div>
-</section>
-<script>
-    document.querySelectorAll('.variant-option').forEach(function(button) {
-        button.addEventListener('click', function() {
-            // Kiểm tra nếu nút đã được chọn (có lớp 'selected')
-            if (this.classList.contains('selected')) {
-                // Nếu đã chọn, click lần nữa sẽ hủy chọn (xóa lớp 'selected')
-                this.classList.remove('selected');
-            } else {
-                // Nếu chưa được chọn, xóa lớp 'selected' khỏi các nút khác trong cùng danh sách
-                let parentUl = this.closest('.variant');
-                parentUl.querySelectorAll('.variant-option').forEach(function(btn) {
-                    btn.classList.remove('selected');
-                });
-                // Thêm lớp 'selected' vào nút hiện tại
-                this.classList.add('selected');
-            }
-        });
-    });
-</script>
+    </section>
 @endsection
+@push('scripts')
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const defaultPrice = document.getElementById('variant-price').textContent;
+            const defaultQuantity = 0;
+            document.querySelectorAll('.variant-option').forEach(function(button) {
+                button.addEventListener('click', function() {
+                    // Kiểm tra nếu nút đã được chọn (có lớp 'selected')
+                    if (this.classList.contains('selected')) {
+                        // Nếu đã chọn, khi nhấn lại sẽ bỏ chọn và đặt lại giá trị mặc định
+                        this.classList.remove('selected');
+                        document.getElementById('variant-price').textContent = defaultPrice;
+                        document.getElementById('variant-quantity').textContent = defaultQuantity;
+                    } else {
+                        // Nếu chưa được chọn, bỏ lớp 'selected' khỏi các nút khác và chọn nút hiện tại
+                        this.closest('.variant').querySelectorAll('.variant-option').forEach(
+                            function(btn) {
+                                btn.classList.remove('selected');
+                            });
+                        this.classList.add('selected');
+
+                        // Lấy giá và số lượng từ thuộc tính data của nút hiện tại
+                        const price = this.getAttribute('data-price');
+                        const quantity = this.getAttribute('data-quantity');
+
+                        // Cập nhật giá và số lượng hiển thị
+                        document.getElementById('variant-price').textContent = price;
+                        document.getElementById('variant-quantity').textContent = quantity;
+                    }
+                });
+            });
+        });
+    </script>
+@endpush
