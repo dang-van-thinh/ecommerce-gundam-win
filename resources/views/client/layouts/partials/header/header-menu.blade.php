@@ -104,30 +104,58 @@
                             <a href="#">
                                 <i class="iconsax" data-icon="user-2"></i>
                             </a>
-                            <!--Nếu người dùng chưa đăng nhập nhé-->
-                            <div class="onhover-show-div user">
-                                <ul>
-                                    <li> <a href="{{ route('auth.login-view') }}">Đăng nhập </a></li>
-                                    <li> <a href="{{ route('auth.register-view') }}">Đăng ký</a></li>
-                                </ul>
-                            </div>
-                            <!--Còn đây là người dùng đăng nhập rồi nhé nhé , tắt cái này thì bật cái kia và ngược lại nhé fen :))-->
-
-                            {{-- <div class="onhover-show-div user" style="width: 200px">
-                                <ul>
-                                    <li> <a href="{{ route('profile.infomation') }}">Thông tin tài khoản </a></li>
-                                    <li> <a href="{{ route('profile.order-history') }}">Lịch sử mua hàng</a></li>
-                                    <li> <a href="">Đăng xuất</a></li>
-                                </ul>
-                            </div> --}}
+                            @if (Auth::id())
+                                <!-- Người dùng đã đăng nhập -->
+                                <div class="onhover-show-div user" style="width: 200px;">
+                                    <ul>
+                                        <li><a href="{{ route('profile.infomation') }}">Thông tin tài khoản</a></li>
+                                        <li><a href="{{ route('profile.order-history') }}">Lịch sử mua hàng</a></li>
+                                        <li>
+                                            <!-- Form đăng xuất để xử lý bằng phương thức POST -->
+                                            <form action="{{ route('auth.logout') }}" method="POST"
+                                                style="display: inline;">
+                                                @csrf
+                                                <button type="submit" title="Đăng xuất"
+                                                    style="background: none; border: none; padding: 0; cursor: pointer; text-decoration: none;">
+                                                    <a>Đăng xuất</a>
+                                                </button>
+                                            </form>
+                                        </li>
+                                    </ul>
+                                </div>
+                            @else
+                                <!--Nếu người dùng chưa đăng nhập nhé-->
+                                <div class="onhover-show-div user">
+                                    <ul>
+                                        <li> <a href="{{ route('auth.login-view') }}">Đăng nhập </a></li>
+                                        <li> <a href="{{ route('auth.register-view') }}">Đăng ký</a></li>
+                                    </ul>
+                                </div>
+                            @endif
                         </li>
                         <li class="onhover-div shopping-cart">
-                            <a class="p-0" href="{{ route('cart') }}">
-                                <div class="shoping-prize">
-                                    <i class="iconsax pe-2" data-icon="basket-2"></i>
-                                    1
+                            @if (Auth::id())
+                                <a class="p-0" href="{{ route('cart') }}">
+                                    <div class="shoping-prize">
+                                        <i class="iconsax pe-2" data-icon="basket-2"></i>
+                                        1
+                                    </div>
+                                </a>
+                            @else
+                                <!--Nếu người dùng chưa đăng nhập nhé-->
+                                <div class="p-0">
+                                    <div class="shoping-prize">
+                                        <i class="iconsax pe-2" data-icon="basket-2"></i> 1
+                                    </div>
                                 </div>
-                            </a>
+                                <div class="onhover-show-div user" style="width:200px">
+                                    <ul>
+                                        <li>
+                                            <p>Vui lòng đăng nhập !</p>
+                                        </li>
+                                    </ul>
+                                </div>
+                            @endif
                         </li>
                     </ul>
                 </div>

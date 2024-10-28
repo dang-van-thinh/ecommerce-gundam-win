@@ -87,14 +87,12 @@
                                 <ul class="profile-information mb-0">
                                     <li>
                                         <h6>Email :</h6>
-                                        <p>john.customer@example.com<span data-bs-toggle="modal"
-                                                data-bs-target="#edit-email" title="Quick View" tabindex="0">Edit</span>
-                                        </p>
+                                        <p>john.customer@example.com </p>
                                     </li>
                                     <li>
-                                        <h6>Password :</h6>
+                                        <h6>Mật khẩu :</h6>
                                         <p>●●●●●●<span data-bs-toggle="modal" data-bs-target="#edit-password"
-                                                title="Quick View" tabindex="0">Edit</span></p>
+                                                title="Quick View" tabindex="0">Thay đổi</span></p>
                                     </li>
                                 </ul>
                             </div>
@@ -108,4 +106,5 @@
             </div>
         </div>
     </div>
+    @include('client.pages.profile.layouts.components.edit-password')
 @endsection

@@ -35,10 +35,10 @@ class ImageArticleController extends Controller
             'images.*.image' => 'Tệp tải lên phải là hình ảnh',
             'images.*.mimes' => 'Định dạng ảnh phải là jpeg, png, jpg, gif, svg',
             'images.*.max' => 'Kích thước ảnh phải nhỏ hơn 2MB',
-        ]);       
+        ]);
         if ($validator->fails()) {
             $errors = $validator->errors();
-        
+
             // Kiểm tra nếu $errors có thông tin lỗi
             if ($errors->isNotEmpty()) {
                 return response()->json([
@@ -46,7 +46,7 @@ class ImageArticleController extends Controller
                     'errors' => $errors->all(), // Lấy tất cả lỗi cho cả `images` và `images.*`
                 ], 422);
             }
-        }       
+        }
         // Kiểm tra xem có hình ảnh nào được tải lên không
         if ($request->hasFile('images')) {
             $imagePaths = [];
