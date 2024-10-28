@@ -97,64 +97,78 @@
                 </div>
                 <hr>
 
+                <div class="col-12">
+                    <h3>Tạo sản phẩm biến thể</h3><br>
+                    <div class="d-flex">
+                        <button type="button" id="add-variant" class="btn btn-secondary btn-sm mx-1">Tạo thủ công</button>
+                        <button type="button" id="check-duplicates" class="btn btn-warning btn-sm">Check Trùng Lặp</button>
+                    </div>
+                    <hr>
+
+                    <!-- Vùng hiển thị các biến thể được tạo -->
+                    <div id="variants"></div>
+                </div>
+
+
                 <!-- Biến thể hiện có -->
-                <h3>Các biến thể sản phẩm hiện có</h3>
-                <div id="existing-variants">
+                <div id="existing-variants" class="col-12">
                     @foreach ($product->productVariants as $index => $variant)
                         <div class="variant mb-4 border p-3">
-                            <h4>Biến thể {{ $index + 1 }}</h4>
-                            <div class="mt-2">
-                                <strong>Thuộc tính:</strong> {{ $variant->attributeValues->pluck('name')->implode(', ') }}
-                            </div>
-                            <div class="form-group mb-2">
-                                <label>Giá:</label>
-                                <input type="number" name="variants[{{ $variant->id }}][price]" class="form-control"
-                                    value="{{ $variant->price }}" required min="0">
-                            </div>
-                            <div class="form-group mb-2">
-                                <label>Số lượng:</label>
-                                <input type="number" name="variants[{{ $variant->id }}][quantity]" class="form-control"
-                                    value="{{ $variant->quantity }}" required min="0">
-                            </div>
-                            <input type="hidden" name="variants[{{ $variant->id }}][id]" value="{{ $variant->id }}">
-                            <input type="hidden" class="existing-variant-attributes"
-                                value="{{ $variant->attributeValues->pluck('id')->implode('-') }}">
+                            <h4>Biến thể {{ $index + 1 }}</h4><br>
 
-                            <!-- Nút xoá biến thể -->
-                            <div class="text-end">
-                                <button type="button" class="btn btn-danger btn-sm remove-variant"
-                                    data-variant-id="{{ $variant->id }}">Xoá biến thể
-                                </button>
+                            <div class="d-flex justify-content-between align-items-start">
+                                <div class="d-flex flex-wrap">
+                                    <strong class="mr-3">Thuộc tính:</strong>
+                                    @foreach ($attributes as $attribute)
+                                        <div class="form-group d-flex align-items-center me-2">
+                                            <select name="variants[{{ $variant->id }}][attributes][{{ $attribute->id }}]"
+                                                class="form-control variant-select"
+                                                data-attribute-id="{{ $attribute->id }}" required>
+                                                <option value="">Chọn {{ $attribute->name }}</option>
+                                                @foreach ($attribute->attributeValues as $value)
+                                                    <option value="{{ $value->id }}"
+                                                        {{ $variant->attributeValues->pluck('id')->contains($value->id) ? 'selected' : '' }}>
+                                                        {{ $value->name }}
+                                                    </option>
+                                                @endforeach
+                                            </select>
+                                        </div>
+                                    @endforeach
+                                </div>
+
+                                <div class="form-group">
+                                    <button type="button" class="btn btn-info btn-sm toggle-variant-info">Ẩn/Hiện thông
+                                        tin</button>
+                                    <button type="button" class="btn btn-danger btn-sm remove-variant"
+                                        data-variant-id="{{ $variant->id }}">Xóa biến thể</button>
+                                </div>
+                            </div>
+
+                            <!-- Thông tin chi tiết biến thể (ẩn/hiện) -->
+                            <div class="variant-info mt-3" style="display:none;">
+                                <div class="form-group mb-2">
+                                    <label>Giá:</label>
+                                    <input type="number" name="variants[{{ $variant->id }}][price]"
+                                        class="form-control" value="{{ $variant->price }}" required min="0">
+                                </div>
+                                <div class="form-group mb-2">
+                                    <label>Số lượng:</label>
+                                    <input type="number" name="variants[{{ $variant->id }}][quantity]"
+                                        class="form-control" value="{{ $variant->quantity }}" required min="0">
+                                </div>
+                                <input type="hidden" name="variants[{{ $variant->id }}][id]"
+                                    value="{{ $variant->id }}">
+                                <input type="hidden" class="existing-variant-attributes"
+                                    value="{{ $variant->attributeValues->pluck('id')->implode('-') }}">
                             </div>
                         </div>
                     @endforeach
                 </div>
 
-                <!-- Thuộc tính để tạo biến thể mới -->
-                <div class="col-12">
-                    <h3>Thêm biến thể sản phẩm mới</h3>
-                    <div id="attribute-selection">
-                        @foreach ($attributes as $attribute)
-                            <div class="form-group">
-                                <label>{{ $attribute->name }}:</label>
-                                <select name="attributes[{{ $attribute->id }}][]" class="form-control attribute-select"
-                                    multiple>
-                                    @foreach ($attribute->attributeValues as $value)
-                                        <option value="{{ $value->id }}">{{ $value->name }}</option>
-                                    @endforeach
-                                </select>
-                            </div>
-                        @endforeach
-                    </div>
-
-                    <button type="button" id="generate-variants" class="btn btn-secondary">Tạo biến thể mới</button>
-                    <hr>
-                    <div id="new-variants"></div>
-                </div>
 
                 <div class="mt-3">
-                    <a class="btn btn-primary btn-sm" href="{{ route('products.index') }}">Quay lại</a>
-                    <button type="submit" class="btn btn-success btn-sm">Lưu thay đổi</button>
+                    <a class="btn btn-primary" href="{{ route('products.index') }}">Quay lại</a>
+                    <button type="submit" class="btn btn-success">Lưu thay đổi</button>
                 </div>
             </form>
         </div>
@@ -172,10 +186,16 @@
                 height: 300,
             });
 
-            $('#generate-variants').on('click', function() {
-                generateVariants();
+            // Ẩn/hiện phần thông tin chi tiết của từng biến thể
+            document.querySelectorAll('.toggle-variant-info').forEach(button => {
+                button.addEventListener('click', function() {
+                    const variantInfo = this.closest('.variant').querySelector('.variant-info');
+                    variantInfo.style.display = variantInfo.style.display === 'none' ? 'block' :
+                        'none';
+                });
             });
 
+            // Xoá biến thể
             $(document).on('click', '.remove-variant', function() {
                 const variantId = $(this).data('variant-id');
                 $(this).closest('.variant').hide();
@@ -185,92 +205,114 @@
                     value: variantId
                 }).appendTo('form');
             });
-        });
 
-        function generateVariants() {
-            const attributeSelects = document.querySelectorAll('.attribute-select');
-            let combinations = [];
+            let variantCount = $('#variants .variant').length; // Đếm số biến thể ban đầu
 
-            attributeSelects.forEach(select => {
-                let selectedValues = Array.from(select.selectedOptions).map(option => ({
-                    id: option.value,
-                    name: option.text
-                }));
-                if (selectedValues.length > 0) {
-                    combinations.push(selectedValues);
-                }
+            // Khi nhấn nút "Thêm thủ công", tạo một biến thể mới
+            $('#add-variant').on('click', function() {
+                const newVariant = createVariantForm(variantCount); // Tạo biến thể mới
+                $('#variants').append(newVariant); // Thêm vào vùng hiển thị biến thể
+                variantCount++; // Tăng biến đếm biến thể
             });
 
-            // Kiểm tra xem có tồn tại biến thể hiện có nào không
-            const existingAttributes = document.querySelectorAll('.existing-variant-attributes');
-            const existingAttributesCount = existingAttributes.length > 0 ?
-                existingAttributes[0].value.split('-').length :
-                0;
+            // Hàm tạo giao diện cho một biến thể mới
 
-            if (existingAttributesCount > 0 && combinations.length !== existingAttributesCount) {
-                alert('Số lượng thuộc tính mới không khớp với các biến thể hiện có. Vui lòng chọn lại.');
-                return;
+            function createVariantForm(index) {
+                const variantDiv = $(`
+                    <div class="variant mb-4 border p-3">
+                        <h4>Biến thể mới</h4>
+                        <div class="d-flex justify-content-between">
+                            <div class="d-flex flex-wrap">
+                                <strong class="mr-3">Thuộc tính:</strong>
+                                @foreach ($attributes as $attribute)
+                                    <div class="form-group me-1">
+                                        <select name="variants[${index}][attributes][{{ $attribute->id }}]" 
+                                                class="form-control" required>
+                                            <option value="">Chọn {{ $attribute->name }}</option>
+                                            @foreach ($attribute->attributeValues as $value)
+                                                <option value="{{ $value->id }}">{{ $value->name }}</option>
+                                            @endforeach
+                                        </select>
+                                    </div>
+                                @endforeach
+                            </div>
+                            <div>
+                                <button type="button" class="btn btn-info btn-sm toggle-variant-info">
+                                    Ẩn/Hiện thông tin
+                                </button>
+                                <button type="button" class="btn btn-danger btn-sm remove-variant">
+                                    Xóa biến thể
+                                </button>
+                            </div>
+                        </div>
+
+                        <div class="variant-info mt-3" style="display:none;">
+                            <div class="form-group">
+                                <label>Giá:</label>
+                                <input type="number" name="variants[${index}][price]" class="form-control" required min="0">
+                            </div>
+                            <div class="form-group">
+                                <label>Số lượng:</label>
+                                <input type="number" name="variants[${index}][quantity]" class="form-control" required min="0">
+                            </div>
+                        </div>
+                    </div>
+                `);
+                // Gắn sự kiện cho nút "Ẩn/Hiện thông tin" của biến thể này
+                variantDiv.find('.toggle-variant-info').on('click', function() {
+                    $(this).closest('.variant').find('.variant-info').toggle();
+                });
+
+                // Gắn sự kiện cho nút "Xóa biến thể"
+                variantDiv.find('.remove-variant').on('click', function() {
+                    $(this).closest('.variant').remove(); // Xóa khỏi giao diện
+                });
+
+                return variantDiv;
             }
 
-            if (combinations.length === 0) {
-                alert('Vui lòng chọn ít nhất một thuộc tính!');
-                return;
-            }
+            $('#check-duplicates').on('click', function() {
+                const variants = []; // Mảng lưu trữ các biến thể để kiểm tra trùng lặp
+                const duplicateVariants = []; // Mảng lưu trữ thông tin các biến thể trùng lặp
 
-            const variants = combinations.length === 1 ?
-                combinations[0].map(value => [value]) :
-                cartesianProduct(combinations);
+                // Duyệt qua tất cả các biến thể
+                $('.variant').each(function(index) {
+                    const attributes = [];
 
-            const variantsDiv = document.getElementById('new-variants');
-            variantsDiv.innerHTML = '';
+                    // Duyệt qua tất cả các thuộc tính của biến thể
+                    $(this).find('.variant-select').each(function() {
+                        const attributeId = $(this).data('attribute-id');
+                        const valueId = $(this).val();
+                        attributes.push({
+                            attributeId,
+                            valueId
+                        });
+                    });
 
-            variants.forEach((variant, index) => {
-                const attributeIds = variant.map(v => v.id).sort().join('-');
-                const existingVariants = Array.from(existingAttributes).map(input => input.value);
+                    // Chuỗi JSON của tổ hợp thuộc tính cho biến thể
+                    const attributesString = JSON.stringify(attributes);
 
-                if (!existingVariants.includes(attributeIds)) {
-                    const variantIndex = document.querySelectorAll('.variant').length;
-                    const variantDiv = document.createElement('div');
-                    variantDiv.classList.add('variant', 'border', 'p-3', 'position-relative');
+                    // Kiểm tra nếu biến thể đã tồn tại trong mảng
+                    const duplicateIndex = variants.indexOf(attributesString);
+                    if (duplicateIndex !== -1) {
+                        // Nếu trùng lặp, lưu lại thông tin biến thể bị trùng
+                        duplicateVariants.push({
+                            current: index + 1, // Vị trí của biến thể hiện tại
+                            duplicateWith: duplicateIndex + 1 // Vị trí của biến thể trùng
+                        });
+                    } else {
+                        // Nếu không trùng lặp, thêm tổ hợp thuộc tính vào mảng
+                        variants.push(attributesString);
+                    }
+                });
 
-                    variantDiv.innerHTML = `
-                                <div class="position-relative">
-                                    <div class="d-flex justify-content-between">
-                                        <h4>Biến thể mới ${variantIndex + 1}</h4>
-                                    </div>
-                                    <p>Thuộc tính: ${variant.map(v => v.name).join(', ')}</p>
-                                    <div class="form-group">
-                                        <label>Giá:</label>
-                                        <input type="number" name="new_variants[${variantIndex}][price]" class="form-control" required min="0">
-                                    </div>
-                                    <div class="form-group">
-                                        <label>Số lượng:</label>
-                                        <input type="number" name="new_variants[${variantIndex}][quantity]" class="form-control" required min="0">
-                                    </div>
-                                    ${variant.map(v => `<input type="hidden" name="new_variants[${variantIndex}][attributes][]" value="${v.id}">`).join('')}
-
-                                    <div class="text-end"> 
-                                        <button type="button" class="btn btn-danger btn-sm remove-variant">Xóa biến thể</button>
-                                    </div>
-                                </div>
-                            `;
-
-                    variantsDiv.appendChild(variantDiv);
+                // Hiển thị thông báo
+                if (duplicateVariants.length > 0) {
+                    alert('Có biến thể bị trùng lặp');
                 } else {
-                    const attributeNames = variant.map(v => v.name).join(', ');
-                    alert(`Biến thể với thuộc tính ${attributeNames} đã tồn tại.`);
+                    alert('Không có biến thể nào bị trùng lặp.');
                 }
             });
-
-            // Gán sự kiện cho nút "Xoá" của các biến thể mới
-            $(document).on('click', '.remove-new-variant', function() {
-                $(this).closest('.variant').remove();
-            });
-        }
-
-
-        function cartesianProduct(arr) {
-            return arr.reduce((a, b) => a.flatMap(d => b.map(e => [d, e].flat())));
-        }
+        });
     </script>
 @endpush
