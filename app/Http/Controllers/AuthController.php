@@ -16,6 +16,7 @@ use Hash;
 use Illuminate\Http\Request;
 use Mail;
 use Str;
+use Carbon\Carbon;
 class AuthController extends Controller
 {
     public function loginView()
@@ -24,63 +25,75 @@ class AuthController extends Controller
         return view('client.pages.auth.login');
     }
     public function storeLogin(LoginRequest $request)
-    {
-        // Lấy thông tin 'email' và 'password' từ request
-        $credentials = $request->only('email', 'password');
-        // Tìm người dùng có email tương ứng
-        $user = User::where('email', $credentials['email'])->first();
-        // Kiểm tra xem tài khoản có tồn tại không
-        if (!$user) {
-            // Thông báo tài khoản không tồn tại
-            toastr("Tài khoản không tồn tại", NotificationInterface::ERROR, "Đăng nhập thất bại", [
-                "closeButton" => true,
-                "progressBar" => true,
-                "timeOut" => "3000",
-            ]);
-            return back(); // Quay lại trang trước
-        }
-        // Kiểm tra trạng thái tài khoản (tài khoản có bị khóa không)
-        if ($user->status !== 'ACTIVE') {
-            // Thông báo tài khoản bị khóa
-            toastr("Tài khoản của bạn đã bị khóa <br> Vui lòng liên hệ shop", NotificationInterface::ERROR, "Đăng nhập thất bại", [
-                "closeButton" => true,
-                "progressBar" => true,
-                "timeOut" => "3000",
-            ]);
-            return back(); // Quay lại trang trước
-        }
-        // Kiểm tra xem tài khoản đã được xác thực email chưa
-        if (is_null($user->email_verified_at)) {
-            // Thông báo tài khoản chưa xác thực email
-            toastr("Tài khoản của bạn chưa được xác thực email", NotificationInterface::ERROR, "Đăng nhập thất bại", [
-                "closeButton" => true,
-                "progressBar" => true,
-                "timeOut" => "3000",
-            ]);
-            return back(); // Quay lại trang trước
-        }
-        // Thực hiện đăng nhập người dùng nếu thông tin đăng nhập đúng
-        if (Auth::attempt($credentials)) {
-            if ($request->has('remember')) {
-                // Tạo cookie với email và mật khẩu
-                Cookie::queue('email', $request->email, 604800);
-                Cookie::queue('password', $request->password, 604800);
-            }
-            // Thông báo đăng nhập thành công
-            toastr("Xin chào bạn đến với GunDamWin", NotificationInterface::SUCCESS, "Đăng nhập thành công", [
-                "closeButton" => true,
-                "progressBar" => true,
-                "timeOut" => "3000",
-            ]);
-            return redirect()->route('home'); // Chuyển hướng về trang chủ
-        }
-        // Nếu thông tin đăng nhập không đúng, thông báo lỗi
-        toastr("Thông tin tài khoản hoặc mật khẩu không chính xác", NotificationInterface::ERROR, "Đăng nhập thất bại", [
+{
+    $credentials = $request->only('email', 'password');
+    $user = User::where('email', $credentials['email'])->first();
+    // Kiểm tra xem tài khoản có tồn tại không
+    if (!$user) {
+        toastr("Tài khoản không tồn tại", NotificationInterface::ERROR, "Đăng nhập thất bại");
+        return back();
+    }
+    if ($user->status !== 'ACTIVE') {
+        // Lưu thông báo vào session
+        toastr("Tài khoản đã bị khóa.", NotificationInterface::ERROR, "Cảnh báo", [
             "closeButton" => true,
             "progressBar" => true,
             "timeOut" => "3000",
         ]);
-        return back(); // Quay lại trang trước
+        return redirect()->route('auth.login-view');
+    }
+    if ($user->email_verified_at == null) {
+        Mail::to($user->email)->send(new VerifyAccount($user));
+        // Thông báo đăng ký thành công và yêu cầu xác thực email
+        toastr("Vui lòng kiểm tra email để xác thực tài khoản", NotificationInterface::SUCCESS, "Xác thực email", [
+            "closeButton" => true,
+            "progressBar" => true,
+            "timeOut" => "3000",
+        ]);
+        // Chuyển hướng người dùng đến trang đăng nhập
+        return back();
+    }
+    // Kiểm tra thời gian gần đây nhất cố gắng đăng nhập
+    if ($user->last_login_attempt) {
+        $lastLoginAttempt = Carbon::parse($user->last_login_attempt);
+        // Kiểm tra thời gian hết hạn
+        if ($lastLoginAttempt->addMinutes(15) > now() && $user->login_attempts >= 10) {
+            toastr("Tài khoản đã bị khóa do nhập sai quá nhiều lần. Vui lòng liên hệ shop để mở.", NotificationInterface::ERROR);
+            return back();
+        }
+    }
+        // Thực hiện đăng nhập
+        if (Auth::attempt($credentials)) {
+            if ($request->has('remember')) {
+            // Lưu email vào cookie với thời gian sống là 60 phút
+            cookie()->queue(cookie('email', $request->email, 60));
+            // Lưu mật khẩu vào cookie với thời gian sống là 60 phút (nên xem xét lại vì lý do bảo mật)
+            cookie()->queue(cookie('password', $request->password, 60));
+        }
+            // Nếu đăng nhập thành công
+            $user->login_attempts = 0; // Reset số lần cố gắng đăng nhập
+            $user->last_login_attempt = null; // Reset thời gian cố gắng đăng nhập
+            $user->save();
+
+            toastr("Đăng nhập thành công", NotificationInterface::SUCCESS ,"Thành công");
+            return redirect()->route('home');
+        } else {
+            // Nếu đăng nhập không thành công
+            $user->login_attempts++;
+            $user->last_login_attempt = now(); // Cập nhật thời gian cố gắng đăng nhập
+            $user->save();
+
+            if ($user->login_attempts >= 10) {
+                $user->status = 'IN_ACTIVE'; // Khóa tài khoản
+                $user->save();
+
+                toastr("Tài khoản đã bị khóa do nhập sai quá nhiều lần.", NotificationInterface::ERROR,"Lỗi");
+                return back();
+            }
+
+            toastr("Thông tin tài khoản hoặc mật khẩu không chính xác", NotificationInterface::ERROR,"Lỗi");
+            return back();
+        }
     }
     public function registerView()
     {
@@ -155,11 +168,12 @@ class AuthController extends Controller
     {
         // Tìm người dùng dựa vào email đã nhập
         $user = User::where('email', $request->email)->first();
+
         // Kiểm tra nếu người dùng tồn tại
         if ($user) {
             // Kiểm tra thời gian yêu cầu đặt lại mật khẩu lần trước (15 phút)
             $timeLimit = now()->subMinutes(15);
-            if ($user->updated_at && $user->updated_at > $timeLimit) {
+            if ($user->password_changed_at && $user->password_changed_at > $timeLimit) {
                 toastr('Bạn đã yêu cầu lấy lại mật khẩu gần đây, vui lòng thử lại sau 15 phút.', NotificationInterface::WARNING, 'Yêu cầu quá nhiều', [
                     "closeButton" => true,
                     "progressBar" => true,
@@ -167,18 +181,14 @@ class AuthController extends Controller
                 ]);
                 return back();
             }
-
             // Nếu vượt quá thời gian giới hạn, tiến hành cập nhật mật khẩu
-            $newPassword = Str::random(8);
-
+            $newPassword = $this->generateSecurePassword();
             // Cập nhật mật khẩu mới cho người dùng (mã hóa mật khẩu)
             $user->password = Hash::make($newPassword);
-            $user->updated_at = now(); // Cập nhật thời gian thực
+            $user->password_changed_at = now(); // Cập nhật thời gian thực
             $user->save(); // Lưu tất cả thay đổi
-
             // Gửi email chứa mật khẩu mới
             Mail::to($user->email)->send(new FogotPass($user, $newPassword));
-
             // Thông báo thành công
             toastr('Vui lòng kiểm tra email để nhận mật khẩu mới', NotificationInterface::SUCCESS, 'Lấy lại mật khẩu thành công', [
                 "closeButton" => true,
@@ -206,6 +216,27 @@ class AuthController extends Controller
         return redirect()->route('auth.login-view');
     }
 
+    private function generateSecurePassword($length = 8)
+    {
+        $uppercase = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ';
+        $lowercase = 'abcdefghijklmnopqrstuvwxyz';
+        $numbers = '0123456789';
+        $specialChars = '!@#$%^&*()_+-=[]{}|;:,.<>?';
+
+        // Đảm bảo mật khẩu có ít nhất 1 ký tự chữ in hoa, 1 ký tự đặc biệt
+        $password = '';
+        $password .= $uppercase[random_int(0, strlen($uppercase) - 1)];
+        $password .= $specialChars[random_int(0, strlen($specialChars) - 1)];
+
+        // Tạo phần còn lại của mật khẩu
+        $allChars = $uppercase . $lowercase . $numbers . $specialChars;
+        for ($i = 2; $i < $length; $i++) {
+            $password .= $allChars[random_int(0, strlen($allChars) - 1)];
+        }
+
+        // Xáo trộn mật khẩu để tăng tính bảo mật
+        return str_shuffle($password);
+    }
     public function logout(Request $request)
     {
         // Đăng xuất người dùng hiện tại
@@ -228,45 +259,45 @@ class AuthController extends Controller
     public function changePassword(ChangePassRequest $request)
     {
         $user = Auth::user();
+        // Kiểm tra nếu đã quá thời gian quy định để thay đổi mật khẩu (ví dụ: 30 ngày)
+        $passwordChangeLimit = now()->subDays(30);
+        if ($user->last_password_change && $user->last_password_change > $passwordChangeLimit) {
+            return back()->withErrors(['new_password' => 'Bạn cần thay đổi mật khẩu sau 30 ngày.']);
+        }
         // Kiểm tra nếu mật khẩu mới trùng với mật khẩu hiện tại
         if (Hash::check($request->new_password, $user->password)) {
             return back()->withErrors(['new_password' => 'Mật khẩu mới không được trùng với mật khẩu hiện tại.']);
         }
-
         // Kiểm tra mật khẩu hiện tại
         if (!Hash::check($request->current_password, $user->password)) {
             // Khởi tạo số lần cố gắng đổi mật khẩu
             $attempts = session('password_change_attempts', 0) + 1;
             session(['password_change_attempts' => $attempts]);
-
             // Kiểm tra nếu đã vượt quá 5 lần cố gắng
             if ($attempts >= 5) {
                 // Đặt trạng thái người dùng là IN_ACTIVE
                 $user->update(['status' => 'IN_ACTIVE']); // Cập nhật trạng thái người dùng
-
                 // Đăng xuất người dùng hiện tại
                 Auth::logout();
                 Cookie::queue(Cookie::forget('email'));
                 Cookie::queue(Cookie::forget('password'));
-
                 // Hiển thị thông báo khóa tài khoản
-                sweetalert("Bạn đã nhập mật khẩu không chính xác 5 lần. Tài khoản đã bị khóa.", NotificationInterface::ERROR, [
+                sweetalert("Bạn đã nhập mật khẩu không chính xác 5 lần. Tài khoản đã bị khóa trong 15 phút.", NotificationInterface::ERROR, [
                     'position' => "center",
                     'timeOut' => '',
                     'closeButton' => false,
                 ]);
                 return redirect()->route('auth.login-view');
             }
-
             return back()->withErrors(['current_password' => 'Mật khẩu hiện tại không chính xác. Bạn còn ' . (5 - $attempts) . ' lần thử']);
         }
-
         // Đặt lại số lần cố gắng
         session(['password_change_attempts' => 0]);
-
         // Cập nhật mật khẩu mới
-        $user->update(['password' => Hash::make($request->new_password)]); // Sử dụng mật khẩu mới từ request
-
+        $user->update([
+            'password' => Hash::make($request->new_password), // Sử dụng mật khẩu mới từ request
+            'password_changed_at' => now(), // Cập nhật thời gian thay đổi mật khẩu
+        ]);
         // Hiển thị thông báo thành công
         sweetalert("Thay đổi mật khẩu thành công", NotificationInterface::INFO, [
             'position' => "center",
@@ -274,7 +305,6 @@ class AuthController extends Controller
             'closeButton' => false,
             'icon' => "success",
         ]);
-
         return back();
     }
 }

@@ -101,7 +101,7 @@
         Swal.fire({
             title: "Bạn có muốn lưu thay đổi không?",
             showDenyButton: true,
-            showCancelButton: true,
+            showCancelButton: false,
             confirmButtonText: "Có",
             denyButtonText: `Không`
         }).then((result) => {
