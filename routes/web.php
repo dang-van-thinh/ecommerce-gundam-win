@@ -46,7 +46,7 @@ use Illuminate\Support\Facades\Route;
 //     return view('welcome');
 // });
 // Route::get("/home", [Controller::class, 'notification'])->name("home");
-Route::get("/test", [Controller::class, 'test'])->name("test");
+// Route::get("/test", [Controller::class, 'test'])->name("test");
 
 // admin
 Route::resource('article', ArticleController::class);
@@ -103,4 +103,10 @@ Route::prefix('auth')->name('auth.')->group(function () {
     Route::get('/verify-account/{email}', [AuthController::class, 'verify'])->name('verify-account');
     Route::post('/logout', [AuthController::class, 'logout'])->name('logout');
     Route::post('/profile/change-password', [AuthController::class, 'changePassword'])->name('profile.change-password');
+});
+
+// hiện tại quy ước 1 là user 2 là admin ae nào ngược đời thì sửa lại nhé=))
+Route::middleware(['auth','checkAccountStatus','checkRole:2'])->group(function () {
+    // Các route yêu cầu đăng nhập
+    Route::get("/test", [Controller::class, 'test'])->name("test");
 });

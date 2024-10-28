@@ -8,19 +8,11 @@ use Illuminate\Validation\Rule;
 
 class ChangePassRequest extends FormRequest
 {
-    /**
-     * Determine if the user is authorized to make this request.
-     */
     public function authorize(): bool
     {
-        return true; // Cho phép tất cả người dùng thực hiện yêu cầu này
+        return true;
     }
 
-    /**
-     * Get the validation rules that apply to the request.
-     *
-     * @return array<string, \Illuminate\Contracts\Validation\ValidationRule|array<mixed>|string>
-     */
     public function rules(): array
     {
         $user = Auth::user();
@@ -32,15 +24,15 @@ class ChangePassRequest extends FormRequest
                 'string',
                 'min:8',
                 'confirmed',
-                Rule::notIn([$user->password]), // đảm bảo mật khẩu mới không trùng với mật khẩu cũ
+                'regex:/[a-z]/', // Ít nhất một chữ cái thường
+                'regex:/[A-Z]/', // Ít nhất một chữ cái hoa
+                'regex:/[0-9]/', // Ít nhất một chữ số
+                'regex:/[@$!%*?&]/', // Ít nhất một ký tự đặc biệt
+                Rule::notIn([$user->password]),
             ],
-            'new_password_confirmation' => 'required|string|min:8', // xác nhận mật khẩu mới
+            'new_password_confirmation' => 'required|string|min:8',
         ];
     }
-
-    /**
-     * Customize the error messages.
-     */
     public function messages()
     {
         return [
@@ -48,6 +40,7 @@ class ChangePassRequest extends FormRequest
             'new_password.required' => 'Vui lòng không bỏ trống.',
             'new_password.min' => 'Mật khẩu mới phải có ít nhất 8 ký tự.',
             'new_password.confirmed' => 'Mật khẩu xác nhận không khớp.',
+            'new_password.regex' => 'Mật khẩu mới phải chứa ít nhất một chữ cái thường, một chữ cái hoa, một chữ số và một ký tự đặc biệt.',
             'new_password_confirmation.required' => 'Vui lòng không bỏ trống.',
             'new_password_confirmation.min' => 'Xác nhận mật khẩu phải có ít nhất 8 ký tự.',
             'new_password.not_in' => 'Mật khẩu mới không được trùng với mật khẩu hiện tại.',
