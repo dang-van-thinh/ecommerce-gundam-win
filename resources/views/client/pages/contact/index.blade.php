@@ -16,24 +16,15 @@
                 <div class="row gy-3">
                     <div class="col-12">
                         <div class="title-1 address-content">
-                            <p class="pb-0">Let's Get In Touch<span></span></p>
-                        </div>
-                    </div>
-                    <div class="col-xl-3 col-sm-6">
-                        <div class="address-items">
-                            <div class="icon-box"> <i class="iconsax" data-icon="location"></i></div>
-                            <div class="contact-box">
-                                <h6>Contact Number</h6>
-                                <p>+91 123 - 456 - 7890</p>
-                            </div>
+                            <p class="pb-0">Hãy liên hệ<span></span></p>
                         </div>
                     </div>
                     <div class="col-xl-3 col-sm-6">
                         <div class="address-items">
                             <div class="icon-box"> <i class="iconsax" data-icon="phone-calling"></i></div>
                             <div class="contact-box">
-                                <h6>Email Address</h6>
-                                <p>katie098@gmail.com</p>
+                                <h6>Số liên lạc</h6>
+                                <p>+91 123 - 456 - 7890</p>
                             </div>
                         </div>
                     </div>
@@ -41,8 +32,8 @@
                         <div class="address-items">
                             <div class="icon-box"> <i class="iconsax" data-icon="mail"></i></div>
                             <div class="contact-box">
-                                <h6>Other Address</h6>
-                                <p>ABC Complex, New York USA 123456</p>
+                                <h6>Địa chỉ email</h6>
+                                <p>katie098@gmail.com</p>
                             </div>
                         </div>
                     </div>
@@ -50,8 +41,17 @@
                         <div class="address-items">
                             <div class="icon-box"> <i class="iconsax" data-icon="map-1"></i></div>
                             <div class="contact-box">
-                                <h6>Bournemouth Office</h6>
-                                <p>Visitación de la Encina 22</p>
+                                <h6>Địa chỉ khác</h6>
+                                <p>14 P.Trịnh Văn Bô, Xuân Phương, Nam Từ Liêm, Hà Nội</p>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-xl-3 col-sm-6">
+                        <div class="address-items">
+                            <div class="icon-box"> <i class="iconsax" data-icon="location"></i></div>
+                            <div class="contact-box">
+                                <h6>Văn phòng làm việc</h6>
+                                <p>Tòa P Cao đẳng FPT Polytechnic</p>
                             </div>
                         </div>
                     </div>
@@ -65,27 +65,24 @@
                 <div class="row align-items-center gy-4">
                     <div class="col-lg-6 order-lg-1 order-2">
                         <div class="contact-box">
-                            <h4>Contact Us </h4>
-                            <p>If you've got fantastic products or want to collaborate, reach out to us. </p>
+                            <h4>Liên hệ với chúng tôi</h4>
+                            <p>Nếu bạn có những sản phẩm tuyệt vời hoặc muốn hợp tác, hãy liên hệ với chúng tôi.</p>
                             <div class="contact-form">
                                 <div class="row gy-4">
-                                    <div class="col-12"> <label class="form-label" for="inputEmail4">Full Name
+                                    <div class="col-12"> <label class="form-label" for="inputEmail4">Họ và tên
                                         </label><input class="form-control" id="inputEmail4" type="text" name="text"
-                                            placeholder="Enter Full Name"></div>
-                                    <div class="col-6"><label class="form-label" for="inputEmail5">Email
-                                            Address</label><input class="form-control" id="inputEmail5" type="email"
-                                            name="email" placeholder="Enter Email Address"></div>
-                                    <div class="col-6"><label class="form-label" for="inputEmail6">Phone
-                                            Number</label><input class="form-control" id="inputEmail6" type="number"
-                                            name="number" placeholder="Enter Phone Number"></div>
-                                    <div class="col-12"> <label class="form-label" for="inputEmail7">Subject</label><input
-                                            class="form-control" id="inputEmail7" type="text" name="text"
-                                            placeholder="Enter Subject"></div>
-                                    <div class="col-12"> <label class="form-label">Message</label>
-                                        <textarea class="form-control" id="message" rows="6" placeholder="Enter Your Message"></textarea>
+                                            placeholder="Nhập họ và tên"></div>
+                                    <div class="col-6"><label class="form-label" for="inputEmail5">Địa chỉ email
+                                        </label><input class="form-control" id="inputEmail5" type="email" name="email"
+                                            placeholder="Nhập địa chỉ email"></div>
+                                    <div class="col-6"><label class="form-label" for="inputEmail6">Số điện thoại
+                                        </label><input class="form-control" id="inputEmail6" type="number" name="number"
+                                            placeholder="Nhập số điện thoại"></div>
+                                    <div class="col-12"> <label class="form-label">Tin nhắn</label>
+                                        <textarea class="form-control" id="message" rows="6" placeholder="Nhập tin nhắn"></textarea>
                                     </div>
-                                    <div class="col-12"> <button class="btn btn_black sm rounded" type="submit"> Send
-                                            Message </button></div>
+                                    <div class="col-12"> <button class="btn btn_black sm rounded" type="submit"> Gửi tin
+                                            nhắn </button></div>
                                 </div>
                             </div>
                         </div>
