@@ -87,10 +87,12 @@ Route::get('/', [HomeController::class, 'index'])->name('home');
 Route::get('/product/{id}', [ProductController::class, 'index'])->name('product');
 Route::get('/collection-product', [CollectionProductController::class, 'index'])->name('collection-product');
 Route::get('/collection-blog', [CollectionBlogController::class, 'index'])->name('collection-blog');
-Route::get('/blog/{id}', [BlogController::class, 'index'])->name('blog');
+Route::get('/blog', [BlogController::class, 'index'])->name('blog');
 Route::get('/contact', [ContactController::class, 'index'])->name('contact');
 
 
+Route::post('/blog/{articleId}/comment', [BlogController::class, 'storeComment'])->name('blog.comment.store');
+Route::get('/blog/{id}', [BlogController::class, 'show'])->name('blog.show');
 Route::get('/category-blog/{id}', [CollectionBlogController::class, 'articlesByCategory'])->name('category-articles');
 Route::get('/blog/category-blog/{id}', [BlogController::class, 'articlesByCategory'])->name('category-blog');
 
