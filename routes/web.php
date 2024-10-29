@@ -17,6 +17,7 @@ use App\Http\Controllers\Client\CartController;
 use App\Http\Controllers\Client\CheckOutController;
 use App\Http\Controllers\Client\CollectionBlogController;
 use App\Http\Controllers\Client\CollectionProductController;
+use App\Http\Controllers\Client\CommentPostController;
 use App\Http\Controllers\Client\ContactController;
 use App\Http\Controllers\Client\HomeController;
 use App\Http\Controllers\Client\OrderController;
@@ -69,7 +70,7 @@ Route::get('/', [HomeController::class, 'index'])->name('home');
 Route::get('/product/{id}', [ProductController::class, 'index'])->name('product');
 Route::get('/collection-product', [CollectionProductController::class, 'index'])->name('collection-product');
 Route::get('/collection-blog', [CollectionBlogController::class, 'index'])->name('collection-blog');
-Route::get('/blog/{id}', [BlogController::class, 'index'])->name('blog');
+Route::get('/blog', [BlogController::class, 'index'])->name('blog');
 Route::get('/contact', [ContactController::class, 'index'])->name('contact');
 Route::get('/cart', [CartController::class, 'index'])->name('cart');
 Route::get('/wish-list', [WishListController::class, 'index'])->name('wish-list');
@@ -77,6 +78,9 @@ Route::get('/check-out', [CheckOutController::class, 'index'])->name('check-out'
 Route::get('/order-success', [OrderController::class, 'index'])->name('order-success');
 Route::get('/category-blog/{id}', [CollectionBlogController::class, 'articlesByCategory'])->name('category-articles');
 Route::get('/blog/category-blog/{id}', [BlogController::class, 'articlesByCategory'])->name('category-blog');
+
+Route::get('/blog/{id}', [BlogController::class, 'show'])->name('blog.show');
+Route::post('/blog/{articleId}/comment', [BlogController::class, 'storeComment'])->name('blog.comment.store');
 
 // auth
 Route::prefix('auth')->name('auth.')->group(function () {
