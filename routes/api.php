@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\Admin\Api\ImageBlogApiController;
+use App\Http\Controllers\Client\Api\ProductController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
@@ -19,4 +20,6 @@ use Illuminate\Support\Facades\Route;
 //     return $request->user();
 // });
 // ajax them moi anh bai viet
-Route::post('/image-blog',[ImageBlogApiController::class,'store'])->name('api.image');
+Route::post('/image-blog', [ImageBlogApiController::class, 'store'])->name('api.image');
+
+Route::post('/add-cart', [ProductController::class, 'addToCart'])->name('api.add-cart');

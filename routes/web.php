@@ -49,7 +49,7 @@ use Illuminate\Support\Facades\Route;
 Route::get("/test", [Controller::class, 'test'])->name("test");
 
 // admin
-Route::prefix('/admin')->middleware(['auth', 'checkRole:2'])->group(function () {
+Route::prefix('/admin')->middleware(['auth', 'checkAccountStatus', 'checkRole:2'])->group(function () {
     Route::resource('article', ArticleController::class);
     Route::resource('banner', BannerController::class);
     Route::resource('attributes', AttributeController::class);
@@ -65,8 +65,19 @@ Route::prefix('/admin')->middleware(['auth', 'checkRole:2'])->group(function () 
 });
 
 // client
+
+Route::get('/', [HomeController::class, 'index'])->name('home');
+Route::get('/wish-list', [WishListController::class, 'index'])->name('wish-list');
+Route::get('/collection-product', [CollectionProductController::class, 'index'])->name('collection-product');
+Route::get('/product/{id}', [ProductController::class, 'index'])->name('product');
+Route::get('/contact', [ContactController::class, 'index'])->name('contact');
+Route::get('/category-blog/{id}', [CollectionBlogController::class, 'articlesByCategory'])->name('category-articles');
+Route::get('/blog/category-blog/{id}', [BlogController::class, 'articlesByCategory'])->name('category-blog');
+Route::get('/collection-blog', [CollectionBlogController::class, 'index'])->name('collection-blog');
+Route::get('/blog/{id}', [BlogController::class, 'index'])->name('blog');
+Route::get('/404', [DefaultController::class, 'pageNotFound'])->name('404');
+
 Route::prefix('')->middleware(['auth', 'checkAccountStatus', 'checkRole:2'])->group(function () {
-    // <!-Trang khác-->
     Route::get('/cart', [CartController::class, 'index'])->name('cart');
     Route::get('/check-out', [CheckOutController::class, 'index'])->name('check-out');
     Route::get('/order-success', [OrderController::class, 'index'])->name('order-success');
@@ -76,25 +87,7 @@ Route::prefix('')->middleware(['auth', 'checkAccountStatus', 'checkRole:2'])->gr
         Route::get('/order-history', [ProfileController::class, 'orderHistory'])->name('order-history');
         Route::get('/address', [ProfileController::class, 'address'])->name('address');
     });
-    // <!--Phần này giữ hay bỏ thì nhìn route trên của t nhé - chọn 1 trong 2-->
 });
-Route::get('/wish-list', [WishListController::class, 'index'])->name('wish-list');
-Route::get('/collection-product', [CollectionProductController::class, 'index'])->name('collection-product');
-// <!--Phần này giữ hay bỏ thì nhìn route  nhé - chọn 1 trong 2-->
-
-Route::get('/', [HomeController::class, 'index'])->name('home');
-Route::get('/product/{id}', [ProductController::class, 'index'])->name('product');
-Route::get('/contact', [ContactController::class, 'index'])->name('contact');
-
-
-Route::get('/category-blog/{id}', [CollectionBlogController::class, 'articlesByCategory'])->name('category-articles');
-Route::get('/blog/category-blog/{id}', [BlogController::class, 'articlesByCategory'])->name('category-blog');
-
-
-Route::get('/collection-blog', [CollectionBlogController::class, 'index'])->name('collection-blog');
-Route::get('/blog/{id}', [BlogController::class, 'index'])->name('blog');
-
-Route::get('/404', [DefaultController::class, 'pageNotFound'])->name('404');
 
 // auth
 Route::prefix('auth')->name('auth.')->group(function () {
