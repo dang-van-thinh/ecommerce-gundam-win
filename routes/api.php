@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\Admin\Api\ImageBlogApiController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
@@ -14,6 +15,8 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
-Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
-    return $request->user();
-});
+// Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
+//     return $request->user();
+// });
+// ajax them moi anh bai viet
+Route::post('/image-blog',[ImageBlogApiController::class,'store'])->name('api.image');

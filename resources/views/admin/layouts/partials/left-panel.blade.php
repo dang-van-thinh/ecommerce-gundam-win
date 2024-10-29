@@ -6,7 +6,6 @@
                     <a href=""><i class="menu-icon fa fa-home"></i>Trang chủ </a>
                 </li>
                 {{-- <li class="menu-title">UI elements</li><!-- /.menu-title --> --}}
-
                 <li class="menu-item-has-children dropdown">
                     <a href="#" class="dropdown-toggle" data-toggle="dropdown" aria-haspopup="true"
                         aria-expanded="false"><i class="menu-icon fa fa-book"></i>QL Khóa học</a>
@@ -18,8 +17,9 @@
                     <a href="#" class="dropdown-toggle" data-toggle="dropdown" aria-haspopup="true"
                         aria-expanded="false"><i class="menu-icon fa fa-book"></i>Quản lý Bài viết</a>
                     <ul class="sub-menu children dropdown-menu">
-                        <li><i class="fa fa-list"></i><a href="{{route('imagearticle.index')}}">Thêm mới hình ảnh</a></li>
                         <li><i class="fa fa-list"></i><a href="{{ route('article.index') }}">Danh sách bài viết</a></li>
+                        <li><i class="fa fa-list"></i><a href="{{ route('imagearticle.index') }}">Danh sách hình ảnh</a>
+                        </li>
                     </ul>
                 </li>
                 <li class="menu-item-has-children ">
@@ -74,7 +74,8 @@
                     <a href="#" class="dropdown-toggle" data-toggle="dropdown" aria-haspopup="true"
                         aria-expanded="false"><i class="menu-icon fa fa-book"></i>QL hoàn hàng</a>
                     <ul class="sub-menu children dropdown-menu">
-                        <li><i class="fa fa-list"></i><a href="{{ route('refund.index') }}">Danh sách hoàn hàng</a></li>
+                        <li><i class="fa fa-list"></i><a href="{{ route('refund.index') }}">Danh sách hoàn hàng</a>
+                        </li>
                     </ul>
                 </li>
 
