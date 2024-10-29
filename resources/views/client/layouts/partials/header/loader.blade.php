@@ -7,20 +7,22 @@
             <div class="col-12 p-0">
                 <div class="mobile-fix-option">
                     <ul>
-                        <li> <a href="#"><i class="iconsax" data-icon="home-1"></i>Home</a></li>
-                        <li><a href="#"><i class="iconsax" data-icon="search-normal-2"></i>Search</a></li>
-                        <li><a href="#"><i class="iconsax" data-icon="shopping-cart"></i>Cart</a></li>
-                        <li><a href="#"><i class="iconsax" data-icon="heart"></i>My Wish</a></li>
-                        <li> <a href="#"><i class="iconsax" data-icon="user-2"></i>Account</a></li>
+                        <li> <a href="#"><i class="iconsax" data-icon="home-1"></i>Trang chủ</a></li>
+                        <li><a href="#"><i class="iconsax" data-icon="search-normal-2"></i>Tìm kiếm</a></li>
+                        <li><a href="#"><i class="iconsax" data-icon="shopping-cart"></i>Giỏ hàng</a></li>
+                        {{-- <li><a href="#"><i class="iconsax" data-icon="heart"></i>Yêu thích</a></li> --}}
+                        <li> <a href="#"><i class="iconsax" data-icon="user-2"></i>Tài khoản</a></li>
                     </ul>
                 </div>
             </div>
             <div class="col-12">
                 <div class="main-menu">
                     <a class="brand-logo" href="#">
-                        <img class="img-fluid for-light" src="/template/client/assets/images/logo/logo.png"
+                        <img class="img-fluid for-light"
+                            src="/template/client/assets/images/logo/logoGumdamWin-removebg-preview.png"
                             alt="logo" />
-                        <img class="img-fluid for-dark" src="/template/client/assets/images/logo/logo-white-1.png"
+                        <img class="img-fluid for-dark"
+                            src="/template/client/assets/images/logo/logoGumdamWin-removebg-preview.png"
                             alt="logo" />
                     </a>
                     <nav id="main-nav-1">
@@ -29,22 +31,21 @@
                                 Back
                                 <i class="fa-solid fa-angle-right ps-2" aria-hidden="true"></i>
                             </li>
-                            <li> <a class="nav-link" href="#">Home </a></li>
-                            <li> <a class="nav-link" href="#">Shop</a></li>
-                            <li> <a class="nav-link" href="#">Catalog </a></li>
-                            <li> <a class="nav-link" href="#">FashiOffers <p class="lable-nav">Hot</p></a>
-                            </li>
-                            <li> <a class="nav-link" href="#">Page </a></li>
-                            <li> <a class="nav-link" href="#">Features </a></li>
-                            <li> <a class="nav-link" href="#">Contact </a></li>
+                            <li> <a class="nav-link" href="#">Trang chủ </a></li>
+                            <li> <a class="nav-link" href="#">Sản phẩm</a></li>
+                            <li> <a class="nav-link" href="#">Bài viết </a></li>
+                            <li> <a class="nav-link" href="#">Liên hệ </a></li>
                         </ul>
                     </nav>
                     <div class="sub_header">
                         <div class="toggle-nav"><i class="fa-solid fa-bars-staggered sidebar-bar"></i></div>
                         <ul class="justify-content-end">
                             <li> <button><i class="iconsax" data-icon="search-normal-2"></i></button></li>
-                            <li> <a href="#"><i class="iconsax" data-icon="heart"></i><span
-                                        class="cart_qty_cls">2</span></a></li>
+                            {{-- <li>
+                                <a href="#">
+                                    <i class="iconsax" data-icon="heart"></i>
+                                    <!-- <span class="cart_qty_cls">2</span></a> -->
+                            </li> --}}
                             <li><a href="#"><i class="iconsax" data-icon="user-2"></i></a></li>
                         </ul>
                     </div>

@@ -5,7 +5,8 @@
                 <div class="col-xl-3 col-lg-4 col-md-6">
                     <div class="footer-content">
                         <div class="footer-logo"><a href="index.html"> <img class="img-fluid"
-                                    src="/template/client/assets/images/logo/logo-white-1.png" alt="Footer Logo" /></a>
+                                    src="/template/client/assets/images/logo/logoGW01-removebg-preview.png"
+                                    alt="Footer Logo" /></a>
                         </div>
                         <ul>
                             <li> <i class="iconsax" data-icon="location"></i>
@@ -26,67 +27,28 @@
                             <div class="footer-title d-md-block">
                                 <h5>About Us</h5>
                                 <ul class="footer-details accordion-hidden">
-                                    <li> <a class="nav" href="index.html">Home</a></li>
-                                    <li> <a class="nav" href="collection-left-sidebar.html">Shop</a></li>
-                                    <li> <a class="nav" href="about-us.html">About Us</a></li>
-                                    <li> <a class="nav" href="blog-left-sidebar.html">Blog</a></li>
-                                    <li> <a class="nav" href="contact.html">Contact</a></li>
+                                    <li> <a class="nav" href="{{ route('home') }}">Trang chủ</a></li>
+                                    <li> <a class="nav" href="{{ route('collection-product') }}">Sản phẩm</a></li>
+                                    <li> <a class="nav" href="">Về chúng tôi</a></li>
+                                    <li> <a class="nav" href="{{ route('collection-blog') }}">Bài viết</a></li>
+                                    <li> <a class="nav" href="{{ route('contact') }}">Liên hệ</a></li>
                                 </ul>
                             </div>
                         </div>
                     </div>
                 </div>
-                <div class="col">
-                    <div class="footer-content">
-                        <div>
-                            <div class="footer-title d-md-block">
-                                <h5>New Categories</h5>
-                                <ul class="footer-details accordion-hidden">
-                                    <li> <a class="nav" href="product-bundle.html">Latest Shoes</a></li>
-                                    <li> <a class="nav" href="variant-radio.html">Branded Jeans</a></li>
-                                    <li> <a class="nav" href="product.html">New Jackets</a></li>
-                                    <li> <a class="nav" href="variant-images.html">Colorful Hoodies</a>
-                                    </li>
-                                    <li> <a class="nav" href="variant-dropdown.html">Best Perfume</a>
-                                    </li>
-                                </ul>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-                <div class="col">
-                    <div class="footer-content">
-                        <div>
-                            <div class="footer-title d-md-block">
-                                <h5>Get Help</h5>
-                                <ul class="footer-details accordion-hidden">
-                                    <li> <a class="nav" href="order-success.html">Your Orders</a></li>
-                                    <li> <a class="nav" href="dashboard.html">Your Account</a></li>
-                                    <li> <a class="nav" href="order-tracking.html">Track Orders</a></li>
-                                    <li> <a class="nav" href="wishlist.html">Your Wishlist</a></li>
-                                    <li> <a class="nav" href="faq.html">Shopping FAQs</a></li>
-                                </ul>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-                <div class="col">
-                    <div class="footer-content">
-                        <div>
-                            <div class="footer-title d-md-block">
-                                <h5>My Account</h5>
-                                <ul class="footer-details accordion-hidden">
-                                    <li> <a class="nav" href="dashboard.html">My Account</a></li>
-                                    <li> <a class="nav" href="login.html">Login/Register</a></li>
-                                    <li> <a class="nav" href="cart.html">Cart</a></li>
-                                    <li> <a class="nav" href="order-success.html">Order History</a></li>
-                                    <li> <a class="nav" href="faq.html">Delivery FAQs</a></li>
-                                </ul>
-                            </div>
-                        </div>
-                    </div>
+                <div class="col-xl-6 col-lg-4 col-md-6">
+                   <div class="footer-content">
+                    <iframe
+                    class="col-lg-10 col-md-10"
+                     height="300"
+                    src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3723.891441037562!2d105.74602347584147!3d21.03702928749344!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x313454925c1f84b9%3A0xcda6815c6227e430!2zMTQgUC4gVHLhu4tuaCBWxINuIELDtCwgWHXDom4gUGjGsMahbmcsIE5hbSBU4burIExpw6ptLCBIw6AgTuG7mWkgMTAwMDAwLCBWaeG7h3QgTmFt!5e0!3m2!1svi!2s!4v1729959876652!5m2!1svi!2s"
+                   style="border:0;" allowfullscreen="" loading="lazy"
+                    referrerpolicy="no-referrer-when-downgrade"></iframe>
+                   </div>
                 </div>
             </div>
+        </div>
         </div>
     </section>
     <div class="sub-footer">

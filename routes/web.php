@@ -22,9 +22,10 @@ use App\Http\Controllers\Client\ContactController;
 use App\Http\Controllers\Client\HomeController;
 use App\Http\Controllers\Client\OrderController;
 use App\Http\Controllers\Client\ProductController;
+use App\Http\Controllers\Client\ProfileController;
 use App\Http\Controllers\Client\WishListController;
 use App\Http\Controllers\Controller;
-
+use App\Http\Controllers\DefaultController;
 use App\Http\Controllers\RefundController;
 use App\Models\Article;
 use Illuminate\Support\Facades\Route;
@@ -49,38 +50,49 @@ use Illuminate\Support\Facades\Route;
 Route::get("/test", [Controller::class, 'test'])->name("test");
 
 // admin
-Route::resource('article', ArticleController::class);
-Route::resource('banner', BannerController::class);
-Route::resource('attributes', AttributeController::class);
-Route::resource('attributeValues', AttributeValueController::class);
-Route::resource('category-product', CategoryProductController::class);
-Route::resource('category-article', CategoryArticleController::class);
-Route::resource('roles', RoleController::class);
-Route::resource('users', UserController::class);
-Route::resource('voucher', VocuherController::class);
-Route::resource('refund', RefundController::class);
-Route::resource('products', AdminProductController::class);
-Route::resource('imagearticle', ImageArticleController::class);
-Route::get('/images/paginate', [ImageArticleController::class, 'paginate'])->name('imagearticle.paginate');
-
-
+Route::prefix('/admin')->middleware(['auth', 'checkRole:2'])->group(function () {
+    Route::resource('article', ArticleController::class);
+    Route::resource('banner', BannerController::class);
+    Route::resource('attributes', AttributeController::class);
+    Route::resource('attributeValues', AttributeValueController::class);
+    Route::resource('category-product', CategoryProductController::class);
+    Route::resource('category-article', CategoryArticleController::class);
+    Route::resource('roles', RoleController::class);
+    Route::resource('users', UserController::class);
+    Route::resource('voucher', VocuherController::class);
+    Route::resource('refund', RefundController::class);
+    Route::resource('products', AdminProductController::class);
+    Route::resource('imagearticle', ImageArticleController::class);
+});
 
 // client
+Route::prefix('')->middleware(['auth', 'checkAccountStatus', 'checkRole:2'])->group(function () {
+    // <!-Trang khác-->
+    Route::get('/cart', [CartController::class, 'index'])->name('cart');
+    Route::get('/check-out', [CheckOutController::class, 'index'])->name('check-out');
+    Route::get('/order-success', [OrderController::class, 'index'])->name('order-success');
+    //profile
+    Route::prefix('profile')->name('profile.')->group(function () {
+        Route::get('/', [ProfileController::class, 'infomation'])->name('infomation');
+        Route::get('/order-history', [ProfileController::class, 'orderHistory'])->name('order-history');
+        Route::get('/address', [ProfileController::class, 'address'])->name('address');
+    });
+    // <!--Phần này giữ hay bỏ thì nhìn route trên của t nhé - chọn 1 trong 2-->
+});
+Route::get('/wish-list', [WishListController::class, 'index'])->name('wish-list');
+Route::get('/collection-product', [CollectionProductController::class, 'index'])->name('collection-product');
+// <!--Phần này giữ hay bỏ thì nhìn route  nhé - chọn 1 trong 2-->
+
 Route::get('/', [HomeController::class, 'index'])->name('home');
 Route::get('/product/{id}', [ProductController::class, 'index'])->name('product');
 Route::get('/collection-product', [CollectionProductController::class, 'index'])->name('collection-product');
 Route::get('/collection-blog', [CollectionBlogController::class, 'index'])->name('collection-blog');
-Route::get('/blog', [BlogController::class, 'index'])->name('blog');
+Route::get('/blog/{id}', [BlogController::class, 'index'])->name('blog');
 Route::get('/contact', [ContactController::class, 'index'])->name('contact');
-Route::get('/cart', [CartController::class, 'index'])->name('cart');
-Route::get('/wish-list', [WishListController::class, 'index'])->name('wish-list');
-Route::get('/check-out', [CheckOutController::class, 'index'])->name('check-out');
-Route::get('/order-success', [OrderController::class, 'index'])->name('order-success');
+
+
 Route::get('/category-blog/{id}', [CollectionBlogController::class, 'articlesByCategory'])->name('category-articles');
 Route::get('/blog/category-blog/{id}', [BlogController::class, 'articlesByCategory'])->name('category-blog');
-
-Route::get('/blog/{id}', [BlogController::class, 'show'])->name('blog.show');
-Route::post('/blog/{articleId}/comment', [BlogController::class, 'storeComment'])->name('blog.comment.store');
 
 // auth
 Route::prefix('auth')->name('auth.')->group(function () {
@@ -89,6 +101,14 @@ Route::prefix('auth')->name('auth.')->group(function () {
     Route::get('/register', [AuthController::class, 'registerView'])->name('register-view');
     Route::post('/register', [AuthController::class, 'storeRegister'])->name('register-post');
     Route::get('/foget-password', [AuthController::class, 'fogetPasswordView'])->name('foget-password-view');
-    Route::post('/foget-password', [AuthController::class,'checkfogetPasswordView']);
+    Route::post('/foget-password', [AuthController::class, 'checkfogetPasswordView']);
     Route::get('/verify-account/{email}', [AuthController::class, 'verify'])->name('verify-account');
+    Route::post('/logout', [AuthController::class, 'logout'])->name('logout');
+    Route::post('/profile/change-password', [AuthController::class, 'changePassword'])->name('profile.change-password');
+});
+
+// hiện tại quy ước 1 là user 2 là admin ae nào ngược đời thì sửa lại nhé=))
+Route::middleware(['auth', 'checkAccountStatus', 'checkRole:2'])->group(function () {
+    // Các route yêu cầu đăng nhập
+    Route::get("/test", [Controller::class, 'test'])->name("test");
 });
