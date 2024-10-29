@@ -56,10 +56,11 @@ class ArticleController extends Controller
 
     public function edit(string $id)
     {
+        $listImageArticle = ImageArticle::orderBy('id', 'desc')->get();
         $article = Article::findOrFail($id);
         // Lấy danh sách danh mục
         $categories = CategoryArticle::all();
-        return view("admin.pages.article.update", compact('article', 'categories'));
+        return view("admin.pages.article.update", compact('article', 'categories', 'listImageArticle'));
     }
 
     public function update(UpdateArticleRequest $request, $id)
