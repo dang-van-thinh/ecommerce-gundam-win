@@ -8,6 +8,7 @@ use App\Http\Requests\Auth\RegisterRequest;
 use App\Http\Requests\Auth\ChangePassRequest;
 use App\Mail\FogotPass;
 use App\Mail\VerifyAccount;
+use App\Models\Role;
 use App\Models\User;
 use Auth;
 use Cookie;
@@ -115,25 +116,42 @@ class AuthController extends Controller
     {
         // Lấy và validate dữ liệu từ form đăng ký
         $validatedData = $request->validated();
-        // Tạo người dùng mới từ dữ liệu đã validate
-        $user = User::create([
-            'full_name' => $validatedData['full_name'],
-            'email' => $validatedData['email'],
-            'password' => bcrypt($validatedData['password']), // Mã hóa mật khẩu
-            'status' => 'ACTIVE', // Đặt trạng thái mặc định là 'ACTIVE'
-            'image' => $validatedData['image'] ?? null, // Lưu ảnh (nếu có)
-            'phone' => $validatedData['phone'], // Lưu số điện thoại
-        ]);
-        // Gán vai trò mặc định cho người dùng (nếu cần)
-        $user->roles()->sync([1]);
-        // Gửi email xác thực tài khoản
-        Mail::to($user->email)->send(new VerifyAccount($user));
+
+        // Thực hiện các thao tác trong một giao dịch
+        DB::transaction(function () use ($validatedData) {
+            // Kiểm tra và thêm vai trò mặc định nếu chưa tồn tại
+            $role = Role::firstOrCreate(
+                ['id' => 1],
+                ['name' => 'User', 'description' => 'Vai trò mặc định cho người dùng']
+            );
+            $role = Role::firstOrCreate(
+                ['id' => 2],
+                ['name' => 'Adim', 'description' => 'Vai trò Quản lý']
+            );
+            // Tạo người dùng mới từ dữ liệu đã validate
+            $user = User::create([
+                'full_name' => $validatedData['full_name'],
+                'email' => $validatedData['email'],
+                'password' => bcrypt($validatedData['password']), // Mã hóa mật khẩu
+                'status' => 'ACTIVE', // Đặt trạng thái mặc định là 'ACTIVE'
+                'image' => $validatedData['image'] ?? null, // Lưu ảnh (nếu có)
+                'phone' => $validatedData['phone'], // Lưu số điện thoại
+            ]);
+
+            // Gán vai trò mặc định cho người dùng
+            $user->roles()->sync([$role->id]);
+
+            // Gửi email xác thực tài khoản
+            Mail::to($user->email)->send(new VerifyAccount($user));
+        });
+
         // Thông báo đăng ký thành công và yêu cầu xác thực email
         toastr("Vui lòng kiểm tra email để xác thực tài khoản", NotificationInterface::SUCCESS, "Đăng ký tài khoản thành công", [
             "closeButton" => true,
             "progressBar" => true,
             "timeOut" => "3000",
         ]);
+
         // Chuyển hướng người dùng đến trang đăng nhập
         return redirect()->route('auth.login-view');
     }
