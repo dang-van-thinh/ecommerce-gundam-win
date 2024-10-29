@@ -36,12 +36,12 @@ Danh sách bài viết
                                 <span>
                                     {{ \Carbon\Carbon::parse($article->created_at)->format('d/m/Y')}}
                                 </span>
-                                <a href="{{ route('blog', ['id' => $article->id]) }}">
+                                <a href="{{ route('blog.show', $article->id) }}">
                                     <h4>{{ $article->title }}</h4>
                                 </a>
                                 <p>{!! Str::limit(strip_tags($article->content), 200) !!}</p>
                                 <div class="share-box">
-                                    <a href="{{ route('blog', ['id' => $article->id]) }}"> Read More..</a>
+                                    <a href="{{ route('blog.show',  $article->id) }}"> Read More..</a>
                                 </div>
                             </div>
                         </div>
@@ -101,7 +101,7 @@ Danh sách bài viết
                                         <img class="img-fluid" src="{{ asset('storage/' . $post->image) }}"
                                             alt="{{ $post->title }}">
                                         <div>
-                                            <a href="{{ route('blog', $post->id) }}">
+                                            <a href="{{ route('blog.show', $post->id) }}">
                                                 <h6>{{ $post->title }}</h6>
                                             </a>
                                             <p>{{ \Carbon\Carbon::parse($post->created_at)->format('d/m/Y') }}</p>
@@ -112,31 +112,6 @@ Danh sách bài viết
 
                             </div>
                         </div>
-                        {{-- <div class="col-12">
-                            <div class="sidebar-box">
-                                <div class="sidebar-title">
-                                    <div class="loader-line"></div>
-                                    <h5> Popular Tags</h5>
-                                </div>
-                                <ul class="popular-tag">
-                                    <li>
-                                        <p>T-shirt</p>
-                                    </li>
-                                    <li>
-                                        <p>Handbags </p>
-                                    </li>
-                                    <li>
-                                        <p>Trends </p>
-                                    </li>
-                                    <li>
-                                        <p>Fashion</p>
-                                    </li>
-                                    <li>
-                                        <p>Designer</p>
-                                    </li>
-                                </ul>
-                            </div>
-                        </div> --}}
                         <div class="col-12">
                             <div class="sidebar-box">
                                 <div class="sidebar-title">
@@ -168,7 +143,7 @@ Danh sách bài viết
                             </div>
                         </div>
                         {{-- <div class="col-12 d-none d-lg-block">
-                            <div class="blog-offer-box"> <img class="img-fluid"
+                            <div class=".show-offer-box"> <img class="img-fluid"
                                     src="/template/client/assets/images/other-img/blog-offer.jpg" alt="">
                             </div>
                         </div> --}}
