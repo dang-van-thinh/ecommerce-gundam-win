@@ -17,14 +17,13 @@ class Order extends Model
         'total_amount',
         'status',
         'payment_method',
-        'confirmation_status',
+        'confirm_status',
         'note',
         'discount_amount',
         'created_at',
         'updated_at'
     ];
 
-    public $timestamps = false;
 
     public function orderItems()
     {
