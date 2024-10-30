@@ -61,7 +61,7 @@
                                                     <button class="minus" type="button"><i class="fa-solid fa-minus"></i>
                                                     </button>
                                                     <input type="number" value="{{ $item['cart']['quantity'] }}"
-                                                        min="1" max="20">
+                                                        min="1" max="{{ $item['product_variant']['quantity'] }}">
                                                     <button class="plus" type="button">
                                                         <i class="fa-solid fa-plus"></i>
                                                     </button>
