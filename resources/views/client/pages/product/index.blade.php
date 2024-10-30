@@ -139,14 +139,15 @@
                                 </ul>
                             </div>
                             <div class="d-flex flex-column">
-
                                 <div class="product-variants">
                                     <div class="d-flex flex-row">
                                         <h5>Thuộc tính:</h5>
+                                        {{-- @dd($product ) --}}
                                         <div class="box">
                                             <ul class="variant" id="variant-options">
                                                 @foreach ($product->productVariants as $index => $variant)
-                                                    <button class="variant-option" data-price="{{ $variant->price }}"
+                                                    <button class="variant-option" data-variant ="{{ $variant->id }}"
+                                                        data-price="{{ $variant->price }}"
                                                         data-quantity="{{ $variant->quantity }}">
                                                         {{ $variant->attributeValues->pluck('name')->implode(' - ') }}
                                                     </button>
@@ -157,20 +158,27 @@
                                     <div>
                                         <h5>Số lượng : <span id="variant-quantity"></span></h5>
                                     </div>
-
                                 </div>
-
-
                             </div>
                             <div class="quantity-box d-flex align-items-center gap-3">
-                                <div class="quantity"><button class="minus" type="button"><i
-                                            class="fa-solid fa-minus"></i></button><input type="number" value="1"
-                                        min="1" max="20"><button class="plus" type="button"><i
-                                            class="fa-solid fa-plus"></i></button></div>
-                                <div class="d-flex align-items-center w-100 gap-3"> <a class="btn btn_black sm"
-                                        href="#" data-bs-toggle="offcanvas" data-bs-target="#offcanvasRight"
-                                        aria-controls="offcanvasRight">Thêm Vào Giỏ Hàng</a><a class="btn btn_outline sm"
-                                        href="#">Mua Ngay</a></div>
+                                <div class="quantity">
+                                    <button class="minus" type="button">
+                                        <i class="fa-solid fa-minus"></i>
+                                    </button>
+                                    <input type="number" value="1" min="1" max=""
+                                        id="quantity_variant">
+                                    <button class="plus" type="button">
+                                        <i class="fa-solid fa-plus"></i>
+                                    </button>
+                                </div>
+                                <div class="d-flex align-items-center w-100 gap-3">
+                                    <button type="button" id="btn_add_to_cart" class="btn btn_black sm"
+                                        data-bs-toggle="offcanvas" data-bs-target="#offcanvasRight"
+                                        aria-controls="offcanvasRight">
+                                        Thêm Vào Giỏ Hàng
+                                    </button>
+                                    <a class="btn btn_outline sm" href="#">Mua Ngay</a>
+                                </div>
                             </div>
                             <div class="buy-box">
                                 <ul>
@@ -260,9 +268,10 @@
                 <div class="row">
                     <div class="col-12">
                         <ul class="product-tab theme-scrollbar nav nav-tabs nav-underline" id="Product" role="tablist">
-                            <li class="nav-item" role="presentation"><button class="nav-link active"
-                                    id="Description-tab" data-bs-toggle="tab" data-bs-target="#Description-tab-pane"
-                                    role="tab" aria-controls="Description-tab-pane" aria-selected="true">Chi tiết sản
+                            <li class="nav-item" role="presentation">
+                                <button class="nav-link active" id="Description-tab" data-bs-toggle="tab"
+                                    data-bs-target="#Description-tab-pane" role="tab"
+                                    aria-controls="Description-tab-pane" aria-selected="true">Chi tiết sản
                                     phẩm</button>
                             </li>
                             {{-- <li class="nav-item" role="presentation"><button class="nav-link" id="specification-tab"
@@ -911,36 +920,79 @@
     </section>
 @endsection
 @push('scripts')
+    <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
     <script>
         document.addEventListener('DOMContentLoaded', function() {
-            const defaultPrice = document.getElementById('variant-price').textContent;
-            const defaultQuantity = 0;
-            document.querySelectorAll('.variant-option').forEach(function(button) {
-                button.addEventListener('click', function() {
-                    // Kiểm tra nếu nút đã được chọn (có lớp 'selected')
-                    if (this.classList.contains('selected')) {
-                        // Nếu đã chọn, khi nhấn lại sẽ bỏ chọn và đặt lại giá trị mặc định
-                        this.classList.remove('selected');
-                        document.getElementById('variant-price').textContent = defaultPrice;
-                        document.getElementById('variant-quantity').textContent = defaultQuantity;
-                    } else {
-                        // Nếu chưa được chọn, bỏ lớp 'selected' khỏi các nút khác và chọn nút hiện tại
-                        this.closest('.variant').querySelectorAll('.variant-option').forEach(
-                            function(btn) {
-                                btn.classList.remove('selected');
+                    // hien thi gia 
+                    const defaultPrice = document.getElementById('variant-price').textContent;
+                    const defaultQuantity = 0;
+                    document.querySelectorAll('.variant-option').forEach(function(button) {
+                        button.addEventListener('click', function() {
+                            // Kiểm tra nếu nút đã được chọn (có lớp 'selected')
+                            if (this.classList.contains('selected')) {
+                                // Nếu đã chọn, khi nhấn lại sẽ bỏ chọn và đặt lại giá trị mặc định
+                                this.classList.remove('selected');
+                                document.getElementById('variant-price').textContent = defaultPrice;
+                                document.getElementById('variant-quantity').textContent = defaultQuantity;
+                            } else {
+                                // Nếu chưa được chọn, bỏ lớp 'selected' khỏi các nút khác và chọn nút hiện tại
+                                this.closest('.variant').querySelectorAll('.variant-option').forEach(
+                                    function(btn) {
+                                        btn.classList.remove('selected');
+                                    });
+                                this.classList.add('selected');
+
+                                // Lấy giá và số lượng từ thuộc tính data của nút hiện tại
+                                const price = this.getAttribute('data-price');
+                                const quantity = this.getAttribute('data-quantity');
+
+                                // Cập nhật giá và số lượng hiển thị
+                                document.getElementById('variant-price').textContent = price;
+                                document.getElementById('variant-quantity').textContent = quantity;
+                            }
+                        });
+                    });
+
+                    // them vao gio hang
+                    let btnAddToCart = document.querySelector('#btn_add_to_cart');
+                    btnAddToCart.addEventListener("click", function() {
+                            let quantityVariant = document.querySelector("#quantity_variant");
+
+                            let variantOption = document.querySelectorAll('.variant-option');
+                            let filteredOptions = Array.from(variantOption).filter(option => !option.classList.contains(
+                                'selected'));
+                            // In kết quả để kiểm tra
+                            filteredOptions.forEach(option => console.log(option));
+                            if (filteredOptions.length == variantOption.length) {
+                                alert("chonj bien the")
+                            }
+                            document.querySelectorAll('.variant-option').forEach(element => {
+                                    if (element.classList.contains('selected')) {
+                                        // alert(element.getAttribute("data-variant"));
+                                        let data = {
+                                            userId: @php
+                                                echo Auth::id();
+                                            @endphp,
+                                            variantId: element.getAttribute("data-variant"),
+                                            quantity: quantityVariant.value,
+                                        }
+                                        sendToCart(data);
+                                    }
+                                });
                             });
-                        this.classList.add('selected');
+                    });
 
-                        // Lấy giá và số lượng từ thuộc tính data của nút hiện tại
-                        const price = this.getAttribute('data-price');
-                        const quantity = this.getAttribute('data-quantity');
-
-                        // Cập nhật giá và số lượng hiển thị
-                        document.getElementById('variant-price').textContent = price;
-                        document.getElementById('variant-quantity').textContent = quantity;
-                    }
-                });
-            });
-        });
+                function sendToCart(data) {
+                    $.ajax({
+                        type: "POST",
+                        url: '{{ route('api.add-cart') }}',
+                        data: data,
+                        success: function(response) {
+                            let numberCart = response.message.numberCart;
+                            document.querySelector("#numberCart").innerText = numberCart;
+                            console.log(response.message);
+                        }
+                    });
+                }
     </script>
 @endpush
