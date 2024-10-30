@@ -36,75 +36,48 @@
                                     </tr>
                                 </thead>
                                 <tbody>
-                                    <tr>
-                                        <td>
-                                            <div class="cart-box"> <a href="product.html"> <img
-                                                        src="../assets/images/cart/category/1.jpg" alt=""></a>
-                                                <div> <a href="product.html">
-                                                        <h5>Concrete Jungle Pack</h5>
-                                                    </a>
-                                                    <p>Sold By: <span>Roger Group </span></p>
-                                                    <p>Size: <span>Small</span></p>
+                                    @foreach ($productResponse as $key => $item)
+                                        <tr>
+                                            <td>
+                                                <div class="cart-box">
+                                                    <a href="product.html">
+                                                        <img src="{{ '/storage/' . $item['product']['image'] }}"
+                                                            alt=""></a>
+                                                    <div>
+                                                        <a href="product.html">
+                                                            <h5>{{ $item['product']['name'] }}</h5>
+                                                        </a>
+                                                        @foreach ($item['product_variant']['attribute_values'] as $variant)
+                                                            <p>{{ $variant['attribute']['name'] }}: <span>
+                                                                    {{ $variant['name'] }} </span></p>
+                                                        @endforeach
+                                                    </div>
                                                 </div>
-                                            </div>
-                                        </td>
-                                        <td>$20.00</td>
-                                        <td>
-                                            <div class="quantity"><button class="minus" type="button"><i
-                                                        class="fa-solid fa-minus"></i></button><input type="number"
-                                                    value="1" min="1" max="20"><button class="plus"
-                                                    type="button"><i class="fa-solid fa-plus"></i></button></div>
-                                        </td>
-                                        <td>$195.00</td>
-                                        <td><a class="deleteButton" href="javascript:void(0)"><i class="iconsax"
-                                                    data-icon="trash"></i></a></td>
-                                    </tr>
-                                    <tr>
-                                        <td>
-                                            <div class="cart-box"> <a href="product.html"> <img
-                                                        src="../assets/images/cart/category/2.jpg" alt=""></a>
-                                                <div> <a href="product.html">
-                                                        <h5>Mini dress with ruffled straps</h5>
-                                                    </a>
-                                                    <p>Sold By: <span>luisa Shop</span></p>
-                                                    <p>Size: <span>Medium </span></p>
+                                            </td>
+                                            <td> {{ number_format($item['product_variant']['price'], 0, ',', '.') }} VND
+                                            </td>
+                                            <td>
+                                                <div class="quantity">
+                                                    <button class="minus" type="button"><i class="fa-solid fa-minus"></i>
+                                                    </button>
+                                                    <input type="number" value="{{ $item['cart']['quantity'] }}"
+                                                        min="1" max="20">
+                                                    <button class="plus" type="button">
+                                                        <i class="fa-solid fa-plus"></i>
+                                                    </button>
                                                 </div>
-                                            </div>
-                                        </td>
-                                        <td>$20.00</td>
-                                        <td>
-                                            <div class="quantity"><button class="minus" type="button"><i
-                                                        class="fa-solid fa-minus"></i></button><input type="number"
-                                                    value="1" min="1" max="20"><button class="plus"
-                                                    type="button"><i class="fa-solid fa-plus"></i></button></div>
-                                        </td>
-                                        <td>$150.00</td>
-                                        <td> <a class="deleteButton" href="javascript:void(0)"><i class="iconsax"
-                                                    data-icon="trash"></i></a></td>
-                                    </tr>
-                                    <tr>
-                                        <td>
-                                            <div class="cart-box"> <a href="product.html"> <img
-                                                        src="../assets/images/cart/category/3.jpg" alt=""></a>
-                                                <div> <a href="product.html">
-                                                        <h5>Long Sleeve Asymmetric</h5>
-                                                    </a>
-                                                    <p>Sold By: <span>Brown Shop</span></p>
-                                                    <p>Size: <span>Large </span></p>
-                                                </div>
-                                            </div>
-                                        </td>
-                                        <td>$25.00</td>
-                                        <td>
-                                            <div class="quantity"><button class="minus" type="button"><i
-                                                        class="fa-solid fa-minus"></i></button><input type="number"
-                                                    value="1" min="1" max="20"><button class="plus"
-                                                    type="button"><i class="fa-solid fa-plus"></i></button></div>
-                                        </td>
-                                        <td>$120.00</td>
-                                        <td> <a class="deleteButton" href="javascript:void(0)"><i class="iconsax"
-                                                    data-icon="trash"></i></a></td>
-                                    </tr>
+                                            </td>
+                                            <!-- tong -->
+                                            <td> {{ number_format($item['product_variant']['price'] * $item['cart']['quantity'], 0, ',', '.') }}
+                                                VND </td>
+                                            <td>
+                                                <a class="deleteButton" data-variant= "{{ $item['cart']['id'] }}"
+                                                    href="javascript:void(0)">
+                                                    <i class="iconsax" data-icon="trash"></i>
+                                                </a>
+                                            </td>
+                                        </tr>
+                                    @endforeach
                                 </tbody>
                             </table>
                         </div>
@@ -155,7 +128,8 @@
                                 <li> <span> <a class="theme-color" href="login.html">Login </a>to see best coupon for
                                         you </span></li>
                             </ul>
-                        </div><a class="btn btn_black w-100 sm rounded" href="{{ route('check-out') }}">Check Out</a>
+                        </div>
+                        <a class="btn btn_black w-100 sm rounded" href="{{ route('check-out') }}">Thanh toán</a>
                     </div>
                 </div>
                 <div class="col-12">
@@ -252,3 +226,38 @@
         </div>
     </section>
 @endsection
+
+@push('scripts')
+    <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
+    <script>
+        $(document).ready(function() {
+            $('.deleteButton').on('click', function() {
+
+                let variantId = $(this).attr('data-variant');
+                console.log("Nút có ID là:", variantId);
+                alert("dung");
+                let data = {
+                    userId: @php
+                        echo Auth::id();
+                    @endphp,
+                    variantId: variantId,
+                }
+                deleteProductCart(data);
+            });
+
+
+            function deleteProductCart(data) {
+                $.ajax({
+                    type: "DELETE",
+                    url: '{{ route('api.delete-cart') }}',
+                    data: data,
+                    success: function(response) {
+                        let numberCart = response.message.numberCart;
+                        document.querySelector("#numberCart").innerText = numberCart;
+                        console.log(response.message);
+                    }
+                });
+            }
+        });
+    </script>
+@endpush
