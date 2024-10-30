@@ -8,7 +8,7 @@
     <title>
         @yield('title')
     </title>
-
+    @stack('admin-css')
     @include('admin.layouts.partials.css')
 
 </head>

@@ -2,10 +2,12 @@
 
 namespace App\View\Components;
 
+use App\Models\Cart;
 use App\Models\CategoryArticle;
 use App\Models\CategoryProduct;
 use Closure;
 use Illuminate\Contracts\View\View;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\View\Component;
 
 class HeaderComponent extends Component
@@ -26,10 +28,17 @@ class HeaderComponent extends Component
      */
     public function render(): View|Closure|string
     {
+        $cartResponse = 0;
+        if (Auth::check()) {
+            $userId = Auth::id();
+            $cartResponse = Cart::where('user_id', $userId)->count('*');
+        }
+
         // dd($this->categoryProduct);
         return view('client.layouts.partials.header.header-menu', [
             'categoryProduct' => $this->categoryProduct,
-            'categoryArticle' => $this->categoryArticle
+            'categoryArticle' => $this->categoryArticle,
+            'numberCart' => $cartResponse
         ]);
     }
 }

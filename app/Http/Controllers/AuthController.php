@@ -124,7 +124,7 @@ class AuthController extends Controller
                 ['id' => 1],
                 ['name' => 'User', 'description' => 'Vai trò mặc định cho người dùng']
             );
-            $role = Role::firstOrCreate(
+            Role::firstOrCreate(
                 ['id' => 2],
                 ['name' => 'Adim', 'description' => 'Vai trò Quản lý']
             );
