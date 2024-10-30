@@ -73,7 +73,7 @@ Route::prefix('')->middleware(['auth', 'checkAccountStatus', 'checkRole:1'])->gr
     Route::get('/cart', [CartController::class, 'index'])->name('cart');
     Route::get('/check-out', [CheckOutController::class, 'index'])->name('check-out');
     Route::post("/place-order", [CheckOutController::class, 'placeOrder'])->name('place-order');
-    Route::get('/order-success', [OrderController::class, 'index'])->name('order-success');
+    Route::get('/order-success/{id}', [OrderController::class, 'index'])->name('order-success');
     //profile
     Route::prefix('profile')->name('profile.')->group(function () {
         Route::get('/', [ProfileController::class, 'infomation'])->name('infomation');
