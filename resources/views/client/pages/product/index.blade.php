@@ -925,31 +925,40 @@
         document.addEventListener('DOMContentLoaded', function() {
             // Lấy giá trị mặc định cho giá và số lượng
             const defaultPrice = document.getElementById('variant-price').textContent;
-            const defaultQuantity = 0;
             const quantityInput = document.getElementById("quantity_variant");
+            const defaultQuantity = 0; // Đặt lại mặc định số lượng
 
             // Lắng nghe sự kiện click trên từng nút variant-option
             document.querySelectorAll('.variant-option').forEach(function(button) {
                 button.addEventListener('click', function() {
                     if (this.classList.contains('selected')) {
+                        // Nếu nút đã được chọn, bỏ chọn và đặt lại giá trị
                         this.classList.remove('selected');
                         document.getElementById('variant-price').textContent = defaultPrice;
                         document.getElementById('variant-quantity').textContent = defaultQuantity;
-                        quantityInput.setAttribute('max', defaultQuantity);
                     } else {
+                        // Bỏ chọn các nút khác
                         this.closest('.variant').querySelectorAll('.variant-option').forEach(
                             function(btn) {
                                 btn.classList.remove('selected');
                             });
+
+                        // Chọn nút hiện tại
                         this.classList.add('selected');
 
+                        // Lấy giá và số lượng từ thuộc tính data của nút hiện tại
                         const price = this.getAttribute('data-price');
                         const quantity = this.getAttribute('data-quantity');
+
+                        // Cập nhật giá và số lượng hiển thị
                         document.getElementById('variant-price').textContent = price;
                         document.getElementById('variant-quantity').textContent = quantity;
 
                         // Cập nhật giá trị max cho ô nhập số lượng
                         quantityInput.setAttribute('max', quantity);
+
+                        // Đặt lại ô nhập số lượng về 0
+                        quantityInput.value = 1; // Đặt giá trị input về 0
                     }
                 });
             });
