@@ -138,14 +138,15 @@
                                 <a class="p-0" href="{{ route('cart') }}">
                                     <div class="shoping-prize">
                                         <i class="iconsax pe-2" data-icon="basket-2"></i>
-                                        1
+                                        <span id="numberCart"> {{$numberCart}} </span>
                                     </div>
                                 </a>
                             @else
                                 <!--Nếu người dùng chưa đăng nhập nhé-->
                                 <div class="p-0">
                                     <div class="shoping-prize">
-                                        <i class="iconsax pe-2" data-icon="basket-2"></i> 1
+                                        <i class="iconsax pe-2" data-icon="basket-2"></i>0
+                                       
                                     </div>
                                 </div>
                                 <div class="onhover-show-div user" style="width:200px">
