@@ -24,3 +24,4 @@ Route::post('/image-blog', [ImageBlogApiController::class, 'store'])->name('api.
 
 Route::post('/add-cart', [ProductController::class, 'addToCart'])->name('api.add-cart');
 Route::delete('/delete-cart', [ProductController::class, 'deleteToCart'])->name('api.delete-cart');
+Route::put('/update-cart', [ProductController::class, 'updateToCart'])->name('api.update-cart');
