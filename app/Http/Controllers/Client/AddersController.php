@@ -64,7 +64,7 @@ class AddersController extends Controller
             "timeOut" => "3000",
             "color" => "red"
         ]);
-        return redirect()->route('profile.address');
+        return back();
     }
 
     // Chỉnh sửa địa chỉ
