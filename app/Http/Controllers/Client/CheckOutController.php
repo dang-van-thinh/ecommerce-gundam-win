@@ -6,8 +6,11 @@ use App\Http\Controllers\Controller;
 use App\Http\Requests\Client\placeOrder\CreatePlaceOrderRequest;
 use App\Models\AddressUser;
 use App\Models\Cart;
+use App\Models\District;
 use App\Models\Order;
 use App\Models\OrderItem;
+use App\Models\Province;
+use App\Models\Ward;
 use Flasher\Prime\Notification\NotificationInterface;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -32,11 +35,26 @@ class CheckOutController extends Controller
         }
         // dd($productResponse);
         $userAddress = AddressUser::where('user_id', $userId)->get();
-
+        $provinces = Province::all();
         return view('client.pages.check-out.index', [
             'productResponse' => $productResponse,
-            'userAddress' => $userAddress
+            'userAddress' => $userAddress,
+            'provinces' => $provinces
         ]);
+    }
+
+    // Lấy quận/huyện dựa trên tỉnh
+    public function getDistricts($province_id)
+    {
+        $districts = District::where('province_id', $province_id)->get();
+        return response()->json($districts);
+    }
+
+    // Lấy phường/xã dựa trên quận/huyện
+    public function getWards($district_id)
+    {
+        $wards = Ward::where('district_id', $district_id)->get();
+        return response()->json($wards);
     }
 
     public function placeOrder(CreatePlaceOrderRequest $request)
