@@ -17,8 +17,8 @@
             </div>
 
             <div class="dropdown for-notification">
-                <button class="btn btn-secondary dropdown-toggle" type="button" id="notification"
-                    data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                <button class="btn btn-secondary dropdown-toggle" type="button" id="notification" data-toggle="dropdown"
+                    aria-haspopup="true" aria-expanded="false">
                     <i class="fa fa-bell"></i>
                     <span class="count bg-danger">3</span>
                 </button>
@@ -90,14 +90,18 @@
             </a>
 
             <div class="user-menu dropdown-menu">
-                <a class="nav-link" href="#"><i class="fa fa- user"></i>My Profile</a>
+                <a class="nav-link" href="{{route('home')}}"><i class="fa fa- user"></i>Trang chủ</a>
 
-                <a class="nav-link" href="#"><i class="fa fa- user"></i>Notifications <span
-                        class="count">13</span></a>
+                <a class="nav-link" href="#"><i class="fa fa- user"></i>Notifications <span class="count">13</span></a>
 
                 <a class="nav-link" href=""><i class="fa fa -cog"></i>Settings</a>
 
-                <a class="nav-link" href="#"><i class="fa fa-power -off"></i>Logout</a>
+                <form action="{{ route('auth.logout') }}" method="POST" style="display: inline;">
+                    @csrf
+                    <button type="submit" title="Đăng xuất" class="nav-link" style="margin-left: 10px;" >
+                        <a>Đăng xuất</a>
+                    </button>
+                </form>
             </div>
         </div>
 
