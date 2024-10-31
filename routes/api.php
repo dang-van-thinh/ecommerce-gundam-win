@@ -20,7 +20,9 @@ use Illuminate\Support\Facades\Route;
 //     return $request->user();
 // });
 // ajax them moi anh bai viet
+Route::prefix('')->middleware(['authApi'])->group(function () {
 Route::post('/image-blog', [ImageBlogApiController::class, 'store'])->name('api.image');
 
 Route::post('/add-cart', [ProductController::class, 'addToCart'])->name('api.add-cart');
 Route::delete('/delete-cart', [ProductController::class, 'deleteToCart'])->name('api.delete-cart');
+});
