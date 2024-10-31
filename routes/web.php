@@ -84,17 +84,13 @@ Route::prefix('')->middleware(['auth', 'checkAccountStatus', 'checkRole:1'])->gr
 
         // Store a new address
         Route::post('address', [AddersController::class, 'store'])->name('createUserAddress');
-    
         // Show the form for editing a specific address
         Route::get('address/{id}/edit', [AddersController::class, 'edit'])->name('address.edit');
-    
         // Update a specific address
         Route::put('address/{id}', [AddersController::class, 'update'])->name('address.update');
 
         // Delete a specific address
         Route::get('address/{id}', [AddersController::class, 'destroy'])->name('address.destroy');
-    
-       
     });
 });
 Route::get('get-districts/{province_id}', [AddersController::class, 'getDistricts'])->name('get.districts');
