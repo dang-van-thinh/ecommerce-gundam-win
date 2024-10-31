@@ -177,7 +177,11 @@
                                         aria-controls="offcanvasRight">
                                         Thêm Vào Giỏ Hàng
                                     </button>
-                                    <a class="btn btn_outline sm" href="#">Mua Ngay</a>
+                                    <button type="button" id="btn_buy_now" class="btn btn_black sm"
+                                        data-bs-toggle="offcanvas" data-bs-target="#offcanvasRight"
+                                        aria-controls="offcanvasRight">
+                                        Mua ngay
+                                    </button>
                                 </div>
                             </div>
                             <div class="buy-box">
@@ -920,91 +924,119 @@
     </section>
 @endsection
 @push('scripts')
-    <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
-    <script>
-        document.addEventListener('DOMContentLoaded', function() {
-            // Lấy giá trị mặc định cho giá và số lượng
-            const defaultPrice = document.getElementById('variant-price').textContent;
-            const quantityInput = document.getElementById("quantity_variant");
-            const defaultQuantity = 0; // Đặt lại mặc định số lượng
+<script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+<script>
+    let quantityInput;
+    let defaultPrice;
 
-            // Lắng nghe sự kiện click trên từng nút variant-option
-            document.querySelectorAll('.variant-option').forEach(function(button) {
-                button.addEventListener('click', function() {
-                    if (this.classList.contains('selected')) {
-                        // Nếu nút đã được chọn, bỏ chọn và đặt lại giá trị
-                        this.classList.remove('selected');
-                        document.getElementById('variant-price').textContent = defaultPrice;
-                        document.getElementById('variant-quantity').textContent = defaultQuantity;
-                    } else {
-                        // Bỏ chọn các nút khác
-                        this.closest('.variant').querySelectorAll('.variant-option').forEach(
-                            function(btn) {
-                                btn.classList.remove('selected');
-                            });
+    document.addEventListener('DOMContentLoaded', function() {
+        defaultPrice = document.getElementById('variant-price').textContent;
+        quantityInput = document.getElementById("quantity_variant");
+        const defaultQuantity = 0;
 
-                        // Chọn nút hiện tại
-                        this.classList.add('selected');
+        // Lắng nghe sự kiện click trên từng nút variant-option
+        document.querySelectorAll('.variant-option').forEach(function(button) {
+            button.addEventListener('click', function() {
+                if (this.classList.contains('selected')) {
+                    this.classList.remove('selected');
+                    document.getElementById('variant-price').textContent = defaultPrice;
+                    document.getElementById('variant-quantity').textContent = defaultQuantity;
+                } else {
+                    this.closest('.variant').querySelectorAll('.variant-option').forEach(function(btn) {
+                        btn.classList.remove('selected');
+                    });
 
-                        // Lấy giá và số lượng từ thuộc tính data của nút hiện tại
-                        const price = this.getAttribute('data-price');
-                        const quantity = this.getAttribute('data-quantity');
-
-                        // Cập nhật giá và số lượng hiển thị
-                        document.getElementById('variant-price').textContent = price;
-                        document.getElementById('variant-quantity').textContent = quantity;
-
-                        // Cập nhật giá trị max cho ô nhập số lượng
-                        quantityInput.setAttribute('max', quantity);
-
-                        // Đặt lại ô nhập số lượng về 0
-                        quantityInput.value = 1; // Đặt giá trị input về 0
-                    }
-                });
-            });
-
-            // Sự kiện khi click nút "Thêm vào giỏ hàng"
-            let btnAddToCart = document.querySelector('#btn_add_to_cart');
-            btnAddToCart.addEventListener("click", function() {
-                let selectedVariant = document.querySelector('.variant-option.selected');
-                if (!selectedVariant) {
-                    alert("Vui lòng chọn biến thể trước khi thêm vào giỏ hàng.");
-                    return;
+                    this.classList.add('selected');
+                    const price = this.getAttribute('data-price');
+                    const quantity = this.getAttribute('data-quantity');
+                    document.getElementById('variant-price').textContent = price;
+                    document.getElementById('variant-quantity').textContent = quantity;
+                    quantityInput.setAttribute('max', quantity);
+                    quantityInput.value = 1;
                 }
-
-                // Lấy data-quantity từ biến thể đã chọn
-                const maxQuantity = parseInt(selectedVariant.getAttribute('data-quantity'));
-                const quantityValue = parseInt(quantityInput.value);
-
-                // Kiểm tra số lượng nhập vào
-                if (quantityValue > maxQuantity) {
-                    alert(`Số lượng không được vượt quá ${maxQuantity}`);
-                    quantityInput.value = maxQuantity; // Đặt lại giá trị max
-                    return;
-                }
-
-                // Dữ liệu để thêm vào giỏ hàng
-                const data = {
-                    userId: @php echo Auth::id(); @endphp,
-                    variantId: selectedVariant.getAttribute("data-variant"),
-                    quantity: quantityValue,
-                };
-                sendToCart(data); // Gửi dữ liệu vào giỏ hàng
             });
         });
 
-        function sendToCart(data) {
-            $.ajax({
-                type: "POST",
-                url: '{{ route('api.add-cart') }}',
-                data: data,
-                success: function(response) {
-                    let numberCart = response.message.numberCart;
-                    document.querySelector("#numberCart").innerText = numberCart;
-                    alert("Thêm giỏ hàng thành công !")
-                    console.log(response.message);
+        // Sự kiện khi click nút "Thêm vào giỏ hàng"
+        document.querySelector('#btn_add_to_cart').addEventListener("click", function() {
+            checklogin('Vui lòng chọn biến thể trước khi thêm giỏ hàng', 'add_to_cart');
+        });
+
+        // Sự kiện khi click nút "Mua ngay"
+        document.querySelector('#btn_buy_now').addEventListener("click", function() {
+            checklogin('Vui lòng chọn biến thể trước khi mua', 'buy_now');
+        });
+    });
+
+    function checklogin(message, action) {
+        @auth
+            let selectedVariant = document.querySelector('.variant-option.selected');
+            if (!selectedVariant) {
+                Swal.fire(message, "", "warning");
+                return;
+            }
+
+            const maxQuantity = parseInt(selectedVariant.getAttribute('data-quantity'));
+            const quantityValue = parseInt(quantityInput.value);
+
+            if (quantityValue > maxQuantity) {
+                Swal.fire(`Số lượng không được vượt quá ${maxQuantity}`, "", "warning");
+                quantityInput.value = maxQuantity;
+                return;
+            }
+
+            const data = {
+                userId: {{ Auth::id() }},
+                variantId: selectedVariant.getAttribute("data-variant"),
+                quantity: quantityValue,
+            };
+
+            if (action === 'add_to_cart') {
+                sendToCart(data);
+            } else if (action === 'buy_now') {
+                Swal.fire({
+                title: "Hi cc",
+                icon: "warning",
+                confirmButtonText: "Đăng nhập",
+                showCancelButton: true,
+                cancelButtonText: "Hủy"})
+            }
+        @endauth
+
+        @guest
+            Swal.fire({
+                title: "Bạn cần đăng nhập để thực hiện thao tác này!",
+                icon: "warning",
+                confirmButtonText: "Đăng nhập",
+                showCancelButton: true,
+                cancelButtonText: "Hủy"
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    window.location.href = "{{ route('auth.login-view') }}";
                 }
             });
-        }
-    </script>
+        @endguest
+    }
+
+    function sendToCart(data) {
+        $.ajax({
+            type: "POST",
+            url: '{{ route('api.add-cart') }}',
+            data: data,
+            success: function(response) {
+                let numberCart = response.message.numberCart;
+                document.querySelector("#numberCart").innerText = numberCart;
+                Swal.fire("Thêm vào giỏ hàng thành công!", "", "success");
+            },
+            error: function(error) {
+                Swal.fire("Có lỗi xảy ra, vui lòng thử lại sau!", "", "error");
+                console.error(error);
+            }
+        });
+    }
+</script>
 @endpush
+
+
+
