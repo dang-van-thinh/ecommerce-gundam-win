@@ -9,7 +9,7 @@
             'route' => '',
             'name' => 'Giỏ hàng',
         ],
-    ]);
+    ])
     <section class="section-b-space pt-0">
         @if ($errors->any())
             <div class="alert alert-danger">
@@ -28,15 +28,14 @@
                         <div class="left-sidebar-checkout sticky">
                             <div class="address-option">
                                 <div class="address-title">
-                                    <h4>Shipping Address </h4><a href="#" data-bs-toggle="modal"
-                                        data-bs-target="#address-modal" title="add product" tabindex="0">+ Add New
-                                        Address</a>
+                                    <h4>Địa Chỉ Giao Hàng </h4><a href="#" data-bs-toggle="modal"
+                                        data-bs-target="#add-address-modal" title="Quick View" tabindex="0">+ Thêm Mới Địa
+                                        Chỉ</a>
                                 </div>
                                 <div class="row">
-                                    <div class="col-xxl-4">
-
-                                        @foreach ($userAddress as $key => $item)
-                                            {{-- @dd($item->toArray()) --}}
+                                    @foreach ($userAddress as $key => $item)
+                                        <div class="col-xxl-4">
+                                            {{-- @dd($item->toArray())    --}}
                                             <label for="address-billing-0">
                                                 <span class="delivery-address-box">
                                                     <span class="form-check">
@@ -49,38 +48,40 @@
                                                     <span class="address-detail">
 
                                                         <span class="address">
-                                                            <span class="address-title"> New Home</span>
+                                                            <span class="address-title"> Địa chỉ {{ $key + 1 }}</span>
                                                         </span>
                                                         <span class="address">
                                                             <span class="address-home">
-                                                                <span class="address-tag"> Address:</span>
-                                                                {{ $item->address_detail }}
+                                                                <span class="address-tag"> Địa chỉ:</span>
+                                                                {{ $item->address_detail }},
+                                                                {{ $item->ward->name }},
+                                                                {{ $item->district->name }},
+                                                                {{ $item->province->name }}
                                                             </span>
                                                         </span>
                                                         <span class="address">
                                                             <span class="address-home">
-                                                                <span class="address-tag">Pin Code:</span>
-                                                                80014
+                                                                <span class="address-tag">Người nhận:</span>
+                                                                {{ $item->name }}
                                                             </span>
                                                         </span>
                                                         <span class="address">
                                                             <span class="address-home">
-                                                                <span class="address-tag">Phone :</span>
-                                                                +1 5551855359
+                                                                <span class="address-tag">Sđt:</span>
+                                                                {{ $item->phone }}
                                                             </span>
                                                         </span>
 
                                                     </span>
                                                 </span>
                                             </label>
-                                        @endforeach
-                                    </div>
-
+                                        </div>
+                                    @endforeach
                                 </div>
                             </div>
 
                             <div class="payment-options">
-                                <h4 class="mb-3">Billing Address</h4>
+                                <h4 class="mb-3">Phương Thức Thanh Toán</h4>
                                 <div class="row gy-3">
                                     <div class="col-sm-6">
                                         <div class="payment-box">
@@ -107,7 +108,7 @@
                     </div>
                     <div class="col-xxl-3 col-lg-4">
                         <div class="right-sidebar-checkout">
-                            <h4>Checkout</h4>
+                            <h4>Thanh Toán</h4>
                             <div class="cart-listing">
                                 <ul>
                                     @php
@@ -138,14 +139,13 @@
                                 <div class="summary-total">
                                     <ul>
                                         <li>
-                                            <p>Subtotal</p>
-                                            <span> {{ $totalAmount }}</span>
-
+                                            <p>Tổng giá</p>
+                                            <span>{{ number_format($totalAmount, 0, ',', '.') }} VND</span>
                                         </li>
                                         {{-- <li>
                                             <p>Shipping</p><span>Enter shipping address</span>
                                         </li> --}}
-                                        <li>
+                                        {{-- <li>
                                             <p>Tax</p><span>$ 2.54</span>
                                         </li>
                                         <li>
@@ -153,7 +153,7 @@
                                         </li>
                                         <li>
                                             <p>Wallet Balance</p><span>$ -84.40</span>
-                                        </li>
+                                        </li> --}}
                                     </ul>
                                     {{-- <div class="coupon-code">
                                         <input type="text" placeholder="Enter Coupon Code">
@@ -161,7 +161,7 @@
                                     </div> --}}
                                 </div>
                                 <div class="total">
-                                    <h6>Total : </h6>
+                                    <h6>Thành tiền : </h6>
                                     <h6>{{ number_format($totalAmount, 0, ',', '.') }} VND</h6>
                                     <input type="hidden" value="{{ $totalAmount }}" name="total_amount">
                                 </div>
@@ -175,5 +175,47 @@
                 </div>
             </div>
         </form>
+        @include('client.pages.profile.layouts.components.add-address')
     </section>
 @endsection
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script>
+    $(document).ready(function() {
+        $('#provinceAdd').change(function() {
+            var provinceId = $(this).val();
+            if (provinceId) {
+                $.ajax({
+                    url: '/get-districts/' + provinceId,
+                    type: 'GET',
+                    success: function(data) {
+                        $('#districtAdd').empty().append(
+                            '<option value="">Chọn Huyện/Quận</option>');
+                        $('#wardAdd').empty().append(
+                            '<option value="">Chọn Xã/Phường</option>');
+                        $.each(data, function(key, value) {
+                            $('#districtAdd').append('<option value="' + value.id +
+                                '">' + value.name + '</option>');
+                        });
+                    }
+                });
+            }
+        });
+        $('#districtAdd').change(function() {
+            var districtId = $(this).val();
+            if (districtId) {
+                $.ajax({
+                    url: '/get-wards/' + districtId,
+                    type: 'GET',
+                    success: function(data) {
+                        $('#wardAdd').empty().append(
+                            '<option value="">Chọn Xã/Phường</option>');
+                        $.each(data, function(key, value) {
+                            $('#wardAdd').append('<option value="' + value.id +
+                                '">' + value.name + '</option>');
+                        });
+                    }
+                });
+            }
+        });
+    });
+</script>
