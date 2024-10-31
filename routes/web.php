@@ -12,6 +12,7 @@ use App\Http\Controllers\Admin\RoleController;
 use App\Http\Controllers\Admin\UserController;
 use App\Http\Controllers\Admin\VocuherController;
 use App\Http\Controllers\AuthController;
+use App\Http\Controllers\Client\AddersController;
 use App\Http\Controllers\Client\BlogController;
 use App\Http\Controllers\Client\CartController;
 use App\Http\Controllers\Client\CheckOutController;
@@ -78,9 +79,26 @@ Route::prefix('')->middleware(['auth', 'checkAccountStatus', 'checkRole:1'])->gr
     Route::prefix('profile')->name('profile.')->group(function () {
         Route::get('/', [ProfileController::class, 'infomation'])->name('infomation');
         Route::get('/order-history', [ProfileController::class, 'orderHistory'])->name('order-history');
-        Route::get('/address', [ProfileController::class, 'address'])->name('address');
+        // Route::get('/address', [ProfileController::class, 'address'])->name('address');
+        Route::get('address', [AddersController::class, 'index'])->name('address');
+
+        // Store a new address
+        Route::post('address', [AddersController::class, 'store'])->name('createUserAddress');
+    
+        // Show the form for editing a specific address
+        Route::get('address/{id}/edit', [AddersController::class, 'edit'])->name('address.edit');
+    
+        // Update a specific address
+        Route::put('address/{id}', [AddersController::class, 'update'])->name('address.update');
+
+        // Delete a specific address
+        Route::get('address/{id}', [AddersController::class, 'destroy'])->name('address.destroy');
+    
+       
     });
 });
+Route::get('get-districts/{province_id}', [AddersController::class, 'getDistricts'])->name('get.districts');
+Route::get('get-wards/{district_id}', [AddersController::class, 'getWards'])->name('get.wards');
 
 Route::get('/wish-list', [WishListController::class, 'index'])->name('wish-list');
 Route::get('/collection-product', [CollectionProductController::class, 'index'])->name('collection-product');
