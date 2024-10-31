@@ -42,8 +42,8 @@
                                                 <td>
                                                     <div class="cart-box">
                                                         <a href="product.html">
-                                                            <img src="/template/client/assets/images/cart/category/1.jpg"
-                                                                alt="">
+                                                            <img src="{{ '/Storage/'. $item->productVariant->product->image }}"
+                                                                alt="Ảnh sản phẩm">
                                                         </a>
                                                         <div>
                                                             <a href="product.html">
