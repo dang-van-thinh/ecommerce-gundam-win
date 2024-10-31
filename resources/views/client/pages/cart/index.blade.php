@@ -260,6 +260,20 @@
             }
 
 
+            // cap nhat so luong san pham
+            function updateQuantity(data) {
+                $.ajax({
+                    type: "PUT",
+                    url: '{{ route('api.update-cart') }}',
+                    data: data,
+                    success: function(response) {
+                        console.log(response);
+                        return true;
+                    }
+                });
+            }
+
+
             function deleteProductCart(data) {
                 $.ajax({
                     type: "DELETE",
@@ -280,8 +294,34 @@
             }
 
             function showBtn() {
+                let totalPrice = document.querySelectorAll(".totalPrice");
                 const plusMinus = document.querySelectorAll('.quantity');
-                plusMinus.forEach((element) => {
+                const inputVariants = document.querySelectorAll('.input_variant');
+
+                inputVariants.forEach((inputVariant, index) => {
+                    inputVariant.addEventListener('change', function() {
+                        let max = parseInt(this.getAttribute('max'));
+                        console.log(oldQuantity);
+                        if (inputVariant.value > 0 && inputVariant.value < max) {
+                            let data = {
+                                'idVariant': inputVariant.dataset.id,
+                                'quantity': inputVariant.value
+                            };
+                            updateQuantity(data);
+                            // thay doi hien thị tổng giá
+                            let total = Number(inputVariant.dataset.price * inputEl.value)
+                            console.log(total);
+                            totalPrice[index].innerHTML = new Intl.NumberFormat().format(total) +
+                                ' VND';
+                        } else {
+                            alert("Khong duocj ")
+                        }
+
+                    })
+                })
+
+                plusMinus.forEach((element, index) => {
+
                     const addButton = element.querySelector('.plus');
                     const subButton = element.querySelector('.minus');
 
@@ -293,14 +333,34 @@
 
                         if (inputEl.value < maxQuantity) {
                             inputEl.value = Number(inputEl.value) + 1;
+                            let data = {
+                                'idVariant': addButton.dataset.id,
+                                'quantity': inputEl.value
+                            };
+                            updateQuantity(data)
+                            // thay doi hien thị tổng giá
+                            let total = Number(addButton.dataset.price * inputEl.value)
+                            console.log(total);
+                            totalPrice[index].innerHTML = new Intl.NumberFormat().format(total) +
+                                ' VND';
                         }
-                    });
 
+                    });
 
                     subButton?.addEventListener('click', function() {
                         const inputEl = this.parentNode.querySelector("input[type='number']");
                         if (inputEl.value >= 2) {
                             inputEl.value = Number(inputEl.value) - 1;
+                            let data = {
+                                'idVariant': addButton.dataset.id,
+                                'quantity': inputEl.value
+                            };
+                            updateQuantity(data)
+                            // thay doi hien thị tổng giá
+                            let total = Number(subButton.dataset.price * inputEl.value)
+                            console.log(total);
+                            totalPrice[index].innerHTML = new Intl.NumberFormat().format(total) +
+                                ' VND';
                         }
                     });
                 });
@@ -316,7 +376,7 @@
                 if (productResponse.length > 0) {
                     productResponse.forEach(item => {
                         const row = document.createElement('tr');
-
+                        console.log(item);
                         // Cột sản phẩm
                         const productCell = document.createElement('td');
                         const cartBox = document.createElement('div');
@@ -365,12 +425,16 @@
 
                         const minusButton = document.createElement('button');
                         minusButton.className = 'minus';
+                        minusButton.dataset.id = item.cart.id;
+                        minusButton.dataset.price = item.product_variant.price
                         minusButton.innerHTML = '<i class="fa-solid fa-minus"></i>';
                         quantityDiv.appendChild(minusButton);
 
                         const quantityInput = document.createElement('input');
                         quantityInput.type = 'number';
                         quantityInput.id = 'quantity_variant';
+                        quantityInput.className = 'input_variant';
+                        quantityInput.dataset.id = item.cart.id;
                         quantityInput.value = item.cart.quantity;
                         quantityInput.min = 1;
                         quantityInput.max = item.product_variant.quantity;
@@ -378,6 +442,8 @@
 
                         const plusButton = document.createElement('button');
                         plusButton.className = 'plus';
+                        plusButton.dataset.id = item.cart.id;
+                        plusButton.dataset.price = item.product_variant.price
                         plusButton.innerHTML = '<i class="fa-solid fa-plus"></i>';
                         quantityDiv.appendChild(plusButton);
 
@@ -387,6 +453,7 @@
                         // Tổng giá
                         const totalCell = document.createElement('td');
                         const total = item.product_variant.price * item.cart.quantity;
+                        totalCell.className = 'totalPrice';
                         totalCell.textContent = `${new Intl.NumberFormat().format(total)} VND`;
                         row.appendChild(totalCell);
 

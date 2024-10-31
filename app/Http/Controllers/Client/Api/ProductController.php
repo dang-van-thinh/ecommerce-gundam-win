@@ -75,4 +75,23 @@ class ProductController extends Controller
             'message' => "Xóa thành công"
         ], 400);
     }
+
+    public function updateToCart(Request $request)
+    {
+        $variantId =  $request->input('idVariant');
+        $newQuantity = $request->input('quantity');
+
+        $cartOfUser = Cart::with('productVariant')->where('id', $variantId)->first();
+        // dd($cartOfUser->toArray());
+        if ($newQuantity < 0 || $newQuantity > $cartOfUser->toArray()['product_variant']['quantity']) {
+            return response()->json([
+                'message' => 'Số lượng không phù hợp !'
+            ], 400);
+        } else {
+            $cartOfUser->update(['quantity' => $newQuantity]);
+        }
+        return response()->json([
+            'message' => 'Thay đổi số lượng thành công'
+        ]);
+    }
 }
