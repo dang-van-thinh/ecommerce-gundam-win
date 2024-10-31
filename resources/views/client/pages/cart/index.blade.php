@@ -9,7 +9,8 @@
             'route' => '',
             'name' => 'Trang chủ',
         ],
-    ]);
+    ])
+
     <section class="section-b-space pt-0">
         <div class="custom-container container">
             <div class="row g-4">
@@ -35,8 +36,8 @@
                                         <th></th>
                                     </tr>
                                 </thead>
-                                <tbody>
-                                    @foreach ($productResponse as $key => $item)
+                                <tbody id="show-product">
+                                    {{-- @foreach ($productResponse as $key => $item)
                                         <tr>
                                             <td>
                                                 <div class="cart-box">
@@ -60,7 +61,7 @@
                                                 <div class="quantity">
                                                     <button class="minus" type="button"><i class="fa-solid fa-minus"></i>
                                                     </button>
-                                                    <input type="number" value="{{ $item['cart']['quantity'] }}"
+                                                    <input type="number" id="quantity_variant" value="{{ $item['cart']['quantity'] }}"
                                                         min="1" max="{{ $item['product_variant']['quantity'] }}">
                                                     <button class="plus" type="button">
                                                         <i class="fa-solid fa-plus"></i>
@@ -77,7 +78,7 @@
                                                 </a>
                                             </td>
                                         </tr>
-                                    @endforeach
+                                    @endforeach --}}
                                 </tbody>
                             </table>
                         </div>
@@ -230,20 +231,33 @@
 @push('scripts')
     <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
     <script>
-        $(document).ready(function() {
-            $('.deleteButton').on('click', function() {
+        @php
+            $productJson = json_encode($productResponse);
+        @endphp
+        let productResponse = {!! $productJson !!};
+        console.log(productResponse);
 
-                let variantId = $(this).attr('data-variant');
-                console.log("Nút có ID là:", variantId);
-                alert("dung");
-                let data = {
-                    userId: @php
-                        echo Auth::id();
-                    @endphp,
-                    variantId: variantId,
-                }
-                deleteProductCart(data);
-            });
+        $(document).ready(function() {
+
+            showTable();
+
+            deleteBtn()
+            // xoa sp ra khoi gio hangv
+            function deleteBtn() {
+                let btnDelete = $('.deleteButton');
+                btnDelete.on('click', function() {
+                    let variantId = $(this).attr('data-variant');
+                    console.log("Nút có ID là:", variantId);
+                    alert("dung");
+                    let data = {
+                        userId: @php
+                            echo Auth::id();
+                        @endphp,
+                        variantId: variantId,
+                    }
+                    deleteProductCart(data);
+                });
+            }
 
 
             function deleteProductCart(data) {
@@ -252,12 +266,150 @@
                     url: '{{ route('api.delete-cart') }}',
                     data: data,
                     success: function(response) {
+                        console.log(response.message);
                         let numberCart = response.message.numberCart;
                         document.querySelector("#numberCart").innerText = numberCart;
-                        console.log(response.message);
+                        // gan lai du lieu
+                        productResponse = response.message.productCart;
+                        showTable();
+                        showBtn();
+                        deleteBtn();
                     }
                 });
+
             }
+
+            function showBtn() {
+                const plusMinus = document.querySelectorAll('.quantity');
+                plusMinus.forEach((element) => {
+                    const addButton = element.querySelector('.plus');
+                    const subButton = element.querySelector('.minus');
+
+                    addButton?.addEventListener('click', function() {
+                        let selectedVariant = document.querySelector('.variant-option.selected');
+                        const maxQuantity = parseInt(document.querySelector("#quantity_variant")
+                            .getAttribute('max'));
+                        const inputEl = this.parentNode.querySelector("input[type='number']");
+
+                        if (inputEl.value < maxQuantity) {
+                            inputEl.value = Number(inputEl.value) + 1;
+                        }
+                    });
+
+
+                    subButton?.addEventListener('click', function() {
+                        const inputEl = this.parentNode.querySelector("input[type='number']");
+                        if (inputEl.value >= 2) {
+                            inputEl.value = Number(inputEl.value) - 1;
+                        }
+                    });
+                });
+            }
+
+            function showTable() {
+                const tableBody = document.querySelector('#show-product'); // giả sử bạn có một tbody với id này
+
+                // Xóa dữ liệu cũ
+                tableBody.innerHTML = '';
+
+                // Lặp qua từng sản phẩm để tạo các hàng
+                if (productResponse.length > 0) {
+                    productResponse.forEach(item => {
+                        const row = document.createElement('tr');
+
+                        // Cột sản phẩm
+                        const productCell = document.createElement('td');
+                        const cartBox = document.createElement('div');
+                        cartBox.className = 'cart-box';
+
+                        // Ảnh sản phẩm
+                        const imgLink = document.createElement('a');
+                        imgLink.href = 'product.html';
+                        const img = document.createElement('img');
+                        img.src = `/storage/${item.product.image}`;
+                        img.alt = '';
+                        imgLink.appendChild(img);
+                        cartBox.appendChild(imgLink);
+
+                        // Thông tin sản phẩm
+                        const infoDiv = document.createElement('div');
+                        const nameLink = document.createElement('a');
+                        nameLink.href = 'product.html';
+                        const name = document.createElement('h5');
+                        name.textContent = item.product.name;
+                        nameLink.appendChild(name);
+                        infoDiv.appendChild(nameLink);
+
+                        // Biến thể sản phẩm
+                        item.product_variant.attribute_values.forEach(variant => {
+                            const variantP = document.createElement('p');
+                            variantP.innerHTML =
+                                `${variant.attribute.name}: <span>${variant.name}</span>`;
+                            infoDiv.appendChild(variantP);
+                        });
+
+                        cartBox.appendChild(infoDiv);
+                        productCell.appendChild(cartBox);
+                        row.appendChild(productCell);
+
+                        // Giá sản phẩm
+                        const priceCell = document.createElement('td');
+                        priceCell.textContent =
+                            `${new Intl.NumberFormat().format(item.product_variant.price)} VND`;
+                        row.appendChild(priceCell);
+
+                        // Số lượng
+                        const quantityCell = document.createElement('td');
+                        const quantityDiv = document.createElement('div');
+                        quantityDiv.className = 'quantity';
+
+                        const minusButton = document.createElement('button');
+                        minusButton.className = 'minus';
+                        minusButton.innerHTML = '<i class="fa-solid fa-minus"></i>';
+                        quantityDiv.appendChild(minusButton);
+
+                        const quantityInput = document.createElement('input');
+                        quantityInput.type = 'number';
+                        quantityInput.id = 'quantity_variant';
+                        quantityInput.value = item.cart.quantity;
+                        quantityInput.min = 1;
+                        quantityInput.max = item.product_variant.quantity;
+                        quantityDiv.appendChild(quantityInput);
+
+                        const plusButton = document.createElement('button');
+                        plusButton.className = 'plus';
+                        plusButton.innerHTML = '<i class="fa-solid fa-plus"></i>';
+                        quantityDiv.appendChild(plusButton);
+
+                        quantityCell.appendChild(quantityDiv);
+                        row.appendChild(quantityCell);
+
+                        // Tổng giá
+                        const totalCell = document.createElement('td');
+                        const total = item.product_variant.price * item.cart.quantity;
+                        totalCell.textContent = `${new Intl.NumberFormat().format(total)} VND`;
+                        row.appendChild(totalCell);
+
+                        // Nút xóa
+                        const deleteCell = document.createElement('td');
+                        const deleteButton = document.createElement('a');
+                        deleteButton.className = 'deleteButton';
+                        deleteButton.dataset.variant = item.cart.id;
+                        deleteButton.href = 'javascript:void(0)';
+                        deleteButton.innerHTML = '<i class="fas fa-trash"></i>';
+                        deleteCell.appendChild(deleteButton);
+                        row.appendChild(deleteCell);
+
+                        // Thêm hàng vào bảng
+                        tableBody.appendChild(row);
+
+                    });
+                } else {
+                    let div = `<div> Giỏ hàng trông </div>`;
+                    tableBody.appendChild(div);
+                }
+            };
+            showBtn();
         });
     </script>
 @endpush
