@@ -55,49 +55,59 @@ class CheckOutController extends Controller
         // dd($request->totalAmount);
 
         try {
-            DB::transaction(function () use ($request, $productCarts) {
-                $dataOrder = [
-                    "address_user_id" => $request->address_user_id,
-                    "total_amount" => $request->total_amount,
-                    "payment_method" => $request->payment_method,
-                    "note" => $request->note,
-                    "confirm_status" => "IN_ACTIVE",
-                    "status" => "PENDING"
+            DB::beginTransaction();
+
+            $dataOrder = [
+                "address_user_id" => $request->address_user_id,
+                "total_amount" => $request->total_amount,
+                "payment_method" => $request->payment_method,
+                "note" => $request->note,
+                "confirm_status" => "IN_ACTIVE",
+                "status" => "PENDING"
+            ];
+            $order = Order::create($dataOrder);
+
+            $data = [];
+            foreach ($productCarts as $key => $item) {
+                $data[] = [
+                    'order_id' => $order->id,
+                    'product_variant_id' => $item['product_variant_id'],
+                    'product_name' => $item['product_variant']['product']['name'],
+                    'product_price' => $item['product_variant']['price'],
+                    'quantity' => $item['quantity'],
+                    'total_price' => $item['quantity'] * $item['product_variant']['price']
                 ];
-                $order = Order::create($dataOrder);
-                $data = [];
-                $orderItem['order_id'] = $order->id;
-                foreach ($productCarts as $key => $item) {
+            }
 
-                    $orderItem['product_variant_id'] = $item['product_variant_id'];
-                    $orderItem['product_name'] = $item['product_variant']['product']['name'];
-                    $orderItem['product_price'] = $item['product_variant']['price'];
-                    $orderItem['quantity'] = $item['quantity'];
-                    $orderItem['total_price'] = $item['quantity'] * $item['product_variant']['price'];
-                    $data[$key] = $orderItem;
-                }
-                // dd($order->toArray());
-                OrderItem::insert($data);
-                $dataCart = [];
-                foreach ($productCarts as $key => $value) {
-                    $dataCart[] = $value['id'];
-                }
-                Cart::destroy($dataCart);
-            });
+            OrderItem::insert($data);
 
-            sweetalert("Đơn hàng đã được đặt !", NotificationInterface::SUCCESS, [
+            // Xóa các sản phẩm trong giỏ hàng
+            $dataCart = array_map(fn($value) => $value['id'], $productCarts);
+            Cart::destroy($dataCart);
+
+            // Cam kết giao dịch
+            DB::commit();
+
+            // Thông báo thành công và chuyển hướng
+            sweetalert("Đơn hàng đã được đặt!", NotificationInterface::SUCCESS, [
                 'position' => "center",
                 'timeOut' => '',
                 'closeButton' => false
             ]);
-            return redirect()->route("order-success");
-        } catch (\Throwable $th) {
-            sweetalert("Đặt hàng thất bại !", NotificationInterface::ERROR, [
+            return redirect()->route("order-success", ['id' => $order->id]);
+        } catch (\Exception $e) {
+            // Hủy giao dịch khi có lỗi
+            DB::rollBack();
+
+            // Ghi log lỗi hoặc thông báo lỗi (có thể sử dụng sweetalert để báo lỗi)
+            sweetalert("Đã xảy ra lỗi khi đặt hàng!", NotificationInterface::ERROR, [
                 'position' => "center",
                 'timeOut' => '',
                 'closeButton' => false
             ]);
-            return back();
+
+            // Quay lại trang trước với thông báo lỗi
+            return back()->withErrors(['error' => 'Đã xảy ra lỗi khi đặt hàng. Vui lòng thử lại sau!']);
         }
     }
 }

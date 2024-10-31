@@ -992,6 +992,7 @@
                 success: function(response) {
                     let numberCart = response.message.numberCart;
                     document.querySelector("#numberCart").innerText = numberCart;
+                    alert("Thêm giỏ hàng thành công !")
                     console.log(response.message);
                 }
             });

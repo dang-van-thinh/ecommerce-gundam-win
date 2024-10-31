@@ -51,11 +51,23 @@ class ProductController extends Controller
         $variantId = $request->input('variantId');
         $userId = $request->input('userId');
         if (Cart::query()->findOrFail($variantId)->delete()) {
-            $cartResponse = Cart::where('user_id', $userId)->count('*');
+            $numberCart = Cart::where('user_id', $userId)->count('*');
+            $productCarts = Cart::with(['productVariant.product', 'productVariant.attributeValues.attribute'])->where('user_id', $userId)->get()->toArray();
+            // dd($productCarts);
+            $productResponse = [];
+            foreach ($productCarts as $key => $value) {
+                $productResponse[$key] = [];
+                foreach ($productCarts as $key => $productCart) {
+                    $productResponse[$key]['cart'] = $productCart;
+                    $productResponse[$key]['product_variant'] = $productCart['product_variant'];
+                    $productResponse[$key]['product'] = $productCart['product_variant']['product'];
+                }
+            }
             return response()->json([
                 'message' => [
                     'status' => "Xóa thành công",
-                    'numberCart' => $cartResponse
+                    'numberCart' => $numberCart,
+                    'productCart' => $productResponse
                 ]
             ]);
         }
