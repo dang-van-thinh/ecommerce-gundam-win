@@ -10,7 +10,7 @@ class OrderController extends Controller
 {
     public function index($id)
     {
-        $data = Order::with('orderItems.productVariant.attributeValues.attribute')->findOrFail($id);
+        $data = Order::with('orderItems.productVariant.attributeValues.attribute', 'orderItems.productVariant.product')->findOrFail($id);
 
         // dd($data->toArray());
         return view('client.pages.order-success.index', compact('data'));
