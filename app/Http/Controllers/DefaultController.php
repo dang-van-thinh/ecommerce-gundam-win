@@ -6,6 +6,6 @@ class DefaultController extends Controller
 {
     public function pageNotFound()
     {
-        return view('client.pages.404');
+        return view('errors.404-client');
     }
 }
