@@ -22,19 +22,6 @@ class AddersController extends Controller
         return view('client.pages.profile.address', compact('provinces', 'addressUsers'));
     }
 
-    // Lấy quận/huyện dựa trên tỉnh
-    public function getDistricts($province_id)
-    {
-        $districts = District::where('province_id', $province_id)->get();
-        return response()->json($districts);
-    }
-
-    // Lấy phường/xã dựa trên quận/huyện
-    public function getWards($district_id)
-    {
-        $wards = Ward::where('district_id', $district_id)->get();
-        return response()->json($wards);
-    }
 
     // Thêm mới địa chỉ
     public function store(AddressUserRequest $request)

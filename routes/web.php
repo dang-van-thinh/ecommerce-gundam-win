@@ -93,8 +93,6 @@ Route::prefix('')->middleware(['auth', 'checkAccountStatus', 'checkRole:1'])->gr
         Route::get('address/{id}', [AddersController::class, 'destroy'])->name('address.destroy');
     });
 });
-Route::get('get-districts/{province_id}', [AddersController::class, 'getDistricts'])->name('get.districts');
-Route::get('get-wards/{district_id}', [AddersController::class, 'getWards'])->name('get.wards');
 
 Route::get('/wish-list', [WishListController::class, 'index'])->name('wish-list');
 Route::get('/collection-product', [CollectionProductController::class, 'index'])->name('collection-product');

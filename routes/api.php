@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\Admin\Api\ImageBlogApiController;
+use App\Http\Controllers\Client\Api\AddressApiController;
 use App\Http\Controllers\Client\Api\ProductController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
@@ -21,10 +22,12 @@ use Illuminate\Support\Facades\Route;
 // });
 // ajax them moi anh bai viet
 Route::prefix('')->middleware(['authApi'])->group(function () {
-Route::post('/image-blog', [ImageBlogApiController::class, 'store'])->name('api.image');
+    Route::post('/image-blog', [ImageBlogApiController::class, 'store'])->name('api.image');
 
-Route::post('/add-cart', [ProductController::class, 'addToCart'])->name('api.add-cart');
-Route::delete('/delete-cart', [ProductController::class, 'deleteToCart'])->name('api.delete-cart');
-Route::put('/update-cart', [ProductController::class, 'updateToCart'])->name('api.update-cart');
+    Route::post('/add-cart', [ProductController::class, 'addToCart'])->name('api.add-cart');
+    Route::delete('/delete-cart', [ProductController::class, 'deleteToCart'])->name('api.delete-cart');
+    Route::put('/update-cart', [ProductController::class, 'updateToCart'])->name('api.update-cart');
+
+    Route::get('get-districts/{province_id}', [AddressApiController::class, 'getDistricts'])->name('api.districts');
+    Route::get('get-wards/{district_id}', [AddressApiController::class, 'getWards'])->name('api.wards');
 });
-
