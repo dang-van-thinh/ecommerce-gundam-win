@@ -3,6 +3,7 @@
 namespace App\Exceptions;
 
 use Illuminate\Foundation\Exceptions\Handler as ExceptionHandler;
+use Illuminate\Support\Facades\Log;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 use Throwable;
 
@@ -29,14 +30,16 @@ class Handler extends ExceptionHandler
         });
     }
 
-
     public function render($request, Throwable $exception)
     {
         if ($exception instanceof NotFoundHttpException) {
-            // Phân biệt giao diện qua URL
+            Log::info('404 Exception triggered');
+
             if ($request->is('admin/*')) {
-                return response()->view('errors.404-admin', [], 404);
+                Log::info('404 Admin View Triggered');
+                return response()->view('errors.404', [], 404);
             } else {
+                Log::info('404 Client View Triggered');
                 return response()->view('errors.404-client', [], 404);
             }
         }
