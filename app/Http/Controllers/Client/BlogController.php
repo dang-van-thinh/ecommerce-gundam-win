@@ -35,6 +35,11 @@ class BlogController extends Controller
         // Trả về view với các dữ liệu tương ứng
         return view('client.pages.collection-blog.index', compact('articles', 'latestPosts', 'categories', 'category'));
     }
+    // Trong Controller
+public function showComments($articleId) {
+    $comments = CommentPost::with('user', 'replies.user')->where('article_id', $articleId)->get();
+    return view('client.pages.blog.comment_render', compact('comments'));
+}
 
     public function show($id)
     {
