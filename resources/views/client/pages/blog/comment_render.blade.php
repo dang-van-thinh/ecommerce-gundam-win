@@ -9,8 +9,9 @@
                     <h6>
                         {{-- Kiểm tra xem đây có phải bình luận con không --}}
                         @if ($comment->parent_comment_id)
-                        {{ $comment->user->full_name }} trả lời: <strong style="color: rgb(110, 110, 238)">{{
-                            $comment->parent->user->full_name }}</strong>
+                        {{ $comment->user->full_name }} trả lời: <strong style="color: rgb(110, 110, 238)">
+                            {{ $comment->parent->user->full_name }}
+                        </strong>
                         @else
                         {{ $comment->user->full_name }}
                         @endif
@@ -18,15 +19,16 @@
                 </div>
                 <div class="comment-date">
                     {{ $comment->comment }}
-                    <a href="#" class="reply-btn" data-comment-id="{{ $comment->id }}">Trả lời</a>
+                    <a href="javascript:void(0);" class="reply-btn" data-comment-id="{{ $comment->id }}">Trả lời</a>
                 </div>
                 <span>{{ $comment->created_at->format('d/m/Y') }}</span>
             </div>
         </div>
+
         <div class="comment-text">
             <!-- Form trả lời bình luận -->
             <form action="{{ route('blog.comment.store', $article->id) }}" method="POST" class="reply-form"
-                id="reply-form-{{ $comment->id }}" style="display:none;">
+                id="reply-form-{{ $comment->id }}" style="display: none;">
                 @csrf
                 <input type="hidden" name="parent_comment_id" value="{{ $comment->id }}">
                 <textarea class="form-control" name="comment" rows="2" cols="50" required
@@ -40,17 +42,17 @@
 
             <!-- Hiển thị các câu trả lời -->
             @if ($comment->replies->isNotEmpty())
-            <ul >
+            <a href="javascript:void(0);" class="toggle-replies-btn" data-comment-id="{{ $comment->id }}">
+                Xem câu trả lời <span>&#9660;</span>
+            </a>
+            <ul class="replies-list" id="replies-{{ $comment->id }}" style="display: none;">
                 @foreach ($comment->replies as $reply)
                     <li>
                         @include('client.pages.blog.comment_render', ['comment' => $reply])
                     </li>
                 @endforeach
             </ul>
-        @endif
-        
+            @endif
         </div>
-
     </div>
-   
 </li>
