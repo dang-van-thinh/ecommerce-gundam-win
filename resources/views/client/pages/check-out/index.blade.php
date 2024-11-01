@@ -181,11 +181,14 @@
 <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 <script>
     $(document).ready(function() {
+        // lay dia chi them moi
         $('#provinceAdd').change(function() {
             var provinceId = $(this).val();
             if (provinceId) {
+                var url = `{{ route('api.districts', ['province_id' => ':province_id']) }}`;
+                url = url.replace(':province_id', provinceId);
                 $.ajax({
-                    url: '/get-districts/' + provinceId,
+                    url: url,
                     type: 'GET',
                     success: function(data) {
                         $('#districtAdd').empty().append(
@@ -203,8 +206,10 @@
         $('#districtAdd').change(function() {
             var districtId = $(this).val();
             if (districtId) {
+                var url = `{{ route('api.wards', ['district_id' => ':district_id']) }}`;
+                url = url.replace(':district_id', districtId);
                 $.ajax({
-                    url: '/get-wards/' + districtId,
+                    url: url,
                     type: 'GET',
                     success: function(data) {
                         $('#wardAdd').empty().append(
