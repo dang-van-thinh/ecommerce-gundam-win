@@ -924,53 +924,56 @@
     </section>
 @endsection
 @push('scripts')
-<script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
-<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
-<script>
-    let quantityInput;
-    let defaultPrice;
+    <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    <script>
+        let quantityInput;
+        let defaultPrice;
 
-    document.addEventListener('DOMContentLoaded', function() {
-        defaultPrice = document.getElementById('variant-price').textContent;
-        quantityInput = document.getElementById("quantity_variant");
-        const defaultQuantity = 0;
+        document.addEventListener('DOMContentLoaded', function() {
+            defaultPrice = document.getElementById('variant-price').textContent;
+            quantityInput = document.getElementById("quantity_variant");
+            const defaultQuantity = 0;
 
-        // Lắng nghe sự kiện click trên từng nút variant-option
-        document.querySelectorAll('.variant-option').forEach(function(button) {
-            button.addEventListener('click', function() {
-                if (this.classList.contains('selected')) {
-                    this.classList.remove('selected');
-                    document.getElementById('variant-price').textContent = defaultPrice;
-                    document.getElementById('variant-quantity').textContent = defaultQuantity;
-                } else {
-                    this.closest('.variant').querySelectorAll('.variant-option').forEach(function(btn) {
-                        btn.classList.remove('selected');
-                    });
+            // Lắng nghe sự kiện click trên từng nút variant-option
+            document.querySelectorAll('.variant-option').forEach(function(button) {
+                button.addEventListener('click', function() {
+                    if (this.classList.contains('selected')) {
+                        this.classList.remove('selected');
+                        document.getElementById('variant-price').textContent = defaultPrice;
+                        document.getElementById('variant-quantity').textContent = defaultQuantity;
+                    } else {
+                        this.closest('.variant').querySelectorAll('.variant-option').forEach(
+                            function(btn) {
+                                btn.classList.remove('selected');
+                            });
 
-                    this.classList.add('selected');
-                    const price = this.getAttribute('data-price');
-                    const quantity = this.getAttribute('data-quantity');
-                    document.getElementById('variant-price').textContent = price;
-                    document.getElementById('variant-quantity').textContent = quantity;
-                    quantityInput.setAttribute('max', quantity);
-                    quantityInput.value = 1;
-                }
+                        this.classList.add('selected');
+                        const price = this.getAttribute('data-price');
+                        const quantity = this.getAttribute('data-quantity');
+                        document.getElementById('variant-price').textContent = price;
+                        document.getElementById('variant-quantity').textContent = quantity;
+                        quantityInput.setAttribute('max', quantity);
+                        quantityInput.value = 1;
+                    }
+                });
+            });
+
+            // Sự kiện khi click nút "Thêm vào giỏ hàng"
+            document.querySelector('#btn_add_to_cart').addEventListener("click", function() {
+                console.log(checklogin('Vui lòng chọn biến thể trước khi thêm giỏ hàng', 'add_to_cart'));
+                checklogin('Vui lòng chọn biến thể trước khi thêm giỏ hàng', 'add_to_cart');
+            });
+
+            // Sự kiện khi click nút "Mua ngay"
+            document.querySelector('#btn_buy_now').addEventListener("click", function() {
+                checklogin('Vui lòng chọn biến thể trước khi mua', 'buy_now');
+
             });
         });
 
-        // Sự kiện khi click nút "Thêm vào giỏ hàng"
-        document.querySelector('#btn_add_to_cart').addEventListener("click", function() {
-            checklogin('Vui lòng chọn biến thể trước khi thêm giỏ hàng', 'add_to_cart');
-        });
-
-        // Sự kiện khi click nút "Mua ngay"
-        document.querySelector('#btn_buy_now').addEventListener("click", function() {
-            checklogin('Vui lòng chọn biến thể trước khi mua', 'buy_now');
-        });
-    });
-
-    function checklogin(message, action) {
-        @auth
+        function checklogin(message, action) {
+            @auth
             let selectedVariant = document.querySelector('.variant-option.selected');
             if (!selectedVariant) {
                 Swal.fire(message, "", "warning");
@@ -995,48 +998,57 @@
             if (action === 'add_to_cart') {
                 sendToCart(data);
             } else if (action === 'buy_now') {
-                Swal.fire({
-                title: "Hi cc",
-                icon: "warning",
-                confirmButtonText: "Đăng nhập",
-                showCancelButton: true,
-                cancelButtonText: "Hủy"})
+                buyNow(data);
             }
         @endauth
 
         @guest
-            Swal.fire({
-                title: "Bạn cần đăng nhập để thực hiện thao tác này!",
-                icon: "warning",
-                confirmButtonText: "Đăng nhập",
-                showCancelButton: true,
-                cancelButtonText: "Hủy"
-            }).then((result) => {
-                if (result.isConfirmed) {
-                    window.location.href = "{{ route('auth.login-view') }}";
-                }
-            });
-        @endguest
-    }
-
-    function sendToCart(data) {
-        $.ajax({
-            type: "POST",
-            url: '{{ route('api.add-cart') }}',
-            data: data,
-            success: function(response) {
-                let numberCart = response.message.numberCart;
-                document.querySelector("#numberCart").innerText = numberCart;
-                Swal.fire("Thêm vào giỏ hàng thành công!", "", "success");
-            },
-            error: function(error) {
-                Swal.fire("Có lỗi xảy ra, vui lòng thử lại sau!", "", "error");
-                console.error(error);
+        Swal.fire({
+            title: "Bạn cần đăng nhập để thực hiện thao tác này!",
+            icon: "warning",
+            confirmButtonText: "Đăng nhập",
+            showCancelButton: true,
+            cancelButtonText: "Hủy"
+        }).then((result) => {
+            if (result.isConfirmed) {
+                window.location.href = "{{ route('auth.login-view') }}";
             }
         });
-    }
-</script>
+        @endguest
+        }
+
+        function buyNow($data) {
+            $.ajax({
+                type: "POST",
+                url: '{{ route('api.add-cart') }}',
+                data: data,
+                success: function(response) {
+                    let numberCart = response.message.numberCart;
+                    document.querySelector("#numberCart").innerText = numberCart;
+                    Swal.fire("Thêm vào giỏ hàng thành công!", "", "success");
+                },
+                error: function(error) {
+                    Swal.fire("Có lỗi xảy ra, vui lòng thử lại sau!", "", "error");
+                    console.error(error);
+                }
+            });
+        }
+
+        function sendToCart(data) {
+            $.ajax({
+                type: "POST",
+                url: '{{ route('api.add-cart') }}',
+                data: data,
+                success: function(response) {
+                    let numberCart = response.message.numberCart;
+                    document.querySelector("#numberCart").innerText = numberCart;
+                    Swal.fire("Thêm vào giỏ hàng thành công!", "", "success");
+                },
+                error: function(error) {
+                    Swal.fire("Có lỗi xảy ra, vui lòng thử lại sau!", "", "error");
+                    console.error(error);
+                }
+            });
+        }
+    </script>
 @endpush
-
-
-
