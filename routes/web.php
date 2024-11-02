@@ -93,6 +93,9 @@ Route::prefix('')->middleware(['auth', 'checkAccountStatus', 'checkRole:1'])->gr
 
         // Delete a specific address
         Route::get('address/{id}', [AddersController::class, 'destroy'])->name('address.destroy');
+
+        //Chỉnh sửa thông tin tài khoản
+        Route::post('/edit-profile', [ProfileController::class, 'editProfile'])->name('edit-profile');
     });
 });
 
