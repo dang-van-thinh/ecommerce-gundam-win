@@ -59,7 +59,7 @@
                                                 class="iconsax" data-icon="heart" aria-hidden="true"
                                                 data-bs-toggle="tooltip" data-bs-title="Add to Wishlist"></i></a>
                                     </div>
-                                    {{-- <div class="product-image ratio_apos">
+                                    <div class="product-image ratio_apos">
                                     <a class="pro-first" href="{{ route('product', $product->id) }}">
                                         <img class="bg-img" src="{{ '/storage/' . $product->image}}" alt="product" />
                                     </a>
@@ -70,7 +70,7 @@
                                         <img class="bg-img" src="{{'/storage/' . $firstImage->image_url}}"
                                             alt="product" />
                                     </a>
-                                </div> --}}
+                                </div>
                                     <div class="cart-info-icon">
                                         <a href="#" data-bs-toggle="modal" data-bs-target="#addtocart"
                                             tabindex="0">
