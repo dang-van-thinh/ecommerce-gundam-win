@@ -961,6 +961,7 @@
 
             // Sự kiện khi click nút "Thêm vào giỏ hàng"
             document.querySelector('#btn_add_to_cart').addEventListener("click", function() {
+                console.log(checklogin('Vui lòng chọn biến thể trước khi thêm giỏ hàng', 'add_to_cart'));
                 checklogin('Vui lòng chọn biến thể trước khi thêm giỏ hàng', 'add_to_cart');
             });
 
@@ -996,6 +997,8 @@
             if (action === 'add_to_cart') {
                 sendToCart(data);
             } else if (action === 'buy_now') {
+                buyNow(data);
+
                 Swal.fire({
                     title: "Hi cc",
                     icon: "warning",
@@ -1003,6 +1006,7 @@
                     showCancelButton: true,
                     cancelButtonText: "Hủy"
                 })
+
             }
         @endauth
 
@@ -1020,6 +1024,24 @@
         });
         @endguest
         }
+
+        function buyNow($data) {
+            $.ajax({
+                type: "POST",
+                url: '{{ route('api.add-cart') }}',
+                data: data,
+                success: function(response) {
+                    let numberCart = response.message.numberCart;
+                    document.querySelector("#numberCart").innerText = numberCart;
+                    Swal.fire("Thêm vào giỏ hàng thành công!", "", "success");
+                },
+                error: function(error) {
+                    Swal.fire("Có lỗi xảy ra, vui lòng thử lại sau!", "", "error");
+                    console.error(error);
+                }
+            });
+        }
+
 
         function sendToCart(data) {
             $.ajax({
