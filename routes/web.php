@@ -29,6 +29,8 @@ use App\Http\Controllers\Controller;
 use App\Http\Controllers\DefaultController;
 use App\Http\Controllers\RefundController;
 use App\Models\Article;
+use App\Http\Controllers\Client\SearchController;
+
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -93,6 +95,8 @@ Route::prefix('')->middleware(['auth', 'checkAccountStatus', 'checkRole:1'])->gr
         Route::get('address/{id}', [AddersController::class, 'destroy'])->name('address.destroy');
     });
 });
+
+Route::post('/search', [SearchController::class, 'search'])->name('search');
 
 Route::get('/wish-list', [WishListController::class, 'index'])->name('wish-list');
 Route::get('/collection-product', [CollectionProductController::class, 'index'])->name('collection-product');
