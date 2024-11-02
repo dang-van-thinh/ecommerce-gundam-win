@@ -85,7 +85,7 @@
                                 </div>
                             </div>
                         </div>
-                        <div class="col-sm-10 col-9">
+                        <div class="col-sm-10 col-9">   
                             <div class="swiper product-slider-thumb product-slider-img-1">
                                 <div class="swiper-wrapper ratio_square-2">
                                     @foreach ($product->productImages as $productImage)
@@ -122,20 +122,21 @@
                                     <li> <i class="fa-solid fa-star"> </i><i class="fa-solid fa-star"> </i><i
                                             class="fa-solid fa-star"> </i><i class="fa-solid fa-star-half-stroke"></i><i
                                             class="fa-regular fa-star"></i></li>
-                                    <li>(4.7) Rating</li>
+                                    <li>(4.7) Đánh giá</li>
                                 </ul>
                             </div>
                             <div class="buy-box border-buttom">
                                 <ul>
                                     <li> <span data-bs-toggle="modal" data-bs-target="#size-chart" title="Quick View"
-                                            tabindex="0"><i class="iconsax me-2" data-icon="ruler"></i>Size Chart</span>
+                                            tabindex="0"><i class="iconsax me-2" data-icon="ruler"></i>Bảng kích
+                                            thước</span>
                                     </li>
                                     <li> <span data-bs-toggle="modal" data-bs-target="#terms-conditions-modal"
                                             title="Quick View" tabindex="0"><i class="iconsax me-2"
-                                                data-icon="truck"></i>Delivery & return</span></li>
+                                                data-icon="truck"></i>Giao hàng và trả lại</span></li>
                                     <li> <span data-bs-toggle="modal" data-bs-target="#question-box" title="Quick View"
-                                            tabindex="0"><i class="iconsax me-2" data-icon="question-message"></i>Ask a
-                                            Question</span></li>
+                                            tabindex="0"><i class="iconsax me-2" data-icon="question-message"></i>Đặt câu
+                                            hỏi</span></li>
                                 </ul>
                             </div>
                             <div class="d-flex flex-column">
@@ -200,32 +201,32 @@
                             <div class="sale-box">
                                 <div class="d-flex align-items-center gap-2"><img
                                         src="/template/client/assets/images/gif/timer.gif" alt="">
-                                    <p>Limited Time Left! Hurry, Sale Ending!</p>
+                                    <p>Thời gian có hạn! Nhanh lên, chương trình khuyến mại sắp kết thúc!</p>
                                 </div>
                                 <div class="countdown">
                                     <ul class="clockdiv1">
                                         <li>
                                             <div class="timer">
                                                 <div class="days"></div>
-                                            </div><span class="title">Days</span>
+                                            </div><span class="title">Ngày</span>
                                         </li>
                                         <li>:</li>
                                         <li>
                                             <div class="timer">
                                                 <div class="hours"></div>
-                                            </div><span class="title">Hours</span>
+                                            </div><span class="title">Giờ</span>
                                         </li>
                                         <li>:</li>
                                         <li>
                                             <div class="timer">
                                                 <div class="minutes"></div>
-                                            </div><span class="title">Min</span>
+                                            </div><span class="title">Phút</span>
                                         </li>
                                         <li>:</li>
                                         <li>
                                             <div class="timer">
                                                 <div class="seconds"></div>
-                                            </div><span class="title">Sec</span>
+                                            </div><span class="title">Giây</span>
                                         </li>
                                     </ul>
                                 </div>
@@ -464,7 +465,7 @@
                                                         <h5>4.5</h5>
                                                     </div>
                                                     <div>
-                                                        <h6>Average Ratings</h6>
+                                                        <h6>Đánh giá trung bình</h6>
                                                         <ul class="rating mb p-0">
                                                             <li><i class="fa-solid fa-star"></i></li>
                                                             <li><i class="fa-solid fa-star"></i></li>
@@ -484,10 +485,10 @@
                                                             <div class="progress-bar progress-bar-striped progress-bar-animated"
                                                                 style="width: 80%"></div>
                                                         </div>
-                                                        <p>80%</p>
+                                                        <p>5 Sao</p>
                                                     </li>
                                                     <li>
-                                                        <p>4 Star</p>
+                                                        <p>4 sao</p>
                                                         <div class="progress" role="progressbar"
                                                             aria-label="Animated striped example" aria-valuenow="75"
                                                             aria-valuemin="0" aria-valuemax="100">
@@ -497,7 +498,7 @@
                                                         <p>70%</p>
                                                     </li>
                                                     <li>
-                                                        <p>3 Star</p>
+                                                        <p>3 Sao</p>
                                                         <div class="progress" role="progressbar"
                                                             aria-label="Animated striped example" aria-valuenow="75"
                                                             aria-valuemin="0" aria-valuemax="100">
@@ -507,7 +508,7 @@
                                                         <p>55%</p>
                                                     </li>
                                                     <li>
-                                                        <p>2 Star</p>
+                                                        <p>2 Sao</p>
                                                         <div class="progress" role="progressbar"
                                                             aria-label="Animated striped example" aria-valuenow="75"
                                                             aria-valuemin="0" aria-valuemax="100">
@@ -517,7 +518,7 @@
                                                         <p>40%</p>
                                                     </li>
                                                     <li>
-                                                        <p>1 Star</p>
+                                                        <p>1 Sao</p>
                                                         <div class="progress" role="progressbar"
                                                             aria-label="Animated striped example" aria-valuenow="75"
                                                             aria-valuemin="0" aria-valuemax="100">
@@ -528,14 +529,13 @@
                                                     </li>
                                                 </ul><button class="btn reviews-modal" data-bs-toggle="modal"
                                                     data-bs-target="#Reviews-modal" title="Quick View"
-                                                    tabindex="0">Write a
-                                                    review</button>
+                                                    tabindex="0">Viết Bài Đánh Giá</button>
                                             </div>
                                         </div>
                                     </div>
                                     <div class="col-lg-8">
                                         <div class="comments-box">
-                                            <h5>Comments </h5>
+                                            <h5>Bình Luận </h5>
                                             <ul class="theme-scrollbar">
                                                 <li>
                                                     <div class="comment-items">
@@ -968,7 +968,6 @@
             // Sự kiện khi click nút "Mua ngay"
             document.querySelector('#btn_buy_now').addEventListener("click", function() {
                 checklogin('Vui lòng chọn biến thể trước khi mua', 'buy_now');
-
             });
         });
 
@@ -999,6 +998,15 @@
                 sendToCart(data);
             } else if (action === 'buy_now') {
                 buyNow(data);
+
+                Swal.fire({
+                    title: "Hi cc",
+                    icon: "warning",
+                    confirmButtonText: "Đăng nhập",
+                    showCancelButton: true,
+                    cancelButtonText: "Hủy"
+                })
+
             }
         @endauth
 
@@ -1033,6 +1041,7 @@
                 }
             });
         }
+
 
         function sendToCart(data) {
             $.ajax({
