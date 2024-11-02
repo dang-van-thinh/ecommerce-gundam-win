@@ -5,12 +5,22 @@
         <div class="profile-bg-img"></div>
         <div class="dashboard-left-sidebar-close"><i class="fa-solid fa-xmark"></i></div>
         <div class="profile-contain">
-            <div class="profile-image"> <img class="img-fluid" src="/template/client/assets/images/user/12.jpg" alt="">
-            </div>
+            @if (Auth::user()->image)
+                <div class="profile-image">
+                    <img class="img-fluid" src="{{ '/storage/' . Auth::user()->image }}" alt="">
+                </div>
+            @else
+                <div class="profile-image">
+                    <img class="img-fluid" src="/template/client/assets/images/user/12.jpg" alt="">
+                </div>
+            @endif
+
             <div class="profile-name">
-                <h4>John Doe</h4>
-                <h6>john.customer@example.com</h6><span data-bs-toggle="modal" data-bs-target="#edit-box"
-                    title="Quick View" tabindex="0">Edit Profile</span>
+                <h4>{{ Auth::user()->full_name }}</h4>
+                <h6>{{ Auth::user()->email }}</h6>
+                <span data-bs-toggle="modal" data-bs-target="#edit-profile" title="Quick View" tabindex="0">
+                    Chỉnh sửa hồ sơ
+                </span>
             </div>
         </div>
     </div>
@@ -58,12 +68,15 @@
         </li> --}}
     </ul>
     <div class="logout-button" style="display: flex; justify-content: center; align-items: center;">
-    <form action="{{ route('auth.logout') }}" method="POST">
-        @csrf
-        <button type="submit" style="width: 250px; border-radius: 20px;"  class="btn btn_black sm logout-btn" title="Đăng xuất">
-            <i class="iconsax me-1" data-icon="logout-1"></i> Đăng xuất
-        </button>
-    </form>
-</div>
+        <form action="{{ route('auth.logout') }}" method="POST">
+            @csrf
+            <button type="submit" style="width: 250px; border-radius: 20px;" class="btn btn_black sm logout-btn"
+                title="Đăng xuất">
+                <i class="iconsax me-1" data-icon="logout-1"></i> Đăng xuất
+            </button>
+        </form>
+    </div>
 
 </div>
+
+@include('client.pages.profile.layouts.components.edit-profile')
