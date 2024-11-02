@@ -9,7 +9,6 @@
         @stack('css')
 
     </head>
-
     <body class="skeleton_body">
         <!--bottom to top-->
         <div class="tap-top">
