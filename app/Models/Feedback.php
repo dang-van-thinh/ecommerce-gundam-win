@@ -23,10 +23,9 @@ class Feedback extends Model
         'order_item_id',
         'updated_at '
     ];
-    public $timestamps = false;
-
-    public function product(){
-       return $this->belongsTo(Product::class,'product_id');
+    public function orderItem()
+    {
+        return $this->belongsTo(OrderItem::class);
     }
 
     public function user()
