@@ -30,5 +30,8 @@ class ProductVariant extends Model
     {
         return $this->belongsTo(Product::class, 'product_id');
     }
-
+    public function feedbacks()
+    {
+        return $this->hasMany(Feedback::class, 'user_id');
+    }
 }

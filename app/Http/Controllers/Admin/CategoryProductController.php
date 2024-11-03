@@ -50,14 +50,38 @@ class CategoryProductController extends Controller
     }
     public function destroy(string $id)
     {
-        $category = CategoryProduct::findOrFail($id);
-        Storage::disk('public')->delete($category->image);
-        $category->delete();
-        toastr("Xóa thành công", NotificationInterface::SUCCESS, "Thành công", [
-            "closeButton" => true,
-            "progressBar" => true,
-            "timeOut" => "3000",
-        ]);
+        try {
+            $category = CategoryProduct::findOrFail($id); // Sử dụng findOrFail để ném ngoại lệ nếu không tìm thấy danh mục
+            // Kiểm tra xem danh mục có sản phẩm liên kết hay không
+            if ($category->products()->count() > 0) { // Giả sử có một mối quan hệ 'products' trong model CategoryProduct
+                toastr("Không thể xóa danh mục này vì nó có sản phẩm liên kết.", NotificationInterface::ERROR, "Lỗi", [
+                    "closeButton" => true,
+                    "progressBar" => true,
+                    "timeOut" => "3000",
+                ]);
+                return redirect()->back();
+            }
+
+            // Xóa ảnh liên quan từ storage
+            Storage::disk('public')->delete($category->image);
+
+            // Xóa danh mục
+            $category->delete();
+
+            toastr("Xóa thành công", NotificationInterface::SUCCESS, "Thành công", [
+                "closeButton" => true,
+                "progressBar" => true,
+                "timeOut" => "3000",
+            ]);
+        } catch (\Exception $e) {
+            // Bắt lỗi nếu có ngoại lệ
+            toastr("Đã xảy ra lỗi: " . $e->getMessage(), NotificationInterface::ERROR, "Lỗi", [
+                "closeButton" => true,
+                "progressBar" => true,
+                "timeOut" => "3000",
+            ]);
+        }
+
         return redirect()->back();
     }
 }

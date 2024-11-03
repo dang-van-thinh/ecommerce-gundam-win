@@ -10,7 +10,7 @@ class Feedback extends Model
     use HasFactory;
 
 
-    protected $table = "feedback";
+    protected $table = "feedbacks";
 
     protected $filltable = [
         'id',
@@ -21,9 +21,9 @@ class Feedback extends Model
         'comment ',
         'file_path ',
         'created_at',
+        'has_edited',
         'updated_at '
     ];
-    public $timestamps = false;
 
     public function product(){
        return $this->belongsTo(Product::class,'product_id');

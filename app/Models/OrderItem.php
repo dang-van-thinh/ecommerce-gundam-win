@@ -19,6 +19,7 @@ class OrderItem extends Model
         'product_price',
         'quantity',
         'total_price',
+        'feedback_status',
     ];
     public function order()
     {
@@ -28,5 +29,9 @@ class OrderItem extends Model
     public function productVariant()
     {
         return  $this->belongsTo(ProductVariant::class);
+    }
+    public function feedbacks()
+    {
+        return $this->hasMany(Feedback::class, 'user_id');
     }
 }
