@@ -9,7 +9,7 @@ use App\Http\Requests\Admin\categoryArticle\CreateCategoryArticleRequest;
 use App\Http\Requests\Admin\categoryArticle\UpdateCategoriArticleRequest;
 use App\Models\CategoryArticle;
 
-class CategoryArticleController  extends Controller
+class CategoryArticleController extends Controller
 {
     public function index()
     {
@@ -31,7 +31,9 @@ class CategoryArticleController  extends Controller
         ]);
         return redirect()->route("category-article.index");
     }
-    public function show(string $id) {}
+    public function show(string $id)
+    {
+    }
     public function edit(string $id)
     {
         $cate = CategoryArticle::find($id);
@@ -51,13 +53,34 @@ class CategoryArticleController  extends Controller
     }
     public function destroy(string $id)
     {
-        $cate = CategoryArticle::find($id);
-        $cate->delete();
-        toastr("Xóa thành công", NotificationInterface::SUCCESS, "Thành công", [
-            "closeButton" => true,
-            "progressBar" => true,
-            "timeOut" => "3000",
-        ]);
+        try {
+            $cate = CategoryArticle::findOrFail($id); // Sử dụng findOrFail để ném ngoại lệ nếu không tìm thấy danh mục
+            // Kiểm tra xem danh mục có bài viết liên kết hay không
+            if ($cate->articles()->count() > 0) { // Giả sử có một mối quan hệ 'articles' trong model CategoryArticle
+                toastr("Không thể xóa danh mục này vì nó có bài viết liên kết.", NotificationInterface::ERROR, "Lỗi", [
+                    "closeButton" => true,
+                    "progressBar" => true,
+                    "timeOut" => "3000",
+                ]);
+                return redirect()->route("category-article.index");
+            }
+
+            $cate->delete();
+            toastr("Xóa thành công", NotificationInterface::SUCCESS, "Thành công", [
+                "closeButton" => true,
+                "progressBar" => true,
+                "timeOut" => "3000",
+            ]);
+        } catch (\Exception $e) {
+            // Bắt lỗi nếu có ngoại lệ
+            toastr("Đã xảy ra lỗi: " . $e->getMessage(), NotificationInterface::ERROR, "Lỗi", [
+                "closeButton" => true,
+                "progressBar" => true,
+                "timeOut" => "3000",
+            ]);
+        }
+
         return redirect()->route("category-article.index");
     }
+
 }
