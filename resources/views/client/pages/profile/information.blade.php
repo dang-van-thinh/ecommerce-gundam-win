@@ -13,13 +13,13 @@
                         <h4>Thông tin người dùng</h4>
                     </div>
                     <div class="dashboard-user-name">
-                        <h6>Hello, <b>John Doe</b></h6>
-                        <p>My dashboard provides a comprehensive overview of key metrics and data
-                            relevant to your operations. It offers real-time insights into performance,
-                            including sales figures, website traffic, customer engagement, and more.
-                            With customizable widgets and intuitive visualizations, it facilitates quick
-                            decision-making and allows you to track progress towards your goals
-                            effectively.</p>
+                        <h6>Xin chào, <b>{{ Auth::user()->full_name }}</b></h6>
+                        <p>Trang tổng quan của tôi cung cấp cho bạn một cái nhìn toàn diện về các số liệu và dữ liệu chính
+                            liên quan đến hoạt động của bạn. Nó cung cấp thông tin chi tiết theo thời gian thực về hiệu
+                            suất, bao gồm số liệu bán hàng, lưu lượng truy cập trang web, mức độ tương tác của khách hàng,
+                            v.v. Với các tiện ích có thể tùy chỉnh và hình ảnh trực quan, nó tạo điều kiện cho việc ra quyết
+                            định nhanh chóng và giúp bạn theo dõi tiến trình hướng tới mục tiêu của mình một cách hiệu quả.
+                        </p>
                     </div>
                     <div class="total-box">
                         <div class="row gy-4">
@@ -63,31 +63,31 @@
                             <div class="col-xl-7">
                                 <div class="sidebar-title">
                                     <div class="loader-line"></div>
-                                    <h5>Profile Information</h5>
+                                    <h5>Thông tin hồ sơ</h5>
                                 </div>
                                 <ul class="profile-information">
                                     <li>
-                                        <h6>Name :</h6>
-                                        <p>John Doe</p>
+                                        <h6>Họ và tên :</h6>
+                                        <p>{{ Auth::user()->full_name }}</p>
                                     </li>
                                     <li>
-                                        <h6>Phone:</h6>
-                                        <p>+1 5551855359</p>
+                                        <h6>Số điện thoại:</h6>
+                                        <p>{{ Auth::user()->phone }}</p>
                                     </li>
-                                    <li>
+                                    {{-- <li>
                                         <h6>Address:</h6>
                                         <p>26, Starts Hollow Colony Denver, Colorado, United States
                                             80014</p>
-                                    </li>
+                                    </li> --}}
                                 </ul>
                                 <div class="sidebar-title">
                                     <div class="loader-line"></div>
-                                    <h5>Login Details</h5>
+                                    <h5>Chi tiết đăng nhập</h5>
                                 </div>
                                 <ul class="profile-information mb-0">
                                     <li>
                                         <h6>Email :</h6>
-                                        <p>john.customer@example.com </p>
+                                        <p>{{ Auth::user()->email }}</p>
                                     </li>
                                     <li>
                                         <h6>Mật khẩu :</h6>
