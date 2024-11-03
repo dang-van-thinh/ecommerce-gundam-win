@@ -81,6 +81,8 @@ Route::prefix('')->middleware(['auth', 'checkAccountStatus', 'checkRole:1'])->gr
         Route::get('/order-history', [ProfileController::class, 'orderHistory'])->name('order-history');
         // Route::get('/address', [ProfileController::class, 'address'])->name('address');
         Route::get('address', [AddersController::class, 'index'])->name('address');
+        Route::post('/feedback/store', [ProfileController::class, 'store'])->name('feedback.store');
+        Route::put('/profile/feedback/{id}', [ProfileController::class, 'update'])->name('feedback.update');
 
         // Store a new address
         Route::post('address', [AddersController::class, 'store'])->name('createUserAddress');
