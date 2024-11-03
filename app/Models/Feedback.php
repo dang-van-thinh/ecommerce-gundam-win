@@ -14,7 +14,6 @@ class Feedback extends Model
 
     protected $filltable = [
         'id',
-        'product_id',
         'user_id',
         'parent_feedback_id',
         'rating ',
@@ -24,13 +23,14 @@ class Feedback extends Model
         'has_edited',
         'updated_at '
     ];
+    public $timestamps = false;
 
     public function product(){
        return $this->belongsTo(Product::class,'product_id');
     }
 
-    public function user(){
-       return $this->belongsTo(User::class,'user_id');
+    public function user()
+    {
+        return $this->belongsTo(User::class, 'user_id');
     }
-
 }
