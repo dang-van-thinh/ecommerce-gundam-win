@@ -25,6 +25,11 @@ class OrderItem extends Model
         return  $this->belongsTo(Order::class, 'order_id');
     }
 
+    public function feedback()
+    {
+        return $this->hasOne(Feedback::class);
+    }
+
     public function productVariant()
     {
         return  $this->belongsTo(ProductVariant::class);
