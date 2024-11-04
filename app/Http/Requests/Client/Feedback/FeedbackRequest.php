@@ -14,7 +14,7 @@ class FeedbackRequest extends FormRequest
     public function rules()
     {
         return [
-            'product_id' => 'required|exists:products,id',
+            'order_item_id' => 'required|exists:order_items,id',
             'user_id' => 'required|exists:users,id',
             'rating' => 'required|integer|between:1,5',
             'comment' => 'nullable|string|max:1000',

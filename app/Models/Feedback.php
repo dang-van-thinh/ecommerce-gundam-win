@@ -20,7 +20,7 @@ class Feedback extends Model
         'comment ',
         'file_path ',
         'created_at',
-        'has_edited',
+        'order_item_id',
         'updated_at '
     ];
     public $timestamps = false;
