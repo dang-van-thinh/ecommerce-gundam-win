@@ -8,6 +8,7 @@ use App\Http\Requests\Client\Feedback\FeedbackRequest;
 use App\Http\Requests\Client\profiles\EditProfileRequest;
 use App\Models\District;
 use App\Models\Feedback;
+use App\Models\Order;
 use App\Models\OrderItem;
 use App\Models\Province;
 use App\Models\User;
@@ -24,96 +25,88 @@ class ProfileController extends Controller
         return view('client.pages.profile.information');
     }
 
-
     public function orderHistory()
     {
-        // Lấy tất cả các OrderItem cùng với các mối quan hệ cần thiết
-        $history = OrderItem::with('productVariant.attributeValues.attribute', 'productVariant.product', 'order', 'order.feedbacks')->get();
-
-        // Cập nhật feedback_status cho tất cả OrderItem có feedback mới
-        foreach ($history as $item) {
-            if ($item->order->feedbacks()->where('user_id', auth()->id())->exists()) {
-                $item->feedback_status = 1; // Đánh giá đã được tạo
-                $item->save(); // Lưu thay đổi vào cơ sở dữ liệu
-            }
-        }
-
-        return view('client.pages.profile.order', compact('history'));
+        // Lấy tất cả các Order cùng với OrderItems và ProductVariants
+        $orders = Order::with('orderItems.productVariant.attributeValues.attribute', 'orderItems.productVariant.product')->get();
+        return view('client.pages.profile.order', compact('orders'));
     }
 
+    public function orderDetails($orderId) {
+        $order = Order::with('orderItems.productVariant.product.feedback','orderItems.feedback')->find($orderId); // Lấy feedback qua productVariant
 
-
-public function store(FeedbackRequest $request)
-{
-    // Tạo mới feedback
-    $feedback = new Feedback();
-    $feedback->product_id = $request->input('product_id');
-    $feedback->user_id = $request->input('user_id');
-    $feedback->rating = $request->input('rating');
-    $feedback->comment = $request->input('comment');
-    $feedback->has_edited = true;
-
-    // Xử lý file tải lên (nếu có)
-    if ($request->hasFile('file_path')) {
-        $feedback->file_path = $request->file('file_path')->store('feedbacks'); // Lưu tệp vào thư mục feedbacks
-    } else {
-        $feedback->file_path = null; // Thiết lập giá trị là null nếu không có tệp
+        return view('client.pages.profile.layouts.components.details', compact('order'));
     }
 
-    // Lưu feedback vào cơ sở dữ liệu
-    $feedback->save();
-
-    // Ghi nhật các giá trị order_id và product_variant_id
-    \Log::info('Order ID: ' . $request->input('order_id'));
-    \Log::info('Product Variant ID: ' . $request->input('product_variant_id'));
-
-    // Cập nhật trạng thái feedback trong bảng order_items
-    $orderItem = OrderItem::where('order_id', $request->input('order_id'))
-        ->where('product_variant_id', $request->input('product_variant_id'))
-        ->first();
-
-    // Ghi nhật thông tin về orderItem
-    if ($orderItem) {
-        $orderItem->feedback_status = 1; // Đánh giá đã được tạo
-        $orderItem->save(); // Lưu thay đổi vào cơ sở dữ liệu
-    } else {
-        \Log::warning('Order Item not found.');
-    }
-
-    // dd($orderItem); // Kiểm tra giá trị của orderItem
-
-    // Thông báo cho người dùng
-    sweetalert("Cảm ơn bạn đã đánh giá sản phẩm", NotificationInterface::INFO, [
-        'position' => "center",
-        'timeOut' => '',
-        'closeButton' => false,
-        'icon' => "success",
-    ]);
-
-    return back();
-}
-
-    public function update(EditFeedbackRequest $request, $id)
+    public function store(FeedbackRequest $request)
     {
-        $feedback = Feedback::findOrFail($id);
+        // Tạo mới feedback
+        $feedback = new Feedback();
+        $feedback->order_item_id = $request->input('order_item_id');
+        $feedback->user_id = $request->input('user_id');
         $feedback->rating = $request->input('rating');
         $feedback->comment = $request->input('comment');
-         $feedback->has_edited = 2;
 
-        // Xóa ảnh cũ nếu có ảnh mới được tải lên
-        $request->hasFile('file_path') && ($feedback->file_path && Storage::delete($feedback->file_path)); // Xóa file cũ nếu có
+        // Xử lý file tải lên (nếu có)
+        if ($request->hasFile('file_path')) {
+            $feedback->file_path = $request->file('file_path')->store('feedbacks'); // Lưu tệp vào thư mục feedbacks
+        } else {
+            $feedback->file_path = null; // Thiết lập giá trị là null nếu không có tệp
+        }
 
-        // Lưu ảnh mới nếu có
-        $feedback->file_path = $request->hasFile('file_path') ? $request->file('file_path')->store('feedbacks') : $feedback->file_path;
-
+        // Lưu feedback vào cơ sở dữ liệu
         $feedback->save();
-
-        sweetalert("Sửa đánh đánh giá sản phẩm thành công", NotificationInterface::INFO, [
+        // Thông báo cho người dùng
+        sweetalert("Cảm ơn bạn đã đánh giá sản phẩm", NotificationInterface::INFO, [
             'position' => "center",
             'timeOut' => '',
             'closeButton' => false,
             'icon' => "success",
         ]);
+
+        return back();
+    }
+
+    public function edit($id)
+    {
+        $feedback = Feedback::findOrFail($id);
+        $item = OrderItem::with('productVariant.product')->findOrFail($feedback->order_item_id);
+
+        return view('your-view-file', compact('feedback', 'item'));
+    }
+    public function show($id)
+    {
+        // Lấy thông tin đơn hàng theo ID
+        $order = Order::with('orderItems.productVariant.product')->findOrFail($id);
+        return view('client.pages.profile.layouts.components.details', compact('order'));
+    }
+
+    public function update(EditFeedbackRequest $request, $id)
+    {
+        $feedback = Feedback::findOrFail($id);
+        $feedback->order_item_id = $request->input('order_item_id');
+        $feedback->user_id = $request->input('user_id');
+        $feedback->rating = $request->input('rating');
+        $feedback->comment = $request->input('comment');
+        $feedback->updated_at = now();
+
+        // Xóa ảnh cũ nếu có ảnh mới được tải lên
+        if ($request->hasFile('file_path')) {
+            if ($feedback->file_path) {
+                Storage::delete($feedback->file_path); // Xóa file cũ nếu có
+            }
+            $feedback->file_path = $request->file('file_path')->store('feedbacks');
+        }
+
+        $feedback->save();
+
+        sweetalert("Sửa đánh giá sản phẩm thành công", NotificationInterface::INFO, [
+            'position' => "center",
+            'timeOut' => '',
+            'closeButton' => false,
+            'icon' => "success",
+        ]);
+
         return redirect()->back();
     }
 

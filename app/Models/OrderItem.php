@@ -11,7 +11,7 @@ class OrderItem extends Model
 
     protected $table = "order_items";
 
-    protected $filltable = [
+    protected $fillable = [
         'id',
         'order_id',
         'product_variant_id',
@@ -33,10 +33,6 @@ class OrderItem extends Model
 
     public function productVariant()
     {
-        return  $this->belongsTo(ProductVariant::class);
-    }
-    public function feedbacks()
-    {
-        return $this->hasMany(Feedback::class, 'user_id');
+        return $this->belongsTo(ProductVariant::class, 'product_variant_id');
     }
 }
