@@ -10,7 +10,7 @@ class Feedback extends Model
     use HasFactory;
 
 
-    protected $table = "feedback";
+    protected $table = "feedbacks";
 
     protected $filltable = [
         'id',
@@ -20,6 +20,7 @@ class Feedback extends Model
         'comment ',
         'file_path ',
         'created_at',
+        'order_item_id',
         'updated_at '
     ];
     public function orderItem()
