@@ -13,7 +13,7 @@
                             <div class="reviews-product d-flex align-items-center">
                                 <img src="{{ '/storage/' . $item->productVariant->product->image }}"
                                      style="object-fit: cover;" width="100px" alt="{{ $item->productVariant->product->image }}">
-                                <div style="padding:0 20px;" >
+                                <div style="padding:0 20px;">
                                     <h5>{{ $item->product_name }}</h5>
                                     <p class="mb-1">{{ $item->total_amount }} VND</p>
                                     <ul class="rating p-0 mb-0">
@@ -32,6 +32,7 @@
                         </div>
                         <input type="hidden" name="product_id" value="{{ $item->productVariant->product->id }}">
                         <input type="hidden" name="user_id" value="{{ auth()->id() }}">
+                        <input type="hidden" name="order_item_id" value="{{ $item->id }}"> <!-- Thêm trường order_item_id -->
                         <input type="hidden" name="parent_feedback_id" value="0"> <!-- Đặt 0 cho feedback gốc -->
 
                         <div class="col-12">
@@ -43,13 +44,13 @@
                         </div>
                         <div class="col-12">
                             <div class="form-group">
-                                <label class="form-label">Upload File (optional)</label>
+                                <label class="form-label">Ảnh đánh giá</label>
                                 <input class="form-control" type="file" name="file_path" />
                             </div>
                         </div>
                         <div class="col-12">
                             <button class="btn btn-submit" type="submit">
-                                Submit
+                                Gửi đánh giá
                             </button>
                         </div>
                     </div>
@@ -63,23 +64,24 @@
 <script src="//cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 <script>
     document.querySelectorAll('input[name="rating"]').forEach((input) => {
-    input.addEventListener('change', (event) => {
-        const rating = parseInt(event.target.value, 10);
-        const stars = event.target.closest('.rating').querySelectorAll('label i');
+        input.addEventListener('change', (event) => {
+            const rating = parseInt(event.target.value, 10);
+            const stars = event.target.closest('.rating').querySelectorAll('label i');
 
-        // Đổi màu tất cả các ngôi sao dựa trên số sao đã chọn
-        stars.forEach((star, index) => {
-            star.style.color = index < rating ? '#f39c12' : '#ddd'; // Màu vàng (#f39c12) cho sao đã chọn, xám (#ddd) cho sao chưa chọn
+            // Đổi màu tất cả các ngôi sao dựa trên số sao đã chọn
+            stars.forEach((star, index) => {
+                star.style.color = index < rating ? '#f39c12' : '#ddd'; // Màu vàng (#f39c12) cho sao đã chọn, xám (#ddd) cho sao chưa chọn
+            });
         });
     });
-});
-document.getElementById('Reviews-modal').addEventListener('show.bs.modal', () => {
-    document.querySelectorAll('.rating label i').forEach((star) => {
-        star.style.color = '#ddd'; // Màu xám mặc định
-    });
-});
 
-        @if ($errors->any())
+    document.getElementById('Reviews-modal').addEventListener('show.bs.modal', () => {
+        document.querySelectorAll('.rating label i').forEach((star) => {
+            star.style.color = '#ddd'; // Màu xám mặc định
+        });
+    });
+
+    @if ($errors->any())
         @foreach ($errors->all() as $error)
             Swal.fire({
                 title: "Lỗi!",
