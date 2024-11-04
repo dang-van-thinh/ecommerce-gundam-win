@@ -1,200 +1,112 @@
 @extends('client.pages.profile.layouts.master')
+
 @section('title')
-    Lịch sử mua hàng
+Lịch sử mua hàng
 @endsection
+
 @section('profile')
-    <div class="tab-content" id="v-pills-tabContent">
-        <div class="dashboard-right-box">
-            <div class="order">
-                <div class="sidebar-title">
-                    <div class="loader-line"></div>
-                    <h4>Lịch sử đơn hàng</h4>
+<div class="dashboard-right-box">
+    <div class="order">
+        <div class="sidebar-title">
+            <div class="product-section-box x-small-section pt-0">
+                <div class="custom-container container">
+                    <div class="row">
+                        <div class="loader-line"></div>
+                        <h4>Lịch sử đơn hàng</h4>
+                    </div>
+                    <div class="col-12">
+                        <ul class="product-tab theme-scrollbar nav nav-tabs nav-underline" id="Product" role="tablist">
+                            @php
+                                // Danh sách các trạng thái và tên tab tương ứng
+                                $tabs = [
+                                    'COMPLETED' => 'Thành công',
+                                    'PENDING' => 'Đang chờ xử lý',
+                                    'DELIVERING' => 'Đang giao hàng',
+                                    'SHIPPED' => 'Đã vận chuyển',
+                                    'CANCELED' => 'Hủy đơn hàng'
+                                ];
+                            @endphp
+                            @foreach ($tabs as $status => $tabName)
+                                <li class="nav-item" role="presentation">
+                                    <button class="nav-link {{ $loop->first ? 'active' : '' }}" id="{{ $status }}-tab"
+                                        data-bs-toggle="tab" data-bs-target="#{{ $status }}-tab-pane" role="tab"
+                                        aria-controls="{{ $status }}-tab-pane"
+                                        aria-selected="{{ $loop->first ? 'true' : 'false' }}">
+                                        {{ $tabName }}
+                                    </button>
+                                </li>
+                            @endforeach
+                        </ul>
+                        <div class="tab-content product-content" id="ProductContent">
+                            @foreach ($tabs as $status => $tabName)
+                                <div class="tab-pane fade {{ $loop->first ? 'show active' : '' }}"
+                                    id="{{ $status }}-tab-pane" role="tabpanel" aria-labelledby="{{ $status }}-tab"
+                                    tabindex="0">
+                                    <div class="row gy-4">
+                                    @foreach ($orders as $item)
+    @if ($item->status === $status) <!-- Kiểm tra trạng thái đơn hàng -->
+        <div class="col-12">
+            <div class="order-box">
+                <div class="order-container">
+                    <div class="order-icon">
+                        <i class="iconsax" data-icon="box"></i>
+                        <div class="couplet"><i class="fa-solid fa-check"></i></div>
+                    </div>
+                    <div class="order-detail">
+                        <h5>{{ $tabName }}</h5>
+                        <p>Ngày {{ date('d/m/Y', strtotime($item->created_at)) }}</p>
+                    </div>
                 </div>
-                <div class="row gy-4">
-                    <div class="col-12">
-                        <div class="order-box">
-                            <div class="order-container">
-                                <div class="order-icon"><i class="iconsax" data-icon="box"></i>
-                                    <div class="couplet"><i class="fa-solid fa-check"></i></div>
-                                </div>
-                                <div class="order-detail">
-                                    <h5>Delivered</h5>
-                                    <p>on Fri, 1 Mar</p>
-                                </div>
-                            </div>
-                            <div class="product-order-detail">
-                                <div class="product-box"> <a href="product.html"> <img
-                                            src="/template/client/assets/images/notification/1.jpg" alt=""></a>
-                                    <div class="order-wrap">
-                                        <h5>Rustic Minidress with Halterneck</h5>
-                                        <p>Versatile sporty slogans short sleeve quirky laid back
-                                            orange lux hoodies vests pins badges.</p>
-                                        <ul>
-                                            <li>
-                                                <p>Prize : </p><span>$20.00</span>
-                                            </li>
-                                            <li>
-                                                <p>Size : </p><span>M</span>
-                                            </li>
-                                            <li>
-                                                <p>Order Id :</p><span>ghat56han50</span>
-                                            </li>
-                                        </ul>
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="return-box">
-                                <div class="review-box">
-                                    <ul class="rating">
-                                        <li> <i class="fa-solid fa-star"> </i><i class="fa-solid fa-star"> </i><i
-                                                class="fa-solid fa-star"> </i><i class="fa-solid fa-star-half-stroke"></i><i
-                                                class="fa-regular fa-star"></i></li>
-                                    </ul><span data-bs-toggle="modal" data-bs-target="#Reviews-modal" title="Quick View"
-                                        tabindex="0">Write Review</span>
-                                </div>
-                                <h6> <span> </span>* Exchange/Return window closed on 20 mar</h6>
+
+                <div class="product-order-detail">
+                    @foreach ($item->orderItems as $orderItem) <!-- Lặp qua từng orderItem -->
+                        <div class="product-box">
+                            <a href="{{ route('product', $orderItem->productVariant->product->id) }}">
+                                <img src="{{ '/storage/' . $orderItem->productVariant->product->image }}"
+                                    style="object-fit: cover;"
+                                    alt="{{ $orderItem->productVariant->product->name }}">
+                            </a>
+                            <div class="order-wrap">
+                                <h5>{{ $orderItem->product_name }}</h5>
+                                <p>{{ $item->note }}</p>
+                                <ul>
+                                    <li>
+                                        <p>Giá:</p><span>{{ number_format($orderItem->product_price) }} Vnd</span>
+                                    </li>
+                                    <li>
+                                        <p>Số lượng:</p><span>{{ $orderItem->quantity }}</span>
+                                    </li>
+                                    <li>
+                                        <p>Biến thể:</p>
+                                        <span>{{ $orderItem->productVariant->attributeValues->pluck('name')->implode(' - ') }}</span>
+                                    </li>
+                                    <li>
+                                        <p>Mã đơn hàng:</p>
+                                        <span>{{ $item->id }}</span>
+                                    </li>
+                                </ul>
                             </div>
                         </div>
-                    </div>
-                    <div class="col-12">
-                        <div class="order-box">
-                            <div class="order-container">
-                                <div class="order-icon"><i class="iconsax" data-icon="undo"></i>
-                                    <div class="couplet"><i class="fa-solid fa-check"></i></div>
-                                </div>
-                                <div class="order-detail">
-                                    <h5>Refund Credited</h5>
-                                    <p> Your Refund Of <b> $389.00 </b>For then return has been
-                                        processed Successfully on 4th Apr.<a href="#"> View Refund
-                                            details</a></p>
-                                </div>
-                            </div>
-                            <div class="product-order-detail">
-                                <div class="product-box"> <a href="product.html"> <img
-                                            src="/template/client/assets/images/notification/9.jpg" alt=""></a>
-                                    <div class="order-wrap">
-                                        <h5>Rustic Minidress with Halterneck</h5>
-                                        <p>Versatile sporty slogans short sleeve quirky laid back
-                                            orange lux hoodies vests pins badges.</p>
-                                        <ul>
-                                            <li>
-                                                <p>Prize : </p><span>$20.00</span>
-                                            </li>
-                                            <li>
-                                                <p>Size : </p><span>M</span>
-                                            </li>
-                                            <li>
-                                                <p>Order Id :</p><span>ghat56han50</span>
-                                            </li>
-                                        </ul>
+                    @endforeach
+                </div>
+
+                <!-- Nút xem chi tiết đơn hàng -->
+                <div class="text-center mt-3"  >
+                    <a style="background-color: #c28f51; border:none;" href="{{ route('profile.order.details', $item->id) }}" class="btn btn-primary">Xem chi tiết đơn hàng</a>
+                </div>
+            </div>
+        </div>
+    @endif
+@endforeach
+
                                     </div>
                                 </div>
-                            </div>
-                            <div class="return-box">
-                                <div class="review-box">
-                                    <ul class="rating">
-                                        <li> <i class="fa-regular fa-star"></i><i class="fa-regular fa-star"></i><i
-                                                class="fa-regular fa-star"></i><i class="fa-regular fa-star"></i><i
-                                                class="fa-regular fa-star"></i></li>
-                                    </ul>
-                                </div>
-                                <h6> * Exchange/Return window closed on 20 mar</h6>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="col-12">
-                        <div class="order-box">
-                            <div class="order-container">
-                                <div class="order-icon"><i class="iconsax" data-icon="box"></i>
-                                    <div class="couplet"><i class="fa-solid fa-check"></i></div>
-                                </div>
-                                <div class="order-detail">
-                                    <h5>Delivered</h5>
-                                    <p>on Fri, 1 Mar</p>
-                                </div>
-                            </div>
-                            <div class="product-order-detail">
-                                <div class="product-box"> <a href="product.html"> <img
-                                            src="/template/client/assets/images/notification/2.jpg" alt=""></a>
-                                    <div class="order-wrap">
-                                        <h5>Rustic Minidress with Halterneck</h5>
-                                        <p>Versatile sporty slogans short sleeve quirky laid back
-                                            orange lux hoodies vests pins badges.</p>
-                                        <ul>
-                                            <li>
-                                                <p>Prize : </p><span>$20.00</span>
-                                            </li>
-                                            <li>
-                                                <p>Size : </p><span>M</span>
-                                            </li>
-                                            <li>
-                                                <p>Order Id :</p><span>ghat56han50</span>
-                                            </li>
-                                        </ul>
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="return-box">
-                                <div class="review-box">
-                                    <ul class="rating">
-                                        <li> <i class="fa-solid fa-star"> </i><i class="fa-solid fa-star"> </i><i
-                                                class="fa-solid fa-star"> </i><i class="fa-solid fa-star-half-stroke"></i><i
-                                                class="fa-regular fa-star"></i></li>
-                                    </ul><span data-bs-toggle="modal" data-bs-target="#Reviews-modal" title="Quick View"
-                                        tabindex="0">Write Review</span>
-                                </div>
-                                <h6> * Exchange/Return window closed on 20 mar</h6>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="col-12">
-                        <div class="order-box">
-                            <div class="order-container">
-                                <div class="order-icon"><i class="iconsax" data-icon="box-add"></i>
-                                    <div class="couplet"><i class="fa-solid fa-xmark"></i></div>
-                                </div>
-                                <div class="order-detail">
-                                    <h5>Cancelled</h5>
-                                    <p>on Fri, 1 Mar</p>
-                                    <h6> <b>Refund lanitiated : </b>$774.00 on Thu, 24 Feb 2024. <a href="#"> View
-                                            Refunddetails</a></h6>
-                                </div>
-                            </div>
-                            <div class="product-order-detail">
-                                <div class="product-box"> <a href="product.html"> <img
-                                            src="/template/client/assets/images/notification/6.jpg" alt=""></a>
-                                    <div class="order-wrap">
-                                        <h5>Rustic Minidress with Halterneck</h5>
-                                        <p>Versatile sporty slogans short sleeve quirky laid back
-                                            orange lux hoodies vests pins badges.</p>
-                                        <ul>
-                                            <li>
-                                                <p>Prize : </p><span>$20.00</span>
-                                            </li>
-                                            <li>
-                                                <p>Size : </p><span>M</span>
-                                            </li>
-                                            <li>
-                                                <p>Order Id :</p><span>ghat56han50</span>
-                                            </li>
-                                        </ul>
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="return-box">
-                                <div class="review-box">
-                                    <ul class="rating">
-                                        <li> <i class="fa-regular fa-star"></i><i class="fa-regular fa-star"></i><i
-                                                class="fa-regular fa-star"></i><i class="fa-regular fa-star"></i><i
-                                                class="fa-regular fa-star"></i></li>
-                                    </ul>
-                                </div>
-                                <h6> * Exchange/Return window closed on 20 mar</h6>
-                            </div>
+                            @endforeach
                         </div>
                     </div>
                 </div>
             </div>
         </div>
     </div>
+</div>
 @endsection
