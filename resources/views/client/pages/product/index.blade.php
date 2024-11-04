@@ -85,7 +85,7 @@
                                 </div>
                             </div>
                         </div>
-                        <div class="col-sm-10 col-9">   
+                        <div class="col-sm-10 col-9">
                             <div class="swiper product-slider-thumb product-slider-img-1">
                                 <div class="swiper-wrapper ratio_square-2">
                                     @foreach ($product->productImages as $productImage)
@@ -996,6 +996,8 @@
             if (action === 'add_to_cart') {
                 sendToCart(data);
             } else if (action === 'buy_now') {
+                buyNow(data);
+
                 Swal.fire({
                     title: "Hi cc",
                     icon: "warning",
@@ -1003,6 +1005,7 @@
                     showCancelButton: true,
                     cancelButtonText: "Hủy"
                 })
+
             }
         @endauth
 
@@ -1020,6 +1023,24 @@
         });
         @endguest
         }
+
+        function buyNow($data) {
+            $.ajax({
+                type: "POST",
+                url: '{{ route('api.add-cart') }}',
+                data: data,
+                success: function(response) {
+                    let numberCart = response.message.numberCart;
+                    document.querySelector("#numberCart").innerText = numberCart;
+                    Swal.fire("Thêm vào giỏ hàng thành công!", "", "success");
+                },
+                error: function(error) {
+                    Swal.fire("Có lỗi xảy ra, vui lòng thử lại sau!", "", "error");
+                    console.error(error);
+                }
+            });
+        }
+
 
         function sendToCart(data) {
             $.ajax({

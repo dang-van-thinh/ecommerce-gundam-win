@@ -11,7 +11,7 @@ class OrderItem extends Model
 
     protected $table = "order_items";
 
-    protected $filltable = [
+    protected $fillable = [
         'id',
         'order_id',
         'product_variant_id',
@@ -19,14 +19,20 @@ class OrderItem extends Model
         'product_price',
         'quantity',
         'total_price',
+        'feedback_status',
     ];
     public function order()
     {
         return  $this->belongsTo(Order::class, 'order_id');
     }
 
+    public function feedback()
+    {
+        return $this->hasOne(Feedback::class);
+    }
+
     public function productVariant()
     {
-        return  $this->belongsTo(ProductVariant::class);
+        return $this->belongsTo(ProductVariant::class, 'product_variant_id');
     }
 }
