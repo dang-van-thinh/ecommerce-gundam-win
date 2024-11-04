@@ -39,4 +39,8 @@ class Order extends Model
     {
         return $this->belongsTo(AddressUser::class, 'address_user_id');
     }
+    public function feedbacks()
+    {
+        return $this->hasMany(Feedback::class, 'user_id');
+    }
 }
