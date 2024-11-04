@@ -87,40 +87,53 @@
                 <div class="col-12">
                     <h3>Tạo sản phẩm biến thể</h3><br>
                     <div class="d-flex">
+                        <strong>Chọn thuộc tính: </strong>
+                        @foreach ($attributes as $item)
+                            <div class="form-check mx-2">
+                                <input type="checkbox" class="form-check-input attribute-checkbox"
+                                    data-id="{{ $item->id }}">
+                                <label class="form-check-label">{{ $item->name }}</label>
+                            </div>
+                        @endforeach
+                    </div>
+
+                    <br>
+                    <div class="d-flex">
                         <button type="button" id="generate-auto" class="btn btn-secondary btn-sm">Tạo tự động</button>
                         <button type="button" id="add-variant" class="btn btn-secondary btn-sm mx-1">Tạo thủ công</button>
                         <button type="button" id="check-duplicates" class="btn btn-warning btn-sm">Check Trùng Lặp</button>
                     </div>
-
                     <hr>
+                    {{-- KHU VỰC CHỌN GIÁ TRỊ THUỘC TÍNH CỦA TẠO TỰ ĐỘNG --}}
+                    <div>
+                        <div id="auto-attribute-selection" style="display: none;" class="col-12">
+                            <h4>Chọn giá trị thuộc tính để tạo biến thể:</h4><br>
+                            <div>
+                                @foreach ($attributes as $attribute)
+                                    <div class="form-group me-2">
+                                        <label>{{ $attribute->name }}</label>
+                                        <select multiple name="auto_attributes[{{ $attribute->id }}][]"
+                                            class="form-control auto-attribute-select"
+                                            data-attribute-id="{{ $attribute->id }}">
+                                            @foreach ($attribute->attributeValues as $value)
+                                                <option value="{{ $value->id }}">{{ $value->name }}</option>
+                                            @endforeach
+                                        </select>
 
-                    <div id="variants"></div>
-                </div>
-                <div>
-                    <div id="auto-attribute-selection" style="display: none;" class="col-12">
-                        <h4>Chọn giá trị thuộc tính để tạo biến thể:</h4><br>
-                        <div >
-                            @foreach ($attributes as $attribute)
-                                <div class="form-group me-2">
-                                    <label>Size</label>
+                                        <button type="button" class="select-all btn btn-primary btn-sm">Chọn tất
+                                            cả</button>
+                                        <button type="button" class="deselect-all btn btn-secondary btn-sm">Bỏ tất
+                                            cả</button>
 
-                                    <select multiple name="auto_attributes[{{ $attribute->id }}][]"
-                                        class="form-control auto-attribute-select"
-                                        data-attribute-id="{{ $attribute->id }}">
-                                        @foreach ($attribute->attributeValues as $value)
-                                            <option value="{{ $value->id }}">{{ $value->name }}</option>
-                                        @endforeach
-                                    </select>
-
-                                    <button type="button" class="select-all btn btn-primary btn-sm">Chọn tất cả</button>
-                                    <button type="button" class="deselect-all btn btn-secondary btn-sm">Bỏ tất cả</button>
-
-                                </div>
-                            @endforeach
+                                    </div>
+                                @endforeach
+                            </div>
+                            <button type="button" id="create-variants" class="btn btn-success mt-2">Tạo</button>
+                            <hr>
                         </div>
-                        <button type="button" id="create-variants" class="btn btn-success mt-2">Tạo</button>
-                        <hr>
                     </div>
+                    {{-- KHU VỰC BIẾN THỂ ĐƯỢC TẠO --}}
+                    <div id="variants"></div>
                 </div>
 
                 <div class="mt-3">
@@ -178,6 +191,7 @@
 
             $('#generate-auto').on('click', function() {
                 $('#auto-attribute-selection').toggle(); // Hiện hoặc ẩn phần chọn thuộc tính
+                toggleAutoAttributeSelection();
             });
 
             $('#create-variants').on('click', function() {
@@ -213,6 +227,21 @@
                 ]);
             }
 
+            // Tập hợp các thuộc tính đã chọn
+            const selectedAttributes = new Set();
+
+            // Khi người dùng chọn hoặc bỏ chọn checkbox thuộc tính
+            $('.attribute-checkbox').on('change', function() {
+                const attributeId = $(this).data('id');
+
+                if ($(this).is(':checked')) {
+                    selectedAttributes.add(attributeId);
+                } else {
+                    selectedAttributes.delete(attributeId);
+                }
+            });
+
+            // Hàm thêm biến thể
             function addVariant(index = $('.variant').length, attributes = []) {
                 const variantDiv = $(`
                     <div class="variant mb-4 border p-3">
@@ -220,17 +249,7 @@
                         <div class="d-flex justify-content-between">
                             <div class="d-flex flex-wrap">
                                 <strong class="mr-3">Thuộc tính:</strong>
-                                @foreach ($attributes as $attribute)
-                                    <div class="form-group d-flex align-items-center me-1">
-                                        <select name="variants[${index}][attributes][{{ $attribute->id }}]"
-                                            class="form-control variant-select" data-attribute-id="{{ $attribute->id }}" required>
-                                            <option value="">Chọn {{ $attribute->name }}</option>
-                                            @foreach ($attribute->attributeValues as $value)
-                                                <option value="{{ $value->id }}" ${attributes.includes('{{ $value->id }}') ? 'selected' : ''}>{{ $value->name }}</option>
-                                            @endforeach
-                                        </select>
-                                    </div>
-                                @endforeach
+                                ${generateAttributeSelects(index, attributes)}
                             </div>
                             <div class="form-group">
                                 <button type="button" class="btn btn-info btn-sm toggle-variant-info">Ẩn/Hiện thông tin</button>
@@ -257,6 +276,29 @@
 
                 return variantDiv;
             }
+
+            // Hàm tạo các phần tử chọn thuộc tính dựa trên thuộc tính đã chọn
+            function generateAttributeSelects(index, attributes) {
+                let attributeSelects = '';
+                @foreach ($attributes as $attribute)
+                    // Kiểm tra nếu thuộc tính nằm trong danh sách đã chọn
+                    if (selectedAttributes.has(parseInt('{{ $attribute->id }}'))) {
+                        attributeSelects += `
+                <div class="form-group d-flex align-items-center me-1">
+                    <select name="variants[${index}][attributes][{{ $attribute->id }}]"
+                        class="form-control variant-select" data-attribute-id="{{ $attribute->id }}" required>
+                        <option value="">Chọn {{ $attribute->name }}</option>
+                        @foreach ($attribute->attributeValues as $value)
+                            <option value="{{ $value->id }}" ${attributes.includes('{{ $value->id }}') ? 'selected' : ''}>{{ $value->name }}</option>
+                        @endforeach
+                    </select>
+                </div>
+            `;
+                    }
+                @endforeach
+                return attributeSelects;
+            }
+
 
             $('#variants').on('click', '.remove-variant', function() {
                 $(this).closest('.variant').remove(); // Xóa biến thể
@@ -309,6 +351,17 @@
                     alert('Không có biến thể nào bị trùng lặp.');
                 }
             });
+
+            function toggleAutoAttributeSelection() {
+                $('.auto-attribute-select').each(function() {
+                    const attributeId = $(this).data('attribute-id');
+                    if (selectedAttributes.has(attributeId)) {
+                        $(this).closest('.form-group').show();
+                    } else {
+                        $(this).closest('.form-group').hide();
+                    }
+                });
+            }
 
         });
     </script>
