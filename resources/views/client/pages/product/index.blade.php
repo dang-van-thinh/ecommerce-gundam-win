@@ -123,7 +123,6 @@
                                             class="fa-solid fa-star"> </i><i class="fa-solid fa-star-half-stroke"></i><i
                                             class="fa-regular fa-star"></i></li>
                                     <li>(4.7) Đánh giá</li>
-                                    <li>(4.7) Đánh giá</li>
                                 </ul>
                             </div>
                             <div class="buy-box border-buttom">
@@ -131,16 +130,11 @@
                                     <li> <span data-bs-toggle="modal" data-bs-target="#size-chart" title="Quick View"
                                             tabindex="0"><i class="iconsax me-2" data-icon="ruler"></i>Bảng kích
                                             thước</span>
-                                            tabindex="0"><i class="iconsax me-2" data-icon="ruler"></i>Bảng kích
-                                            thước</span>
                                     </li>
                                     <li> <span data-bs-toggle="modal" data-bs-target="#terms-conditions-modal"
                                             title="Quick View" tabindex="0"><i class="iconsax me-2"
                                                 data-icon="truck"></i>Giao hàng và trả lại</span></li>
-                                                data-icon="truck"></i>Giao hàng và trả lại</span></li>
                                     <li> <span data-bs-toggle="modal" data-bs-target="#question-box" title="Quick View"
-                                            tabindex="0"><i class="iconsax me-2" data-icon="question-message"></i>Đặt câu
-                                            hỏi</span></li>
                                             tabindex="0"><i class="iconsax me-2" data-icon="question-message"></i>Đặt câu
                                             hỏi</span></li>
                                 </ul>
@@ -208,7 +202,6 @@
                                 <div class="d-flex align-items-center gap-2"><img
                                         src="/template/client/assets/images/gif/timer.gif" alt="">
                                     <p>Thời gian có hạn! Nhanh lên, chương trình khuyến mại sắp kết thúc!</p>
-                                    <p>Thời gian có hạn! Nhanh lên, chương trình khuyến mại sắp kết thúc!</p>
                                 </div>
                                 <div class="countdown">
                                     <ul class="clockdiv1">
@@ -216,13 +209,11 @@
                                             <div class="timer">
                                                 <div class="days"></div>
                                             </div><span class="title">Ngày</span>
-                                            </div><span class="title">Ngày</span>
                                         </li>
                                         <li>:</li>
                                         <li>
                                             <div class="timer">
                                                 <div class="hours"></div>
-                                            </div><span class="title">Giờ</span>
                                             </div><span class="title">Giờ</span>
                                         </li>
                                         <li>:</li>
@@ -230,13 +221,11 @@
                                             <div class="timer">
                                                 <div class="minutes"></div>
                                             </div><span class="title">Phút</span>
-                                            </div><span class="title">Phút</span>
                                         </li>
                                         <li>:</li>
                                         <li>
                                             <div class="timer">
                                                 <div class="seconds"></div>
-                                            </div><span class="title">Giây</span>
                                             </div><span class="title">Giây</span>
                                         </li>
                                     </ul>
@@ -477,7 +466,6 @@
                                                     </div>
                                                     <div>
                                                         <h6>Đánh giá trung bình</h6>
-                                                        <h6>Đánh giá trung bình</h6>
                                                         <ul class="rating mb p-0">
                                                             <li><i class="fa-solid fa-star"></i></li>
                                                             <li><i class="fa-solid fa-star"></i></li>
@@ -498,10 +486,8 @@
                                                                 style="width: 80%"></div>
                                                         </div>
                                                         <p>5 Sao</p>
-                                                        <p>5 Sao</p>
                                                     </li>
                                                     <li>
-                                                        <p>4 sao</p>
                                                         <p>4 sao</p>
                                                         <div class="progress" role="progressbar"
                                                             aria-label="Animated striped example" aria-valuenow="75"
@@ -513,7 +499,6 @@
                                                     </li>
                                                     <li>
                                                         <p>3 Sao</p>
-                                                        <p>3 Sao</p>
                                                         <div class="progress" role="progressbar"
                                                             aria-label="Animated striped example" aria-valuenow="75"
                                                             aria-valuemin="0" aria-valuemax="100">
@@ -524,7 +509,6 @@
                                                     </li>
                                                     <li>
                                                         <p>2 Sao</p>
-                                                        <p>2 Sao</p>
                                                         <div class="progress" role="progressbar"
                                                             aria-label="Animated striped example" aria-valuenow="75"
                                                             aria-valuemin="0" aria-valuemax="100">
@@ -534,7 +518,6 @@
                                                         <p>40%</p>
                                                     </li>
                                                     <li>
-                                                        <p>1 Sao</p>
                                                         <p>1 Sao</p>
                                                         <div class="progress" role="progressbar"
                                                             aria-label="Animated striped example" aria-valuenow="75"
@@ -547,13 +530,11 @@
                                                 </ul><button class="btn reviews-modal" data-bs-toggle="modal"
                                                     data-bs-target="#Reviews-modal" title="Quick View"
                                                     tabindex="0">Viết Bài Đánh Giá</button>
-                                                    tabindex="0">Viết Bài Đánh Giá</button>
                                             </div>
                                         </div>
                                     </div>
                                     <div class="col-lg-8">
                                         <div class="comments-box">
-                                            <h5>Bình Luận </h5>
                                             <h5>Bình Luận </h5>
                                             <ul class="theme-scrollbar">
                                                 <li>
@@ -948,16 +929,7 @@
     <script>
         let quantityInput;
         let defaultPrice;
-    <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
-    <script>
-        let quantityInput;
-        let defaultPrice;
 
-        document.addEventListener('DOMContentLoaded', function() {
-            defaultPrice = document.getElementById('variant-price').textContent;
-            quantityInput = document.getElementById("quantity_variant");
-            const defaultQuantity = 0;
         document.addEventListener('DOMContentLoaded', function() {
             defaultPrice = document.getElementById('variant-price').textContent;
             quantityInput = document.getElementById("quantity_variant");
@@ -975,29 +947,7 @@
                             function(btn) {
                                 btn.classList.remove('selected');
                             });
-            // Lắng nghe sự kiện click trên từng nút variant-option
-            document.querySelectorAll('.variant-option').forEach(function(button) {
-                button.addEventListener('click', function() {
-                    if (this.classList.contains('selected')) {
-                        this.classList.remove('selected');
-                        document.getElementById('variant-price').textContent = defaultPrice;
-                        document.getElementById('variant-quantity').textContent = defaultQuantity;
-                    } else {
-                        this.closest('.variant').querySelectorAll('.variant-option').forEach(
-                            function(btn) {
-                                btn.classList.remove('selected');
-                            });
 
-                        this.classList.add('selected');
-                        const price = this.getAttribute('data-price');
-                        const quantity = this.getAttribute('data-quantity');
-                        document.getElementById('variant-price').textContent = price;
-                        document.getElementById('variant-quantity').textContent = quantity;
-                        quantityInput.setAttribute('max', quantity);
-                        quantityInput.value = 1;
-                    }
-                });
-            });
                         this.classList.add('selected');
                         const price = this.getAttribute('data-price');
                         const quantity = this.getAttribute('data-quantity');
@@ -1020,8 +970,6 @@
             });
         });
 
-        function checklogin(message, action) {
-            @auth
         function checklogin(message, action) {
             @auth
             let selectedVariant = document.querySelector('.variant-option.selected');
@@ -1048,6 +996,8 @@
             if (action === 'add_to_cart') {
                 sendToCart(data);
             } else if (action === 'buy_now') {
+                buyNow(data);
+
                 Swal.fire({
                     title: "Hi cc",
                     icon: "warning",
@@ -1055,6 +1005,7 @@
                     showCancelButton: true,
                     cancelButtonText: "Hủy"
                 })
+
             }
         @endauth
 
@@ -1070,21 +1021,10 @@
                 window.location.href = "{{ route('auth.login-view') }}";
             }
         });
-        Swal.fire({
-            title: "Bạn cần đăng nhập để thực hiện thao tác này!",
-            icon: "warning",
-            confirmButtonText: "Đăng nhập",
-            showCancelButton: true,
-            cancelButtonText: "Hủy"
-        }).then((result) => {
-            if (result.isConfirmed) {
-                window.location.href = "{{ route('auth.login-view') }}";
-            }
-        });
         @endguest
         }
 
-        function sendToCart(data) {
+        function buyNow($data) {
             $.ajax({
                 type: "POST",
                 url: '{{ route('api.add-cart') }}',
@@ -1100,7 +1040,8 @@
                 }
             });
         }
-    </script>
+
+
         function sendToCart(data) {
             $.ajax({
                 type: "POST",
