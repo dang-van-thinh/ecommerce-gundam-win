@@ -83,21 +83,29 @@
                             <div class="payment-options">
                                 <h4 class="mb-3">Phương Thức Thanh Toán</h4>
                                 <div class="row gy-3">
-                                    <div class="col-sm-6">
+                                    <div class="col-sm-4">
                                         <div class="payment-box">
                                             <input class="custom-radio me-2" id="cod" type="radio" checked="checked"
-                                                value="CASH" name="payment_method">
-                                            <label for="cod">Cod</label>
+                                                value="cod" name="payment_method">
+                                            <label for="cod">Thanh toán khi nhận hàng</label>
                                         </div>
                                     </div>
-                                    <div class="col-sm-6">
+                                    <div class="col-sm-4">
                                         <div class="payment-box">
-                                            <input class="custom-radio me-2" id="stripe" type="radio"
-                                                name="payment_method" value="BANK_TRANSFER">
-                                            <label for="stripe">Online</label>
+                                            <input class="custom-radio me-2" id="momo" type="radio"
+                                                name="payment_method" value="momo">
+                                            <label for="momo">Thanh toán qua MOMO</label>
+
                                         </div>
                                     </div>
+                                    <div class="col-sm-4">
+                                        <div class="payment-box">
+                                            <input class="custom-radio me-2" id="vnpay" type="radio"
+                                                name="payment_method" value="vnpay">
+                                            <label for="vnpay">Thanh toán qua VNPAY</label>
 
+                                        </div>
+                                    </div>
                                 </div>
                             </div>
                             <div class="address-option">
@@ -129,7 +137,8 @@
                                                             {{ $variant['name'] }} </span></p>
                                                 @endforeach
                                             </div>
-                                            <p>{{ number_format($item['product_variant']['price'] * $item['cart']['quantity'], 0, ',', '.') }}
+                                            <p class="">
+                                                {{ number_format($item['product_variant']['price'] * $item['cart']['quantity'], 0, ',', '.') }}
                                                 VND</p>
                                         </li>
                                     @endforeach
@@ -140,6 +149,7 @@
                                     <ul>
                                         <li>
                                             <p>Tổng giá</p>
+                                            <input type="hidden" name="totalAmount" value="{{ $totalAmount }}">
                                             <span>{{ number_format($totalAmount, 0, ',', '.') }} VND</span>
                                         </li>
                                         {{-- <li>
