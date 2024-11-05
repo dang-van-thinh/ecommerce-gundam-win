@@ -7,6 +7,8 @@ use App\Models\Cart;
 use App\Models\ProductVariant;
 use Illuminate\Http\Request;
 
+use function PHPUnit\Framework\throwException;
+
 class ProductController extends Controller
 {
     public function addToCart(Request $request)
@@ -23,7 +25,7 @@ class ProductController extends Controller
         ];
 
         // check trung
-        $carted = Cart::query()->where('user_id', $userId)->where([
+        $carted = Cart::with('productVariant')->where('user_id', $userId)->where([
             ['user_id', '=', $userId],
             ['product_variant_id', '=', $variantId]
         ])->first();
@@ -32,8 +34,15 @@ class ProductController extends Controller
 
         if ($carted) {
             $quantityNew = $carted->quantity + $quantity;
+            if ($quantityNew >  $carted->toArray()['product_variant']['quantity']) {
+                return response()->json([
+                    'message' => "Số lượng sản phẩm trong giỏ hàng lớn hơn số sản phẩm tồn kho !"
+                ], 400);
+            }
             // dd($quantity);
-            $carted->update(['quantity' => $quantityNew]);
+            $carted->update([
+                'quantity' => $quantityNew
+            ]);
         } else {
             Cart::query()->create($cart);
         }
@@ -93,5 +102,16 @@ class ProductController extends Controller
         return response()->json([
             'message' => 'Thay đổi số lượng thành công'
         ]);
+    }
+
+
+    public function productBuyNow(Request $request)
+    {
+        $userId = $request->input('userId');
+        $quantity = $request->input('quantity');
+        $variantId = $request->input('variantId');
+
+        // tim kiem bien the
+        $productVariant = ProductVariant::where('id');
     }
 }
