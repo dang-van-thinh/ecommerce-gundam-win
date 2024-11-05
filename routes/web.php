@@ -72,7 +72,7 @@ Route::prefix('/admin')->middleware(['auth', 'checkAccountStatus', 'checkRole:2'
 
 
 
-Route::prefix('')->middleware(['auth', 'checkAccountStatus', 'checkRole:1'])->group(function () {
+Route::prefix('')->middleware(['auth', 'checkAccountStatus', 'checkRole:1','updateOrderStatus'])->group(function () {
     Route::get('/cart', [CartController::class, 'index'])->name('cart');
     Route::post('/check-out', [CheckOutController::class, 'index'])->name('check-out');
     Route::post("/place-order", [CheckOutController::class, 'placeOrder'])->name('place-order');
