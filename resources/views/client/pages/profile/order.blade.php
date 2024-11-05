@@ -19,10 +19,10 @@ Lịch sử mua hàng
                             @php
                                 // Danh sách các trạng thái và tên tab tương ứng
                                 $tabs = [
-                                    'COMPLETED' => 'Thành công',
                                     'PENDING' => 'Đang chờ xử lý',
                                     'DELIVERING' => 'Đang giao hàng',
-                                    'SHIPPED' => 'Đã vận chuyển',
+                                    'SHIPPED' => 'Đã giao hàng',
+                                    'COMPLETED' => 'Thành công',
                                     'CANCELED' => 'Hủy đơn hàng'
                                 ];
                             @endphp
@@ -44,7 +44,7 @@ Lịch sử mua hàng
                                     tabindex="0">
                                     <div class="row gy-4">
                                     @foreach ($orders as $item)
-    @if ($item->status === $status) <!-- Kiểm tra trạng thái đơn hàng -->
+    @if ($item->status === $status && Auth::user()->id === $item->address_user_id) <!-- Kiểm tra trạng thái đơn hàng -->
         <div class="col-12">
             <div class="order-box">
                 <div class="order-container">
@@ -60,7 +60,7 @@ Lịch sử mua hàng
 
                 <div class="product-order-detail">
                     @foreach ($item->orderItems as $orderItem) <!-- Lặp qua từng orderItem -->
-                        <div class="product-box">
+                    <div class="product-box mb-3">
                             <a href="{{ route('product', $orderItem->productVariant->product->id) }}">
                                 <img src="{{ '/storage/' . $orderItem->productVariant->product->image }}"
                                     style="object-fit: cover;"
@@ -87,6 +87,7 @@ Lịch sử mua hàng
                                 </ul>
                             </div>
                         </div>
+                        <hr>
                     @endforeach
                 </div>
 
