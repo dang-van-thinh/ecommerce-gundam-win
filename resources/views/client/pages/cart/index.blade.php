@@ -13,26 +13,27 @@
 
     <section class="section-b-space pt-0">
         <div class="custom-container container">
-            <div class="row g-4">
+            <div id="item_not_product"> </div>
+            <div class="row g-4" id="item_has_product">
                 <div class="col-12">
                     <div class="cart-countdown"><img src="../assets/images/gif/fire-2.gif" alt="">
-                        <h6>Please, hurry! Someone has placed an order on one of the items you have in the cart. We'll
-                            keep it for you for<span id="countdown"></span>minutes.</h6>
+                        <h6>Xin hãy nhanh chân! Có người đã đặt hàng một trong những mặt hàng bạn có trong giỏ hàng. Chúng
+                            tôi sẽ giữ hàng cho bạn trong <span id="countdown"></span> phút.</h6>
                     </div>
                 </div>
                 <div class="col-xxl-9 col-xl-8">
                     <div class="cart-table">
                         <div class="table-title">
-                            <h5>Cart<span id="cartTitle">(3)</span></h5><button id="clearAllButton">Clear All</button>
+                            {{-- <h5>Giỏ hàng<span id="cartTitle"></span></h5><button id="clearAllButton">Clear All</button> --}}
                         </div>
                         <div class="table-responsive theme-scrollbar">
                             <table class="table" id="cart-table">
                                 <thead>
                                     <tr>
-                                        <th>Product </th>
-                                        <th>Price </th>
-                                        <th>Quantity</th>
-                                        <th>Total</th>
+                                        <th>Sản phẩm </th>
+                                        <th>Giá </th>
+                                        <th>Số lượng</th>
+                                        <th>Tổng tiền</th>
                                         <th></th>
                                     </tr>
                                 </thead>
@@ -82,147 +83,62 @@
                                 </tbody>
                             </table>
                         </div>
-                        <div class="no-data" id="data-show"><img src="../assets/images/cart/1.gif" alt="">
-                            <h4>You have nothing in your shopping cart!</h4>
-                            <p>Today is a great day to purchase the things you have been holding onto! or <span>Carry on
-                                    Buying</span></p>
+                        <div id="data-nothing">
+
                         </div>
                     </div>
                 </div>
                 <div class="col-xxl-3 col-xl-4">
                     <div class="cart-items">
-                        <div class="cart-progress">
+                        {{-- <div class="cart-progress">
                             <div class="progress">
                                 <div class="progress-bar progress-bar-striped" role="progressbar" style="width: 43%"
                                     aria-valuenow="50" aria-valuemin="0" aria-valuemax="100"><span> <i class="iconsax"
                                             data-icon="truck-fast"></i></span></div>
                             </div>
                             <p>Almost there, add <span>$267.00 </span>more to get <span>FREE Shipping !! </span></p>
-                        </div>
-                        <div class="cart-body">
-                            <h6>Price Details (3 Items) </h6>
+                        </div> --}}
+                        <div class="cart-body mt-0">
+                            <h6>Chi tiết giá </h6>
                             <ul>
                                 <li>
-                                    <p>Bag total </p><span>$220.00 </span>
+                                    <p>Tổng </p><span>$220.00 </span>
                                 </li>
                                 <li>
-                                    <p>Bag savings </p><span class="theme-color">-$20.00 </span>
+                                    <p>Tiết kiệm được </p><span class="theme-color">-$20.00 </span>
                                 </li>
                                 <li>
-                                    <p>Coupon Discount </p><span class="Coupon">Apply Coupon </span>
-                                </li>
-                                <li>
-                                    <p>Delivery </p><span>$50.00 </span>
+                                    <p>Vận chuyển </p><span>$50.00 </span>
                                 </li>
                             </ul>
                         </div>
                         <div class="cart-bottom">
-                            <p><i class="iconsax me-1" data-icon="tag-2"></i>SPECIAL OFFER (-$1.49) </p>
-                            <h6>Subtotal <span>$158.41 </span></h6><span>Taxes and shipping calculated at
-                                checkout</span>
+                            <p><i class="iconsax me-1" data-icon="tag-2"></i>Khuyến mãi đặc biệt (-$1.49) </p>
+                            <h6>Tổng cộng <span>$158.41 </span></h6>
+                            <span>Thuế và phí vận chuyển được tính khi thanh toán</span>
                         </div>
                         <div class="coupon-box">
-                            <h6>Coupon</h6>
+                            <h6>Mã giảm giá</h6>
                             <ul>
-                                <li> <span> <input type="text" placeholder="Apply Coupon"><i class="iconsax me-1"
-                                            data-icon="tag-2"> </i></span><button class="btn">Apply </button></li>
-                                <li> <span> <a class="theme-color" href="login.html">Login </a>to see best coupon for
-                                        you </span></li>
+                                <li>
+                                    <span>
+                                        <input type="text" placeholder="Sử dụng mã giảm giá"><i class="iconsax me-1"
+                                            data-icon="tag-2"> </i>
+                                    </span>
+                                    <button style="font-size: 14px; padding: 5px; width: 107px;" class="btn w-50%">Áp
+                                        dụng</button>
+                                </li>
                             </ul>
                         </div>
-                        <a class="btn btn_black w-100 sm rounded" href="{{ route('check-out') }}">Thanh toán</a>
+                        <form action="{{ route('check-out') }}" method="post">
+                            @csrf
+                            <button type="submit" class="btn btn_black w-100 sm rounded" id="submit_checkout">Thanh
+                                toán</button>
+                        </form>
+
                     </div>
                 </div>
-                <div class="col-12">
-                    <div class="cart-slider">
-                        <div class="d-flex align-items-start justify-content-between">
-                            <div>
-                                <h6>For a trendy and modern twist, especially during transitional seasons.</h6>
-                                <p> <img class="me-2" src="../assets/images/gif/discount.gif" alt="">You will
-                                    get 10%
-                                    OFF on each product</p>
-                            </div><a class="btn btn_outline sm rounded" href="product.html">View All<svg>
-                                    <use href="../assets/svg/icon-sprite.svg#arrow"></use>
-                                </svg></a>
-                        </div>
-                        <div class="swiper cart-slider-box">
-                            <div class="swiper-wrapper">
-                                <div class="swiper-slide">
-                                    <div class="cart-box"> <a href="product.html"> <img src="../assets/images/user/4.jpg"
-                                                alt=""></a>
-                                        <div> <a href="product.html">
-                                                <h5>Polo-neck Body Dress</h5>
-                                            </a>
-                                            <h6>Sold By: <span>Brown Shop</span></h6>
-                                            <div class="category-dropdown"><select class="form-select" name="carlist">
-                                                    <option value="">Best color</option>
-                                                    <option value="">White</option>
-                                                    <option value="">Black</option>
-                                                    <option value="">Green</option>
-                                                </select></div>
-                                            <p>$19.90 <span> <del>$14.90 </del></span></p><a class="btn"
-                                                href="#">Add</a>
-                                        </div>
-                                    </div>
-                                </div>
-                                <div class="swiper-slide">
-                                    <div class="cart-box"> <a href="product.html"> <img src="../assets/images/user/5.jpg"
-                                                alt=""></a>
-                                        <div> <a href="product.html">
-                                                <h5>Short Sleeve Sweater</h5>
-                                            </a>
-                                            <h6>Sold By: <span>Brown Shop</span></h6>
-                                            <div class="category-dropdown"><select class="form-select" name="carlist">
-                                                    <option value="">Best color</option>
-                                                    <option value="">White</option>
-                                                    <option value="">Black</option>
-                                                    <option value="">Green</option>
-                                                </select></div>
-                                            <p>$22.90 <span> <del>$24.90 </del></span></p><a class="btn"
-                                                href="#">Add</a>
-                                        </div>
-                                    </div>
-                                </div>
-                                <div class="swiper-slide">
-                                    <div class="cart-box"> <a href="product.html"> <img src="../assets/images/user/6.jpg"
-                                                alt=""></a>
-                                        <div> <a href="product.html">
-                                                <h5>Oversized Cotton Short</h5>
-                                            </a>
-                                            <h6>Sold By: <span>Brown Shop</span></h6>
-                                            <div class="category-dropdown"><select class="form-select" name="carlist">
-                                                    <option value="">Best color</option>
-                                                    <option value="">White</option>
-                                                    <option value="">Black</option>
-                                                    <option value="">Green</option>
-                                                </select></div>
-                                            <p>$10.90 <span> <del>$18.90 </del></span></p><a class="btn"
-                                                href="#">Add</a>
-                                        </div>
-                                    </div>
-                                </div>
-                                <div class="swiper-slide">
-                                    <div class="cart-box"> <a href="product.html"> <img src="../assets/images/user/7.jpg"
-                                                alt=""></a>
-                                        <div> <a href="product.html">
-                                                <h5>Oversized Women Shirt</h5>
-                                            </a>
-                                            <h6>Sold By: <span>Brown Shop</span></h6>
-                                            <div class="category-dropdown"><select class="form-select" name="carlist">
-                                                    <option value="">Best color</option>
-                                                    <option value="">White</option>
-                                                    <option value="">Black</option>
-                                                    <option value="">Green</option>
-                                                </select></div>
-                                            <p>$15.90 <span> <del>$20.90 </del></span></p><a class="btn"
-                                                href="#">Add</a>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
+
             </div>
         </div>
     </section>
@@ -248,7 +164,7 @@
                 btnDelete.on('click', function() {
                     let variantId = $(this).attr('data-variant');
                     console.log("Nút có ID là:", variantId);
-                    alert("dung");
+                    // alert("dung");
                     let data = {
                         userId: @php
                             echo Auth::id();
@@ -298,6 +214,7 @@
                 const plusMinus = document.querySelectorAll('.quantity');
                 const inputVariants = document.querySelectorAll('.input_variant');
 
+
                 inputVariants.forEach((inputVariant, index) => {
                     inputVariant.addEventListener('change', function() {
                         let max = parseInt(this.getAttribute('max'));
@@ -324,6 +241,12 @@
 
                     const addButton = element.querySelector('.plus');
                     const subButton = element.querySelector('.minus');
+                    const inputQuantity = document.querySelector("input[type='number']");
+                    inputQuantity.addEventListener("input", function() {
+                        if (inputQuantity.value < 0) {
+                            alert("deo")
+                        }
+                    });
 
                     addButton?.addEventListener('click', function() {
                         let selectedVariant = document.querySelector('.variant-option.selected');
@@ -472,8 +395,16 @@
 
                     });
                 } else {
-                    let div = `<div> Giỏ hàng trông </div>`;
-                    tableBody.appendChild(div);
+                    console.log(productResponse);
+                    document.querySelector('#item_has_product').style.display = 'none';
+
+                    let div = `<div class='text-center' >
+                        <img src="/template/client/assets/images/cart/1.gif" alt="">
+                            <h4>Bạn không có gì trong giỏ hàng !</h4>
+                            <p>Hôm nay là một ngày tuyệt vời để mua những thứ bạn đã giữ! hoặc 
+                                <a href='{{ route('home') }}'>Tiếp tục mua</a></div>`;
+                    document.querySelector("#item_not_product").innerHTML = div;
+                    // tableBody.appendChild(div);
                 }
             };
             showBtn();
