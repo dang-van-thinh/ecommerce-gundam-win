@@ -6,6 +6,7 @@ use App\Http\Controllers\Admin\AttributeController;
 use App\Http\Controllers\Admin\AttributeValueController;
 use App\Http\Controllers\Admin\CategoryArticleController;
 use App\Http\Controllers\Admin\CategoryProductController;
+use App\Http\Controllers\Admin\FeedbackController;
 use App\Http\Controllers\Admin\ProductController as AdminProductController;
 use App\Http\Controllers\Admin\ImageArticleController;
 use App\Http\Controllers\Admin\RoleController;
@@ -66,6 +67,7 @@ Route::prefix('/admin')->middleware(['auth', 'checkAccountStatus', 'checkRole:2'
     Route::resource('refund', RefundController::class);
     Route::resource('products', AdminProductController::class);
     Route::resource('imagearticle', ImageArticleController::class);
+    Route::resource('feedback', FeedbackController::class);
 });
 
 // client
