@@ -20,8 +20,9 @@ use Illuminate\Support\Facades\Route;
 // Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
 //     return $request->user();
 // });
-// ajax them moi anh bai viet
+
 Route::prefix('')->middleware(['authApi'])->group(function () {
+    // ajax them moi anh bai viet
     Route::post('/image-blog', [ImageBlogApiController::class, 'store'])->name('api.image');
 
     Route::post('/add-cart', [ProductController::class, 'addToCart'])->name('api.add-cart');
@@ -29,7 +30,7 @@ Route::prefix('')->middleware(['authApi'])->group(function () {
     Route::put('/update-cart', [ProductController::class, 'updateToCart'])->name('api.update-cart');
 
     Route::post('/buy-now', [ProductController::class, 'productBuyNow'])->name('api.buy-now');
-
+    // api dia chi tinh thanh viet nam
     Route::get('get-districts/{province_id}', [AddressApiController::class, 'getDistricts'])->name('api.districts');
     Route::get('get-wards/{district_id}', [AddressApiController::class, 'getWards'])->name('api.wards');
 });
