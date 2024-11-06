@@ -76,7 +76,7 @@ Route::prefix('/admin')->middleware(['auth', 'checkAccountStatus', 'checkRole:2'
 
 Route::prefix('')->middleware(['auth', 'checkAccountStatus', 'checkRole:1'])->group(function () {
     Route::get('/cart', [CartController::class, 'index'])->name('cart');
-    Route::get('/check-out', [CheckOutController::class, 'index'])->name('check-out');
+    Route::post('/check-out', [CheckOutController::class, 'index'])->name('check-out');
     Route::post("/place-order", [CheckOutController::class, 'placeOrder'])->name('place-order');
     Route::get('/order-success/{id}', [OrderController::class, 'index'])->name('order-success');
     //profile
@@ -88,6 +88,8 @@ Route::prefix('')->middleware(['auth', 'checkAccountStatus', 'checkRole:1'])->gr
         Route::get('address', [AddersController::class, 'index'])->name('address');
         Route::post('/feedback/store', [ProfileController::class, 'store'])->name('feedback.store');
         Route::put('/feedback/{id}', [ProfileController::class, 'update'])->name('feedback.update');
+        Route::put('/orders/{order}/cancel', [ProfileController::class, 'cancel'])->name('order.cancel');
+        Route::put('/orders/{order}/confirmstatus', [ProfileController::class, 'confirmstatus'])->name('order.confirmstatus');
 
         // Store a new address
         Route::post('address', [AddersController::class, 'store'])->name('createUserAddress');
