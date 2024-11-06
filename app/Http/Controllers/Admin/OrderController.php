@@ -45,7 +45,7 @@ class OrderController extends Controller
             Mail::to($order->addressUser->user->email)->send(new OrderCompletedMail($order));
         }
 
-        toastr("Sản phẩm đã được cập nhật thành công!", NotificationInterface::SUCCESS, "Thành công", [
+        toastr("Cập nhật trạng thái đơn hàng thành công!", NotificationInterface::SUCCESS, "Thành công", [
             "closeButton" => true,
             "progressBar" => true,
             "timeOut" => "3000",
