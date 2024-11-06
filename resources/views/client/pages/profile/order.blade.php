@@ -44,7 +44,7 @@ Lịch sử mua hàng
                                     tabindex="0">
                                     <div class="row gy-4">
                                     @foreach ($orders as $item)
-    @if ($item->status === $status && Auth::user()->id === $item->address_user_id) <!-- Kiểm tra trạng thái đơn hàng -->
+    @if ($item->status === $status && Auth::id() === $item->addressUser->user->id) <!-- Kiểm tra trạng thái đơn hàng -->
         <div class="col-12">
             <div class="order-box">
                 <div class="order-container">
