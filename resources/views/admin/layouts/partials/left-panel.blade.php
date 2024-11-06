@@ -22,7 +22,7 @@
                         </li>
                     </ul>
                 </li>
-                <li class="menu-item-has-children ">
+                <li class="menu-item-has-children">
                     <a href="{{ route('banner.index') }}"><i class="menu-icon fa fa-book"></i>Quản lý Banner</a>
                 </li>
                 <li class="menu-item-has-children dropdown">
@@ -87,7 +87,21 @@
                     </ul>
                 </li>
 
+                <li class="menu-item-has-children dropdown">
+                    <a href="#" class="dropdown-toggle" data-toggle="dropdown" aria-haspopup="true"
 
+                        aria-expanded="false"><i class="menu-icon fa fa-book"></i>Đơn hàng</a>
+                    <ul class="sub-menu children dropdown-menu">
+                        <li><i class="fa fa-list"></i><a href="{{ route('orders.index') }}">Tất cả đơn hàng</a></li>
+                    </ul>
+                </li>
+                <li class="menu-item-has-children dropdown">
+                    <a href="#" class="dropdown-toggle" data-toggle="dropdown" aria-haspopup="true"
+                        aria-expanded="false"><i class="menu-icon fa fa-book"></i>QL Phản Hồi KH</a>
+                    <ul class="sub-menu children dropdown-menu">
+                        <li><i class="fa fa-list"></i><a href="{{ route('feedback.index') }}">Danh sách</a></li>
+                    </ul>
+                </li>
             </ul>
         </div>
     </nav>
