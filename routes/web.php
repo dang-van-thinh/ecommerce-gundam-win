@@ -8,6 +8,7 @@ use App\Http\Controllers\Admin\CategoryArticleController;
 use App\Http\Controllers\Admin\CategoryProductController;
 use App\Http\Controllers\Admin\ProductController as AdminProductController;
 use App\Http\Controllers\Admin\ImageArticleController;
+use App\Http\Controllers\Admin\OrderController as AdminOrderController;
 use App\Http\Controllers\Admin\RoleController;
 use App\Http\Controllers\Admin\UserController;
 use App\Http\Controllers\Admin\VocuherController;
@@ -66,6 +67,7 @@ Route::prefix('/admin')->middleware(['auth', 'checkAccountStatus', 'checkRole:2'
     Route::resource('refund', RefundController::class);
     Route::resource('products', AdminProductController::class);
     Route::resource('imagearticle', ImageArticleController::class);
+    Route::resource('orders', AdminOrderController::class);
 });
 
 // client
