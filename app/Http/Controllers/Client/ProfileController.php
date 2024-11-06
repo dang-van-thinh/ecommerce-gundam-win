@@ -32,8 +32,9 @@ class ProfileController extends Controller
         return view('client.pages.profile.order', compact('orders'));
     }
 
-    public function orderDetails($orderId) {
-        $order = Order::with('orderItems.productVariant.product.feedback','orderItems.feedback')->find($orderId); // Lấy feedback qua productVariant
+    public function orderDetails($orderId)
+    {
+        $order = Order::with('orderItems.productVariant.product.feedback', 'orderItems.feedback')->find($orderId); // Lấy feedback qua productVariant
 
         return view('client.pages.profile.layouts.components.details', compact('order'));
     }
@@ -46,6 +47,7 @@ class ProfileController extends Controller
         $feedback->user_id = $request->input('user_id');
         $feedback->rating = $request->input('rating');
         $feedback->comment = $request->input('comment');
+        $feedback->updated_at = NULL;
 
         // Xử lý file tải lên (nếu có)
         if ($request->hasFile('file_path')) {
@@ -107,6 +109,34 @@ class ProfileController extends Controller
             'icon' => "success",
         ]);
 
+        return redirect()->back();
+    }
+    public function cancel($id)
+    {
+        $order = Order::findOrFail($id);
+            $order->status = 'CANCELED';
+            $order->save();
+            sweetalert("Đơn của bạn đã được hủy", NotificationInterface::INFO, [
+                'position' => "center",
+                'timeOut' => '',
+                'closeButton' => false,
+                'icon' => "success",
+            ]);
+        return redirect()->back();
+    }
+    public function confirmstatus($id)
+    {
+        $order = Order::findOrFail($id);
+            $order->status = 'COMPLETED';
+            $order->confirm_status = 'ACTIVE';
+            $order->save();
+
+        sweetalert("Cảm ơn bạn đã xác nhận", NotificationInterface::INFO, [
+            'position' => "center",
+            'timeOut' => '',
+            'closeButton' => false,
+            'icon' => "success",
+        ]);
         return redirect()->back();
     }
 
