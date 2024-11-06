@@ -143,7 +143,7 @@
                     productImage.className = 'product-image';
                     productImage.style.textAlignCenter = 'center';
                     const anchor = document.createElement('a');
-                    anchor.href = `/product/${product.id}`; // Thay đổi link nếu cần
+                    anchor.href = `/product/${product.id}`;
 
                     const img = document.createElement('img');
                     img.className = 'bg-img';
@@ -162,7 +162,7 @@
                     const detailDiv = document.createElement('div');
 
                     const detailAnchor = document.createElement('a');
-                    detailAnchor.href = `product?id=${product.id}`;
+                    detailAnchor.href = `/product/${product.id}`;
 
                     const h6 = document.createElement('h6');
                     h6.textContent = product.name;
