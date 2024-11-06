@@ -131,33 +131,43 @@
                                             tabindex="0"><i class="iconsax me-2" data-icon="ruler"></i>Bảng kích
                                             thước</span>
                                     </li>
-                                    <li> <span data-bs-toggle="modal" data-bs-target="#terms-conditions-modal"
+                                    <li>
+                                        <span data-bs-toggle="modal" data-bs-target="#terms-conditions-modal"
                                             title="Quick View" tabindex="0"><i class="iconsax me-2"
-                                                data-icon="truck"></i>Giao hàng và trả lại</span></li>
-                                    <li> <span data-bs-toggle="modal" data-bs-target="#question-box" title="Quick View"
+                                                data-icon="truck"></i>Giao hàng và trả lại</span>
+                                    </li>
+                                    <li>
+                                        <span data-bs-toggle="modal" data-bs-target="#question-box" title="Quick View"
                                             tabindex="0"><i class="iconsax me-2" data-icon="question-message"></i>Đặt câu
-                                            hỏi</span></li>
+                                            hỏi
+                                        </span>
+                                    </li>
                                 </ul>
                             </div>
                             <div class="d-flex flex-column">
                                 <div class="product-variants">
-                                    <div class="d-flex flex-row">
-                                        <h5>Thuộc tính:</h5>
-                                        {{-- @dd($product ) --}}
-                                        <div class="box">
-                                            <ul class="variant" id="variant-options">
-                                                @foreach ($product->productVariants as $index => $variant)
-                                                    <button class="variant-option" data-variant ="{{ $variant->id }}"
-                                                        data-price="{{ $variant->price }}"
-                                                        data-quantity="{{ $variant->quantity }}">
-                                                        {{ $variant->attributeValues->pluck('name')->implode(' - ') }}
-                                                    </button>
-                                                @endforeach
-                                            </ul>
+                                    {{-- hien thi bien the san pham --}}
+                                    @foreach ($productAttribute as $index => $variant)
+                                        <div class="d-flex flex-row">
+                                            <h5 class=""> {{ $variant['name'] }} </h5>
+                                            <div class="box">
+                                                <ul class="variant" id="variant-options">
+                                                    @foreach ($variant['value'] as $key => $item)
+                                                        {{-- @dd($item) --}}
+                                                        <button class="variant-option"
+                                                            data-variant ="{{ $variant['name'] }}"
+                                                            data-value="{{ $item['id'] }}" data-quantity="">
+                                                            {{ $item['name'] }}
+                                                        </button>
+                                                    @endforeach
+                                                </ul>
+                                            </div>
                                         </div>
-                                    </div>
+                                    @endforeach
                                     <div>
-                                        <h5>Số lượng : <span id="variant-quantity"></span></h5>
+                                        <h5 class="fw-bold">Số lượng :
+                                            <span class="fw-bold fs-6" id="variant-quantity"></span>
+                                        </h5>
                                     </div>
                                 </div>
                             </div>
@@ -929,35 +939,134 @@
     <script>
         let quantityInput;
         let defaultPrice;
+        var resultProduct
+
+        let dataProductVariant = {!! $productVariantJson !!}
+        console.log(dataProductVariant);
+
 
         document.addEventListener('DOMContentLoaded', function() {
             defaultPrice = document.getElementById('variant-price').textContent;
             quantityInput = document.getElementById("quantity_variant");
             const defaultQuantity = 0;
 
+            console.log(defaultQuantity);
+            let arrVariant = [];
+
             // Lắng nghe sự kiện click trên từng nút variant-option
             document.querySelectorAll('.variant-option').forEach(function(button) {
                 button.addEventListener('click', function() {
+                    // kiem tra ton tai roi thi bỏ đi
+
                     if (this.classList.contains('selected')) {
-                        this.classList.remove('selected');
-                        document.getElementById('variant-price').textContent = defaultPrice;
-                        document.getElementById('variant-quantity').textContent = defaultQuantity;
-                    } else {
+                        this.classList.remove('selected'); // xoa bo di
+                        document.getElementById('variant-price').textContent =
+                            defaultPrice; // set gia voi so luong
+
+
+                        const variant = this.getAttribute('data-variant');
+                        const valueVariant = this.getAttribute('data-value')
+                        const index = arrVariant.findIndex(item => item.variant === variant);
+                        if (index !== -1) {
+                            // Xóa đối tượng được tìm thấy
+                            arrVariant.splice(index, 1);
+                        }
+                        changeVariant(arrVariant);
+
+                        // document.getElementById('variant-quantity').textContent = defaultQuantity;
+                        // const variantId = this.getAttribute('data-variant');
+
+                    } else { // con chua bam trc đấy
                         this.closest('.variant').querySelectorAll('.variant-option').forEach(
                             function(btn) {
                                 btn.classList.remove('selected');
                             });
 
                         this.classList.add('selected');
-                        const price = this.getAttribute('data-price');
-                        const quantity = this.getAttribute('data-quantity');
-                        document.getElementById('variant-price').textContent = price;
-                        document.getElementById('variant-quantity').textContent = quantity;
-                        quantityInput.setAttribute('max', quantity);
-                        quantityInput.value = 1;
+
+
+                        const variant = this.getAttribute('data-variant');
+                        const valueVariant = this.getAttribute('data-value')
+                        const data = {
+                            'variant': variant,
+                            'valueId': valueVariant
+                        };
+
+                        // Tìm doio tuong lap gia tri , neu thay thif thay doi gia tri , chua co thif them moiw
+                        result = arrVariant.find(item => item.variant ===
+                            variant);
+                        if (result) {
+                            result.valueId = valueVariant;
+                        } else {
+                            arrVariant.push(data)
+                        }
+                        // console.log(arrVariant);
+                        // ham thay doi gia tri bien the
+                        changeVariant(arrVariant);
+
+                        // const quantity = this.getAttribute('data-quantity');
+                        // document.getElementById('variant-price').textContent = price;
+                        // document.getElementById('variant-quantity').textContent = quantity;
+                        // quantityInput.setAttribute('max', quantity);
+                        // quantityInput.value = 1;
                     }
                 });
             });
+
+            function changeVariant(dataArrayVariant) {
+                console.log(dataArrayVariant);
+                console.log("=============");
+                console.log(dataProductVariant);
+                // set lai gia tri quantity va price
+                resultProduct = findMatchingQuantity(dataArrayVariant, dataProductVariant);
+                console.log(resultProduct);
+                if (resultProduct.length > 0) {
+                    let quantityValue = resultProduct[0].quantity;
+                    let priceValue = resultProduct[0].price;
+
+                    if (quantityValue == 0) {
+                        quantityInput.setAttribute('max', 0);
+                        document.getElementById('variant-quantity').textContent = "Sản phẩm này đã hết hàng";
+                        document.getElementById('variant-quantity').style.color = 'red'
+                    } else {
+                        quantityInput.setAttribute('max', quantityValue);
+                        document.getElementById('variant-quantity').textContent = quantityValue;
+                        document.getElementById('variant-quantity').style.color = 'gray'
+                    }
+
+                    quantityInput.value = 1;
+                    document.getElementById('variant-price').textContent = new Intl.NumberFormat('vi-VN', {
+                        style: 'currency',
+                        currency: 'VND'
+                    }).format(priceValue);
+                } else {
+                    console.log("nho hon 0");
+                    document.getElementById('variant-quantity').textContent = '';
+                }
+                // console.log(resultProduct); // Kết quả sẽ là mảng số lượng của các biến thể
+            }
+
+            function findMatchingQuantity(arrayA, arrayB) {
+
+                return arrayB.filter(product => {
+                    // Đảm bảo số lượng các thuộc tính phải trùng nhau
+                    if (arrayA.length !== product.attribute_values.length) {
+                        return false;
+                    }
+
+                    // Kiểm tra nếu tất cả các đối tượng trong arrayA đều có trong attribute_values của product
+                    return arrayA.every(variant => {
+                        return product.attribute_values.some(attr =>
+                            attr.attribute.name === variant.variant &&
+                            attr.pivot.attribute_value_id == variant.valueId
+                        );
+                    });
+                }).map(product => ({
+                    id: product.id,
+                    quantity: product.quantity,
+                    price: product.price
+                }));
+            }
 
             // Sự kiện khi click nút "Thêm vào giỏ hàng"
             document.querySelector('#btn_add_to_cart').addEventListener("click", function() {
@@ -973,39 +1082,44 @@
         function checklogin(message, action) {
             @auth
             let selectedVariant = document.querySelector('.variant-option.selected');
-            if (!selectedVariant) {
+            if (!selectedVariant || resultProduct.length == 0) {
                 Swal.fire(message, "", "warning");
                 return;
             }
 
-            const maxQuantity = parseInt(selectedVariant.getAttribute('data-quantity'));
+            const maxQuantity = parseInt(document.getElementById('variant-quantity').textContent);
             const quantityValue = parseInt(quantityInput.value);
+
+            // console.log(quantityValue);
+            // console.log(maxQuantity);
 
             if (quantityValue > maxQuantity) {
                 Swal.fire(`Số lượng không được vượt quá ${maxQuantity}`, "", "warning");
                 quantityInput.value = maxQuantity;
                 return;
             }
+            if (quantityValue < 1) {
+                Swal.fire(`Số lượng không được nhỏ hơn 1`, "", "warning");
+                quantityInput.value = 1;
+                return;
+            }
+            if (isNaN(maxQuantity)) {
+                Swal.fire("Sản phẩm không còn hàng !", "", "warning");
+                quantityInput.value = '';
+                return;
+            }
 
             const data = {
                 userId: {{ Auth::id() }},
-                variantId: selectedVariant.getAttribute("data-variant"),
+                variantId: resultProduct[0].id,
                 quantity: quantityValue,
             };
+            console.log(data);
 
             if (action === 'add_to_cart') {
                 sendToCart(data);
             } else if (action === 'buy_now') {
                 buyNow(data);
-
-                Swal.fire({
-                    title: "Hi cc",
-                    icon: "warning",
-                    confirmButtonText: "Đăng nhập",
-                    showCancelButton: true,
-                    cancelButtonText: "Hủy"
-                })
-
             }
         @endauth
 
@@ -1027,12 +1141,10 @@
         function buyNow($data) {
             $.ajax({
                 type: "POST",
-                url: '{{ route('api.add-cart') }}',
+                url: '{{ route('api.buy-now') }}',
                 data: data,
                 success: function(response) {
-                    let numberCart = response.message.numberCart;
-                    document.querySelector("#numberCart").innerText = numberCart;
-                    Swal.fire("Thêm vào giỏ hàng thành công!", "", "success");
+                    console.log(response);
                 },
                 error: function(error) {
                     Swal.fire("Có lỗi xảy ra, vui lòng thử lại sau!", "", "error");
@@ -1044,6 +1156,7 @@
 
         function sendToCart(data) {
             $.ajax({
+
                 type: "POST",
                 url: '{{ route('api.add-cart') }}',
                 data: data,
@@ -1053,8 +1166,8 @@
                     Swal.fire("Thêm vào giỏ hàng thành công!", "", "success");
                 },
                 error: function(error) {
-                    Swal.fire("Có lỗi xảy ra, vui lòng thử lại sau!", "", "error");
-                    console.error(error);
+                    Swal.fire(error.responseJSON.message, "", "error");
+                    console.error(error.responseJSON.message);
                 }
             });
         }

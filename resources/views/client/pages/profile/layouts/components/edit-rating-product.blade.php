@@ -19,7 +19,7 @@
                                     alt="{{ $item->productVariant->product->image }}">
                                 <div style="padding:0 20px;">
                                     <h5>{{ $item->product_name }}</h5>
-                                    <p class="mb-1">{{ $item->total_amount }} VND</p>
+                                    <p class="mb-1">{{ $item->total_price }} VND</p>
                                     <!-- Hiển thị số sao hiện tại -->
 @php
     $currentRating = old('rating', $item->feedback->rating); // Lấy số sao từ cơ sở dữ liệu
@@ -46,14 +46,6 @@
                         <input type="hidden" name="parent_feedback_id"
                             value="{{ $item->feedback->parent_feedback_id }}">
                         <input type="hidden" name="order_item_id" value="{{ $item->id }}">
-
-                        <div class="col-12">
-                            <div class="form-group">
-                                <label class="form-label">Bình luận</label>
-                                <textarea class="form-control" name="comment" cols="30" rows="5"
-                                    placeholder="Viết bình luận của bạn tại đây...">{{ old('comment', $item->feedback->comment) }}</textarea>
-                            </div>
-                        </div>
                         <div class="col-12">
                             <div class="form-group">
                                 <label class="form-label">Ảnh hiện tại:</label>
@@ -67,6 +59,14 @@
                                 <input class="form-control" type="file" name="file_path" />
                             </div>
                         </div>
+                        <div class="col-12">
+                            <div class="form-group">
+                                <label class="form-label">Bình luận</label>
+                                <textarea class="form-control" name="comment" cols="30" rows="5"
+                                    placeholder="Viết bình luận của bạn tại đây...">{{ old('comment', $item->feedback->comment) }}</textarea>
+                            </div>
+                        </div>
+
                         <div class="col-12">
                             <button class="btn btn-submit" type="submit">
                                 Lưu thay đổi
@@ -82,27 +82,31 @@
 @push('scripts')
 <script>
 document.querySelectorAll('input[name="rating"]').forEach((input) => {
-    const starsContainer = input.closest('.rating').querySelectorAll('label i');
+        const stars = input.closest('.rating').querySelectorAll('label i');
 
-    // Xử lý sự kiện khi thay đổi số sao đã chọn
-    input.addEventListener('change', (event) => {
-        const rating = parseInt(event.target.value, 10);
-        updateStars(rating, starsContainer);
-    });
+        // Thay đổi màu sao khi hover
+        stars.forEach((star, index) => {
+            star.addEventListener('mouseenter', () => {
+                stars.forEach((s, i) => {
+                    s.style.color = i <= index ? '#f39c12' : '#ddd'; // Đổi màu sao dựa trên chỉ số
+                });
+            });
 
-    // Xử lý sự kiện khi di chuột qua các ngôi sao
-    input.addEventListener('mouseover', (event) => {
-        const rating = parseInt(event.target.value, 10);
-        updateStars(rating, starsContainer);
-    });
+            star.addEventListener('mouseleave', () => {
+                const rating = parseInt(document.querySelector('input[name="rating"]:checked')?.value, 10) || 0; // Lấy giá trị rating đã chọn
+                stars.forEach((s, i) => {
+                    s.style.color = i < rating ? '#f39c12' : '#ddd'; // Đặt lại màu theo giá trị đã chọn
+                });
+            });
+        });
 
-    // Khôi phục trạng thái ban đầu khi chuột rời khỏi
-    input.addEventListener('mouseout', () => {
-        const selectedRating = document.querySelector('input[name="rating"]:checked');
-        const rating = selectedRating ? parseInt(selectedRating.value, 10) : 0;
-        updateStars(rating, starsContainer);
+        input.addEventListener('change', (event) => {
+            const rating = parseInt(event.target.value, 10);
+            stars.forEach((star, index) => {
+                star.style.color = index < rating ? '#f39c12' : '#ddd'; // Màu vàng cho sao đã chọn, xám cho sao chưa chọn
+            });
+        });
     });
-});
 
 // Hàm cập nhật màu sắc cho các ngôi sao
 function updateStars(rating, stars) {

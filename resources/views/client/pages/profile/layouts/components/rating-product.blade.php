@@ -15,7 +15,7 @@
                                      style="object-fit: cover;" width="100px" alt="{{ $item->productVariant->product->image }}">
                                 <div style="padding:0 20px;">
                                     <h5>{{ $item->product_name }}</h5>
-                                    <p class="mb-1">{{ $item->total_amount }} VND</p>
+                                    <p class="mb-1">{{ $item->total_price }} VND</p>
                                     <ul class="rating p-0 mb-0">
                                         @for ($i = 1; $i <= 5; $i++)
                                             <li>
@@ -34,7 +34,12 @@
                         <input type="hidden" name="user_id" value="{{ auth()->id() }}">
                         <input type="hidden" name="order_item_id" value="{{ $item->id }}"> <!-- Thêm trường order_item_id -->
                         <input type="hidden" name="parent_feedback_id" value="0"> <!-- Đặt 0 cho feedback gốc -->
-
+                        <div class="col-12">
+                            <div class="form-group">
+                                <label class="form-label">Ảnh đánh giá</label>
+                                <input class="form-control" type="file" name="file_path" />
+                            </div>
+                        </div>
                         <div class="col-12">
                             <div class="form-group">
                                 <label class="form-label">Bình luận</label>
@@ -42,12 +47,7 @@
                                           placeholder="Viết bình luận của bạn tại đây..."></textarea>
                             </div>
                         </div>
-                        <div class="col-12">
-                            <div class="form-group">
-                                <label class="form-label">Ảnh đánh giá</label>
-                                <input class="form-control" type="file" name="file_path" />
-                            </div>
-                        </div>
+
                         <div class="col-12">
                             <button class="btn btn-submit" type="submit">
                                 Gửi đánh giá
@@ -64,13 +64,28 @@
 <script src="//cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 <script>
     document.querySelectorAll('input[name="rating"]').forEach((input) => {
+        const stars = input.closest('.rating').querySelectorAll('label i');
+
+        // Thay đổi màu sao khi hover
+        stars.forEach((star, index) => {
+            star.addEventListener('mouseenter', () => {
+                stars.forEach((s, i) => {
+                    s.style.color = i <= index ? '#f39c12' : '#ddd'; // Đổi màu sao dựa trên chỉ số
+                });
+            });
+
+            star.addEventListener('mouseleave', () => {
+                const rating = parseInt(document.querySelector('input[name="rating"]:checked')?.value, 10) || 0; // Lấy giá trị rating đã chọn
+                stars.forEach((s, i) => {
+                    s.style.color = i < rating ? '#f39c12' : '#ddd'; // Đặt lại màu theo giá trị đã chọn
+                });
+            });
+        });
+
         input.addEventListener('change', (event) => {
             const rating = parseInt(event.target.value, 10);
-            const stars = event.target.closest('.rating').querySelectorAll('label i');
-
-            // Đổi màu tất cả các ngôi sao dựa trên số sao đã chọn
             stars.forEach((star, index) => {
-                star.style.color = index < rating ? '#f39c12' : '#ddd'; // Màu vàng (#f39c12) cho sao đã chọn, xám (#ddd) cho sao chưa chọn
+                star.style.color = index < rating ? '#f39c12' : '#ddd'; // Màu vàng cho sao đã chọn, xám cho sao chưa chọn
             });
         });
     });
@@ -92,3 +107,4 @@
     @endif
 </script>
 @endpush
+
