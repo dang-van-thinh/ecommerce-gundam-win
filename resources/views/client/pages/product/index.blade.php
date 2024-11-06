@@ -119,10 +119,16 @@
                             </p>
                             <div class="rating">
                                 <ul>
-                                    <li> <i class="fa-solid fa-star"> </i><i class="fa-solid fa-star"> </i><i
-                                            class="fa-solid fa-star"> </i><i class="fa-solid fa-star-half-stroke"></i><i
-                                            class="fa-regular fa-star"></i></li>
-                                    <li>(4.7) Đánh giá</li>
+                                    @php
+                                        $rating = $averageRating ? $averageRating : 0; // Lấy rating từ feedback
+                                    @endphp
+                                    @for ($i = 1; $i <= 5; $i++)
+                                        <li>
+                                            <i class="fa-solid fa-star"
+                                                style="color: {{ $i <= $rating ? '#f39c12' : '#000' }};"></i>
+                                        </li>
+                                    @endfor
+                                    <li><span>({{ $feedbackCount }}) đánh giá</span></li>
                                 </ul>
                             </div>
                             <div class="buy-box border-buttom">
@@ -462,74 +468,46 @@
                                             <div class="customer-rating">
                                                 <div class="global-rating">
                                                     <div>
-                                                        <h5>4.5</h5>
+                                                        <h5>{{ $averageRating }}</h5>
                                                     </div>
                                                     <div>
                                                         <h6>Đánh giá trung bình</h6>
                                                         <ul class="rating mb p-0">
-                                                            <li><i class="fa-solid fa-star"></i></li>
-                                                            <li><i class="fa-solid fa-star"></i></li>
-                                                            <li><i class="fa-solid fa-star"></i></li>
-                                                            <li><i class="fa-solid fa-star"></i></li>
-                                                            <li><i class="fa-regular fa-star"></i></li>
-                                                            <li><span>(14)</span></li>
+                                                            @php
+                                                                $rating = $averageRating ? $averageRating : 0; // Lấy rating từ feedback
+                                                            @endphp
+                                                            @for ($i = 1; $i <= 5; $i++)
+                                                                <li>
+                                                                    <i class="fa-solid fa-star"
+                                                                        style="color: {{ $i <= $rating ? '#f39c12' : '#000' }};"></i>
+                                                                </li>
+                                                            @endfor
+                                                            @php
+                                                                $feedbackCount = $feedbacks->count();
+                                                            @endphp
+                                                            <li><span>({{ $feedbackCount }})</span></li>
                                                         </ul>
                                                     </div>
                                                 </div>
                                                 <ul class="rating-progess">
-                                                    <li>
-                                                        <p>5 Star</p>
-                                                        <div class="progress" role="progressbar"
-                                                            aria-label="Animated striped example" aria-valuenow="75"
-                                                            aria-valuemin="0" aria-valuemax="100">
-                                                            <div class="progress-bar progress-bar-striped progress-bar-animated"
-                                                                style="width: 80%"></div>
-                                                        </div>
-                                                        <p>5 Sao</p>
-                                                    </li>
-                                                    <li>
-                                                        <p>4 sao</p>
-                                                        <div class="progress" role="progressbar"
-                                                            aria-label="Animated striped example" aria-valuenow="75"
-                                                            aria-valuemin="0" aria-valuemax="100">
-                                                            <div class="progress-bar progress-bar-striped progress-bar-animated"
-                                                                style="width: 70%"></div>
-                                                        </div>
-                                                        <p>70%</p>
-                                                    </li>
-                                                    <li>
-                                                        <p>3 Sao</p>
-                                                        <div class="progress" role="progressbar"
-                                                            aria-label="Animated striped example" aria-valuenow="75"
-                                                            aria-valuemin="0" aria-valuemax="100">
-                                                            <div class="progress-bar progress-bar-striped progress-bar-animated"
-                                                                style="width: 55%"></div>
-                                                        </div>
-                                                        <p>55%</p>
-                                                    </li>
-                                                    <li>
-                                                        <p>2 Sao</p>
-                                                        <div class="progress" role="progressbar"
-                                                            aria-label="Animated striped example" aria-valuenow="75"
-                                                            aria-valuemin="0" aria-valuemax="100">
-                                                            <div class="progress-bar progress-bar-striped progress-bar-animated"
-                                                                style="width: 40%"></div>
-                                                        </div>
-                                                        <p>40%</p>
-                                                    </li>
-                                                    <li>
-                                                        <p>1 Sao</p>
-                                                        <div class="progress" role="progressbar"
-                                                            aria-label="Animated striped example" aria-valuenow="75"
-                                                            aria-valuemin="0" aria-valuemax="100">
-                                                            <div class="progress-bar progress-bar-striped progress-bar-animated"
-                                                                style="width: 25%"></div>
-                                                        </div>
-                                                        <p>25%</p>
-                                                    </li>
-                                                </ul><button class="btn reviews-modal" data-bs-toggle="modal"
+                                                    @foreach ($ratingProgress as $stars => $percentage)
+                                                        <li>
+                                                            <p>{{ $stars }} Sao</p>
+                                                            <div class="progress" role="progressbar"
+                                                                aria-label="Progress for {{ $stars }} stars"
+                                                                aria-valuenow="{{ $percentage }}" aria-valuemin="0"
+                                                                aria-valuemax="100">
+                                                                <div class="progress-bar progress-bar-striped progress-bar-animated"
+                                                                    style="width: {{ $percentage }}%;"></div>
+                                                            </div>
+                                                            <p>{{ $percentage }}%</p>
+                                                        </li>
+                                                    @endforeach
+                                                </ul>
+                                                {{-- <button class="btn reviews-modal" data-bs-toggle="modal"
                                                     data-bs-target="#Reviews-modal" title="Quick View"
-                                                    tabindex="0">Viết Bài Đánh Giá</button>
+                                                    tabindex="0">Viết Bài Đánh Giá
+                                                </button> --}}
                                             </div>
                                         </div>
                                     </div>
@@ -537,102 +515,90 @@
                                         <div class="comments-box">
                                             <h5>Bình Luận </h5>
                                             <ul class="theme-scrollbar">
-                                                <li>
-                                                    <div class="comment-items">
-                                                        <div class="user-img"> <img
-                                                                src="/template/client/assets/images/user/1.jpg"
-                                                                alt="">
-                                                        </div>
-                                                        <div class="user-content">
-                                                            <div class="user-info">
-                                                                <div class="d-flex justify-content-between gap-3">
-                                                                    <h6> <i class="iconsax" data-icon="user-1"></i>Michel
-                                                                        Poe</h6><span>
-                                                                        <i class="iconsax" data-icon="clock"></i>Mar 29,
-                                                                        2022</span>
+                                                @foreach ($feedbacks as $feedback)
+                                                    <li style="width:97%">
+                                                        <div class="comment-items">
+                                                            {{-- <div class="user-img"> <img
+                                                                    src="/template/client/assets/images/user/1.jpg"
+                                                                    alt="">
+                                                            </div> --}}
+                                                            <div class="user-content">
+                                                                <div class="user-info">
+                                                                    <div class="d-flex justify-content-between gap-3">
+                                                                        <h6>
+                                                                            <i class="iconsax" data-icon="user-1"></i>
+                                                                            {{ $feedback->user->full_name }}
+                                                                        </h6>
+                                                                        <span>
+                                                                            <i class="iconsax" data-icon="clock"></i>
+                                                                            {{ $feedback->created_at }}
+                                                                        </span>
+                                                                    </div>
+                                                                    <ul class="rating mb p-0">
+                                                                        @php
+                                                                            $rating = $feedback->rating
+                                                                                ? $feedback->rating
+                                                                                : 0; // Lấy rating từ feedback
+                                                                        @endphp
+                                                                        @for ($i = 1; $i <= 5; $i++)
+                                                                            <li>
+                                                                                <i class="fa-solid fa-star"
+                                                                                    style="color: {{ $i <= $rating ? '#f39c12' : '#000' }};"></i>
+                                                                            </li>
+                                                                        @endfor
+                                                                        <span>{{ number_format($rating, 1) }} / 5
+                                                                            sao</span> <!-- Hiển thị số sao trung bình -->
+                                                                    </ul>
                                                                 </div>
-                                                                <ul class="rating mb p-0">
-                                                                    <li><i class="fa-solid fa-star"></i></li>
-                                                                    <li><i class="fa-solid fa-star"></i></li>
-                                                                    <li><i class="fa-solid fa-star"></i></li>
-                                                                    <li><i class="fa-solid fa-star"></i></li>
-                                                                    <li><i class="fa-regular fa-star"></i></li>
-                                                                </ul>
-                                                            </div>
-                                                            <p>Khaki cotton blend military jacket flattering fit mock
-                                                                horn buttons and patch pockets showerproof black
-                                                                lightgrey. Printed lining patch pockets jersey blazer
-                                                                built in pocket square wool casual quilted jacket
-                                                                without hood azure.</p><a href="#"> <span> <i
-                                                                        class="iconsax" data-icon="undo"></i>
-                                                                    Replay</span></a>
-                                                        </div>
-                                                    </div>
-                                                </li>
-                                                <li class="reply">
-                                                    <div class="comment-items">
-                                                        <div class="user-img"> <img
-                                                                src="/template/client/assets/images/user/2.jpg"
-                                                                alt="">
-                                                        </div>
-                                                        <div class="user-content">
-                                                            <div class="user-info">
-                                                                <div class="d-flex justify-content-between gap-3">
-                                                                    <h6> <i class="iconsax" data-icon="user-1"></i>Michel
-                                                                        Poe</h6><span>
-                                                                        <i class="iconsax" data-icon="clock"></i>Mar 29,
-                                                                        2022</span>
+                                                                <div>
+                                                                    <p>{{ $feedback->comment }}</p>
+                                                                    <img width="70px"
+                                                                        src="{{ '/storage/' . $feedback->file_path }}"
+                                                                        alt="">
                                                                 </div>
-                                                                <ul class="rating mb p-0">
-                                                                    <li><i class="fa-solid fa-star"></i></li>
-                                                                    <li><i class="fa-solid fa-star"></i></li>
-                                                                    <li><i class="fa-solid fa-star"></i></li>
-                                                                    <li><i class="fa-solid fa-star"></i></li>
-                                                                    <li><i class="fa-regular fa-star"></i></li>
-                                                                </ul>
+                                                                <a href="#">
+                                                                    <span>
+                                                                        <i class="iconsax" data-icon="undo"></i>
+                                                                        Replay
+                                                                    </span>
+                                                                </a>
                                                             </div>
-                                                            <p>Khaki cotton blend military jacket flattering fit mock
-                                                                horn buttons and patch pockets showerproof black
-                                                                lightgrey. Printed lining patch pockets jersey blazer
-                                                                built in pocket square wool casual quilted jacket
-                                                                without hood azure.</p><a href="#"> <span> <i
-                                                                        class="iconsax" data-icon="undo"></i>
-                                                                    Replay</span></a>
                                                         </div>
-                                                    </div>
-                                                </li>
-                                                <li>
-                                                    <div class="comment-items">
-                                                        <div class="user-img"> <img
-                                                                src="/template/client/assets/images/user/3.jpg"
-                                                                alt="">
-                                                        </div>
-                                                        <div class="user-content">
-                                                            <div class="user-info">
-                                                                <div class="d-flex justify-content-between gap-3">
-                                                                    <h6> <i class="iconsax" data-icon="user-1"></i>Michel
-                                                                        Poe</h6><span>
-                                                                        <i class="iconsax" data-icon="clock"></i>Mar 29,
-                                                                        2022</span>
+                                                        @if ($feedback->replies->isNotEmpty())
+                                                            @foreach ($feedback->replies as $reply)
+                                                    <li class="reply" style="width:90%">
+                                                        <div class="comment-items">
+                                                            {{-- <div class="user-img"> <img
+                                                                    src="/template/client/assets/images/user/2.jpg"
+                                                                    alt="">
+                                                            </div> --}}
+                                                            <div class="user-content">
+                                                                <div class="user-info">
+                                                                    <div class="d-flex justify-content-between gap-3">
+                                                                        <h6>
+                                                                            <i class="iconsax"data-icon="user-1"></i>
+                                                                            Admin
+                                                                        </h6>
+                                                                        <span>
+                                                                            <i class="iconsax" data-icon="clock"></i>
+                                                                            {{ $reply->created_at }}
+                                                                        </span>
+                                                                    </div>
                                                                 </div>
-                                                                <ul class="rating mb p-0">
-                                                                    <li><i class="fa-solid fa-star"></i></li>
-                                                                    <li><i class="fa-solid fa-star"></i></li>
-                                                                    <li><i class="fa-solid fa-star"></i></li>
-                                                                    <li><i class="fa-solid fa-star"></i></li>
-                                                                    <li><i class="fa-regular fa-star"></i></li>
-                                                                </ul>
+                                                                <p>{{ $reply->comment }}</p>
+                                                                {{-- <a href="#">
+                                                                                    <span>
+                                                                                        <i class="iconsax" data-icon="undo"></i>
+                                                                                        Replay
+                                                                                    </span>
+                                                                                </a> --}}
                                                             </div>
-                                                            <p>Khaki cotton blend military jacket flattering fit mock
-                                                                horn buttons and patch pockets showerproof black
-                                                                lightgrey. Printed lining patch pockets jersey blazer
-                                                                built in pocket square wool casual quilted jacket
-                                                                without hood azure.</p><a href="#"> <span> <i
-                                                                        class="iconsax" data-icon="undo"></i>
-                                                                    Replay</span></a>
                                                         </div>
-                                                    </div>
+                                                    </li>
+                                                @endforeach
+                                                @endif
                                                 </li>
+                                                @endforeach
                                             </ul>
                                         </div>
                                     </div>
