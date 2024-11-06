@@ -130,7 +130,7 @@
                                 </li>
                             </ul>
                         </div>
-                        <form action="{{ route('check-out') }}" method="post">
+                        <form action="{{ route('check-out') }}" method="get">
                             @csrf
                             <button type="submit" class="btn btn_black w-100 sm rounded" id="submit_checkout">Thanh
                                 toán</button>

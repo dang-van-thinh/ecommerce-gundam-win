@@ -13,7 +13,6 @@ class Order extends Model
 
     protected $fillable = [
         'id',
-        'address_user_id',
         'total_amount',
         'status',
         'payment_method',
@@ -21,7 +20,11 @@ class Order extends Model
         'note',
         'discount_amount',
         'created_at',
-        'updated_at'
+        'updated_at',
+        'code',
+        'full_address',
+        'phone',
+        'customer_name'
     ];
 
 
