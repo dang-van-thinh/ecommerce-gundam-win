@@ -15,8 +15,8 @@ use App\Models\User;
 use App\Models\Ward;
 use Flasher\Prime\Notification\NotificationInterface;
 use Illuminate\Http\Request;
-use Storage;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Storage;
 
 class ProfileController extends Controller
 {
