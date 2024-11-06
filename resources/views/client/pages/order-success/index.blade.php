@@ -42,7 +42,7 @@
                                                 <td>
                                                     <div class="cart-box">
                                                         <a href="product.html">
-                                                            <img src="{{ '/Storage/'. $item->productVariant->product->image }}"
+                                                            <img src="{{ '/Storage/' . $item->productVariant->product->image }}"
                                                                 alt="Ảnh sản phẩm">
                                                         </a>
                                                         <div>
@@ -86,29 +86,31 @@
                             <ul>
                                 <li>
                                     <p class="fw-semibold">Tổng sản phẩm ({{ count($data->orderItems) }})</p>
-                                    <h6>$230.00</h6>
+                                    <h6>
+                                        <h5>{{ number_format($data->total_amount) }} VND</h5>
+                                    </h6>
                                 </li>
-                                <li>
+                                {{-- <li>
                                     <p>Shipping to </p><span>united kingdom</span>
-                                </li>
+                                </li> --}}
                             </ul>
                             <ul>
                                 <li>
-                                    <p>shipping Costs</p><span>$0.00</span>
+                                    <p>Phí vận chuyển</p><span>$0.00</span>
                                 </li>
-                                <li>
+                                {{-- <li>
                                     <p>Total without VAT </p><span>$250.00</span>
                                 </li>
                                 <li>
                                     <p>Including 10% VAT </p><span>$25.00</span>
-                                </li>
+                                </li> --}}
                                 <li>
-                                    <p>Discount Code </p><span>$-10.00</span>
+                                    <p>Giảm giá</p><span>{{ number_format($data->discount_amount) }} VND</span>
                                 </li>
                             </ul>
                             <div class="d-flex align-items-center justify-content-between">
                                 <h6>Tổng cộng</h6>
-                                <h5>{{ number_format($data->discount_amount) }} VND</h5>
+                                <h5>{{ number_format($data->total_amount) }} VND</h5>
                             </div>
                             <div class="note-box">
                                 <p>Tôi hy vọng cửa hàng có thể làm việc với tôi để giao hàng sớm nhất có thể vì tôi thực sự
