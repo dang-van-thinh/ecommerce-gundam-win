@@ -6,6 +6,7 @@ use App\Http\Controllers\Admin\AttributeController;
 use App\Http\Controllers\Admin\AttributeValueController;
 use App\Http\Controllers\Admin\CategoryArticleController;
 use App\Http\Controllers\Admin\CategoryProductController;
+use App\Http\Controllers\Admin\FeedbackController;
 use App\Http\Controllers\Admin\ProductController as AdminProductController;
 use App\Http\Controllers\Admin\ImageArticleController;
 use App\Http\Controllers\Admin\OrderController as AdminOrderController;
@@ -68,13 +69,11 @@ Route::prefix('/admin')->middleware(['auth', 'checkAccountStatus', 'checkRole:2'
     Route::resource('products', AdminProductController::class);
     Route::resource('imagearticle', ImageArticleController::class);
     Route::resource('orders', AdminOrderController::class);
+    Route::resource('feedback', FeedbackController::class);
 });
 
 // client
-
-
-
-Route::prefix('')->middleware(['auth', 'checkAccountStatus', 'checkRole:1'])->group(function () {
+Route::prefix('')->middleware(['auth', 'checkAccountStatus', 'checkRole:1','updateOrderStatus'])->group(function () {
     Route::get('/cart', [CartController::class, 'index'])->name('cart');
     Route::post('/check-out', [CheckOutController::class, 'index'])->name('check-out');
     Route::post("/place-order", [CheckOutController::class, 'placeOrder'])->name('place-order');
