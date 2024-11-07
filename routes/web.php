@@ -6,6 +6,7 @@ use App\Http\Controllers\Admin\AttributeController;
 use App\Http\Controllers\Admin\AttributeValueController;
 use App\Http\Controllers\Admin\CategoryArticleController;
 use App\Http\Controllers\Admin\CategoryProductController;
+use App\Http\Controllers\Admin\DashboardController;
 use App\Http\Controllers\Admin\FeedbackController;
 use App\Http\Controllers\Admin\ProductController as AdminProductController;
 use App\Http\Controllers\Admin\ImageArticleController;
@@ -71,6 +72,7 @@ Route::prefix('/admin')->middleware(['auth', 'checkAccountStatus', 'checkRole:2'
     Route::resource('orders', AdminOrderController::class);
     // Route::get('/orders/filter', [AdminOrderController::class, 'filterOrders'])->name('orders.filter');
     Route::resource('feedback', FeedbackController::class);
+    Route::get('', [DashboardController::class, 'index'])->name('dashboard');
 });
 
 // client
@@ -88,12 +90,12 @@ Route::prefix('')->middleware(['auth', 'checkAccountStatus', 'checkRole:1', 'upd
     Route::prefix('profile')->name('profile.')->group(function () {
         Route::get('/', [ProfileController::class, 'infomation'])->name('infomation');
         Route::get('/order-history', [ProfileController::class, 'orderHistory'])->name('order-history');
-        Route::get('/order/{id}', [ProfileController::class, 'show'])->name('order.details');
+        Route::get('/order/{id}', [ProfileController::class, 'orderDetail'])->name('order.details');
         // Route::get('/address', [ProfileController::class, 'address'])->name('address');
         Route::get('address', [AddersController::class, 'index'])->name('address');
-        Route::post('/feedback/store', [ProfileController::class, 'store'])->name('feedback.store');
-        Route::put('/feedback/{id}', [ProfileController::class, 'update'])->name('feedback.update');
-        Route::put('/orders/{order}/cancel', [ProfileController::class, 'cancel'])->name('order.cancel');
+        Route::post('/feedback/store', [ProfileController::class, 'feedbackstore'])->name('feedback.store');
+        Route::put('/feedback/{id}', [ProfileController::class, 'feedbackupdate'])->name('feedback.update');
+        Route::put('/orders/{order}/cancel', [ProfileController::class, 'orderCancel'])->name('order.cancel');
         Route::put('/orders/{order}/confirmstatus', [ProfileController::class, 'confirmstatus'])->name('order.confirmstatus');
 
         // Store a new address
@@ -126,7 +128,9 @@ Route::post('/blog/{articleId}/comment', [BlogController::class, 'storeComment']
 Route::get('/blog/{id}', [BlogController::class, 'show'])->name('blog.show');
 Route::get('/category-blog/{id}', [CollectionBlogController::class, 'articlesByCategory'])->name('category-articles');
 Route::get('/blog/category-blog/{id}', [BlogController::class, 'articlesByCategory'])->name('category-blog');
+Route::post('/product/filter', [CollectionProductController::class, 'filter'])->name('product.filter');
 Route::get('/404', [DefaultController::class, 'pageNotFound'])->name('404');
+Route::post('/feedback/reply', [ProductController::class, 'replyFeedback'])->name('feedback.reply');
 
 // auth
 Route::prefix('auth')->name('auth.')->group(function () {
