@@ -15,12 +15,12 @@ class Feedback extends Model
     protected $fillable = [
         'user_id',
         'parent_feedback_id',
-        'rating ',
-        'comment ',
-        'file_path ',
+        'rating',
+        'comment',
+        'file_path',
         'created_at',
         'order_item_id',
-        'updated_at '
+        'updated_at'
     ];
     public function orderItem()
     {
