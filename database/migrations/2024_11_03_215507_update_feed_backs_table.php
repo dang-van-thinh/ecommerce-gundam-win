@@ -14,7 +14,7 @@ return new class extends Migration
     public function up(): void
     {
         Schema::table('feedbacks', function (Blueprint $table) {
-            $table->dropConstrainedForeignIdFor(Product::class);
+            $table->dropForeign(['product_id']);
             $table->dropColumn('product_id');
             $table->foreignIdFor(OrderItem::class)->constrained();
         });
@@ -27,7 +27,7 @@ return new class extends Migration
     {
         Schema::table('feedbacks', callback: function (Blueprint $table) {
             $table->foreignIdFor(Product::class)->constrained();
-            $table->dropConstrainedForeignIdFor(OrderItem::class);
+            $table->dropForeign('order_item_id');
             $table->dropColumn('order_item_id');
         });
     }
