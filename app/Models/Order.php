@@ -13,6 +13,7 @@ class Order extends Model
 
     protected $fillable = [
         'id',
+        'user_id',
         'total_amount',
         'status',
         'payment_method',
@@ -38,9 +39,9 @@ class Order extends Model
         return $this->hasOne(Refund::class, 'order_id');
     }
 
-    public function addressUser()
+    public function user()
     {
-        return $this->belongsTo(AddressUser::class, 'address_user_id');
+        return $this->belongsTo(User::class, 'user_id');
     }
     public function feedbacks()
     {
