@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Client;
 use App\Http\Controllers\Controller;
 use App\Models\Feedback;
 use App\Models\Product;
+use Flasher\Prime\Notification\NotificationInterface;
 // use Flasher\Laravel\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Http\Request;
@@ -111,7 +112,7 @@ class ProductController extends Controller
     }
 
 
-    public function reply(Request $request)
+    public function replyFeedback(Request $request)
     {
         // Kiểm tra nếu người dùng có vai trò "admin"
         // $isAdmin = DB::table('user_roles')
@@ -124,15 +125,27 @@ class ProductController extends Controller
         // }
 
 
-        // Tạo phản hồi mới
-        $feedback = new Feedback();
-        $feedback->parent_feedback_id = $request->input('parent_feedback_id');
-        $feedback->user_id = $request->input('user_id');
-        $feedback->order_item_id = $request->input('order_item_id');
-        $feedback->comment = $request->input('comment');
+        $feedback = Feedback::create([
+            'parent_feedback_id' => $request->parent_feedback_id,
+            'user_id' => $request->user_id,
+            'order_item_id' => $request->order_item_id,
+            'comment' => $request->comment,
+        ]);
 
-        $feedback->save();
 
+        if ($feedback) {
+            toastr("Phản hồi khách hàng thành công", NotificationInterface::SUCCESS, "Thành công !", [
+                "closeButton" => true,
+                "progressBar" => true,
+                "timeOut" => "3000",
+            ]);
+        } else {
+            toastr("Xóa phản hồi không thành công!", NotificationInterface::ERROR, "Thất bại!", [
+                "closeButton" => true,
+                "progressBar" => true,
+                "timeOut" => "3000",
+            ]);
+        }
 
         return back();
     }
