@@ -112,6 +112,30 @@ class ProductController extends Controller
         $variantId = $request->input('variantId');
 
         // tim kiem bien the
-        $productVariant = ProductVariant::where('id');
+        $productVariant = ProductVariant::where('id', $variantId)->first()->toArray();
+        // dd($productVariant->toArray());
+
+        if ($productVariant) {
+            return response()->json([
+                'productCheckout' => $productVariant,
+                'url' => route('check-out-now')
+            ]);
+        }
+        return response()->json([
+            'message' => "Không tìm thấy sản phẩm phù hợp"
+        ], 400);
+    }
+
+    public function getPrductVariant(Request $request)
+    {
+        // dd($request->query('userId'));
+        $userId = $request->query('userId');
+        $quantity = $request->query('quantity');
+        $variantId = $request->query('variantId');
+        $productResponse = ProductVariant::with(['product', 'attributeValues.attribute'])->where('id', $variantId)->first();
+        return response()->json([
+            'productResponse' => $productResponse,
+            'quantity' => $quantity
+        ]);
     }
 }

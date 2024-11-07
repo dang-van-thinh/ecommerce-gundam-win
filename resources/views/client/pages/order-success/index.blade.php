@@ -142,3 +142,12 @@
         </div>
     </section>
 @endsection
+@push('scripts')
+    <script>
+        // Sau khi SweetAlert thông báo xong, xóa localStorage
+        window.onload = function() {
+            localStorage.removeItem("productBuyNow"); // Xóa 1 item cụ thể
+            // localStorage.clear(); // Hoặc xóa toàn bộ dữ liệu trong localStorage
+        };
+    </script>;
+@endpush
