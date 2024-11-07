@@ -5,6 +5,9 @@ namespace App\Http\Controllers\Client;
 use App\Http\Controllers\Controller;
 use App\Models\Feedback;
 use App\Models\Product;
+// use Flasher\Laravel\Http\Request;
+use Illuminate\Support\Facades\DB;
+use Illuminate\Http\Request;
 
 class ProductController extends Controller
 {
@@ -105,5 +108,32 @@ class ProductController extends Controller
             'client.pages.product.index',
             compact('product', 'relatedProducts', 'productAttribute', 'productVariantJson', 'feedbacks', 'averageRating', 'feedbackCount', 'ratingProgress')
         );
+    }
+
+
+    public function reply(Request $request)
+    {
+        // Kiểm tra nếu người dùng có vai trò "admin"
+        // $isAdmin = DB::table('user_roles')
+        //     ->where('user_id', auth()->id())
+        //     ->where('role_id', 2)  // 2 là ID vai trò của admin
+        //     ->exists();
+
+        // if (!$isAdmin) {
+        //     return back()->with('error', 'Bạn không có quyền phản hồi đánh giá này.');
+        // }
+
+
+        // Tạo phản hồi mới
+        $feedback = new Feedback();
+        $feedback->parent_feedback_id = $request->input('parent_feedback_id');
+        $feedback->user_id = $request->input('user_id');
+        $feedback->order_item_id = $request->input('order_item_id');
+        $feedback->comment = $request->input('comment');
+
+        $feedback->save();
+
+
+        return back();
     }
 }
