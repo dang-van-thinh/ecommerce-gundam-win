@@ -33,15 +33,7 @@ class ProfileController extends Controller
             ->get();
         return view('client.pages.profile.order', compact('orders'));
     }
-
-    public function orderDetails($orderId)
-    {
-        $order = Order::with('orderItems.productVariant.product.feedback', 'orderItems.feedback')->find($orderId); // Lấy feedback qua productVariant
-
-        return view('client.pages.profile.layouts.components.details', compact('order'));
-    }
-
-    public function store(FeedbackRequest $request)
+    public function feedbackstore(FeedbackRequest $request)
     {
         // Tạo mới feedback
         $feedback = new Feedback();
@@ -70,22 +62,14 @@ class ProfileController extends Controller
 
         return back();
     }
-
-    public function edit($id)
-    {
-        $feedback = Feedback::findOrFail($id);
-        $item = OrderItem::with('productVariant.product')->findOrFail($feedback->order_item_id);
-
-        return view('your-view-file', compact('feedback', 'item'));
-    }
-    public function show($id)
+    public function orderDetail($id)
     {
         // Lấy thông tin đơn hàng theo ID
         $order = Order::with('orderItems.productVariant.product')->findOrFail($id);
         return view('client.pages.profile.layouts.components.details', compact('order'));
     }
 
-    public function update(EditFeedbackRequest $request, $id)
+    public function feedbackupdate(EditFeedbackRequest $request, $id)
     {
         $feedback = Feedback::findOrFail($id);
         $feedback->order_item_id = $request->input('order_item_id');
@@ -113,7 +97,7 @@ class ProfileController extends Controller
 
         return redirect()->back();
     }
-    public function cancel($id)
+    public function orderCancel($id)
     {
         $order = Order::findOrFail($id);
         $order->status = 'CANCELED';
