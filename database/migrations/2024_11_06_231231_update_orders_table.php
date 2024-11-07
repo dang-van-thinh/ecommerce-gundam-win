@@ -18,8 +18,8 @@ return new class extends Migration
             $table->string('phone', 14);
             $table->string('customer_name', 100);
             $table->string('full_address', 200);
-            // $table->dropForeign(['address_user_id']);
-            // $table->dropColumn('address_user_id');
+            $table->dropForeign(['address_user_id']);
+            $table->dropColumn('address_user_id');
             $table->foreignIdFor(User::class)->constrained();
         });
     }
