@@ -6,6 +6,7 @@ use App\Http\Controllers\Admin\AttributeController;
 use App\Http\Controllers\Admin\AttributeValueController;
 use App\Http\Controllers\Admin\CategoryArticleController;
 use App\Http\Controllers\Admin\CategoryProductController;
+use App\Http\Controllers\Admin\DashboardController;
 use App\Http\Controllers\Admin\FeedbackController;
 use App\Http\Controllers\Admin\ProductController as AdminProductController;
 use App\Http\Controllers\Admin\ImageArticleController;
@@ -70,6 +71,7 @@ Route::prefix('/admin')->middleware(['auth', 'checkAccountStatus', 'checkRole:2'
     Route::resource('imagearticle', ImageArticleController::class);
     Route::resource('orders', AdminOrderController::class);
     Route::resource('feedback', FeedbackController::class);
+    Route::get('', [DashboardController::class, 'index'])->name('dashboard');
 });
 
 // client
