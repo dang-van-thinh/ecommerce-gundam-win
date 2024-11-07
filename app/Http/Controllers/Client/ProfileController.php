@@ -28,9 +28,9 @@ class ProfileController extends Controller
     public function orderHistory()
     {
         // Lấy tất cả các Order cùng với OrderItems và ProductVariants
-        $orders = Order::with('orderItems.productVariant.attributeValues.attribute', 'orderItems.productVariant.product','addressUser.user')
-        ->orderBy('id', 'desc')
-        ->get();
+        $orders = Order::with('orderItems.productVariant.attributeValues.attribute', 'orderItems.productVariant.product', 'user')
+            ->orderBy('id', 'desc')
+            ->get();
         return view('client.pages.profile.order', compact('orders'));
     }
 
@@ -116,22 +116,22 @@ class ProfileController extends Controller
     public function cancel($id)
     {
         $order = Order::findOrFail($id);
-            $order->status = 'CANCELED';
-            $order->save();
-            sweetalert("Đơn của bạn đã được hủy", NotificationInterface::INFO, [
-                'position' => "center",
-                'timeOut' => '',
-                'closeButton' => false,
-                'icon' => "success",
-            ]);
+        $order->status = 'CANCELED';
+        $order->save();
+        sweetalert("Đơn của bạn đã được hủy", NotificationInterface::INFO, [
+            'position' => "center",
+            'timeOut' => '',
+            'closeButton' => false,
+            'icon' => "success",
+        ]);
         return redirect()->back();
     }
     public function confirmstatus($id)
     {
         $order = Order::findOrFail($id);
-            $order->status = 'COMPLETED';
-            $order->confirm_status = 'ACTIVE';
-            $order->save();
+        $order->status = 'COMPLETED';
+        $order->confirm_status = 'ACTIVE';
+        $order->save();
 
         sweetalert("Cảm ơn bạn đã xác nhận", NotificationInterface::INFO, [
             'position' => "center",
