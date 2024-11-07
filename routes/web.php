@@ -75,8 +75,13 @@ Route::prefix('/admin')->middleware(['auth', 'checkAccountStatus', 'checkRole:2'
 // client
 Route::prefix('')->middleware(['auth', 'checkAccountStatus', 'checkRole:1', 'updateOrderStatus'])->group(function () {
     Route::get('/cart', [CartController::class, 'index'])->name('cart');
-    Route::get('/check-out', [CheckOutController::class, 'index'])->name('check-out');
+    Route::get('/check-out', [CheckOutController::class, 'checkOutByCart'])->name('check-out');
+    Route::get('/check-out-now', [CheckOutController::class, 'checkOutByNow'])->name('check-out-now');
+
+    // Route::get('check-out-now', [CheckOutController::class, '']);
+
     Route::post("/place-order", [CheckOutController::class, 'placeOrder'])->name('place-order');
+    Route::post("/place-order/buy-now", [CheckOutController::class, 'placeOrderBuyNow'])->name('place-order-buy-now');
     Route::get('/order-success/{id}', [OrderController::class, 'index'])->name('order-success');
     //profile
     Route::prefix('profile')->name('profile.')->group(function () {

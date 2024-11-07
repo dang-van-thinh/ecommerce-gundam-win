@@ -898,6 +898,7 @@
                 });
             });
 
+            // thay doi so luong theo bine the
             function changeVariant(dataArrayVariant) {
                 console.log(dataArrayVariant);
                 console.log("=============");
@@ -932,7 +933,6 @@
             }
 
             function findMatchingQuantity(arrayA, arrayB) {
-
                 return arrayB.filter(product => {
                     // Đảm bảo số lượng các thuộc tính phải trùng nhau
                     if (arrayA.length !== product.attribute_values.length) {
@@ -999,11 +999,11 @@
                 variantId: resultProduct[0].id,
                 quantity: quantityValue,
             };
-            console.log(data);
 
             if (action === 'add_to_cart') {
                 sendToCart(data);
             } else if (action === 'buy_now') {
+                // alert("kjsakjd")
                 buyNow(data);
             }
         @endauth
@@ -1023,13 +1023,17 @@
         @endguest
         }
 
-        function buyNow($data) {
+        function buyNow(data) {
             $.ajax({
                 type: "POST",
                 url: '{{ route('api.buy-now') }}',
                 data: data,
                 success: function(response) {
                     console.log(response);
+                    const productJson = JSON.stringify(data);
+                    localStorage.setItem('productBuyNow', productJson)
+                    window.location.href = response.url
+
                 },
                 error: function(error) {
                     Swal.fire("Có lỗi xảy ra, vui lòng thử lại sau!", "", "error");
