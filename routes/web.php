@@ -129,7 +129,7 @@ Route::get('/category-blog/{id}', [CollectionBlogController::class, 'articlesByC
 Route::get('/blog/category-blog/{id}', [BlogController::class, 'articlesByCategory'])->name('category-blog');
 Route::post('/product/filter', [CollectionProductController::class, 'filter'])->name('product.filter');
 Route::get('/404', [DefaultController::class, 'pageNotFound'])->name('404');
-Route::post('/feedback/reply', [ProductController::class, 'reply'])->name('feedback.reply');
+Route::post('/feedback/reply', [ProductController::class, 'replyFeedback'])->name('feedback.reply');
 
 // auth
 Route::prefix('auth')->name('auth.')->group(function () {
