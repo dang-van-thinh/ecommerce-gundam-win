@@ -43,8 +43,9 @@ Lịch sử mua hàng
                                     id="{{ $status }}-tab-pane" role="tabpanel" aria-labelledby="{{ $status }}-tab"
                                     tabindex="0">
                                     <div class="row gy-4">
+                                        {{-- @dd($orders->toArray()) --}}
                                     @foreach ($orders as $item)
-    @if ($item->status === $status && Auth::id() === $item->addressUser->user->id) <!-- Kiểm tra trạng thái đơn hàng -->
+    @if ($item->status === $status && Auth::id() === $item->user->id) <!-- Kiểm tra trạng thái đơn hàng -->
         <div class="col-12">
             <div class="order-box">
                 <div class="order-container">
