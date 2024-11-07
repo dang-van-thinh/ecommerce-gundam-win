@@ -40,7 +40,6 @@ Chi tiết đơn hàng
         /* Khoảng cách giữa sao và số lượng */
     }
 </style>
-
 <div class="dashboard-right-box">
     <div class="order">
         <div class="sidebar-title">
@@ -75,128 +74,124 @@ Chi tiết đơn hàng
                     </div>
                     <div class="product-order-detail">
                         @foreach ($order->orderItems as $item)
-                                                <div class="product-box">
-                                                    <a href="{{ route('product', $item->productVariant->product->id) }}">
-                                                        <img src="{{ '/storage/' . $item->productVariant->product->image }}"
-                                                            alt="{{ $item->productVariant->product->name }}" />
-                                                    </a>
-                                                    <div class="order-wrap">
-                                                        <h5>{{ $item->product_name }}</h5>
-                                                        <p>{{ $order->note }}</p>
-                                                        <ul>
-                                                            <li>
-                                                                <p>Giá:</p>
-                                                                <span>{{ number_format($item->product_price) }} Vnd</span>
-                                                            </li>
-                                                            <li>
-                                                                <p>Số lượng:</p>
-                                                                <span>{{ $item->quantity }}</span>
-                                                            </li>
-                                                            <li>
-                                                                <p>Biến thể:</p>
-                                                                <span>{{ $item->productVariant->attributeValues->pluck('name')->implode(' - ') }}</span>
-                                                            </li>
-                                                            <li>
-                                                                <p>Mã đơn hàng:</p>
-                                                                <span>{{ $order->id }}</span>
-                                                            </li>
-                                                        </ul>
-                                                    </div>
+                                            <div class="product-box">
+                                                <a href="{{ route('product', $item->productVariant->product->id) }}">
+                                                    <img src="{{ '/storage/' . $item->productVariant->product->image }}"
+                                                        alt="{{ $item->productVariant->product->name }}" />
+                                                </a>
+                                                <div class="order-wrap">
+                                                    <h5>{{ $item->product_name }}</h5>
+                                                    <p>{{ $order->note }}</p>
+                                                    <ul>
+                                                        <li>
+                                                            <p>Giá:</p>
+                                                            <span>{{ number_format($item->product_price) }} Vnd</span>
+                                                        </li>
+                                                        <li>
+                                                            <p>Số lượng:</p>
+                                                            <span>{{ $item->quantity }}</span>
+                                                        </li>
+                                                        <li>
+                                                            <p>Biến thể:</p>
+                                                            <span>{{ $item->productVariant->attributeValues->pluck('name')->implode(' - ') }}</span>
+                                                        </li>
+                                                        <li>
+                                                            <p>Mã đơn hàng:</p>
+                                                            <span>{{ $order->id }}</span>
+                                                        </li>
+                                                    </ul>
                                                 </div>
-
-                                                <div class="return-box">
-                                                    <div class="review-box">
-                                                        <ul class="rating">
-                                                            @if ($order->status === 'COMPLETED' && $order->confirm_status === 'ACTIVE')
-                                                                                            @php
-                                                                                                $rating = $item->feedback ? $item->feedback->rating : 0; // Lấy rating từ feedback
-                                                                                            @endphp
-                                                                                            @for ($i = 1; $i <= 5; $i++)
-                                                                                                <li>
-                                                                                                    <i class="fa-solid fa-star"
-                                                                                                        style="color: {{ $i <= $rating ? '#f39c12' : '#000' }};"></i>
-                                                                                                </li>
-                                                                                            @endfor
-                                                                                            <span>{{ number_format($rating, 1) }} / 5 sao</span>
-                                                                                            <!-- Hiển thị số sao trung bình -->
-                                                            @endif
-                                                        </ul>
-
-
+                                            </div>
+                                            <div class="return-box">
+                                                <div class="review-box">
+                                                    <ul class="rating">
                                                         @if ($order->status === 'COMPLETED' && $order->confirm_status === 'ACTIVE')
-                                                                                        @if ($item->feedback)
-                                                                                                                        @php
-                                                                                                                            // Kiểm tra xem đã hơn 3 ngày kể từ khi đánh giá được tạo không
-                                                                                                                            $threeDaysAgo = now()->subDays(3);
-                                                                                                                            $canEditReview = $item->feedback->updated_at === null && $item->feedback->created_at > $threeDaysAgo;
-                                                                                                                        @endphp
-
-                                                                                                                        @if ($canEditReview)
-                                                                                                                            <span data-bs-toggle="modal" data-bs-target="#EditReview-modal"
-                                                                                                                                data-feedback="{{ $item->feedback->id }}" title="Quick View" tabindex="0">Sửa đánh
-                                                                                                                                giá</span>
-                                                                                                                            @include('client.pages.profile.layouts.components.edit-rating-product')
-                                                                                                                        @else
-                                                                                                                            <span>Cảm ơn bạn đã mua sản phẩm của chúng tôi</span>
-                                                                                                                        @endif
-                                                                                        @else
-                                                                                            <span data-bs-toggle="modal" data-bs-target="#Reviews-modal" title="Quick View"
-                                                                                                tabindex="0">Viết đánh giá</span>
-                                                                                            @include('client.pages.profile.layouts.components.rating-product')
-                                                                                        @endif
-
-                                                        @else
-
+                                                                                        @php
+                                                                                            $rating = $item->feedback ? $item->feedback->rating : 0; // Lấy rating từ feedback
+                                                                                        @endphp
+                                                                                        @for ($i = 1; $i <= 5; $i++)
+                                                                                            <li>
+                                                                                                <i class="fa-solid fa-star"
+                                                                                                    style="color: {{ $i <= $rating ? '#f39c12' : '#000' }};"></i>
+                                                                                            </li>
+                                                                                        @endfor
+                                                                                        <span>{{ number_format($rating, 1) }} / 5 sao</span>
+                                                                                        <!-- Hiển thị số sao trung bình -->
                                                         @endif
-                                                    </div>
+                                                    </ul>
+                                                    @if ($order->status === 'COMPLETED' && $order->confirm_status === 'ACTIVE')
+                                                                            @if ($item->feedback)
+                                                                                                    @php
+                                                                                                        // Kiểm tra xem đã hơn 3 ngày kể từ khi đánh giá được tạo không
+                                                                                                        $threeDaysAgo = now()->subDays(3);
+                                                                                                        $canEditReview = $item->feedback->updated_at === null && $item->feedback->created_at > $threeDaysAgo;
+                                                                                                    @endphp
+
+                                                                                                    @if ($canEditReview)
+                                                                                                        <span data-bs-toggle="modal" data-bs-target="#EditReview-modal"
+                                                                                                            data-feedback="{{ $item->feedback->id }}" title="Sửa đánh giá" tabindex="0">Sửa đánh
+                                                                                                            giá</span>
+                                                                                                        @include('client.pages.profile.layouts.components.edit-rating-product')
+                                                                                                    @else
+                                                                                                        <span>Cảm ơn bạn đã mua sản phẩm của chúng tôi</span>
+                                                                                                    @endif
+                                                                            @else
+                                                                                <span data-bs-toggle="modal" data-bs-target="#Reviews-modal" title="Đánh giá"
+                                                                                    tabindex="0">Viết đánh giá</span>
+                                                                                @include('client.pages.profile.layouts.components.rating-product')
+                                                                            @endif
+
+                                                    @else
+
+                                                    @endif
                                                 </div>
+                                            </div>
                         @endforeach
                         @if ($order->confirm_status === 'IN_ACTIVE' && $order->status === 'SHIPPED')
-                                                                <div class="text-center mt-3">
-                                                                    <form action="{{ route('profile.order.confirmstatus', $order->id) }}" method="POST"
-                                                                        style="display:inline;">
-                                                                        @csrf
-                                                                        @method('PUT')
-                                                                        <button style="background-color: #c28f51; border:none;" type="submit"
-                                                                            class="btn btn-danger">Đã nhận hàng</button>
-                                                                    </form>
-                                                                </div>
-                                                            @endif
-                                                            <!-- Nút hủy đơn hàng -->
-                                                            @if ($order->status === 'PENDING')
-                                                                <div class="text-center mt-3">
-                                                                    <button style="background-color: #c28f51; border:none;" type="button"
-                                                                        class="btn btn-danger" data-bs-toggle="modal"
-                                                                        data-bs-target="#CancelOrderModal">Hủy đơn hàng</button>
-                                                                </div>
-                                                                <!-- Modal xác nhận hủy đơn hàng -->
-                                                                <div class="modal fade" id="CancelOrderModal" tabindex="-1"
-                                                                    aria-labelledby="CancelOrderModalLabel" aria-hidden="true">
-                                                                    <div class="modal-dialog">
-                                                                        <div class="modal-content">
-                                                                            <div class="modal-header">
-                                                                                <h5 class="modal-title" id="CancelOrderModalLabel">Xác nhận hủy đơn hàng
-                                                                                </h5>
-                                                                                <button type="button" class="btn-close" data-bs-dismiss="modal"
-                                                                                    aria-label="Close"></button>
-                                                                            </div>
-                                                                            <div class="modal-body">
-                                                                                Bạn có chắc chắn muốn hủy đơn hàng này?
-                                                                            </div>
-                                                                            <div class="modal-footer">
-                                                                                <button type="button" class="btn btn-secondary"
-                                                                                    data-bs-dismiss="modal">Đóng</button>
-                                                                                <form action="{{ route('profile.order.cancel', $order->id) }}"
-                                                                                    method="POST" style="display:inline;">
-                                                                                    @csrf
-                                                                                    @method('PUT')
-                                                                                    <button type="submit" class="btn btn-danger">Xác nhận hủy</button>
-                                                                                </form>
-                                                                            </div>
-                                                                        </div>
-                                                                    </div>
-                                                                </div>
-                                                            @endif
+                            <div class="text-center mt-3">
+                                <form action="{{ route('profile.order.confirmstatus', $order->id) }}" method="POST"
+                                    style="display:inline;">
+                                    @csrf
+                                    @method('PUT')
+                                    <button style="background-color: #c28f51; border:none;" type="submit"
+                                        class="btn btn-danger">Đã nhận hàng</button>
+                                </form>
+                            </div>
+                        @endif
+                        <!-- Nút hủy đơn hàng -->
+                        @if ($order->status === 'PENDING')
+                            <div class="text-center mt-3">
+                                <button style="background-color: #c28f51; border:none;" type="button" class="btn btn-danger"
+                                    data-bs-toggle="modal" data-bs-target="#CancelOrderModal">Hủy đơn hàng</button>
+                            </div>
+                            <!-- Modal xác nhận hủy đơn hàng -->
+                            <div class="modal fade" id="CancelOrderModal" tabindex="-1"
+                                aria-labelledby="CancelOrderModalLabel" aria-hidden="true">
+                                <div class="modal-dialog">
+                                    <div class="modal-content">
+                                        <div class="modal-header">
+                                            <h5 class="modal-title" id="CancelOrderModalLabel">Xác nhận hủy đơn hàng
+                                            </h5>
+                                            <button type="button" class="btn-close" data-bs-dismiss="modal"
+                                                aria-label="Close"></button>
+                                        </div>
+                                        <div class="modal-body">
+                                            Bạn có chắc chắn muốn hủy đơn hàng này?
+                                        </div>
+                                        <div class="modal-footer">
+                                            <button type="button" class="btn btn-secondary"
+                                                data-bs-dismiss="modal">Đóng</button>
+                                            <form action="{{ route('profile.order.cancel', $order->id) }}" method="POST"
+                                                style="display:inline;">
+                                                @csrf
+                                                @method('PUT')
+                                                <button type="submit" class="btn btn-danger">Xác nhận hủy</button>
+                                            </form>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        @endif
                     </div>
 
                     <div class="text-center mt-3">
