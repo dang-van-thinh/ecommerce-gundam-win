@@ -33,14 +33,15 @@
                                         Chỉ</a>
                                 </div>
                                 <div class="row">
+                                    {{-- @dd($userAddress) --}}
                                     @foreach ($userAddress as $key => $item)
                                         <div class="col-xxl-4">
                                             {{-- @dd($item->toArray())    --}}
-                                            <label for="address-billing-0">
+                                            <label for="{{ $key }}">
                                                 <span class="delivery-address-box">
                                                     <span class="form-check">
                                                         <input class="custom-radio" value="{{ $item['id'] }}"
-                                                            data-value="{{ $key }}" id="address-billing-0"
+                                                            data-value="{{ $key }}" id="{{ $key }}"
                                                             type="radio"
                                                             @if ($item['default'] == 1) checked="checked" @endif
                                                             name="address_user_id">
@@ -53,6 +54,8 @@
                                                         <span class="address">
                                                             <span class="address-home">
                                                                 <span class="address-tag"> Địa chỉ:</span>
+                                                                <input type="hidden" name="address_user"
+                                                                    value="{{ $item['id'] }}">
                                                                 {{ $item->address_detail }},
                                                                 {{ $item->ward->name }},
                                                                 {{ $item->district->name }},
@@ -122,6 +125,7 @@
                                     @php
                                         $totalAmount = 0;
                                     @endphp
+                                    {{-- @dd($productResponse) --}}
                                     @foreach ($productResponse as $key => $item)
                                         @php
                                             $totalAmount +=
@@ -136,6 +140,13 @@
                                                     <p>{{ $variant['attribute']['name'] }}: <span>
                                                             {{ $variant['name'] }} </span></p>
                                                 @endforeach
+                                                <!-- hien thi so luong-->
+                                                <p class="fs-6">
+                                                    Số lượng: {{ $item['cart']['quantity'] }}
+                                                </p>
+                                            </div>
+                                            <div>
+
                                             </div>
                                             <p class="">
                                                 {{ number_format($item['product_variant']['price'] * $item['cart']['quantity'], 0, ',', '.') }}

@@ -30,6 +30,7 @@ Route::prefix('')->middleware(['authApi'])->group(function () {
     Route::put('/update-cart', [ProductController::class, 'updateToCart'])->name('api.update-cart');
 
     Route::post('/buy-now', [ProductController::class, 'productBuyNow'])->name('api.buy-now');
+    Route::get('/product/buy-now', [ProductController::class, 'getPrductVariant'])->name('api.product-variant');
     // api dia chi tinh thanh viet nam
     Route::get('get-districts/{province_id}', [AddressApiController::class, 'getDistricts'])->name('api.districts');
     Route::get('get-wards/{district_id}', [AddressApiController::class, 'getWards'])->name('api.wards');
