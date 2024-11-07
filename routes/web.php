@@ -73,7 +73,7 @@ Route::prefix('/admin')->middleware(['auth', 'checkAccountStatus', 'checkRole:2'
 });
 
 // client
-Route::prefix('')->middleware(['auth', 'checkAccountStatus', 'checkRole:1','updateOrderStatus'])->group(function () {
+Route::prefix('')->middleware(['auth', 'checkAccountStatus', 'checkRole:1', 'updateOrderStatus'])->group(function () {
     Route::get('/cart', [CartController::class, 'index'])->name('cart');
     Route::get('/check-out', [CheckOutController::class, 'index'])->name('check-out');
     Route::post("/place-order", [CheckOutController::class, 'placeOrder'])->name('place-order');
@@ -121,6 +121,7 @@ Route::get('/blog/{id}', [BlogController::class, 'show'])->name('blog.show');
 Route::get('/category-blog/{id}', [CollectionBlogController::class, 'articlesByCategory'])->name('category-articles');
 Route::get('/blog/category-blog/{id}', [BlogController::class, 'articlesByCategory'])->name('category-blog');
 Route::get('/404', [DefaultController::class, 'pageNotFound'])->name('404');
+Route::post('/feedback/reply', [ProductController::class, 'reply'])->name('feedback.reply');
 
 // auth
 Route::prefix('auth')->name('auth.')->group(function () {
