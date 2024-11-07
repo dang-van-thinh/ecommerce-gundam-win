@@ -87,12 +87,12 @@ Route::prefix('')->middleware(['auth', 'checkAccountStatus', 'checkRole:1', 'upd
     Route::prefix('profile')->name('profile.')->group(function () {
         Route::get('/', [ProfileController::class, 'infomation'])->name('infomation');
         Route::get('/order-history', [ProfileController::class, 'orderHistory'])->name('order-history');
-        Route::get('/order/{id}', [ProfileController::class, 'show'])->name('order.details');
+        Route::get('/order/{id}', [ProfileController::class, 'orderDetail'])->name('order.details');
         // Route::get('/address', [ProfileController::class, 'address'])->name('address');
         Route::get('address', [AddersController::class, 'index'])->name('address');
-        Route::post('/feedback/store', [ProfileController::class, 'store'])->name('feedback.store');
-        Route::put('/feedback/{id}', [ProfileController::class, 'update'])->name('feedback.update');
-        Route::put('/orders/{order}/cancel', [ProfileController::class, 'cancel'])->name('order.cancel');
+        Route::post('/feedback/store', [ProfileController::class, 'feedbackstore'])->name('feedback.store');
+        Route::put('/feedback/{id}', [ProfileController::class, 'feedbackupdate'])->name('feedback.update');
+        Route::put('/orders/{order}/cancel', [ProfileController::class, 'orderCancel'])->name('order.cancel');
         Route::put('/orders/{order}/confirmstatus', [ProfileController::class, 'confirmstatus'])->name('order.confirmstatus');
 
         // Store a new address
