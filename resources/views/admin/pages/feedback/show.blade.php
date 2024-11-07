@@ -12,11 +12,14 @@
                 @if ($feedback->replies->isNotEmpty())
                     @foreach ($feedback->replies as $reply)
                         <div class="d-flex align-items-center mb-2">
-                            <input type="text" class="form-control mr-2" name="comment"
-                                value="{{ $reply->comment }}">
-                            <!-- Nút Sửa -->
-                            <button type="button" class="btn btn-warning btn-edit"
-                                data-id="{{ $reply->id }}">Sửa</button>
+                            <form action="{{ route('feedback.update', $reply->id) }}" method="POST">
+                                @csrf
+                                @method('PUT')
+                                <input type="text" class="form-control mr-2" name="comment"
+                                    value="{{ $reply->comment }}">
+                                <!-- Nút Sửa -->
+                                <button type="submit" class="btn btn-warning btn-edit">Sửa</button>
+                            </form>
 
                             <!-- Nút Xóa -->
                             <form class="form-delete" action="{{ route('feedback.destroy', $reply->id) }}"
