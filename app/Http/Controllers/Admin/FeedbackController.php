@@ -63,66 +63,97 @@ class FeedbackController extends Controller
 
     public function store(Request $request)
     {
-        $feedback = new Feedback();
-        $feedback->parent_feedback_id = $request->input('parent_feedback_id');
-        $feedback->user_id = $request->input('user_id');
-        $feedback->order_item_id = $request->input('order_item_id');
-        $feedback->comment = $request->input('comment');
 
-        $feedback->save();
-
-        // dd($request->all());
-        // $data = $request->all();
-        // Feedback::create($data);
-
-        // Feedback::create([
-        //     'parent_feedback_id' => $request->parent_feedback_id,
-        //     'user_id' => $request->user_id,
-        //     'order_item_id' => $request->order_item_id,
-        //     'comment' => $request->comment,
-        // ]);
-
-        toastr("Phản hồi khách hàng thành công", NotificationInterface::SUCCESS, "Thành công !", [
-            "closeButton" => true,
-            "progressBar" => true,
-            "timeOut" => "3000",
+        $feedback = Feedback::create([
+            'parent_feedback_id' => $request->parent_feedback_id,
+            'user_id' => $request->user_id,
+            'order_item_id' => $request->order_item_id,
+            'comment' => $request->comment,
         ]);
+
+
+        if ($feedback) {
+            toastr("Phản hồi khách hàng thành công", NotificationInterface::SUCCESS, "Thành công !", [
+                "closeButton" => true,
+                "progressBar" => true,
+                "timeOut" => "3000",
+            ]);
+        } else {
+            toastr("Xóa phản hồi không thành công!", NotificationInterface::ERROR, "Thất bại!", [
+                "closeButton" => true,
+                "progressBar" => true,
+                "timeOut" => "3000",
+            ]);
+        }
+
         return back();
     }
-
 
     public function show(string $id)
     {
         //
     }
 
-    public function edit(string $id)
-    {
-        //
-    }
+    public function edit(string $id) {}
 
 
     public function update(Request $request, string $id)
     {
-        //
+        // Tìm feedback theo ID
+        $feedback = Feedback::findOrFail($id);
+
+        // Cập nhật feedback 
+        $isUpdated = $feedback->update([
+            'comment' => $request->comment
+        ]);
+
+        // Kiểm tra xem có được cập nhật không.
+        if ($isUpdated) {
+            toastr("Sửa phản hồi thành công!", NotificationInterface::SUCCESS, "Thành công!", [
+                "closeButton" => true,
+                "progressBar" => true,
+                "timeOut" => "3000",
+            ]);
+        } else {
+            toastr("Sửa phản hồi không thành công!", NotificationInterface::ERROR, "Thất bại!", [
+                "closeButton" => true,
+                "progressBar" => true,
+                "timeOut" => "3000",
+            ]);
+        }
+
+        return back();
     }
 
 
     public function destroy($id)
     {
-        $feedbackDestroy = Feedback::destroy($id);
-        if ($feedbackDestroy) {
-            toastr("Xóa phản hồi thành công !", NotificationInterface::SUCCESS, "Thành công !", [
+        $feedback = Feedback::find($id); // Tìm feedback theo ID
+        if (!$feedback) {
+            toastr("Phản hồi không tồn tại!", NotificationInterface::ERROR, "Lỗi!", [
                 "closeButton" => true,
                 "progressBar" => true,
                 "timeOut" => "3000",
             ]);
             return back();
         }
-        toastr("Xóa phản hồi không thành công !", NotificationInterface::ERROR, "Thất bại !", [
+
+        // Xóa feedback
+        $feedbackDestroy = $feedback->delete(); // Sử dụng phương thức delete() 
+        if ($feedbackDestroy) {
+            toastr("Xóa phản hồi thành công!", NotificationInterface::SUCCESS, "Thành công!", [
+                "closeButton" => true,
+                "progressBar" => true,
+                "timeOut" => "3000",
+            ]);
+            return back();
+        }
+
+        toastr("Xóa phản hồi không thành công!", NotificationInterface::ERROR, "Thất bại!", [
             "closeButton" => true,
             "progressBar" => true,
             "timeOut" => "3000",
         ]);
+        return back();
     }
 }
