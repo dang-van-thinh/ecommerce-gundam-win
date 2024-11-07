@@ -12,11 +12,14 @@
                 @if ($feedback->replies->isNotEmpty())
                     @foreach ($feedback->replies as $reply)
                         <div class="d-flex align-items-center mb-2">
-                            <input type="text" class="form-control mr-2" name="comment"
-                                value="{{ $reply->comment }}">
-                            <!-- Nút Sửa -->
-                            <button type="button" class="btn btn-warning btn-edit"
-                                data-id="{{ $reply->id }}">Sửa</button>
+                            <form action="{{ route('feedback.update', $reply->id) }}" method="POST">
+                                @csrf
+                                @method('PUT')
+                                <input type="text" class="form-control mr-2" name="comment"
+                                    value="{{ $reply->comment }}">
+                                <!-- Nút Sửa -->
+                                <button type="submit" class="btn btn-warning btn-edit">Sửa</button>
+                            </form>
 
                             <!-- Nút Xóa -->
                             <form class="form-delete" action="{{ route('feedback.destroy', $reply->id) }}"
@@ -39,7 +42,7 @@
                     <input type="hidden" name="order_item_id" value="{{ $feedback->order_item_id }}">
                     <label for="" class="form-control-label">Phản Hồi Khách hàng</label>
                     <textarea class="form-control mt-3" name="comment" cols="30" rows="5"
-                        placeholder="Viết bình luận của bạn tại đây..."></textarea>
+                        placeholder="Viết bình luận của bạn tại đây..." required></textarea>
                     <div class="d-flex justify-content-end mt-3">
                         <button type="submit" class="btn btn-success">Phản hồi khách hàng</button>
                     </div>
