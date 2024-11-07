@@ -70,6 +70,7 @@ Route::prefix('/admin')->middleware(['auth', 'checkAccountStatus', 'checkRole:2'
     Route::resource('products', AdminProductController::class);
     Route::resource('imagearticle', ImageArticleController::class);
     Route::resource('orders', AdminOrderController::class);
+    // Route::get('/orders/filter', [AdminOrderController::class, 'filterOrders'])->name('orders.filter');
     Route::resource('feedback', FeedbackController::class);
     Route::get('', [DashboardController::class, 'index'])->name('dashboard');
 });
