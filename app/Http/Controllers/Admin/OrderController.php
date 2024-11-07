@@ -14,12 +14,20 @@ class OrderController extends Controller
     /**
      * Display a listing of the resource.
      */
-    public function index()
+    public function index(Request $request)
     {
-        $data = Order::with('orderItems.productVariant.attributeValues.attribute', 'orderItems.productVariant.product', 'addressUser.user')->latest('id')->paginate(5);
-        // dd($data->toArray());
-        return view('admin.pages.orders.index', compact('data'));
+        $status = $request->get('status', 'all');
+        $query = Order::with('orderItems.productVariant.attributeValues.attribute', 'orderItems.productVariant.product', 'user')->latest('id');
+    
+        if ($status != 'all') {
+            $query->where('status', $status);
+        }
+    
+        $data = $query->paginate(10); // Phân trang với dữ liệu đã lọc
+    
+        return view('admin.pages.orders.index', compact('data', 'status'));
     }
+    
 
     /**
      * Show the form for editing the specified resource.
@@ -36,13 +44,13 @@ class OrderController extends Controller
      */
     public function update(Request $request, string $id)
     {
-        $order = Order::with('addressUser.user')->findOrFail($id);
+        $order = Order::with('user')->findOrFail($id);
         // dd($order->toArray());
         $order->update($request->all());
 
         // Gửi email nếu trạng thái là SHIPPED
         if ($order->status === 'SHIPPED') {
-            Mail::to($order->addressUser->user->email)->send(new OrderCompletedMail($order));
+            Mail::to($order->user->email)->send(new OrderCompletedMail($order));
         }
 
         toastr("Cập nhật trạng thái đơn hàng thành công!", NotificationInterface::SUCCESS, "Thành công", [
@@ -54,5 +62,17 @@ class OrderController extends Controller
 
         return back();
     }
-
+    public function filterOrders(Request $request)
+    {
+        $status = $request->get('status', 'all');
+        $query = Order::query();
+    
+        if ($status != 'all') {
+            $query->where('status', $status);
+        }
+    
+        $data = $query->paginate(10); // Phân trang
+    
+        return view('admin.pages.orders.index', compact('data', 'status'));
+    }
 }
