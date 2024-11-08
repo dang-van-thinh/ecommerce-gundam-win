@@ -18,7 +18,7 @@ class BannerRequest extends FormRequest
         return [
             'title' => 'required|string|max:255',
             'image' => 'required|image|mimes:jpeg,png,jpg,gif|max:2048',
-            'image_type' => 'required|in:header,content',
+            'image_type' => 'required|in:HEADER,CONTENT-LEFT-TOP,CONTENT-LEFT-BELOW,CONTENT-RIGHT,SUBSCRIBE-NOW-EMAIL,BANNER-LEFT,BANNER-RIGHT',
             'link' => 'required|nullable|url',
         ];
     }
