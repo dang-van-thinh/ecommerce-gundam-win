@@ -94,12 +94,12 @@
                                 <i class="iconsax" data-icon="search-normal-2"></i>
                             </button>
                         </li>
-                        {{-- <li>
+                        <li>
                             <a href="{{ route('wish-list') }}">
                                 <i class="iconsax" data-icon="heart"></i>
                                 <span class="cart_qty_cls">2</span>
                             </a>
-                        </li> --}}
+                        </li>
                         <li class="onhover-div">
                             <a href="#">
                                 <i class="iconsax" data-icon="user-2"></i>
