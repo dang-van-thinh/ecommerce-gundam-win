@@ -36,7 +36,7 @@
                 <div class="col-md-6">
                     <label for="image_type" class="form-label">Chọn vị trí hình ảnh:</label>
                     <select name="image_type" class="form-select">
-                    <option value="header" {{ old('image_type') == 'header' ? 'selected' : '' }}>Header</option>
+                    <option value="HEADER" {{ old('image_type') == 'HEADER' ? 'selected' : '' }}>Header</option>
                     <option value="CONTENT-LEFT-TOP" {{ old('image_type') == 'CONTENT-LEFT-TOP' ? 'selected' : '' }}>Content-left-top</option>
                     <option value="CONTENT-LEFT-BELOW" {{ old('image_type') == 'CONTENT-LEFT-BELOW' ? 'selected' : '' }}>Content-left-right</option>
                     <option value="CONTENT-RIGHT" {{ old('image_type') == 'CONTENT-RIGHT' ? 'selected' : '' }}>Content-right</option>
