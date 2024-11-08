@@ -23,10 +23,10 @@
                 </div>
                @endforeach 
                @foreach ($rightBanners as $banner)
-                   
-               @endforeach
-                <a href="{{$banner->link}}"> <img class="bg-img"
+                    <a href="{{$banner->link}}"> <img class="bg-img"
                         src="{{ asset('storage/' . $banner->image_url) }}" alt="" /></a>
+               @endforeach
+               
             </div>
         </div>
     </div>
