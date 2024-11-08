@@ -30,8 +30,13 @@
                     <label for="image_type" class="form-label">Chọn vị trí hình ảnh:</label>
                     <select id="image_type" name="image_type" class="form-control">
                         <option value="header" {{ $banners->image_type == 'header' ? 'selected' : '' }}>Header</option>
-                        <option value="content" {{ $banners->image_type == 'content' ? 'selected' : '' }}>Content</option>
-                    </select>
+                        <option value="CONTENT-LEFT-TOP" {{ $banners->image_type == 'CONTENT-LEFT-TOP' ? 'selected' : '' }}>Content-left-top</option>
+                        <option value="CONTENT-LEFT-BELOW" {{ $banners->image_type == 'CONTENT-LEFT-BELOW' ? 'selected' : '' }}>Content-left-right</option>
+                        <option value="CONTENT-RIGHT" {{ $banners->image_type == 'CONTENT-RIGHT' ? 'selected' : '' }}>Content-right</option>
+                        <option value="SUBSCRIBE-NOW-EMAIL" {{ $banners->image_type == 'SUBSCRIBE-NOW-EMAIL' ? 'selected' : '' }}>subscribe-now-email</option>
+                        <option value="BANNER-LEFT" {{ $banners->image_type == 'BANNER-LEFT' ? 'selected' : '' }}>banner-left</option>
+                        <option value="BANNER-RIGHT" {{ $banners->image_type == 'BANNER-RIGHT' ? 'selected' : '' }}>banner-right</option>
+                        </select>
                     @error('image_type')
                     <span class="text-danger">{{ $message }}</span>
                     @enderror
