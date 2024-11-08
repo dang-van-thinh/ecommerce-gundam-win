@@ -1,7 +1,9 @@
 <div class="container-fluid subscribe-banner">
     <div class="row align-items-center">
-        <div class="col-xl-8 col-md-7 col-12 px-0"> <a href="index.html"><img class="bg-img"
-                    src="/template/client/assets/images/banner/banner-6.png" alt="" /></a></div>
+        @foreach ($subscribeNowEmailBanners as $banner)
+        <div class="col-xl-8 col-md-7 col-12 px-0"> <a href="{{$banner->link}}"><img class="bg-img"
+                    src="{{ asset('storage/' . $banner->image_url) }}" alt="" /></a></div>
+         @endforeach           
         <div class="col-xl-4 col-5">
             <div class="subscribe-content">
                 <h6>GET 20% OFF</h6>
