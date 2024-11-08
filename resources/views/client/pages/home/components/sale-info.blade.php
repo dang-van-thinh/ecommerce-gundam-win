@@ -2,20 +2,47 @@
     <div class="row">
         <div class="col-xxl-5 col-lg-8 offer-box-1">
             <div class="row gy-4 ratio_45">
+                @foreach ($contentLeftTopBanners as $banners)
                 <div class="col-12">
-                    <div class="collection-banner p-left"> <img class="bg-img"
-                            src="/template/client/assets/images/banner/banner-7.jpg" alt="" />
-                        <div class="contain-banner">
+                    <div class="collection-banner p-left"> 
+                        
+                        <img class="bg-img"
+                            src="{{ asset('storage/' . $banners->image_url) }}" alt="" />
+                        <div class="contain-banners">
                             <div>
                                 <h4>Up to 60% OFF</h4>
-                                <h3>New Brand Men’s Bag</h3>
+                                <h3>{{$banners->title}}</h3>
                                 <div class="link-hover-anim underline"><a
                                         class="btn btn_underline link-strong link-strong-unhovered"
-                                        href="collection-left-sidebar.html">Shop Collection<svg>
+                                        href="{{$banners->link}}">Shop Collection<svg>
                                             <use href="/template/client/assets/svg/icon-sprite.svg#arrow">
                                             </use>
                                         </svg></a><a class="btn btn_underline link-strong link-strong-hovered"
-                                        href="collection-left-sidebar.html">Shop Collection<svg>
+                                        href="{{$banners->link}}">Shop Collection<svg>
+                                            <use href="/template/client/assets/svg/icon-sprite.svg#arrow">
+                                            </use>
+                                        </svg></a></div>
+                            </div>
+                        </div>
+                        
+                    </div>    
+                </div>
+                @endforeach
+                @foreach ($contentLeftBelowBanners as $banners)             
+                <div class="col-12">
+                    <div class="collection-banners p-right"><img class="bg-img"
+                            src="{{ asset('storage/' . $banners->image_url) }}" alt="" />
+                        <div class="contain-banners">
+                            <div>
+                                <h4>Up to 60% OFF</h4>
+                                <h3>{{$banners->title}}</h3>
+                                <div class="link-hover-anim underline"><a
+                                        class="btn btn_underline link-strong link-strong-unhovered"
+                                        href="{{$banners->link}}">Shop Collection<svg>
+                                            <use href="/template/client/assets/svg/icon-sprite.svg#arrow">
+                                            </use>
+                                        </svg></a><a class="btn btn_underline link-strong link-strong-hovered"
+                                        href="{{$banners->link}}">Shop Collection<svg>
                                             <use href="/template/client/assets/svg/icon-sprite.svg#arrow">
                                             </use>
                                         </svg></a></div>
@@ -23,27 +50,7 @@
                         </div>
                     </div>
                 </div>
-                <div class="col-12">
-                    <div class="collection-banner p-right"><img class="bg-img"
-                            src="/template/client/assets/images/banner/banner-8.jpg" alt="" />
-                        <div class="contain-banner">
-                            <div>
-                                <h4>Up to 60% OFF</h4>
-                                <h3>Women’s Stylish Top</h3>
-                                <div class="link-hover-anim underline"><a
-                                        class="btn btn_underline link-strong link-strong-unhovered"
-                                        href="collection-left-sidebar.html">Shop Collection<svg>
-                                            <use href="/template/client/assets/svg/icon-sprite.svg#arrow">
-                                            </use>
-                                        </svg></a><a class="btn btn_underline link-strong link-strong-hovered"
-                                        href="collection-left-sidebar.html">Shop Collection<svg>
-                                            <use href="/template/client/assets/svg/icon-sprite.svg#arrow">
-                                            </use>
-                                        </svg></a></div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
+                @endforeach
             </div>
         </div>
         <div class="col-xxl-3 col-4 d-none d-lg-block">
@@ -182,13 +189,17 @@
                 </div>
             </div>
         </div>
+        @foreach ($contentRightBanners as $banner)
         <div class="col-4 d-none d-xxl-block">
-            <div class="offer-banner-3 ratio1_3"> <a href="#"> <img class="bg-img"
-                        src="/template/client/assets/images/banner/banner-9.jpg" alt="" />
+            <div class="offer-banners-3 ratio1_3">
+                 <a href="{{$banner->link}}"> <img class="bg-img"
+                        src="{{ asset('storage/' . $banner->image_url) }}" alt="" />
                     <div> <img src="/template/client/assets/images/banner/2.png" alt="" />
-                        <h6>SALE UP TO 70%</h6>
+                        <h6>{{$banner->title}}</h6>
                     </div>
-                </a></div>
+                </a>
+            </div>
         </div>
+        @endforeach
     </div>
 </div>
