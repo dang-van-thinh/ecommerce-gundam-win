@@ -33,14 +33,15 @@
                                         Chỉ</a>
                                 </div>
                                 <div class="row">
+                                    {{-- @dd($userAddress) --}}
                                     @foreach ($userAddress as $key => $item)
                                         <div class="col-xxl-4">
                                             {{-- @dd($item->toArray())    --}}
-                                            <label for="address-billing-0">
+                                            <label for="{{ $key }}">
                                                 <span class="delivery-address-box">
                                                     <span class="form-check">
                                                         <input class="custom-radio" value="{{ $item['id'] }}"
-                                                            data-value="{{ $key }}" id="address-billing-0"
+                                                            data-value="{{ $key }}" id="{{ $key }}"
                                                             type="radio"
                                                             @if ($item['default'] == 1) checked="checked" @endif
                                                             name="address_user_id">
@@ -53,6 +54,8 @@
                                                         <span class="address">
                                                             <span class="address-home">
                                                                 <span class="address-tag"> Địa chỉ:</span>
+                                                                <input type="hidden" name="address_user"
+                                                                    value="{{ $item['id'] }}">
                                                                 {{ $item->address_detail }},
                                                                 {{ $item->ward->name }},
                                                                 {{ $item->district->name }},
@@ -83,21 +86,29 @@
                             <div class="payment-options">
                                 <h4 class="mb-3">Phương Thức Thanh Toán</h4>
                                 <div class="row gy-3">
-                                    <div class="col-sm-6">
+                                    <div class="col-sm-4">
                                         <div class="payment-box">
                                             <input class="custom-radio me-2" id="cod" type="radio" checked="checked"
-                                                value="CASH" name="payment_method">
-                                            <label for="cod">Cod</label>
+                                                value="cod" name="payment_method">
+                                            <label for="cod">Thanh toán khi nhận hàng</label>
                                         </div>
                                     </div>
-                                    <div class="col-sm-6">
+                                    <div class="col-sm-4">
                                         <div class="payment-box">
-                                            <input class="custom-radio me-2" id="stripe" type="radio"
-                                                name="payment_method" value="BANK_TRANSFER">
-                                            <label for="stripe">Online</label>
+                                            <input class="custom-radio me-2" id="momo" type="radio"
+                                                name="payment_method" value="momo">
+                                            <label for="momo">Thanh toán qua MOMO</label>
+
                                         </div>
                                     </div>
+                                    <div class="col-sm-4">
+                                        <div class="payment-box">
+                                            <input class="custom-radio me-2" id="vnpay" type="radio"
+                                                name="payment_method" value="vnpay">
+                                            <label for="vnpay">Thanh toán qua VNPAY</label>
 
+                                        </div>
+                                    </div>
                                 </div>
                             </div>
                             <div class="address-option">
@@ -114,6 +125,7 @@
                                     @php
                                         $totalAmount = 0;
                                     @endphp
+                                    {{-- @dd($productResponse) --}}
                                     @foreach ($productResponse as $key => $item)
                                         @php
                                             $totalAmount +=
@@ -128,8 +140,16 @@
                                                     <p>{{ $variant['attribute']['name'] }}: <span>
                                                             {{ $variant['name'] }} </span></p>
                                                 @endforeach
+                                                <!-- hien thi so luong-->
+                                                <p class="fs-6">
+                                                    Số lượng: {{ $item['cart']['quantity'] }}
+                                                </p>
                                             </div>
-                                            <p>{{ number_format($item['product_variant']['price'] * $item['cart']['quantity'], 0, ',', '.') }}
+                                            <div>
+
+                                            </div>
+                                            <p class="">
+                                                {{ number_format($item['product_variant']['price'] * $item['cart']['quantity'], 0, ',', '.') }}
                                                 VND</p>
                                         </li>
                                     @endforeach
@@ -140,6 +160,7 @@
                                     <ul>
                                         <li>
                                             <p>Tổng giá</p>
+                                            <input type="hidden" name="totalAmount" value="{{ $totalAmount }}">
                                             <span>{{ number_format($totalAmount, 0, ',', '.') }} VND</span>
                                         </li>
                                         {{-- <li>
