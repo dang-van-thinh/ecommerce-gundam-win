@@ -13,39 +13,53 @@
                 <div class="row gy-3">
                     @foreach ($addressUsers as $addressUser)
                         <div class="col-xxl-4 col-md-6">
-                            <div class="address-option"><label for="address-billing-{{ $addressUser->id }}"> <span
-                                        class="delivery-address-box"> <span class="form-check"> <input class="custom-radio"
-                                                id="address-billing-{{ $addressUser->id }}" type="radio" name="radio"
-                                                {{ $addressUser->default ? 'checked' : '' }}></span><span
-                                            class="address-detail"><span class="address"> <span
-                                                    class="address-title">{{ $addressUser->name }}
-                                                </span></span><span class="address"> <span class="address-home"> <span
-                                                        class="address-tag"> Địa chỉ:</span>
-                                                    {{ $addressUser->address_detail }}, {{ $addressUser->ward->name }},
-                                                    {{ $addressUser->district->name }}, {{ $addressUser->province->name }}
-                                                </span></span>
-                                            <span class="address"> <span class="address-home"> <span class="address-tag">Số
-                                                        điện thoại
-                                                        :</span>{{ $addressUser->phone }}</span></span></span></span>
+                            <div class="address-option">
+                                <label for="address-billing-{{ $addressUser->id }}">
+                                    <span class="delivery-address-box">
+                                        <span class="form-check">
+                                            <input class="custom-radio" id="address-billing-{{ $addressUser->id }}"
+                                                type="radio" name="radio"
+                                                onclick="setDefaultAddress({{ $addressUser->id }}, {{ $addressUser->user_id }})"
+                                                {{ $addressUser->default ? 'checked' : '' }}>
+                                        </span>
+                                        <span class="address-detail">
+                                            <span class="address">
+                                                <span class="address-title">{{ $addressUser->name }}</span>
+                                            </span>
+                                            <span class="address">
+                                                <span class="address-home">
+                                                    <span class="address-tag">Địa chỉ:</span>
+                                                    {{ $addressUser->address_detail }},
+                                                    {{ $addressUser->ward->name }},
+                                                    {{ $addressUser->district->name }},
+                                                    {{ $addressUser->province->name }}
+                                                </span>
+                                            </span>
+                                            <span class="address">
+                                                <span class="address-home">
+                                                    <span class="address-tag">Số điện thoại :</span>
+                                                    {{ $addressUser->phone }}
+                                                </span>
+                                            </span>
+                                        </span>
+                                    </span>
                                     <span class="buttons">
-
                                         <button class="btn btn_black sm" data-bs-toggle="modal"
                                             data-bs-target="#edit-box-{{ $addressUser->id }}" title="Quick View"
                                             tabindex="0">
                                             Chỉnh sửa
                                         </button>
-
                                         <a class="btn btn_outline sm"
                                             href="{{ route('profile.address.destroy', $addressUser->id) }}"
-                                            title="Quick View" tabindex="0">Xóa </a>
-
+                                            title="Quick View" tabindex="0">Xóa</a>
                                     </span>
-                                </label></div>
-
+                                </label>
+                            </div>
                         </div>
                         @include('client.pages.profile.layouts.components.edit-address')
                     @endforeach
                 </div>
+
 
                 <button class="btn add-address" data-bs-toggle="modal" data-bs-target="#add-address-modal"
                     title="Quick View" tabindex="0">+ Thêm địa chỉ
@@ -58,6 +72,7 @@
 @endsection
 
 <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 <script>
     $(document).ready(function() {
         $('.province').change(function() {
@@ -140,5 +155,26 @@
                 });
             }
         });
+
     });
+
+    function setDefaultAddress(addressId, userId) {
+        $.ajax({
+            url: '/api/profile/address/set-default/' + addressId,
+            type: 'POST',
+            data: {
+                user_id: userId, // Truyền user_id vào request
+            },
+            success: function(response) {
+                if (response.status === 'success') {
+                    Swal.fire(response.message, "", "success");
+                } else {
+                    alert('Có lỗi xảy ra');
+                }
+            },
+            error: function(xhr) {
+                alert('Có lỗi xảy ra');
+            }
+        });
+    }
 </script>
