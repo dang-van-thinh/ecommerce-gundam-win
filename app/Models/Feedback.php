@@ -12,16 +12,15 @@ class Feedback extends Model
 
     protected $table = "feedbacks";
 
-    protected $filltable = [
-        'id',
+    protected $fillable = [
         'user_id',
         'parent_feedback_id',
-        'rating ',
-        'comment ',
-        'file_path ',
+        'rating',
+        'comment',
+        'file_path',
         'created_at',
         'order_item_id',
-        'updated_at '
+        'updated_at'
     ];
     public function orderItem()
     {
@@ -31,5 +30,11 @@ class Feedback extends Model
     public function user()
     {
         return $this->belongsTo(User::class, 'user_id');
+    }
+
+    // phản hồi của Admin với feedback người dùng
+    public function replies()
+    {
+        return $this->hasMany(Feedback::class, 'parent_feedback_id');
     }
 }

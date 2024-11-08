@@ -17,12 +17,11 @@ Lịch sử mua hàng
                     <div class="col-12">
                         <ul class="product-tab theme-scrollbar nav nav-tabs nav-underline" id="Product" role="tablist">
                             @php
-                                // Danh sách các trạng thái và tên tab tương ứng
                                 $tabs = [
-                                    'COMPLETED' => 'Thành công',
                                     'PENDING' => 'Đang chờ xử lý',
                                     'DELIVERING' => 'Đang giao hàng',
-                                    'SHIPPED' => 'Đã vận chuyển',
+                                    'SHIPPED' => 'Đã giao hàng',
+                                    'COMPLETED' => 'Thành công',
                                     'CANCELED' => 'Hủy đơn hàng'
                                 ];
                             @endphp
@@ -43,62 +42,73 @@ Lịch sử mua hàng
                                     id="{{ $status }}-tab-pane" role="tabpanel" aria-labelledby="{{ $status }}-tab"
                                     tabindex="0">
                                     <div class="row gy-4">
-                                    @foreach ($orders as $item)
-    @if ($item->status === $status) <!-- Kiểm tra trạng thái đơn hàng -->
-        <div class="col-12">
-            <div class="order-box">
-                <div class="order-container">
-                    <div class="order-icon">
-                        <i class="iconsax" data-icon="box"></i>
-                        <div class="couplet"><i class="fa-solid fa-check"></i></div>
-                    </div>
-                    <div class="order-detail">
-                        <h5>{{ $tabName }}</h5>
-                        <p>Ngày {{ date('d/m/Y', strtotime($item->created_at)) }}</p>
-                    </div>
-                </div>
+                                        @foreach ($orders as $item)
+                                            @if ($item->status === $status)
+                                                <div class="col-12">
+                                                    <div class="order-box">
+                                                        <div class="order-container">
+                                                            <div class="order-icon">
+                                                                <i class="iconsax" data-icon="box"></i>
+                                                                <div class="couplet"><i class="fa-solid fa-check"></i></div>
+                                                            </div>
+                                                            <div class="order-detail d-flex flex-wrap">
+                                                                <!-- Cột trái -->
+                                                                <div class="order-detail-left"
+                                                                    style="flex: 1; min-width: 250px; padding-right: 15px;">
+                                                                    <h5>{{ $tabName }}</h5>
+                                                                    <p>Ngày đặt đơn:
+                                                                        {{ date('d/m/Y', strtotime($item->created_at)) }}</p>
+                                                                    <p>Người nhận: {{ $item->customer_name }}</p>
+                                                                    <p>Số điện thoại: {{ $item->phone }}</p>
+                                                                </div>
+                                                                <!-- Cột phải -->
+                                                                <div class="order-detail-right" style="flex: 1; min-width: 250px; ">
+                                                                    <p>Địa chỉ giao hàng: {{ $item->full_address }}</p>
+                                                                    <p>Mã đơn hàng: <span>{{ $item->code }}</span></p>
+                                                                    <p>Ghi chú đơn hàng: {{ $item->note }}</p>
+                                                                </div>
+                                                            </div>
 
-                <div class="product-order-detail">
-                    @foreach ($item->orderItems as $orderItem) <!-- Lặp qua từng orderItem -->
-                        <div class="product-box">
-                            <a href="{{ route('product', $orderItem->productVariant->product->id) }}">
-                                <img src="{{ '/storage/' . $orderItem->productVariant->product->image }}"
-                                    style="object-fit: cover;"
-                                    alt="{{ $orderItem->productVariant->product->name }}">
-                            </a>
-                            <div class="order-wrap">
-                                <h5>{{ $orderItem->product_name }}</h5>
-                                <p>{{ $item->note }}</p>
-                                <ul>
-                                    <li>
-                                        <p>Giá:</p><span>{{ number_format($orderItem->product_price) }} Vnd</span>
-                                    </li>
-                                    <li>
-                                        <p>Số lượng:</p><span>{{ $orderItem->quantity }}</span>
-                                    </li>
-                                    <li>
-                                        <p>Biến thể:</p>
-                                        <span>{{ $orderItem->productVariant->attributeValues->pluck('name')->implode(' - ') }}</span>
-                                    </li>
-                                    <li>
-                                        <p>Mã đơn hàng:</p>
-                                        <span>{{ $item->id }}</span>
-                                    </li>
-                                </ul>
-                            </div>
-                        </div>
-                    @endforeach
-                </div>
-
-                <!-- Nút xem chi tiết đơn hàng -->
-                <div class="text-center mt-3"  >
-                    <a style="background-color: #c28f51; border:none;" href="{{ route('profile.order.details', $item->id) }}" class="btn btn-primary">Xem chi tiết đơn hàng</a>
-                </div>
-            </div>
-        </div>
-    @endif
-@endforeach
-
+                                                        </div>
+                                                        <div class="product-order-detail">
+                                                            @foreach ($item->orderItems as $orderItem)
+                                                                <div class="product-box mb-3">
+                                                                    <a
+                                                                        href="{{ route('product', $orderItem->productVariant->product->id) }}">
+                                                                        <img src="{{ '/storage/' . $orderItem->productVariant->product->image }}"
+                                                                            style="object-fit: cover;"
+                                                                            alt="{{ $orderItem->productVariant->product->name }}">
+                                                                    </a>
+                                                                    <div class="order-wrap">
+                                                                        <h5>{{ $orderItem->product_name }}</h5>
+                                                                        <ul>
+                                                                            <li>
+                                                                                <p>Giá:</p>
+                                                                                <span>{{ number_format($orderItem->product_price) }}
+                                                                                    Vnd</span>
+                                                                            </li>
+                                                                            <li>
+                                                                                <p>Số lượng:</p><span>{{ $orderItem->quantity }}</span>
+                                                                            </li>
+                                                                            <li>
+                                                                                <p>Biến thể:</p>
+                                                                                <span>{{ $orderItem->productVariant->attributeValues->pluck('name')->implode(' - ') }}</span>
+                                                                            </li>
+                                                                        </ul>
+                                                                    </div>
+                                                                </div>
+                                                                <hr>
+                                                            @endforeach
+                                                        </div>
+                                                        <div class="text-center mt-3">
+                                                            <a style="background-color: #c28f51; border:none;"
+                                                                href="{{ route('profile.order.details', $item->id) }}"
+                                                                class="btn btn-primary">Xem chi tiết đơn hàng</a>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            @endif
+                                        @endforeach
                                     </div>
                                 </div>
                             @endforeach
