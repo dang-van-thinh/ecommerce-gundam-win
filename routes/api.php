@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\Admin\Api\ImageBlogApiController;
+use App\Http\Controllers\Admin\Api\OrderController;
 use App\Http\Controllers\Client\Api\AddressApiController;
 use App\Http\Controllers\Client\Api\ProductController;
 use Illuminate\Http\Request;
@@ -35,3 +36,4 @@ Route::prefix('')->middleware(['authApi'])->group(function () {
     Route::get('get-districts/{province_id}', [AddressApiController::class, 'getDistricts'])->name('api.districts');
     Route::get('get-wards/{district_id}', [AddressApiController::class, 'getWards'])->name('api.wards');
 });
+Route::get('/admin/orders/filter', [OrderController::class, 'filter']);
