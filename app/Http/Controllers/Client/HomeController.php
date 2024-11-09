@@ -16,13 +16,13 @@ class HomeController extends Controller
             ->get(); // Trả về danh sách sản phẩm
 
          // Lấy theo phân loại banner
-         $headerBanners = Banner::where('image_type','HEADER')->get();
-        $contentLeftTopBanners = Banner::where('image_type','CONTENT-LEFT-TOP')->get();
-        $contentLeftBelowBanners = Banner::where('image_type','CONTENT-LEFT-BELOW')->get();
-        $contentRightBanners = Banner::where('image_type','CONTENT-RIGHT')->get();
-        $subscribeNowEmailBanners = Banner::where('image_type','SUBSCRIBE-NOW-EMAIL')->get();
-        $leftBanners = Banner::where('image_type','BANNER-LEFT')->get();
-        $rightBanners = Banner::where('image_type','BANNER-RIGHT')->get();
+         $headerBanners = Banner::where('image_type','HEADER')->first();
+        $contentLeftTopBanners = Banner::where('image_type','CONTENT-LEFT-TOP')->first();
+        $contentLeftBelowBanners = Banner::where('image_type','CONTENT-LEFT-BELOW')->first();
+        $contentRightBanners = Banner::where('image_type','CONTENT-RIGHT')->first();
+        $subscribeNowEmailBanners = Banner::where('image_type','SUBSCRIBE-NOW-EMAIL')->first();
+        $leftBanners = Banner::where('image_type','BANNER-LEFT')->first();
+        $rightBanners = Banner::where('image_type','BANNER-RIGHT')->first();
          
         return view('client.pages.home.index', compact(
             'products', 
