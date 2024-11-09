@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\Admin\Api\ImageBlogApiController;
+use App\Http\Controllers\Admin\Api\OrderController;
 use App\Http\Controllers\Client\Api\AddressApiController;
 use App\Http\Controllers\Client\Api\ProductController;
 use App\Http\Controllers\Client\ProfileController;
@@ -41,3 +42,4 @@ Route::prefix('')->middleware(['authApi'])->group(function () {
     Route::post('/toggle-favorite', [WishListController::class, 'toggleFavorite'])->name('toggle.favorite');
     Route::post('/remove-favorite', [WishListController::class, 'removeFavorite'])->name('remove.favorite');
 });
+Route::get('/admin/orders/filter', [OrderController::class, 'filter']);
