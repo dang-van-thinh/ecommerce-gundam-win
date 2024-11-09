@@ -14,20 +14,14 @@ class OrderController extends Controller
     /**
      * Display a listing of the resource.
      */
-    public function index(Request $request)
+    public function index()
     {
-        $status = $request->get('status', 'all');
-        $query = Order::with('orderItems.productVariant.attributeValues.attribute', 'orderItems.productVariant.product', 'user')->latest('id');
-    
-        if ($status != 'all') {
-            $query->where('status', $status);
-        }
-    
-        $data = $query->paginate(10); // Phân trang với dữ liệu đã lọc
-    
-        return view('admin.pages.orders.index', compact('data', 'status'));
+        $data = Order::with('orderItems.productVariant.attributeValues.attribute', 'orderItems.productVariant.product', 'user')
+        ->latest('id')->paginate(5);
+
+        return view('admin.pages.orders.index', compact('data'));
     }
-    
+
 
     /**
      * Show the form for editing the specified resource.
@@ -61,18 +55,5 @@ class OrderController extends Controller
         ]);
 
         return back();
-    }
-    public function filterOrders(Request $request)
-    {
-        $status = $request->get('status', 'all');
-        $query = Order::query();
-    
-        if ($status != 'all') {
-            $query->where('status', $status);
-        }
-    
-        $data = $query->paginate(10); // Phân trang
-    
-        return view('admin.pages.orders.index', compact('data', 'status'));
     }
 }
