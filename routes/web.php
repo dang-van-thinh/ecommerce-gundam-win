@@ -70,7 +70,6 @@ Route::prefix('/admin')->middleware(['auth', 'checkAccountStatus', 'checkRole:2'
     Route::resource('products', AdminProductController::class);
     Route::resource('imagearticle', ImageArticleController::class);
     Route::resource('orders', AdminOrderController::class);
-    // Route::get('/orders/filter', [AdminOrderController::class, 'filterOrders'])->name('orders.filter');
     Route::resource('feedback', FeedbackController::class);
     Route::get('', [DashboardController::class, 'index'])->name('dashboard');
 });
@@ -111,6 +110,8 @@ Route::prefix('')->middleware(['auth', 'checkAccountStatus', 'checkRole:1', 'upd
         //Chỉnh sửa thông tin tài khoản
         Route::post('/edit-profile', [ProfileController::class, 'editProfile'])->name('edit-profile');
     });
+    // Yêu thích sản phẩm
+    // Route::post('/toggle-favorite', [WishListController::class, 'toggleFavorite'])->name('toggle.favorite');
 });
 
 Route::post('/search', [SearchController::class, 'search'])->name('search');
