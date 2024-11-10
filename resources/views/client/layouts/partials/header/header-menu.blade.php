@@ -94,45 +94,40 @@
                                 <i class="iconsax" data-icon="search-normal-2"></i>
                             </button>
                         </li>
-                        <li>
-                            <a href="{{ route('wish-list') }}">
-                                <i class="iconsax" data-icon="heart"></i>
-                                <span class="cart_qty_cls">2</span>
-                            </a>
-                        </li>
+
                         <li class="onhover-div">
                             <a href="#">
                                 <i class="iconsax" data-icon="user-2"></i>
                             </a>
                             @if (Auth::id())
-                                <!-- Người dùng đã đăng nhập -->
-                                <div class="onhover-show-div user" style="width: 200px;">
-                                    <ul>
-                                        @php
-                                            // Lấy role_id từ bảng user_roles
-                                            $roleIds = \DB::table('user_roles')
-                                                ->where('user_id', Auth::id())
-                                                ->pluck('role_id')
-                                                ->toArray();
-                                        @endphp
-                                        @if (in_array(2, $roleIds))
-                                            <li><a href="{{ route('users.index') }}">Trang quản lý</a></li>
-                                        @endif
-                                        <li><a href="{{ route('profile.infomation') }}">Thông tin tài khoản</a></li>
-                                        <li><a href="{{ route('profile.order-history') }}">Lịch sử mua hàng</a></li>
-                                        <li>
-                                            <!-- Form đăng xuất để xử lý bằng phương thức POST -->
-                                            <form action="{{ route('auth.logout') }}" method="POST"
-                                                style="display: inline;">
-                                                @csrf
-                                                <button type="submit" title="Đăng xuất"
-                                                    style="background: none; border: none; padding: 0; cursor: pointer; text-decoration: none;">
-                                                    <a>Đăng xuất</a>
-                                                </button>
-                                            </form>
-                                        </li>
-                                    </ul>
-                                </div>
+                                                        <!-- Người dùng đã đăng nhập -->
+                                                        <div class="onhover-show-div user" style="width: 200px;">
+                                                            <ul>
+                                                                @php
+                                                                    // Lấy role_id từ bảng user_roles
+                                                                    $roleIds = \DB::table('user_roles')
+                                                                        ->where('user_id', Auth::id())
+                                                                        ->pluck('role_id')
+                                                                        ->toArray();
+                                                                @endphp
+                                                                @if (in_array(2, $roleIds))
+                                                                    <li><a href="{{ route('users.index') }}">Trang quản lý</a></li>
+                                                                @endif
+                                                                <li><a href="{{ route('profile.infomation') }}">Thông tin tài khoản</a></li>
+                                                                <li><a href="{{ route('profile.order-history') }}">Lịch sử mua hàng</a></li>
+                                                                <li>
+                                                                    <!-- Form đăng xuất để xử lý bằng phương thức POST -->
+                                                                    <form action="{{ route('auth.logout') }}" method="POST"
+                                                                        style="display: inline;">
+                                                                        @csrf
+                                                                        <button type="submit" title="Đăng xuất"
+                                                                            style="background: none; border: none; padding: 0; cursor: pointer; text-decoration: none;">
+                                                                            <a>Đăng xuất</a>
+                                                                        </button>
+                                                                    </form>
+                                                                </li>
+                                                            </ul>
+                                                        </div>
                             @else
                                 <!--Nếu người dùng chưa đăng nhập nhé-->
                                 <div class="onhover-show-div user">
@@ -143,16 +138,39 @@
                                 </div>
                             @endif
                         </li>
-                        <li class="onhover-div shopping-cart">
-                            @if (Auth::id())
+                        @if (Auth::id())
+                            <li>
+                                <a href="{{ route('wish-list') }}">
+                                    <i class="iconsax" data-icon="heart"></i>
+                                    <span id="love" class="cart_qty_cls">{{$love}}</span>
+                                </a>
+                            </li>
+                            <li class="onhover-div shopping-cart">
                                 <a class="p-0" href="{{ route('cart') }}">
                                     <div class="shoping-prize">
                                         <i class="iconsax pe-2" data-icon="basket-2"></i>
                                         <span id="numberCart"> {{ $numberCart }} </span>
                                     </div>
                                 </a>
-                            @else
-                                <!--Nếu người dùng chưa đăng nhập nhé-->
+                            </li>
+
+                        @else
+                            <li>
+                                <div class="p-0">
+                                    <div class="shoping-prize">
+                                            <i class="iconsax" data-icon="heart"></i>
+                                    </div>
+                                </div>
+                                <div class="onhover-show-div user" style="width:200px">
+                                    <ul>
+                                        <li>
+                                            <p>Vui lòng đăng nhập !</p>
+                                        </li>
+                                    </ul>
+                                </div>
+
+                            </li>
+                            <li>
                                 <div class="p-0">
                                     <div class="shoping-prize">
                                         <i class="iconsax pe-2" data-icon="basket-2"></i>0
@@ -166,8 +184,8 @@
                                         </li>
                                     </ul>
                                 </div>
-                            @endif
-                        </li>
+                            </li>
+                        @endif
                     </ul>
                 </div>
             </div>
