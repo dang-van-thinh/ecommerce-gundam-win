@@ -110,6 +110,8 @@ Route::prefix('')->middleware(['auth', 'checkAccountStatus', 'checkRole:1', 'upd
         //Chỉnh sửa thông tin tài khoản
         Route::post('/edit-profile', [ProfileController::class, 'editProfile'])->name('edit-profile');
     });
+    // Yêu thích sản phẩm
+    // Route::post('/toggle-favorite', [WishListController::class, 'toggleFavorite'])->name('toggle.favorite');
 });
 
 Route::post('/search', [SearchController::class, 'search'])->name('search');

@@ -37,4 +37,8 @@ class Product extends Model
     {
         return $this->hasMany(ProductVariant::class);
     }
+    public function favorites()
+    {
+        return $this->belongsToMany(User::class, 'favorites', 'product_id', 'user_id');
+    }
 }
