@@ -37,13 +37,13 @@
                         <div class="col-md-12">
                             <label for="image_type" class="form-label">Chọn vị trí hình ảnh:</label>
                             <select name="image_type" class="form-select">
-                            <option value="HEADER" {{ old('image_type') == 'HEADER' ? 'selected' : '' }}>Header</option>
-                            <option value="CONTENT-LEFT-TOP" {{ old('image_type') == 'CONTENT-LEFT-TOP' ? 'selected' : '' }}>Content-left-top</option>
-                            <option value="CONTENT-LEFT-BELOW" {{ old('image_type') == 'CONTENT-LEFT-BELOW' ? 'selected' : '' }}>Content-left-right</option>
-                            <option value="CONTENT-RIGHT" {{ old('image_type') == 'CONTENT-RIGHT' ? 'selected' : '' }}>Content-right</option>
-                            <option value="SUBSCRIBE-NOW-EMAIL" {{ old('image_type') == 'SUBSCRIBE-NOW-EMAIL' ? 'selected' : '' }}>subscribe-now-email</option>
-                            <option value="BANNER-LEFT" {{ old('image_type') == 'BANNER-LEFT' ? 'selected' : '' }}>banner-left</option>
-                            <option value="BANNER-RIGHT" {{ old('image_type') == 'BANNER-RIGHT' ? 'selected' : '' }}>banner-right</option>
+                            <option value="HEADER" {{ old('image_type') == 'HEADER' ? 'selected' : '' }}>Banner Header</option>
+                            <option value="CONTENT-LEFT-TOP" {{ old('image_type') == 'CONTENT-LEFT-TOP' ? 'selected' : '' }}>Banner Content-left-top</option>
+                            <option value="CONTENT-LEFT-BELOW" {{ old('image_type') == 'CONTENT-LEFT-BELOW' ? 'selected' : '' }}>Banner Content-left-right</option>
+                            <option value="CONTENT-RIGHT" {{ old('image_type') == 'CONTENT-RIGHT' ? 'selected' : '' }}>Banner Content-right</option>
+                            <option value="SUBSCRIBE-NOW-EMAIL" {{ old('image_type') == 'SUBSCRIBE-NOW-EMAIL' ? 'selected' : '' }}>Banner subscribe-now-email</option>
+                            <option value="BANNER-LEFT" {{ old('image_type') == 'BANNER-LEFT' ? 'selected' : '' }}>Banner-left</option>
+                            <option value="BANNER-RIGHT" {{ old('image_type') == 'BANNER-RIGHT' ? 'selected' : '' }}>Banner-right</option>
                             </select>                    
                             @error('image_type')
                             <div class="text-danger">{{ $message }}</div>
