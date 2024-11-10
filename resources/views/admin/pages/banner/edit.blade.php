@@ -71,7 +71,7 @@
                 </div>
                 <div class="col-md-6">
                     <h4>Ghi chú:</h4> <br>
-                    <p>HEADER yêu cầu kích thước tối đa 930x380</p>
+                    <p>HEADER yêu cầu kích thước tối đa 1600x650</p>
                     <p>CONTENT-LEFT-TOP yêu cầu 650x300</p>
                     <p>CONTENT-LEFT-BELOW yêu cầu 650x300</p>
                     <p>CONTENT-RIGHT yêu cầu 500x550</p>
