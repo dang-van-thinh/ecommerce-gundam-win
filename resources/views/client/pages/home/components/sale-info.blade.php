@@ -8,15 +8,15 @@
                                 src="{{ asset('storage/' . $contentLeftTopBanners->image_url) }}" alt="" />
                             <div class="contain-banner">
                                 <div>
-                                    <h4>Up to 60% OFF</h4>
-                                    <h3>New Brand Men’s Bag</h3>
+                                    
+                                    <h3>{{$contentLeftTopBanners->title}}</h3>
                                     <div class="link-hover-anim underline"><a
                                             class="btn btn_underline link-strong link-strong-unhovered"
-                                            href="collection-left-sidebar.html">Shop Collection<svg>
+                                            href="{{$contentLeftTopBanners->link}}">Xem thêm<svg>
                                                 <use href="/template/client/assets/svg/icon-sprite.svg#arrow">
                                                 </use>
                                             </svg></a><a class="btn btn_underline link-strong link-strong-hovered"
-                                            href="collection-left-sidebar.html">Shop Collection<svg>
+                                            href="{{$contentLeftTopBanners->link}}">Xem thêm<svg>
                                                 <use href="/template/client/assets/svg/icon-sprite.svg#arrow">
                                                 </use>
                                             </svg></a></div>
@@ -24,22 +24,42 @@
                             </div>
                         </div>
                     </div>
+                    @else
+                    <div class="collection-banner p-left"> <img class="bg-img"
+                        src="/template/client/assets/images/banner/banner-7.jpg" alt="" />
+                    <div class="contain-banner">
+                        <div>
+                            
+                            <h3>Hiện không có tiêu đề</h3>
+                            <div class="link-hover-anim underline"><a
+                                    class="btn btn_underline link-strong link-strong-unhovered"
+                                    href="#">Xem ngay<svg>
+                                        <use href="/template/client/assets/svg/icon-sprite.svg#arrow">
+                                        </use>
+                                    </svg></a><a class="btn btn_underline link-strong link-strong-hovered"
+                                    href="#">Xem ngay<svg>
+                                        <use href="/template/client/assets/svg/icon-sprite.svg#arrow">
+                                        </use>
+                                    </svg></a></div>
+                        </div>
+                    </div>
+                </div>
                 @endif
-                @if ($contentLeftTopBanners)
+                @if ($contentLeftBelowBanners)
                     <div class="col-12">
                         <div class="collection-banner p-right"><img class="bg-img"
-                                src="{{ asset('storage/' . $contentLeftTopBanners->image_url) }}" alt="" />
+                                src="{{ asset('storage/' . $contentLeftBelowBanners->image_url) }}" alt="" />
                             <div class="contain-banner">
                                 <div>
-                                    <h4>Up to 60% OFF</h4>
-                                    <h3>Women’s Stylish Top</h3>
+                                    
+                                    <h3>{{$contentLeftBelowBanners->title}}</h3>
                                     <div class="link-hover-anim underline"><a
                                             class="btn btn_underline link-strong link-strong-unhovered"
-                                            href="collection-left-sidebar.html">Shop Collection<svg>
+                                            href="{{$contentLeftBelowBanners->link}}">Xem thêm<svg>
                                                 <use href="/template/client/assets/svg/icon-sprite.svg#arrow">
                                                 </use>
                                             </svg></a><a class="btn btn_underline link-strong link-strong-hovered"
-                                            href="collection-left-sidebar.html">Shop Collection<svg>
+                                            href="{{$contentLeftBelowBanners->link}}">Xem thêm<svg>
                                                 <use href="/template/client/assets/svg/icon-sprite.svg#arrow">
                                                 </use>
                                             </svg></a></div>
@@ -47,6 +67,26 @@
                             </div>
                         </div>
                     </div>
+                    @else
+                    <div class="collection-banner p-left"> <img class="bg-img"
+                        src="/template/client/assets/images/banner/banner-7.jpg" alt="" />
+                    <div class="contain-banner">
+                        <div>
+                            
+                            <h3>Hiện không có tiêu đề</h3>
+                            <div class="link-hover-anim underline"><a
+                                    class="btn btn_underline link-strong link-strong-unhovered"
+                                    href="#">Xem ngay<svg>
+                                        <use href="/template/client/assets/svg/icon-sprite.svg#arrow">
+                                        </use>
+                                    </svg></a><a class="btn btn_underline link-strong link-strong-hovered"
+                                    href="#">Xem ngay<svg>
+                                        <use href="/template/client/assets/svg/icon-sprite.svg#arrow">
+                                        </use>
+                                    </svg></a></div>
+                        </div>
+                    </div>
+                </div>
                 @endif
 
             </div>
@@ -191,16 +231,25 @@
 
         <div class="col-4 d-none d-xxl-block">
 
-            
             @if ($contentRightBanners)
-                <div class="offer-banner-3 ratio1_3">
-                    <a href="#"> <img class="bg-img" src="{{ asset('storage/' . $contentRightBanners->image_url) }}"
-                            alt="" />
-                        <div><img src="/template/client/assets/images/banner/2.png" alt="" />
-                            <h6>SALE UP TO 70%</h6>
+            <div class="offer-banner-3 ratio1_3">
+                <a href="#"> <img class="bg-img" src="{{ asset('storage/' . $contentRightBanners->image_url) }}"
+                        alt="" />
+                    <div><img src="/template/client/assets/images/banner/2.png" alt="" />
+                        <h6>{{$contentRightBanners->title}}</h6>
+                    </div>
+                </a>
+            </div>
+                
+            @else
+            
+                <div class="offer-banner-3 ratio1_3"> <a href="#"> <img class="bg-img"
+                            src="/template/client/assets/images/banner/banner-9.jpg" alt="" />
+                        <div> <img src="/template/client/assets/images/banner/2.png" alt="" />
+                            <h6>Tiều đề hiện chưa có</h6>
                         </div>
-                    </a>
-                </div>
+                    </a></div>
+            </div>
             @endif
 
         </div>
