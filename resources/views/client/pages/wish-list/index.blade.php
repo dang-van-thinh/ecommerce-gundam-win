@@ -29,6 +29,13 @@
                                         <a class="pro-first" href="{{ route('product', $favorite->product->id) }}">
                                             <img class="bg-img" src="{{ asset('storage/' . $favorite->product->image) }}" alt="product">
                                         </a>
+                                        @php
+                                            $firstImage = $favorite->product->productImages->first();
+                                        @endphp
+                                        <a class="pro-sec" href="{{ route('product', $favorite->product->id) }}">
+                                            <img class="bg-img" src="{{ '/storage/' . $firstImage->image_url }}"
+                                                alt="product" />
+                                        </a>
                                     </div>
                                 </div>
                                 <div class="product-detail">
