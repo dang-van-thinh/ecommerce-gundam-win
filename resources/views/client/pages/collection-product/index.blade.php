@@ -9,7 +9,7 @@ Danh sách sản phẩm
 'route' => '',
 'name' => 'Trang chủ',
 ],
-]);
+])
 <section class="section-b-space pt-0">
     <div class="custom-container container">
         <div class="row">
@@ -19,9 +19,6 @@ Danh sách sản phẩm
                         <h5>Back </h5><i class="back-button fa-solid fa-xmark"></i>
                     </div>
                     <div class="accordion" id="accordionPanelsStayOpenExample">
-                        {{-- <div class="search-box"><input type="search" name="text" placeholder="Search here..."><i
-                                class="iconsax" data-icon="search-normal-2"></i>
-                        </div> --}}
                         <div class="accordion-item">
                             <!-- Danh mục -->
                             <h2 class="accordion-header">
@@ -126,29 +123,28 @@ Danh sách sản phẩm
                         </div>
 
                         <div class="accordion-item">
-                            <h2 class="accordion-header tags-header"><button class="accordion-button"><span>Shipping
-                                        & Delivery</span><span></span></button></h2>
+                            <h2 class="accordion-header tags-header"><button class="accordion-button"><span>Vận chuyển & Giao hàng</span><span></span></button></h2>
                             <div class="accordion-collapse show collapse" id="panelsStayOpen-collapseSeven">
                                 <div class="accordion-body">
                                     <ul class="widget-card">
-                                        <li><i class="iconsax" data-icon="truck-fast"></i>
-                                            <div>
-                                                <h6>Free Shipping</h6>
-                                                <p>Free shipping for all US order</p>
-                                            </div>
-                                        </li>
-                                        <li><i class="iconsax" data-icon="headphones"></i>
-                                            <div>
-                                                <h6>Support 24/7</h6>
-                                                <p>Free shipping for all US order</p>
-                                            </div>
-                                        </li>
-                                        <li><i class="iconsax" data-icon="exchange"></i>
-                                            <div>
-                                                <h6>30 Days Return</h6>
-                                                <p>Free shipping for all US order</p>
-                                            </div>
-                                        </li>
+                                    <li><i class="iconsax" data-icon="truck-fast"></i>
+                    <div>
+                        <h6>Vận chuyển miễn phí</h6>
+                        <p>Miễn phí vận chuyển cho tất cả các đơn hàng tại Việt nam</p>
+                    </div>
+                </li>
+                <li><i class="iconsax" data-icon="headphones"></i>
+                    <div>
+                        <h6>Hỗ trợ 24/7</h6>
+                        <p>Miễn phí vận chuyển cho tất cả các đơn hàng tại Việt nam</p>
+                    </div>
+                </li>
+                <li><i class="iconsax" data-icon="exchange"></i>
+                    <div>
+                        <h6>Đổi hàng trong 30 ngày</h6>
+                        <p>Miễn phí vận chuyển cho tất cả các đơn hàng tại Việt nam</p>
+                    </div>
+                </li>
                                     </ul>
                                 </div>
                             </div>
@@ -192,13 +188,13 @@ Danh sách sản phẩm
                             @else
                                 <li><a  class="prev" href="{{ $products->previousPageUrl() }}"><i class="iconsax" data-icon="chevron-left"></i></a></li>
                             @endif
-                    
+
                             @foreach ($products->getUrlRange(1, $products->lastPage()) as $page => $url)
                                 <li class="{{ ($products->currentPage() == $page) ? 'active' : '' }}">
                                     <a href="{{ $url }}">{{ $page }}</a>
                                 </li>
                             @endforeach
-                    
+
                             @if ($products->hasMorePages())
                                 <li><a class="next" href="{{ $products->nextPageUrl() }}"><i class="iconsax" data-icon="chevron-right"></i></a></li>
                             @else
@@ -206,8 +202,8 @@ Danh sách sản phẩm
                             @endif
                         </ul>
                     </div>
-                    
-                    
+
+
                     <!--Pani nay thi su dung theo cai tra ra du lieu nhe-->
 
                 </div>
@@ -218,7 +214,7 @@ Danh sách sản phẩm
 
 <script>
     const productRoute = '{{ url('product') }}'; // Định nghĩa route cơ bản cho sản phẩm
-    
+
         function handleSubmit() {
             const selectedCategories = Array.from(document.querySelectorAll('input[name="categories[]"]:checked'))
                 .map(el => el.value);
@@ -227,7 +223,7 @@ Danh sách sản phẩm
             const minPrice = document.getElementById('minRange').value;
             const maxPrice = document.getElementById('maxRange').value;
             const sort = document.getElementById('cars').value; // Lấy giá trị từ dropdown sắp xếp
-    
+
             fetch('{{ route('product.filter') }}', {
                 method: 'POST',
                 headers: {
@@ -268,15 +264,15 @@ Danh sách sản phẩm
             });
 
         }
-    
+
         document.getElementById('minRange').addEventListener('input', function() {
             document.getElementById('minPriceDisplay').innerText = this.value;
         });
-    
+
         document.getElementById('maxRange').addEventListener('input', function() {
             document.getElementById('maxPriceDisplay').innerText = this.value;
         });
-    
+
         // Thêm sự kiện cho dropdown sắp xếp
         document.getElementById('cars').addEventListener('change', handleSubmit);
 </script>
