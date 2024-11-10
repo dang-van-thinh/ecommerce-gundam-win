@@ -15,27 +15,27 @@ class HomeController extends Controller
             ->take(5) // Lấy 5 sản phẩm có giá trị love cao nhất
             ->get(); // Trả về danh sách sản phẩm
 
-         // Lấy theo phân loại banner
-         $headerBanners = Banner::where('image_type','HEADER')->get();
-        $contentLeftTopBanners = Banner::where('image_type','CONTENT-LEFT-TOP')->get();
-        $contentLeftBelowBanners = Banner::where('image_type','CONTENT-LEFT-BELOW')->get();
-        $contentRightBanners = Banner::where('image_type','CONTENT-RIGHT')->get();
-        $subscribeNowEmailBanners = Banner::where('image_type','SUBSCRIBE-NOW-EMAIL')->get();
-        $leftBanners = Banner::where('image_type','BANNER-LEFT')->get();
-        $rightBanners = Banner::where('image_type','BANNER-RIGHT')->get();
-         
+        // Lấy theo phân loại banner
+        $headerBanners = Banner::where('image_type', 'HEADER')->latest()->first();
+        $contentLeftTopBanners = Banner::where('image_type', 'CONTENT-LEFT-TOP')->latest()->first();
+        $contentLeftBelowBanners = Banner::where('image_type', 'CONTENT-LEFT-BELOW')->latest()->first();
+        $contentRightBanners = Banner::where('image_type', 'CONTENT-RIGHT')->latest()->first();
+        $subscribeNowEmailBanners = Banner::where('image_type', 'SUBSCRIBE-NOW-EMAIL')->latest()->first();
+        $leftBanners = Banner::where('image_type', 'BANNER-LEFT')->latest()->first();
+        $rightBanners = Banner::where('image_type', 'BANNER-RIGHT')->latest()->first();
+
+
+
         return view('client.pages.home.index', compact(
-            'products', 
-            'headerBanners', 
-            'contentLeftTopBanners', 
-            'contentLeftBelowBanners', 
-            'contentRightBanners', 
-            'subscribeNowEmailBanners', 
-            'leftBanners', 
-            'rightBanners'
+            'products',
+            'headerBanners',
+            'contentLeftTopBanners',
+            'contentLeftBelowBanners',
+            'contentRightBanners',
+            'subscribeNowEmailBanners',
+            'leftBanners',
+            'rightBanners',
         ));
-        
     }
-    public function loadAllCollection() {
-    }
+    public function loadAllCollection() {}
 }
