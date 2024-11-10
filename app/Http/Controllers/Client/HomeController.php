@@ -15,27 +15,27 @@ class HomeController extends Controller
             ->take(5) // Lấy 5 sản phẩm có giá trị love cao nhất
             ->get(); // Trả về danh sách sản phẩm
 
-         // Lấy theo phân loại banner
-         $headerBanners = Banner::where('image_type','HEADER')->first();
-        $contentLeftTopBanners = Banner::where('image_type','CONTENT-LEFT-TOP')->first();
-        $contentLeftBelowBanners = Banner::where('image_type','CONTENT-LEFT-BELOW')->first();
-        $contentRightBanners = Banner::where('image_type','CONTENT-RIGHT')->first();
-        $subscribeNowEmailBanners = Banner::where('image_type','SUBSCRIBE-NOW-EMAIL')->first();
-        $leftBanners = Banner::where('image_type','BANNER-LEFT')->first();
-        $rightBanners = Banner::where('image_type','BANNER-RIGHT')->first();
-         
+        // Lấy theo phân loại banner
+        $headerBanners = Banner::where('image_type', 'HEADER')->latest()->first();
+        $contentLeftTopBanners = Banner::where('image_type', 'CONTENT-LEFT-TOP')->latest()->first();
+        $contentLeftBelowBanners = Banner::where('image_type', 'CONTENT-LEFT-BELOW')->latest()->first();
+        $contentRightBanners = Banner::where('image_type', 'CONTENT-RIGHT')->latest()->first();
+        $subscribeNowEmailBanners = Banner::where('image_type', 'SUBSCRIBE-NOW-EMAIL')->latest()->first();
+        $leftBanners = Banner::where('image_type', 'BANNER-LEFT')->latest()->first();
+        $rightBanners = Banner::where('image_type', 'BANNER-RIGHT')->latest()->first();
+
+
+
         return view('client.pages.home.index', compact(
-            'products', 
-            'headerBanners', 
-            'contentLeftTopBanners', 
-            'contentLeftBelowBanners', 
-            'contentRightBanners', 
-            'subscribeNowEmailBanners', 
-            'leftBanners', 
-            'rightBanners'
+            'products',
+            'headerBanners',
+            'contentLeftTopBanners',
+            'contentLeftBelowBanners',
+            'contentRightBanners',
+            'subscribeNowEmailBanners',
+            'leftBanners',
+            'rightBanners',
         ));
-        
     }
-    public function loadAllCollection() {
-    }
+    public function loadAllCollection() {}
 }

@@ -2,48 +2,53 @@
     <div class="row">
         <div class="col-xxl-5 col-lg-8 offer-box-1">
             <div class="row gy-4 ratio_45">
-                <div class="col-12">
-                    <div class="collection-banner p-left"> <img class="bg-img"
-                            src="{{ asset('storage/' . $contentLeftTopBanners->image_url) }}" alt="" />
-                        <div class="contain-banner">
-                            <div>
-                                <h4>Up to 60% OFF</h4>
-                                <h3>{{$contentLeftTopBanners->title}}</h3>
-                                <div class="link-hover-anim underline"><a
-                                        class="btn btn_underline link-strong link-strong-unhovered"
-                                        href="{{$contentLeftTopBanners->link}}">Shop Collection<svg>
-                                            <use href="/template/client/assets/svg/icon-sprite.svg#arrow">
-                                            </use>
-                                        </svg></a><a class="btn btn_underline link-strong link-strong-hovered"
-                                        href="{{$contentLeftTopBanners->link}}">Shop Collection<svg>
-                                            <use href="/template/client/assets/svg/icon-sprite.svg#arrow">
-                                            </use>
-                                        </svg></a></div>
+                @if ($contentLeftTopBanners)
+                    <div class="col-12">
+                        <div class="collection-banner p-left"> <img class="bg-img"
+                                src="{{ asset('storage/' . $contentLeftTopBanners->image_url) }}" alt="" />
+                            <div class="contain-banner">
+                                <div>
+                                    <h4>Up to 60% OFF</h4>
+                                    <h3>New Brand Men’s Bag</h3>
+                                    <div class="link-hover-anim underline"><a
+                                            class="btn btn_underline link-strong link-strong-unhovered"
+                                            href="collection-left-sidebar.html">Shop Collection<svg>
+                                                <use href="/template/client/assets/svg/icon-sprite.svg#arrow">
+                                                </use>
+                                            </svg></a><a class="btn btn_underline link-strong link-strong-hovered"
+                                            href="collection-left-sidebar.html">Shop Collection<svg>
+                                                <use href="/template/client/assets/svg/icon-sprite.svg#arrow">
+                                                </use>
+                                            </svg></a></div>
+                                </div>
                             </div>
                         </div>
                     </div>
-                </div>
-                <div class="col-12">
-                    <div class="collection-banner p-right"><img class="bg-img"
-                            src="{{ asset('storage/' . $contentLeftBelowBanners->image_url) }}" alt="" />
-                        <div class="contain-banner">
-                            <div>
-                                <h4>Up to 60% OFF</h4>
-                                <h3>{{$contentLeftBelowBanners->title}}</h3>
-                                <div class="link-hover-anim underline"><a
-                                        class="btn btn_underline link-strong link-strong-unhovered"
-                                        href="{{$contentLeftBelowBanners->link}}">Shop Collection<svg>
-                                            <use href="/template/client/assets/svg/icon-sprite.svg#arrow">
-                                            </use>
-                                        </svg></a><a class="btn btn_underline link-strong link-strong-hovered"
-                                        href="{{$contentLeftBelowBanners->link}}">Shop Collection<svg>
-                                            <use href="/template/client/assets/svg/icon-sprite.svg#arrow">
-                                            </use>
-                                        </svg></a></div>
+                @endif
+                @if ($contentLeftTopBanners)
+                    <div class="col-12">
+                        <div class="collection-banner p-right"><img class="bg-img"
+                                src="{{ asset('storage/' . $contentLeftTopBanners->image_url) }}" alt="" />
+                            <div class="contain-banner">
+                                <div>
+                                    <h4>Up to 60% OFF</h4>
+                                    <h3>Women’s Stylish Top</h3>
+                                    <div class="link-hover-anim underline"><a
+                                            class="btn btn_underline link-strong link-strong-unhovered"
+                                            href="collection-left-sidebar.html">Shop Collection<svg>
+                                                <use href="/template/client/assets/svg/icon-sprite.svg#arrow">
+                                                </use>
+                                            </svg></a><a class="btn btn_underline link-strong link-strong-hovered"
+                                            href="collection-left-sidebar.html">Shop Collection<svg>
+                                                <use href="/template/client/assets/svg/icon-sprite.svg#arrow">
+                                                </use>
+                                            </svg></a></div>
+                                </div>
                             </div>
                         </div>
                     </div>
-                </div>
+                @endif
+
             </div>
         </div>
         <div class="col-xxl-3 col-4 d-none d-lg-block">
@@ -60,17 +65,18 @@
                                                 data-bs-toggle="tooltip" data-bs-title="Add to Wishlist"></i></a>
                                     </div>
                                     <div class="product-image ratio_apos">
-                                    <a class="pro-first" href="{{ route('product', $product->id) }}">
-                                        <img class="bg-img" src="{{ '/storage/' . $product->image}}" alt="product" />
-                                    </a>
-                                    @php
-                                    $firstImage = $product->productImages->first();
-                                    @endphp
-                                    <a class="pro-sec" href="{{ route('product', $product->id) }}">
-                                        <img class="bg-img" src="{{'/storage/' . $firstImage->image_url}}"
-                                            alt="product" />
-                                    </a>
-                                </div>
+                                        <a class="pro-first" href="{{ route('product', $product->id) }}">
+                                            <img class="bg-img" src="{{ '/storage/' . $product->image }}"
+                                                alt="product" />
+                                        </a>
+                                        @php
+                                            $firstImage = $product->productImages->first();
+                                        @endphp
+                                        <a class="pro-sec" href="{{ route('product', $product->id) }}">
+                                            <img class="bg-img" src="{{ '/storage/' . $firstImage->image_url }}"
+                                                alt="product" />
+                                        </a>
+                                    </div>
                                     <div class="cart-info-icon">
                                         <a href="#" data-bs-toggle="modal" data-bs-target="#addtocart"
                                             tabindex="0">
@@ -182,13 +188,21 @@
                 </div>
             </div>
         </div>
+
         <div class="col-4 d-none d-xxl-block">
-            <div class="offer-banner-3 ratio1_3"> <a href="#"> <img class="bg-img"
-                        src="{{ asset('storage/' . $contentRightBanners->image_url) }}" alt="" />
-                    <div> <img src="/template/client/assets/images/banner/2.png" alt="" />
-                        <h6>{{$contentRightBanners->title}}</h6>
-                    </div>
-                </a></div>
+
+            
+            @if ($contentRightBanners)
+                <div class="offer-banner-3 ratio1_3">
+                    <a href="#"> <img class="bg-img" src="{{ asset('storage/' . $contentRightBanners->image_url) }}"
+                            alt="" />
+                        <div><img src="/template/client/assets/images/banner/2.png" alt="" />
+                            <h6>SALE UP TO 70%</h6>
+                        </div>
+                    </a>
+                </div>
+            @endif
+
         </div>
     </div>
 </div>
