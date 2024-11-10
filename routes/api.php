@@ -4,6 +4,8 @@ use App\Http\Controllers\Admin\Api\ImageBlogApiController;
 use App\Http\Controllers\Admin\Api\OrderController;
 use App\Http\Controllers\Client\Api\AddressApiController;
 use App\Http\Controllers\Client\Api\ProductController;
+use App\Http\Controllers\Client\ProfileController;
+use App\Http\Controllers\Client\Api\WishlistController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
@@ -35,5 +37,9 @@ Route::prefix('')->middleware(['authApi'])->group(function () {
     // api dia chi tinh thanh viet nam
     Route::get('get-districts/{province_id}', [AddressApiController::class, 'getDistricts'])->name('api.districts');
     Route::get('get-wards/{district_id}', [AddressApiController::class, 'getWards'])->name('api.wards');
+
+    Route::post('/profile/address/set-default/{id}', [AddressApiController::class, 'setDefaultAddress'])->name('api.profile.address.setDefault');
+    Route::post('/toggle-favorite', [WishListController::class, 'toggleFavorite'])->name('toggle.favorite');
+    Route::post('/remove-favorite', [WishListController::class, 'removeFavorite'])->name('remove.favorite');
 });
 Route::get('/admin/orders/filter', [OrderController::class, 'filter']);

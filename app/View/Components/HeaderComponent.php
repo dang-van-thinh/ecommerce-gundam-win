@@ -5,6 +5,7 @@ namespace App\View\Components;
 use App\Models\Cart;
 use App\Models\CategoryArticle;
 use App\Models\CategoryProduct;
+use App\Models\Favorite;
 use Closure;
 use Illuminate\Contracts\View\View;
 use Illuminate\Support\Facades\Auth;
@@ -29,16 +30,20 @@ class HeaderComponent extends Component
     public function render(): View|Closure|string
     {
         $cartResponse = 0;
+        $love=0;
         if (Auth::check()) {
             $userId = Auth::id();
             $cartResponse = Cart::where('user_id', $userId)->count('*');
+            $love = Favorite::where('user_id', $userId)->count('*');
         }
 
         // dd($this->categoryProduct);
         return view('client.layouts.partials.header.header-menu', [
             'categoryProduct' => $this->categoryProduct,
             'categoryArticle' => $this->categoryArticle,
-            'numberCart' => $cartResponse
+            'numberCart' => $cartResponse,
+            'love' => $love,
+
         ]);
     }
 }

@@ -114,6 +114,8 @@ Route::prefix('')->middleware(['auth', 'checkAccountStatus', 'checkRole:1', 'upd
         Route::get('my-voucher', [MyVoucherController::class, 'index'])->name('myVoucher.index');
         Route::post('create-my-voucher', [MyVoucherController::class, 'create'])->name('myVoucher.create');
     });
+    // Yêu thích sản phẩm
+    // Route::post('/toggle-favorite', [WishListController::class, 'toggleFavorite'])->name('toggle.favorite');
 });
 
 Route::post('/search', [SearchController::class, 'search'])->name('search');
