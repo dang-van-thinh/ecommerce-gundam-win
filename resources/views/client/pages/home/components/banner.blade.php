@@ -16,26 +16,26 @@
             </ul>
         </div>
         <div class="col pe-0">
-            @foreach ($headerBanners as $banner)            
-            <div class="home-banner p-right"> <img class="img-fluid" src="{{ asset('storage/' . $banner->image_url) }}"
-                    alt="{{$banner->title}}" />
+            
+            <div class="home-banner p-right"> <img class="img-fluid" src="{{ asset('storage/' . $headerBanners->image_url) }}"
+                    alt="{{$headerBanners->title}}" />
                 <div class="contain-banner">
                     <div>
                         <h4>Hot Offer <span>START TODAY</span></h4>
-                        <h1>{{$banner->title}}</h1>
+                        <h1>{{$headerBanners->title}}</h1>
                         <p>Amet minim mollit non deserunt ullamco est sit aliqua dolor do amet sint. </p>
                         <div class="link-hover-anim underline"><a
                                 class="btn btn_underline link-strong link-strong-unhovered"
-                                href="{{$banner->link}}">Show Now<svg>
+                                href="{{$headerBanners->link}}">Show Now<svg>
                                     <use href="/template/client/assets/svg/icon-sprite.svg#arrow"></use>
                                 </svg></a><a class="btn btn_underline link-strong link-strong-hovered"
-                                href="{{$banner->link}}">Show Now<svg>
+                                href="{{$headerBanners->link}}">Show Now<svg>
                                     <use href="/template/client/assets/svg/icon-sprite.svg#arrow"></use>
                                 </svg></a></div>
                     </div>
                 </div>
             </div>
-            @endforeach
+           
             <ul class="social-icon">
                 <li> <a href="#">
                         <h6>Follow Us</h6>
