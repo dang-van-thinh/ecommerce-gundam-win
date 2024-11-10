@@ -7,7 +7,7 @@
 @section('content')
     <div class="card">
         <div class="card-header">
-            <strong class="card-title">Mã đơn hàng: {{ $order->id }}</strong>
+            <strong class="card-title">Mã đơn hàng: {{ $order->code }}</strong>
         </div>
         <form action="{{ route('orders.update', $order->id) }}" method="post">
             @csrf
@@ -15,6 +15,26 @@
             <div class="card-body">
                 <div class="row">
                     <div class="col-8">
+                        <div class="">
+                            <h3>Thông tin đặt hàng</h3>
+                            <div class="mx-4">
+                                <ul>
+                                    <li>
+                                        <h6>Người nhận: {{ $order->customer_name }}</h6>
+                                    </li>
+                                    <li>
+                                        <h6>Số điện thoại: {{ $order->phone }}</h6>
+                                    </li>
+                                    <li>
+                                        <h6>Địa chỉ: <span>{{ $order->full_address }}</span></h6>
+                                    </li>
+                                    <li>
+                                        <h5>Ngày đặt: {{ $order->created_at->format(' H:i:s d-m-Y') }}</h5>
+                                    </li>
+                                </ul>
+                            </div>
+                        </div>
+
                         <div class="table-responsive">
                             <table class="table ">
                                 <thead class="table-primary">
