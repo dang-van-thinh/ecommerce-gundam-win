@@ -40,7 +40,7 @@ td {
                         <img src="{{ asset('storage/' . $banner->image_url) }}" class="img-thumbnail" width="100" height="50" alt="Banner Image">
                     </td>
                     <td>{{ $banner->title }}</td>
-                    <td><a href="{{ $banner->link }}" target="_blank">{{ $banner->link }}</a></td>
+                    <td><a href="{{ $banner->link }}" target="_blank">{{ $banner->link }} </a></td>
                     <td>{{ ucfirst($banner->image_type) }}</td>
                     <td>
                         <!-- Info Button to Trigger Modal -->
