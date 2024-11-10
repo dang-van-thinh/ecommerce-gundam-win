@@ -12,12 +12,19 @@
                                     style="color: red; {{ $product->favorites->isNotEmpty() ? '' : 'display: none;' }}"></i>
                             </a>
                         </div>
-                        <div class="product-image position-relative overflow-hidden" style="width: 100%; height: 290px;">
-                            <a class="pro-first d-block w-100 h-100" href="{{ route('product', $product->id) }}">
-                                <img class="img-fluid w-100 h-100" src="{{ '/storage/' . $product->image }}" alt="product"
-                                    style="object-fit: cover;">
-                            </a>
-                        </div>
+                        <div class="product-image ratio_apos">
+                                        <a class="pro-first" href="{{ route('product', $product->id) }}">
+                                            <img class="bg-img" src="{{ '/storage/' . $product->image }}"
+                                                alt="product" />
+                                        </a>
+                                        @php
+                                            $firstImage = $product->productImages->first();
+                                        @endphp
+                                        <a class="pro-sec" href="{{ route('product', $product->id) }}">
+                                            <img class="bg-img" src="{{ '/storage/' . $firstImage->image_url }}"
+                                                alt="product" />
+                                        </a>
+                                    </div>
                     </div>
                     <div class="product-detail">
                         <ul class="rating">
