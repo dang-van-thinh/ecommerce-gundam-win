@@ -6,6 +6,9 @@
                 <a href="{{ $subscribeNowEmailBanners->link }}"><img class="bg-img"
                         src="{{ asset('storage/' . $subscribeNowEmailBanners->image_url) }}" alt="" />
                 </a>
+                @else
+                <a href="index.html"><img class="bg-img"
+                    src="/template/client/assets/images/banner/banner-6.png" alt="" /></a>
                 @endif
                 </div>
         <div class="col-xl-4 col-5">
