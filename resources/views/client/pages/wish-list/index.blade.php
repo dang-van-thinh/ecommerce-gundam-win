@@ -69,7 +69,7 @@
 
                 $.ajax({
                     url: '{{ url("api/remove-favorite") }}', // Gọi đúng route API
-                    method: 'POST',
+                    method: 'DElETE',
                     data: {
                         userId: @php
                             echo Auth::id();
