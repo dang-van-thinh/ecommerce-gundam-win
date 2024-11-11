@@ -1048,36 +1048,56 @@ Chi tiết sản phẩm
             });
         }
         $(document).ready(function () {
-    $(document).on('click', '.wishlist-icon', function (e) {
-        var productId = $(this).data('id');
-        var icon = $(this).find('i');
-        var textElement = $(this).siblings('.wishlist-text');
-        $.ajax({
-            url: '{{ route("toggle.favorite") }}',
-            method: 'POST',
-            data: {
-                userId: @php echo Auth::id(); @endphp,
-                product_id: productId
-            },
-            success: function (response) {
-                console.log("love or not love", response);
-                document.querySelector('#love').innerText = response.love
-                // Kiểm tra trạng thái và ẩn/hiện biểu tượng + văn bản
-                if (response.status === 'added') {
-                    icon.eq(0).hide();  // Ẩn trái tim chưa yêu thích
-                    icon.eq(1).show();  // Hiển thị trái tim đã yêu thích
-                    textElement.text('Bỏ yêu thích');
-                } else {
-                    icon.eq(1).hide();  // Ẩn trái tim đã yêu thích
-                    icon.eq(0).show();  // Hiển thị trái tim chưa yêu thích
-                    textElement.text('Yêu thích sản phẩm');
-                }
-            },
-            error: function (xhr, status, error) {
-                alert('Có lỗi xảy ra!');
-            }
+            $(document).on('click', '.wishlist-icon', function (e) {
+                e.preventDefault();
+                var productId = $(this).data('id');
+                var icon = $(this).find('i');
+                var textElement = $(this).siblings('.wishlist-text');
+
+                @auth
+                    $.ajax({
+                        url: '{{ route("toggle.favorite") }}',
+                        method: 'POST',
+                        data: {
+                            userId: {{ Auth::id() }},
+                            product_id: productId
+                        },
+                        success: function (response) {
+                            console.log("Love status:", response);
+                            $('#love').text(response.love);
+
+                            // Cập nhật trạng thái hiển thị icon và văn bản
+                            if (response.status === 'added') {
+                                icon.eq(0).hide();  // Ẩn trái tim chưa yêu thích
+                                icon.eq(1).show();  // Hiển thị trái tim đã yêu thích
+                                textElement.text('Bỏ yêu thích');
+                            } else {
+                                icon.eq(1).hide();  // Ẩn trái tim đã yêu thích
+                                icon.eq(0).show();  // Hiển thị trái tim chưa yêu thích
+                                textElement.text('Yêu thích sản phẩm');
+                            }
+                        },
+                        error: function (xhr, status, error) {
+                            Swal.fire("Có lỗi xảy ra!", "", "error");
+                            console.error(error);
+                        }
+                    });
+                @endauth
+
+                @guest
+                    Swal.fire({
+                        title: "Bạn cần đăng nhập để thực hiện thao tác này!",
+                        icon: "warning",
+                        confirmButtonText: "Đăng nhập",
+                        showCancelButton: true,
+                        cancelButtonText: "Hủy"
+                    }).then((result) => {
+                        if (result.isConfirmed) {
+                            window.location.href = "{{ route('auth.login-view') }}";
+                        }
+                    });
+                @endguest
+            });
         });
-    });
-});
     </script>
 @endpush
