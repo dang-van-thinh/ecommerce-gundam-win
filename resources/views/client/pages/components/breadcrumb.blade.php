@@ -3,7 +3,7 @@ $pageHeader = ten cua trang
 $parent['route'] = duong dan dan den trang truoc do
 $parent['name'] = ten cua duong dan
 -->
-<section class="section-b-space pt-0">
+<section class="pb-3 pt-0">
     <div class="heading-banner">
         <div class="custom-container container">
             <div class="row align-items-center">

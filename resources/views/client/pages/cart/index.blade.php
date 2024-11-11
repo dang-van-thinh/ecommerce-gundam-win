@@ -162,14 +162,14 @@
             function deleteBtn() {
                 let btnDelete = $('.deleteButton');
                 btnDelete.on('click', function() {
-                    let variantId = $(this).attr('data-variant');
-                    console.log("Nút có ID là:", variantId);
+                    let cart = $(this).attr('data-variant');
+                    console.log("Nút có ID là:", cart);
                     // alert("dung");
                     let data = {
-                        userId: @php
+                        "userId": @php
                             echo Auth::id();
                         @endphp,
-                        variantId: variantId,
+                        "cartId": cart,
                     }
                     deleteProductCart(data);
                 });
@@ -221,7 +221,7 @@
                         console.log(oldQuantity);
                         if (inputVariant.value > 0 && inputVariant.value < max) {
                             let data = {
-                                'idVariant': inputVariant.dataset.id,
+                                'cartId': inputVariant.dataset.id,
                                 'quantity': inputVariant.value
                             };
                             updateQuantity(data);
@@ -401,7 +401,7 @@
                     let div = `<div class='text-center' >
                         <img src="/template/client/assets/images/cart/1.gif" alt="">
                             <h4>Bạn không có gì trong giỏ hàng !</h4>
-                            <p>Hôm nay là một ngày tuyệt vời để mua những thứ bạn đã giữ! hoặc 
+                            <p>Hôm nay là một ngày tuyệt vời để mua những thứ bạn đã giữ! hoặc
                                 <a href='{{ route('home') }}'>Tiếp tục mua</a></div>`;
                     document.querySelector("#item_not_product").innerHTML = div;
                     // tableBody.appendChild(div);
