@@ -10,12 +10,6 @@
             <div class="sidebar-title">
                 <div class="loader-line"></div>
                 <h4>Ưu đãi</h4>
-                {{-- <div class="mt-5">
-                    <form action="{{ route('profile.myVoucher.create') }}" method="post">
-                        @csrf
-                        <button type="submit">Thêm</button>
-                    </form>
-                </div> --}}
             </div>
 
             <div class="row gy-3">
