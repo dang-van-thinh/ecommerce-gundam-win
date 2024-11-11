@@ -138,7 +138,7 @@
 
         function handleProduct() {
             $.ajax({
-                type: "get",
+                type: "post",
                 url: "{{ route('api.product-variant') }}",
                 data: productStorage,
                 success: function(response) {
