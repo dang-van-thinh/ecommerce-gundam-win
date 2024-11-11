@@ -18,6 +18,7 @@ class BannerController extends Controller
         return view('admin.pages.banner.index', compact('banners'));
     }
 
+
     // Hiển thị form tạo mới banner
     public function create()
     {

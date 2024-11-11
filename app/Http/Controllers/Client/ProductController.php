@@ -49,7 +49,7 @@ class ProductController extends Controller
                 }
             }
             // dd($attributeValue);
-            // loai bo nhung phan tu trung nhau 
+            // loai bo nhung phan tu trung nhau
             $uniqueData = collect($attributeValue)->unique('id')->values()->toArray();
             // dd($uniqueData);
             $productAttribute[$key1]['value'] = $uniqueData;

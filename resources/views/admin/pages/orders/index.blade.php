@@ -13,15 +13,16 @@
         <div class="card-body">
             <div class="row mb-3">
                 <div class="col-md-9">
+                    <input type="text" id="order-search" class="form-control col-6" placeholder="Tìm kiếm mã đơn hàng hoặc tên người dùng">
                 </div>
                 <div class="col-md-3">
-                    <select class="form-select" onchange="window.location.href = '?status=' + this.value;">
-                        <option value="all" {{ $status == 'all' ? 'selected' : '' }}>Chọn tất cả</option>
-                        <option value="PENDING" {{ $status == 'PENDING' ? 'selected' : '' }}>Đang chờ xử lý</option>
-                        <option value="DELIVERING" {{ $status == 'DELIVERING' ? 'selected' : '' }}>Đang giao hàng</option>
-                        <option value="SHIPPED" {{ $status == 'SHIPPED' ? 'selected' : '' }}>Đã giao hàng</option>
-                        <option value="COMPLETED" {{ $status == 'COMPLETED' ? 'selected' : '' }}>Đơn hàng hoàn tất</option>
-                        <option value="CANCELED" {{ $status == 'CANCELED' ? 'selected' : '' }}>Đơn hàng đã Huỷ</option>
+                    <select class="form-select" id="order-status-filter">
+                        <option value="all">Chọn tất cả</option>
+                        <option value="PENDING">Đang chờ xử lý</option>
+                        <option value="DELIVERING">Đang giao hàng</option>
+                        <option value="SHIPPED">Đã giao hàng</option>
+                        <option value="COMPLETED">Đơn hàng hoàn tất</option>
+                        <option value="CANCELED">Đơn hàng đã Huỷ</option>
                     </select>
                 </div>
             </div>
@@ -40,43 +41,94 @@
                         </tr>
                     </thead>
                     <tbody id="orderData">
-                        @foreach ($data as $order)
-                            <tr class="">
-                                <td scope="row">{{ $order->code }}</td>
-                                <td>{{ $order->user->full_name }}</td>
-                                <td>{{ number_format($order->total_amount) }}VND</td>
-                                <td>
-                                    @if ($order->payment_method == 'CASH')
-                                        <span class="badge bg-info">Thanh toán khi nhận hàng</span>
-                                    @else
-                                        <span class="badge bg-info">Thanh toán Online</span>
-                                    @endif
-                                </td>
-                                <td>
-                                    @if ($order->status == 'PENDING')
-                                        <span class="badge bg-warning">Đang chờ xử lý</span>
-                                    @elseif ($order->status === 'DELIVERING')
-                                        <span class="badge bg-primary">Đang giao hàng</span>
-                                    @elseif ($order->status === 'SHIPPED')
-                                        <span class="badge bg-primary">Đã giao hàng</span>
-                                    @elseif ($order->status == 'COMPLETED')
-                                        <span class="badge bg-success">Đơn hàng hoàn tất</span>
-                                    @elseif ($order->status === 'CANCELED')
-                                        <span class="badge bg-danger">Đơn hàng đã Huỷ</span>
-                                    @endif
-                                </td>
-                                <td>{{ $order->created_at }}</td>
-                                <td>
-                                    <a href="{{ route('orders.edit', $order->id) }}" class="btn btn-primary btn-sm">Cập
-                                        nhật
-                                        trạng thái</a>
-                                </td>
-                            </tr>
-                        @endforeach
+                        <!-- Nội dung đơn hàng sẽ được tải động -->
                     </tbody>
                 </table>
-                {{ $data->links() }}
+                <div id="pagination" class="mt-3">
+                    <!-- Phân trang sẽ được tải động -->
+                </div>
             </div>
         </div>
     </div>
 @endsection
+
+@push('admin-scripts')
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script>
+        let currentPage = 1;
+
+        // Hàm tải dữ liệu đơn hàng
+        function fetchOrders(page = 1) {
+            let status = $('#order-status-filter').val();
+            let search = $('#order-search').val();
+
+            $.ajax({
+                url: `/api/admin/orders/filter?page=${page}`,
+                type: 'GET',
+                data: {
+                    status: status,
+                    search: search
+                },
+                success: function(response) {
+                    $('#orderData').empty();
+                    response.orders.data.forEach(function(order) {
+                        $('#orderData').append(`
+                            <tr>
+                                <td>${order.code}</td>
+                                <td>${order.user.full_name}</td>
+                                <td>${new Intl.NumberFormat('vi-VN').format(order.total_amount)} VND</td>
+                                <td>${order.payment_method === 'CASH' ? '<span class="badge bg-info">Thanh toán khi nhận hàng</span>' : '<span class="badge bg-info">Thanh toán Online</span>'}</td>
+                                <td>${order.status === 'PENDING' ? '<span class="badge bg-warning">Đang chờ xử lý</span>' :
+                                        order.status === 'DELIVERING' ? '<span class="badge bg-primary">Đang giao hàng</span>' :
+                                        order.status === 'SHIPPED' ? '<span class="badge bg-primary">Đã giao hàng</span>' :
+                                        order.status === 'COMPLETED' ? '<span class="badge bg-success">Đơn hàng hoàn tất</span>' :
+                                        '<span class="badge bg-danger">Đơn hàng đã Huỷ</span>'}
+                                </td>
+                                <td>${new Date(order.created_at).toLocaleDateString('vi-VN')}</td>
+                                <td><a href="/admin/orders/${order.id}/edit" class="btn btn-primary btn-sm">Cập nhật trạng thái</a></td>
+                            </tr>
+                        `);
+                    });
+
+                    // Cập nhật phân trang
+                    $('#pagination').html(`
+                        <div class="pagination">
+                            <div class="page-item ${page === 1 ? 'disabled' : ''}">
+                                <span class="page-link" onclick="fetchOrders(${page - 1})">&lt;</span>
+                            </div>
+                            ${Array.from({ length: response.orders.last_page }, (_, i) => `
+                                <div class="page-item ${page === i + 1 ? 'active' : ''}">
+                                    <span class="page-link" onclick="fetchOrders(${i + 1})">${i + 1}</span>
+                                </div>
+                            `).join('')}
+                            <div class="page-item ${page === response.orders.last_page ? 'disabled' : ''}">
+                                <span class="page-link" onclick="fetchOrders(${page + 1})">&gt;</span>
+                            </div>
+                        </div>
+                    `);
+
+                    currentPage = page;
+                },
+                error: function(xhr, status, error) {
+                    console.error("Có lỗi xảy ra: ", error);
+                }
+            });
+        }
+
+        // Lắng nghe sự kiện thay đổi bộ lọc và tìm kiếm
+        $('#order-status-filter').on('change', function() {
+            currentPage = 1;
+            fetchOrders(currentPage);
+        });
+
+        $('#order-search').on('keyup', function() {
+            currentPage = 1;
+            fetchOrders(currentPage);
+        });
+
+        // Gọi hàm tải dữ liệu đơn hàng khi tải trang
+        $(document).ready(function() {
+            fetchOrders(currentPage);
+        });
+    </script>
+@endpush

@@ -96,7 +96,7 @@
                             </ul>
                             <ul>
                                 <li>
-                                    <p>Phí vận chuyển</p><span>$0.00</span>
+                                    <p>Phí vận chuyển</p><span>0 VND</span>
                                 </li>
                                 {{-- <li>
                                     <p>Total without VAT </p><span>$250.00</span>
@@ -122,18 +122,18 @@
                     <div class="summery-footer">
                         <div class="sidebar-title">
                             <div class="loader-line"></div>
-                            <h4>Địa chỉ giao hàng</h4>
+                            <h4>Thông tin đặt hàng</h4>
                         </div>
                         <ul>
                             <li>
-                                <h6>8424 James Lane South</h6>
-                                <h6>San Francisco, CA 94080</h6>
+                                <h6>Người nhận: {{ $data->customer_name }}</h6>
+                                <h6>Số điện thoại: {{ $data->phone }}</h6>
                             </li>
                             <li>
-                                <h6>Expected Date Of Delivery: <span>Track Order</span></h6>
+                                <h6>Địa chỉ: <span>{{ $data->full_address }}</span></h6>
                             </li>
                             <li>
-                                <h5>Oct 21, 2021</h5>
+                                <h5>Ngày đặt: {{ $data->created_at->format(' H:i:s d-m-Y') }}</h5>
                             </li>
                         </ul>
                     </div>
