@@ -44,6 +44,11 @@
                 Địa chỉ
             </a>
         </li>
+
+        <li>
+            <a href="{{ route('profile.myVoucher.index') }}" class="nav-link"> <i class="iconsax" data-icon="bank-card"></i>Ưu đãi</a>
+        </li>
+
         {{-- <li>
             <button class="nav-link" id="wishlist-tab" data-bs-toggle="pill" data-bs-target="#wishlist" role="tab"
                 aria-controls="wishlist" aria-selected="false"> <i class="iconsax" data-icon="heart"></i>Wishlist
