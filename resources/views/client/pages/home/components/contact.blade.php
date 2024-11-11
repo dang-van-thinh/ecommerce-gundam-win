@@ -1,13 +1,16 @@
+
 <div class="container-fluid subscribe-banner">
     <div class="row align-items-center">
-        @if ($subscribeNowEmailBanners)
+        <div class="col-xl-8 col-md-7 col-12 px-0"> 
+            @if ($subscribeNowEmailBanners)
                 <a href="{{ $subscribeNowEmailBanners->link }}"><img class="bg-img"
                         src="{{ asset('storage/' . $subscribeNowEmailBanners->image_url) }}" alt="" />
                 </a>
+                @else
+                <a href="index.html"><img class="bg-img"
+                    src="/template/client/assets/images/banner/banner-6.png" alt="" /></a>
                 @endif
-            </div>
-
-
+                </div>
         <div class="col-xl-4 col-5">
             <div class="subscribe-content">
                 <h6>GET 20% OFF</h6>
