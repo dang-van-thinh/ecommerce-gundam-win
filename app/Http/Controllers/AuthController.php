@@ -10,15 +10,17 @@ use App\Mail\FogotPass;
 use App\Mail\VerifyAccount;
 use App\Models\Role;
 use App\Models\User;
+use App\Models\Voucher;
+use App\Models\VoucherUsage;
 use Auth;
 use Cookie;
 use Flasher\Prime\Notification\NotificationInterface;
 use Hash;
 use Illuminate\Http\Request;
 use Mail;
-use Str;
 use Carbon\Carbon;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Str;
 
 class AuthController extends Controller
 {
@@ -143,6 +145,23 @@ class AuthController extends Controller
 
             // Gửi email xác thực tài khoản
             Mail::to($user->email)->send(new VerifyAccount($user));
+
+            $voucher = Voucher::where('type', 'SUCCESS')->first();
+
+            if ($voucher) {
+                $startDate = Carbon::now()->lt($voucher->start_date) ? $voucher->start_date : Carbon::now();
+
+                $data = [
+                    "user_id"       => $user->id,
+                    "voucher_id"    => $voucher->id,
+                    "vourcher_code" => strtoupper(Str::random(8)),
+                    "start_date"    => $startDate,
+                    "end_date"      => $voucher->end_date,
+                    "status"        => "ACTIVE",
+                ];
+
+                VoucherUsage::create($data);
+            }
         });
 
         // Thông báo đăng ký thành công và yêu cầu xác thực email
