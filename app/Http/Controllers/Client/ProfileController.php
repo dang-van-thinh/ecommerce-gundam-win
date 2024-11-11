@@ -12,9 +12,13 @@ use App\Models\Order;
 use App\Models\OrderItem;
 use App\Models\Province;
 use App\Models\User;
+use App\Models\Voucher;
+use App\Models\VoucherUsage;
 use App\Models\Ward;
 use Flasher\Prime\Notification\NotificationInterface;
 use Illuminate\Http\Request;
+use Illuminate\Support\Carbon;
+use Illuminate\Support\Str;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Storage;
 
@@ -52,8 +56,26 @@ class ProfileController extends Controller
 
         // Lưu feedback vào cơ sở dữ liệu
         $feedback->save();
+
+        $voucher = Voucher::where('type', 'REGISTER')->first();
+
+        if ($voucher) {
+            $startDate = Carbon::now()->lt($voucher->start_date) ? $voucher->start_date : Carbon::now();
+
+            $data = [
+                "user_id"       => Auth::id(),
+                "voucher_id"    => $voucher->id,
+                "vourcher_code" => strtoupper(string: Str::random(8)),
+                "start_date"    => $startDate,
+                "end_date"      => $voucher->end_date,
+                "status"        => "ACTIVE",
+            ];
+
+            VoucherUsage::create($data);
+        }
+
         // Thông báo cho người dùng
-        sweetalert("Cảm ơn bạn đã đánh giá sản phẩm", NotificationInterface::INFO, [
+        sweetalert("Cảm ơn bạn đã đánh giá sản phẩm ", NotificationInterface::INFO, [
             'position' => "center",
             'timeOut' => '',
             'closeButton' => false,
