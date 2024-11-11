@@ -24,6 +24,7 @@ use App\Http\Controllers\Client\CollectionProductController;
 use App\Http\Controllers\Client\CommentPostController;
 use App\Http\Controllers\Client\ContactController;
 use App\Http\Controllers\Client\HomeController;
+use App\Http\Controllers\Client\MyVoucherController;
 use App\Http\Controllers\Client\OrderController;
 use App\Http\Controllers\Client\ProductController;
 use App\Http\Controllers\Client\ProfileController;
@@ -109,6 +110,9 @@ Route::prefix('')->middleware(['auth', 'checkAccountStatus', 'checkRole:1', 'upd
 
         //Chỉnh sửa thông tin tài khoản
         Route::post('/edit-profile', [ProfileController::class, 'editProfile'])->name('edit-profile');
+
+        Route::get('my-voucher', [MyVoucherController::class, 'index'])->name('myVoucher.index');
+        Route::post('create-my-voucher', [MyVoucherController::class, 'create'])->name('myVoucher.create');
     });
     // Yêu thích sản phẩm
     // Route::post('/toggle-favorite', [WishListController::class, 'toggleFavorite'])->name('toggle.favorite');
