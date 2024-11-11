@@ -65,7 +65,7 @@ Chi tiết sản phẩm
 @include('client.pages.components.breadcrumb', [
     'pageHeader' => 'Sản phẩm : ' . $product->name,
     'parent' => [
-        'route' => 'http://127.0.0.1:8000/',
+        'route' => route("home"),
         'name' => 'Trang chủ',
     ],
 ])
