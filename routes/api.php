@@ -33,13 +33,13 @@ Route::prefix('')->middleware(['authApi'])->group(function () {
     Route::put('/update-cart', [ProductController::class, 'updateToCart'])->name('api.update-cart');
 
     Route::post('/buy-now', [ProductController::class, 'productBuyNow'])->name('api.buy-now');
-    Route::get('/product/buy-now', [ProductController::class, 'getPrductVariant'])->name('api.product-variant');
+    Route::post('/product/buy-now', [ProductController::class, 'getPrductVariant'])->name('api.product-variant');
     // api dia chi tinh thanh viet nam
     Route::get('get-districts/{province_id}', [AddressApiController::class, 'getDistricts'])->name('api.districts');
     Route::get('get-wards/{district_id}', [AddressApiController::class, 'getWards'])->name('api.wards');
 
     Route::post('/profile/address/set-default/{id}', [AddressApiController::class, 'setDefaultAddress'])->name('api.profile.address.setDefault');
     Route::post('/toggle-favorite', [WishListController::class, 'toggleFavorite'])->name('toggle.favorite');
-    Route::post('/remove-favorite', [WishListController::class, 'removeFavorite'])->name('remove.favorite');
+    Route::delete('/remove-favorite', [WishListController::class, 'removeFavorite'])->name('remove.favorite');
 });
 Route::get('/admin/orders/filter', [OrderController::class, 'filter']);
