@@ -22,17 +22,15 @@ class MyVoucherController extends Controller
     }
     public function create()
     {
-        $voucherId = 2;
-
-        $voucher = Voucher::find($voucherId);
+        $voucher = Voucher::where('type', 'REGISTER')->first(); 
 
         if ($voucher) {
             $startDate = Carbon::now()->lt($voucher->start_date) ? $voucher->start_date : Carbon::now();
 
             $data = [
                 "user_id"       => Auth::id(),
-                "voucher_id"    => $voucherId,
-                "vourcher_code" =>  strtoupper(string: Str::random(8)),
+                "voucher_id"    => $voucher->id,
+                "vourcher_code" => strtoupper(Str::random(8)),
                 "start_date"    => $startDate,
                 "end_date"      => $voucher->end_date,
                 "status"        => "ACTIVE",
