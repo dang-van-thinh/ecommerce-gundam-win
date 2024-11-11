@@ -40,6 +40,6 @@ Route::prefix('')->middleware(['authApi'])->group(function () {
 
     Route::post('/profile/address/set-default/{id}', [AddressApiController::class, 'setDefaultAddress'])->name('api.profile.address.setDefault');
     Route::post('/toggle-favorite', [WishListController::class, 'toggleFavorite'])->name('toggle.favorite');
-    Route::post('/remove-favorite', [WishListController::class, 'removeFavorite'])->name('remove.favorite');
+    Route::delete('/remove-favorite', [WishListController::class, 'removeFavorite'])->name('remove.favorite');
 });
 Route::get('/admin/orders/filter', [OrderController::class, 'filter']);
