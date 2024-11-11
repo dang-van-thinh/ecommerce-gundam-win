@@ -9,7 +9,7 @@ use App\Http\Requests\Admin\voucher\UpdateVoucherRequest;
 use Flasher\Prime\Notification\NotificationInterface;
 use Carbon\Carbon;
 
-class VocuherController extends Controller
+class VoucherController extends Controller
 {
     public function index()
     {
