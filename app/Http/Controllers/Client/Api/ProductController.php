@@ -5,12 +5,20 @@ namespace App\Http\Controllers\Client\Api;
 use App\Http\Controllers\Controller;
 use App\Models\Cart;
 use App\Models\ProductVariant;
+use Illuminate\Database\Eloquent\ModelNotFoundException;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Log;
+use PhpParser\Builder\Class_;
 
 use function PHPUnit\Framework\throwException;
 
 class ProductController extends Controller
 {
+    // input : {
+    //    "userId":2,
+    //    "quantity":2,
+    //    "variantId":3
+    //}
     public function addToCart(Request $request)
     {
         $userId = $request->input('userId');
@@ -55,87 +63,137 @@ class ProductController extends Controller
         ]);
     }
 
+//input = {
+//"userId":,
+//"cartId":
+//}
     public function deleteToCart(Request $request)
     {
-        $variantId = $request->input('variantId');
-        $userId = $request->input('userId');
-        if (Cart::query()->findOrFail($variantId)->delete()) {
-            $numberCart = Cart::where('user_id', $userId)->count('*');
-            $productCarts = Cart::with(['productVariant.product', 'productVariant.attributeValues.attribute'])->where('user_id', $userId)->get()->toArray();
-            // dd($productCarts);
-            $productResponse = [];
-            foreach ($productCarts as $key => $value) {
-                $productResponse[$key] = [];
-                foreach ($productCarts as $key => $productCart) {
-                    $productResponse[$key]['cart'] = $productCart;
-                    $productResponse[$key]['product_variant'] = $productCart['product_variant'];
-                    $productResponse[$key]['product'] = $productCart['product_variant']['product'];
+        try {
+            $cartId = $request->input('cartId'); // nay la id cart
+            $userId = $request->input('userId');
+            if (Cart::query()->findOrFail($cartId)->delete()) {
+                $numberCart = Cart::where('user_id', $userId)->count('*'); // dem lai so luong product trong cart
+                // lay lai du lieu cart de tra ra
+                $productCarts = Cart::with(['productVariant.product', 'productVariant.attributeValues.attribute'])->where('user_id', $userId)->get()->toArray();
+                // dd($productCarts);
+                $productResponse = [];
+                foreach ($productCarts as $key => $value) {
+                    $productResponse[$key] = [];
+                    foreach ($productCarts as $key => $productCart) {
+                        $productResponse[$key]['cart'] = $productCart;
+                        $productResponse[$key]['product_variant'] = $productCart['product_variant'];
+                        $productResponse[$key]['product'] = $productCart['product_variant']['product'];
+                    }
                 }
+                return response()->json([
+                    'message' => [
+                        'status' => "Xóa thành công",
+                        'numberCart' => $numberCart,
+                        'productCart' => $productResponse
+                    ]
+                ], 200);
             }
             return response()->json([
-                'message' => [
-                    'status' => "Xóa thành công",
-                    'numberCart' => $numberCart,
-                    'productCart' => $productResponse
-                ]
-            ]);
+                'message' => "Xóa thành công"
+            ], 400);
+        } catch (\Throwable $th) {
+            Log::error($th->getMessage());
+            return response()->json([
+                "message" => $th->getMessage()
+            ],404);
         }
-        return response()->json([
-            'message' => "Xóa thành công"
-        ], 400);
     }
 
+    // input : {
+    //    "userId":2,
+    //    "cartId":132,
+    //    "quantity": 2
+    //}
     public function updateToCart(Request $request)
     {
-        $variantId =  $request->input('idVariant');
-        $newQuantity = $request->input('quantity');
+        try {
+            $cartId =  $request->input('cartId');
+            $newQuantity = $request->input('quantity');
 
-        $cartOfUser = Cart::with('productVariant')->where('id', $variantId)->first();
-        // dd($cartOfUser->toArray());
-        if ($newQuantity < 0 || $newQuantity > $cartOfUser->toArray()['product_variant']['quantity']) {
+            $cartOfUser = Cart::with('productVariant')->where('id', $cartId)->first();
+            // dd($cartOfUser->toArray());
+            if ($newQuantity < 0 || $newQuantity > $cartOfUser->toArray()['product_variant']['quantity']) {
+                return response()->json([
+                    'message' => 'Số lượng không phù hợp !'
+                ], 400);
+            } else {
+                $cartOfUser->update(['quantity' => $newQuantity]);
+            }
             return response()->json([
-                'message' => 'Số lượng không phù hợp !'
-            ], 400);
-        } else {
-            $cartOfUser->update(['quantity' => $newQuantity]);
+                'message' => 'Thay đổi số lượng thành công'
+            ]);
+        }catch (\Throwable $exception){
+            Log::error($exception->getMessage());
+            return response()->json([
+                "message" => $exception->getMessage()
+            ],404);
         }
-        return response()->json([
-            'message' => 'Thay đổi số lượng thành công'
-        ]);
     }
 
-
+// input: {
+//    "userId":2,
+//    "quantity":2,
+//    "variantId":99
+//}
     public function productBuyNow(Request $request)
     {
-        $userId = $request->input('userId');
-        $quantity = $request->input('quantity');
-        $variantId = $request->input('variantId');
+        try {
+            $userId = $request->input('userId');
+            $quantity = $request->input('quantity');
+            $variantId = $request->input('variantId');
 
-        // tim kiem bien the
-        $productVariant = ProductVariant::where('id', $variantId)->first()->toArray();
-        // dd($productVariant->toArray());
+            // tim kiem bien the
+            $productVariant = ProductVariant::query()->findOrFail($variantId);
+//             dd($productVariant);
 
-        if ($productVariant) {
-            return response()->json([
-                'productCheckout' => $productVariant,
-                'url' => route('check-out-now')
-            ]);
+            if ($productVariant) {
+                return response()->json([
+                    'productCheckout' => $productVariant,
+                    "quantity"=>$quantity,
+                    'url' => route('check-out-now')
+                ]);
+            }
+        }catch (\Throwable $exception){
+            Log::error($exception->getMessage());
+            if ($exception instanceof ModelNotFoundException){
+                return response()->json([
+                    'message' => "Không tìm thấy bản ghi phù hợp !"
+                ], 404);
+            }
+
         }
-        return response()->json([
-            'message' => "Không tìm thấy sản phẩm phù hợp"
-        ], 400);
+
     }
 
+
+    // input : {
+    //    "userId":2,
+    //    "quantity":2,
+    //    "variantId":99
+    //}
     public function getPrductVariant(Request $request)
     {
-        // dd($request->query('userId'));
-        $userId = $request->query('userId');
-        $quantity = $request->query('quantity');
-        $variantId = $request->query('variantId');
-        $productResponse = ProductVariant::with(['product', 'attributeValues.attribute'])->where('id', $variantId)->first();
-        return response()->json([
-            'productResponse' => $productResponse,
-            'quantity' => $quantity
-        ]);
+        try {
+            // dd($request->input('userId'));
+            $userId = $request->input('userId');
+            $quantity = $request->input('quantity');
+            $variantId = $request->input('variantId');
+            $productResponse = ProductVariant::with(['product', 'attributeValues.attribute'])->where('id', $variantId)->first();
+            return response()->json([
+                'productResponse' => $productResponse,
+                'quantity' => $quantity
+            ]);
+        }catch (\Throwable $exception){
+            Log::error($exception->getMessage());
+            return response()->json([
+                "message" => get_class($exception) . ": " . $exception->getMessage()
+            ],404);
+        }
     }
 }
