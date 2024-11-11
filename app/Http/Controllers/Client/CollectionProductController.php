@@ -15,7 +15,7 @@ class CollectionProductController extends Controller
 {
     public function index()
     {
-        $products = Product::with(['productImages', 'categoryProduct', 'productVariants'])
+        $products = Product::with(['productImages', 'categoryProduct', 'productVariants','favorites'])
             ->latest('id')
             ->paginate(20);
 
@@ -28,9 +28,6 @@ class CollectionProductController extends Controller
 
         return view('client.pages.collection-product.index', compact('products', 'categories', 'minPrice', 'maxPrice', 'attributes'));
     }
-
-
-
     public function filter(FilterProductRequest $request)
     {
         $categories = $request->input('categories');
@@ -107,7 +104,7 @@ class CollectionProductController extends Controller
 
             case 'least_selling':
                 $subQuery = DB::table('product_variants')
-                    ->select('product_id', DB::raw('SUM(sold) as total_sold')) // Tính tổng số lượng đã bán 
+                    ->select('product_id', DB::raw('SUM(sold) as total_sold')) // Tính tổng số lượng đã bán
                     ->groupBy('product_id'); // Nhóm theo ID sản phẩm
 
                 $query->joinSub($subQuery, 'sold_counts', function ($join) {
@@ -122,7 +119,7 @@ class CollectionProductController extends Controller
                     ->leftJoin('feedbacks', 'feedbacks.order_item_id', '=', 'order_items.id') // Nối feedbacks với order_items
                     ->select('products.*', DB::raw('COALESCE(AVG(feedbacks.rating), 0) as avg_rating')) // Thay NULL bằng 0
                     ->groupBy('products.id') // Nhóm theo id của sản phẩm
-                    ->orderBy('avg_rating', 'ASC'); // Sắp xếp theo rating từ thấp đến cao              
+                    ->orderBy('avg_rating', 'ASC'); // Sắp xếp theo rating từ thấp đến cao
                 break;
             case 'rating_desc':
                 $query->leftJoin('product_variants', 'product_variants.product_id', '=', 'products.id')
@@ -130,7 +127,7 @@ class CollectionProductController extends Controller
                     ->leftJoin('feedbacks', 'feedbacks.order_item_id', '=', 'order_items.id') // Nối feedbacks với order_items
                     ->select('products.*', DB::raw('COALESCE(AVG(feedbacks.rating), 0) as avg_rating')) // Thay NULL bằng 0
                     ->groupBy('products.id') // Nhóm theo id của sản phẩm
-                    ->orderBy('avg_rating', 'DESC'); // Sắp xếp theo rating từ thấp đến cao    
+                    ->orderBy('avg_rating', 'DESC'); // Sắp xếp theo rating từ thấp đến cao
                 break;
 
 
