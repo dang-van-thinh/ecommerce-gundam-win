@@ -13,7 +13,7 @@ use App\Http\Controllers\Admin\ImageArticleController;
 use App\Http\Controllers\Admin\OrderController as AdminOrderController;
 use App\Http\Controllers\Admin\RoleController;
 use App\Http\Controllers\Admin\UserController;
-use App\Http\Controllers\Admin\VocuherController;
+use App\Http\Controllers\Admin\VoucherController;
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\Client\AddersController;
 use App\Http\Controllers\Client\BlogController;
@@ -65,7 +65,7 @@ Route::prefix('/admin')->middleware(['auth', 'checkAccountStatus', 'checkRole:2'
     Route::resource('category-article', CategoryArticleController::class);
     Route::resource('roles', RoleController::class);
     Route::resource('users', UserController::class);
-    Route::resource('voucher', VocuherController::class);
+    Route::resource('voucher', VoucherController::class);
     Route::resource('refund', RefundController::class);
     Route::resource('products', AdminProductController::class);
     Route::resource('imagearticle', ImageArticleController::class);
