@@ -24,6 +24,32 @@ class VoucherController extends Controller
 
     public function store(CreateVoucherRequest $request)
     {
+        // check trùng voucher (1 voucher k thể xuất hiện 2 lần)
+        $existingVoucher = Voucher::where([
+            ['name', $request->name],
+            ['description', $request->description],
+            ['limit', $request->limit],
+            ['start_date', $request->start_date],
+            ['end_date', $request->end_date],
+            ['discount_type', $request->discount_type],
+            ['discount_value', $request->discount_value],
+            ['min_order_value', $request->min_order_value],
+            ['max_order_value', $request->max_order_value],
+            ['status', $request->status],
+        ])->first();
+
+        if ($existingVoucher) {
+            toastr("Voucher này đã tồn tại", NotificationInterface::WARNING, "Cảnh báo!", [
+                "closeButton" => true,
+                "progressBar" => true,
+                "timeOut" => "3000",
+            ]);
+            return back()->withInput();
+        }
+        if ($request->discount_type == 'PERCENTAGE' && $request->discount_value > 100) {
+            return back()->withErrors(['discount_value' => 'Giá trị giảm theo phần trăm không được lớn hơn 100.'])->withInput();
+        }
+
         Voucher::create([
             'name' => $request->name,
             'description' => $request->description,
@@ -36,9 +62,6 @@ class VoucherController extends Controller
             'max_order_value' => $request->max_order_value,
             'status' => $request->status,
         ]);
-        if ($request->discount_type == 'PERCENTAGE' && $request->discount_value > 100) {
-            return back()->withErrors(['discount_value' => 'Giá trị giảm theo phần trăm không được lớn hơn 100.'])->withInput();
-        }
 
         toastr("Thêm thành công dữ liệu voucher", NotificationInterface::SUCCESS, "Thành công !", [
             "closeButton" => true,
@@ -60,6 +83,10 @@ class VoucherController extends Controller
     {
         $voucher = Voucher::findOrFail($id);
 
+        if ($request->discount_type == 'PERCENTAGE' && $request->discount_value > 100) {
+            return back()->withErrors(['discount_value' => 'Giá trị giảm theo phần trăm không được lớn hơn 100.'])->withInput();
+        }
+
         $dataUpdate = [
             'name' => $request->name,
             'description' => $request->description,
@@ -72,9 +99,6 @@ class VoucherController extends Controller
             'max_order_value' => $request->max_order_value,
             'status' => $request->status,
         ];
-        if ($request->discount_type == 'PERCENTAGE' && $request->discount_value > 100) {
-            return back()->withErrors(['discount_value' => 'Giá trị giảm theo phần trăm không được lớn hơn 100.'])->withInput();
-        }
 
         $updateSuccess = $voucher->update($dataUpdate);
 

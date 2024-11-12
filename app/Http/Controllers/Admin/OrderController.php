@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\Admin;
 
+use App\Events\OrderSuccessEvent;
 use App\Http\Controllers\Controller;
 use App\Mail\OrderCompletedMail;
 use App\Models\Order;
@@ -44,7 +45,8 @@ class OrderController extends Controller
 
         // Gửi email nếu trạng thái là SHIPPED
         if ($order->status === 'SHIPPED') {
-            Mail::to($order->user->email)->send(new OrderCompletedMail($order));
+//            Mail::to($order->user->email)->send(new OrderCompletedMail($order));
+            OrderSuccessEvent::dispatch($order);
         }
 
         toastr("Cập nhật trạng thái đơn hàng thành công!", NotificationInterface::SUCCESS, "Thành công", [
