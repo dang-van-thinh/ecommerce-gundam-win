@@ -146,7 +146,7 @@ class AuthController extends Controller
             // Gửi email xác thực tài khoản
             Mail::to($user->email)->send(new VerifyAccount($user));
 
-            $voucher = Voucher::where('type', 'SUCCESS')->first();
+            $voucher = Voucher::where('type', 'REGISTER')->first();
 
             if ($voucher) {
                 $startDate = Carbon::now()->lt($voucher->start_date) ? $voucher->start_date : Carbon::now();
