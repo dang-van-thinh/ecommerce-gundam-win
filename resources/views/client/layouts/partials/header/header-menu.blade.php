@@ -111,7 +111,7 @@
                                                                         ->toArray();
                                                                 @endphp
                                                                 @if (in_array(2, $roleIds))
-                                                                    <li><a href="{{ route('users.index') }}">Trang quản lý</a></li>
+                                                                    <li><a href="{{ route('dashboard') }}">Trang quản lý</a></li>
                                                                 @endif
                                                                 <li><a href="{{ route('profile.infomation') }}">Thông tin tài khoản</a></li>
                                                                 <li><a href="{{ route('profile.order-history') }}">Lịch sử mua hàng</a></li>
