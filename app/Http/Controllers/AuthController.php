@@ -2,6 +2,8 @@
 
 namespace App\Http\Controllers;
 
+use App\Events\ForgotPasswordEvent;
+use App\Events\VerifyEmailEvent;
 use App\Http\Requests\Auth\FogetPassRequest;
 use App\Http\Requests\Auth\LoginRequest;
 use App\Http\Requests\Auth\RegisterRequest;
@@ -144,7 +146,9 @@ class AuthController extends Controller
             $user->roles()->sync([$role->id]);
 
             // Gửi email xác thực tài khoản
-            Mail::to($user->email)->send(new VerifyAccount($user));
+//            Mail::to($user->email)->send(new VerifyAccount($user));
+            // gui bang event
+            VerifyEmailEvent::dispatch($user);
 
             $voucher = Voucher::where('type', 'SUCCESS')->first();
 
@@ -236,7 +240,9 @@ class AuthController extends Controller
             $user->password_changed_at = now(); // Cập nhật thời gian thực
             $user->save(); // Lưu tất cả thay đổi
             // Gửi email chứa mật khẩu mới
-            Mail::to($user->email)->send(new FogotPass($user, $newPassword));
+//            Mail::to($user->email)->send(new FogotPass($user, $newPassword));
+            // gui bang event
+            ForgotPasswordEvent::dispatch($user,$newPassword);
             // Thông báo thành công
             toastr('Vui lòng kiểm tra email để nhận mật khẩu mới', NotificationInterface::SUCCESS, 'Lấy lại mật khẩu thành công', [
                 "closeButton" => true,
