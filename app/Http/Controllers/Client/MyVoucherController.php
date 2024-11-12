@@ -15,14 +15,15 @@ class MyVoucherController extends Controller
     {
         $data = VoucherUsage::with('voucher')
             ->where('user_id', Auth::id())
-            // ->Where('end_date', '>', Carbon::now())
+            ->Where('end_date', '>', Carbon::now())
+            ->latest('id')
             ->get();
         // dd($data->toArray());
         return view('client.pages.profile.voucher', compact('data'));
     }
     public function create()
     {
-        $voucher = Voucher::where('type', 'REGISTER')->first(); 
+        $voucher = Voucher::where('type', 'REGISTER')->first();
 
         if ($voucher) {
             $startDate = Carbon::now()->lt($voucher->start_date) ? $voucher->start_date : Carbon::now();
