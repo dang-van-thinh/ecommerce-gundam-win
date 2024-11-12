@@ -31,8 +31,10 @@ class ProfileController extends Controller
 
     public function orderHistory()
     {
+        $userId = Auth::id();
         // Lấy tất cả các Order cùng với OrderItems và ProductVariants
         $orders = Order::with('orderItems.productVariant.attributeValues.attribute', 'orderItems.productVariant.product', 'user')
+            ->where('user_id', $userId)
             ->orderBy('id', 'desc')
             ->get();
         return view('client.pages.profile.order', compact('orders'));
