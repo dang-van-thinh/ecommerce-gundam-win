@@ -59,7 +59,7 @@ class ProfileController extends Controller
         // Lưu feedback vào cơ sở dữ liệu
         $feedback->save();
 
-        $voucher = Voucher::where('type', 'REGISTER')->first();
+        $voucher = Voucher::where('type', 'SUCCESS')->first();
 
         if ($voucher) {
             $startDate = Carbon::now()->lt($voucher->start_date) ? $voucher->start_date : Carbon::now();

@@ -156,6 +156,101 @@
 
 
                                 </ul>
+
+                                <div class="coupon-box">
+                                    <h6>Mã giảm giá</h6>
+
+                                    <div id="coupon-display" style="display: none;" class="mb-2">
+                                        <!-- Thẻ hiển thị mã giảm giá -->
+                                        <div
+                                            class="border border-success rounded shadow-sm p-2 bg-light d-flex justify-content-between align-items-center">
+                                            <div>
+                                                <strong id="coupon-name" class="text-dark">Tên mã ở đây</strong>
+                                            </div>
+                                            <button id="remove-coupon" class="btn btn-danger btn-sm"
+                                                style="font-size: 14px;">
+                                                X
+                                            </button>
+                                        </div>
+                                    </div>
+
+
+                                    <ul>
+                                        <li>
+                                            <span>
+                                                <input type="text" id="coupon-code-input"
+                                                    placeholder="Sử dụng mã giảm giá">
+                                                <i class="iconsax me-1" data-icon="tag-2"></i>
+                                            </span>
+                                            <button type="button" style="font-size: 14px; padding: 5px; width: 107px;"
+                                                class="btn w-50%" data-bs-toggle="modal" data-bs-target="#voucherModal">
+                                                Chọn
+                                            </button>
+                                        </li>
+                                    </ul>
+
+                                    <!-- Thêm input ẩn để lưu voucher_id -->
+                                    <input type="hidden" id="voucher-id-input" name="voucher_id" value="">
+
+                                    <!-- Modal -->
+                                    <div class="modal fade" id="voucherModal" tabindex="-1"
+                                        aria-labelledby="voucherModalLabel" aria-hidden="true">
+                                        <div class="modal-dialog modal-lg">
+                                            <div class="modal-content">
+                                                <!-- Header -->
+                                                <div class="modal-header">
+                                                    <h5 class="modal-title" id="voucherModalLabel">Mã giảm giá</h5>
+                                                    <button type="button" class="btn-close" data-bs-dismiss="modal"
+                                                        aria-label="Close"></button>
+                                                </div>
+
+                                                <!-- Body -->
+                                                <div class="modal-body">
+                                                    <div class="container">
+                                                        <div class="row">
+                                                            @foreach ($voucher as $item)
+                                                                <div class="col-6 mb-3">
+                                                                    <div
+                                                                        class="border border-primary rounded shadow-sm p-3 bg-light d-flex justify-content-between align-items-center">
+                                                                        <div>
+                                                                            <strong
+                                                                                class="text-dark">{{ $item->voucher->name }}</strong>
+                                                                            <p class="mb-0">
+                                                                                Giảm:
+                                                                                @if ($item->voucher->discount_type === 'PERCENTAGE')
+                                                                                    {{ number_format($item->voucher->discount_value, 0) }}%
+                                                                                @else
+                                                                                    {{ number_format($item->voucher->discount_value, 0, ',', '.') }}
+                                                                                    VND
+                                                                                @endif
+                                                                            </p>
+                                                                        </div>
+                                                                        <button type="button"
+                                                                            class="btn btn-primary apply-coupon"
+                                                                            data-voucher-name="{{ $item->voucher->name }}"
+                                                                            data-voucher-id="{{ $item->voucher->id }}"
+                                                                            data-discount-value="{{ $item->voucher->discount_value }}"
+                                                                            data-discount-type="{{ $item->voucher->discount_type }}">
+                                                                            Áp dụng
+                                                                        </button>
+
+                                                                    </div>
+                                                                </div>
+                                                            @endforeach
+                                                        </div>
+                                                    </div>
+                                                </div>
+
+                                                <!-- Footer -->
+                                                <div class="modal-footer">
+                                                    <button type="button" class="btn btn-danger"
+                                                        data-bs-dismiss="modal">Đóng</button>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+
                                 <div class="summary-total">
                                     <ul>
                                         <li>
@@ -163,27 +258,18 @@
                                             <input type="hidden" name="totalAmount" value="{{ $totalAmount }}">
                                             <span>{{ number_format($totalAmount, 0, ',', '.') }} VND</span>
                                         </li>
-                                        {{-- <li>
-                                            <p>Shipping</p><span>Enter shipping address</span>
-                                        </li> --}}
-                                        {{-- <li>
-                                            <p>Tax</p><span>$ 2.54</span>
-                                        </li>
                                         <li>
-                                            <p>Points</p><span>$ -10.00</span>
+                                            <p>Giảm giá</p>
+                                            <input type="hidden" name="discount_amount" value="0">
+                                            <span id="discount-amount"> 0 VND</span> <!-- Hiển thị với dấu trừ -->
                                         </li>
-                                        <li>
-                                            <p>Wallet Balance</p><span>$ -84.40</span>
-                                        </li> --}}
+
                                     </ul>
-                                    {{-- <div class="coupon-code">
-                                        <input type="text" placeholder="Enter Coupon Code">
-                                        <button class="btn">Apply</button>
-                                    </div> --}}
+
                                 </div>
                                 <div class="total">
                                     <h6>Thành tiền : </h6>
-                                    <h6>{{ number_format($totalAmount, 0, ',', '.') }} VND</h6>
+                                    <h6 id="summary-total">{{ number_format($totalAmount, 0, ',', '.') }} VND</h6>
                                     <input type="hidden" value="{{ $totalAmount }}" name="total_amount">
                                 </div>
                                 <div class="order-button">
@@ -242,6 +328,87 @@
                     }
                 });
             }
+        });
+    });
+    document.addEventListener('DOMContentLoaded', function() {
+        // Lắng nghe sự kiện nhấn nút "Áp dụng" trong modal
+        document.querySelectorAll('.apply-coupon').forEach(button => {
+            button.addEventListener('click', function() {
+                // Lấy mã giảm giá từ nút được nhấn
+                const voucherName = this.getAttribute('data-voucher-name');
+                const voucherId = this.getAttribute('data-voucher-id'); // Lấy voucher_id
+                const discountValue = parseFloat(this.getAttribute('data-discount-value'));
+                const discountType = this.getAttribute('data-discount-type');
+
+                // Hiển thị thẻ mã giảm giá đã áp dụng và ẩn ô input
+                document.getElementById('coupon-display').style.display = 'block';
+                document.getElementById('coupon-name').textContent = voucherName;
+
+                // Cập nhật voucher_id vào input ẩn
+                document.getElementById('voucher-id-input').value =
+                    voucherId; // Gán voucher_id vào input ẩn
+
+                // Cập nhật giảm giá vào tổng giá
+                const totalAmount = parseFloat(document.querySelector(
+                    'input[name="totalAmount"]').value);
+
+                let discountAmount = 0;
+                if (discountType === 'PERCENTAGE') {
+                    discountAmount = (discountValue / 100) *
+                        totalAmount; // Tính giảm giá theo phần trăm
+                } else {
+                    discountAmount = discountValue; // Tính giảm giá cố định theo số tiền
+                    if (totalAmount <= discountAmount) {
+                        discountAmount = totalAmount;
+                    }
+                }
+
+                const newTotal = totalAmount - discountAmount;
+
+                // Cập nhật giá trị vào giao diện
+                document.querySelector('input[name="discount_amount"]').value = discountAmount;
+                document.getElementById('discount-amount').textContent =
+                    `- ${discountAmount.toLocaleString()} VND`; // Hiển thị giảm giá thực tế
+
+                // Cập nhật tổng tiền
+                document.querySelector('input[name="total_amount"]').value = newTotal;
+                document.getElementById('summary-total').textContent =
+                    `${newTotal.toLocaleString()} VND`;
+
+                // Đóng modal sau khi chọn
+                const voucherModalEl = document.getElementById('voucherModal');
+                const voucherModal = bootstrap.Modal.getInstance(voucherModalEl);
+                voucherModal.hide();
+            });
+        });
+
+        // Xử lý sự kiện click nút "X" để xoá mã giảm giá
+        document.getElementById('remove-coupon').addEventListener('click', function(event) {
+            event.preventDefault(); // Ngăn chặn hành động mặc định (reload trang)
+
+            // Làm trống ô input và ẩn nút mã giảm giá đã áp dụng
+            document.getElementById('coupon-name').textContent = '';
+            document.getElementById('coupon-display').style.display = 'none';
+
+            // Làm trống voucher_id khi xoá mã giảm giá
+            document.getElementById('voucher-id-input').value = '';
+
+            // Cập nhật lại tổng giá khi xoá mã giảm giá
+            const totalAmount = parseFloat(document.querySelector('input[name="totalAmount"]').value);
+            const discountAmount = 0;
+            const newTotal = totalAmount;
+
+            // Cập nhật lại tổng tiền
+            document.querySelector('input[name="discount_amount"]').value = discountAmount;
+            document.getElementById('discount-amount').textContent =
+                `${discountAmount.toLocaleString()} VND`; // Hiển thị giảm giá là 0
+
+            // Cập nhật lại tổng tiền sau khi xoá giảm giá
+            document.querySelector('input[name="total_amount"]').value = newTotal;
+            document.getElementById('summary-total').textContent = `${newTotal.toLocaleString()} VND`;
+
+            // Hiển thị lại ô input mã giảm giá khi xoá
+            document.getElementById('coupon-code-input').style.display = 'block';
         });
     });
 </script>
