@@ -189,6 +189,7 @@
 
                                     <!-- Thêm input ẩn để lưu voucher_id -->
                                     <input type="hidden" id="voucher-id-input" name="voucher_id" value="">
+                                    <input type="hidden" id="id-input" name="id_voucherUsage" value="">
 
                                     <!-- Modal -->
                                     <div class="modal fade" id="voucherModal" tabindex="-1"
@@ -226,6 +227,7 @@
                                                                         <button type="button"
                                                                             class="btn btn-primary apply-coupon"
                                                                             data-voucher-name="{{ $item->voucher->name }}"
+                                                                            data-id="{{ $item->id }}"
                                                                             data-voucher-id="{{ $item->voucher->id }}"
                                                                             data-discount-value="{{ $item->voucher->discount_value }}"
                                                                             data-discount-type="{{ $item->voucher->discount_type }}">
@@ -333,6 +335,7 @@
             button.addEventListener('click', function() {
                 // Lấy mã giảm giá từ nút được nhấn
                 const voucherName = this.getAttribute('data-voucher-name');
+                const Id = this.getAttribute('data-id'); // Lấy voucher_id
                 const voucherId = this.getAttribute('data-voucher-id'); // Lấy voucher_id
                 const discountValue = parseFloat(this.getAttribute('data-discount-value'));
                 const discountType = this.getAttribute('data-discount-type');
@@ -344,6 +347,9 @@
                 // Cập nhật voucher_id vào input ẩn
                 document.getElementById('voucher-id-input').value =
                     voucherId; // Gán voucher_id vào input ẩn
+
+                document.getElementById('id-input').value =
+                    Id; // Gán voucher_id vào input ẩn
 
                 // Cập nhật giảm giá vào tổng giá
                 const totalAmount = parseFloat(document.querySelector(
@@ -389,6 +395,9 @@
 
             // Làm trống voucher_id khi xoá mã giảm giá
             document.getElementById('voucher-id-input').value = '';
+
+            // Làm trống id khi xoá mã giảm giá
+            document.getElementById('id-input').value = '';
 
             // Cập nhật lại tổng giá khi xoá mã giảm giá
             const totalAmount = parseFloat(document.querySelector('input[name="totalAmount"]').value);
