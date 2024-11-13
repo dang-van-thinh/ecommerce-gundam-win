@@ -150,7 +150,7 @@ class AuthController extends Controller
             // gui bang event
             VerifyEmailEvent::dispatch($user);
 
-            $voucher = Voucher::where('type', 'SUCCESS')->first();
+            $voucher = Voucher::where('type', 'REGISTER')->first();
 
             if ($voucher) {
                 $startDate = Carbon::now()->lt($voucher->start_date) ? $voucher->start_date : Carbon::now();
