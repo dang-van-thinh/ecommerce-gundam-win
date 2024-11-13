@@ -143,13 +143,94 @@
                 data: productStorage,
                 success: function(response) {
                     console.log(response);
-                    showProduct(response.productResponse, response.quantity)
+                    showProduct(response.productResponse, response.quantity, response.vouchers)
                 }
+            }).then(() => {
+                $(document).ready(function() {
+                    // Lắng nghe sự kiện nhấn nút "Áp dụng" trong modal
+                    $('.apply-coupon').on('click', function() {
+                        // Lấy mã giảm giá từ nút được nhấn
+                        const voucherName = $(this).data('voucher-name');
+                        // console.log(voucherName);
+                        const voucherId = $(this).data('voucher-id');
+                        const discountValue = parseFloat($(this).data(
+                            'discount-value'));
+                        console.log(discountValue);
+                        const discountType = $(this).data('discount-type');
+                        console.log(discountType);
+
+                        // Hiển thị thẻ mã giảm giá đã áp dụng và ẩn ô input
+                        $('#coupon-display').show();
+                        $('#coupon-name').text(voucherName);
+
+                        // Cập nhật voucher_id vào input ẩn
+                        $('#voucher-id-input').val(voucherId);
+
+                        // Cập nhật giảm giá vào tổng giá
+                        const totalAmount = parseFloat($('input[name="totalAmount"]')
+                            .val());
+                        let discountAmount = 0;
+
+                        if (discountType === 'PERCENTAGE') {
+                            discountAmount = (discountValue / 100) * totalAmount;
+                        } else {
+                            discountAmount = discountValue;
+                            if (totalAmount <= discountAmount) {
+                                discountAmount = totalAmount;
+                            }
+                        }
+
+                        const newTotal = totalAmount - discountAmount;
+
+                        // Cập nhật giá trị vào giao diện
+                        $('input[name="discount_amount"]').val(discountAmount);
+                        $('#discount-amount').text(
+                            `- ${discountAmount.toLocaleString()} VND`);
+
+                        // Cập nhật tổng tiền
+                        $('input[name="total_amount"]').val(newTotal);
+                        $('#summary-total').text(`${newTotal.toLocaleString()} VND`);
+
+                        // Đóng modal sau khi chọn
+                        $('#voucherModal').modal('hide');
+                    });
+
+                    // Xử lý sự kiện click nút "X" để xoá mã giảm giá
+                    $('#remove-coupon').on('click', function(event) {
+                        event
+                            .preventDefault(); // Ngăn chặn hành động mặc định (reload trang)
+
+                        // Làm trống ô input và ẩn nút mã giảm giá đã áp dụng
+                        $('#coupon-name').text('');
+                        $('#coupon-display').hide();
+
+                        // Làm trống voucher_id khi xoá mã giảm giá
+                        $('#voucher-id-input').val('');
+
+                        // Cập nhật lại tổng giá khi xoá mã giảm giá
+                        const totalAmount = parseFloat($('input[name="totalAmount"]')
+                            .val());
+                        const discountAmount = 0;
+                        const newTotal = totalAmount;
+
+                        // Cập nhật lại tổng tiền
+                        $('input[name="discount_amount"]').val(discountAmount);
+                        $('#discount-amount').text(
+                            `${discountAmount.toLocaleString()} VND`);
+
+                        // Cập nhật lại tổng tiền sau khi xoá giảm giá
+                        $('input[name="total_amount"]').val(newTotal);
+                        $('#summary-total').text(`${newTotal.toLocaleString()} VND`);
+
+                        // Hiển thị lại ô input mã giảm giá khi xoá
+                        $('#coupon-code-input').show();
+                    });
+                });
             });
         }
         handleProduct();
 
-        function showProduct(productResponse, quantityP) {
+        function showProduct(productResponse, quantityP, vouchers) {
             let totalAmount = 0;
             const price = parseFloat(productResponse.price); // Giá sản phẩm
             const quantity = quantityP; // Số lượng sản phẩm
@@ -214,10 +295,18 @@
             totalList.append(totalItem);
             summaryTotal.append(totalList);
 
+            //giam gia
+            const discountLi = $('<li></li>')
+                .append('<p>Giảm giá</p>')
+                .append('<input type="hidden" name="discount_amount" value="0">')
+                .append('<span id="discount-amount">0 VND</span>');
+            totalList.append(discountLi);
+            summaryTotal.append(totalList);
             // Hiển thị tổng số tiền
             const totalDiv = $("<div></div>").addClass("total");
             const totalText = $("<h6></h6>").text("Thành tiền : ");
-            const totalAmountTextFinal = $("<h6></h6>").text(totalAmount.toLocaleString("vi-VN") + " VND");
+            const totalAmountTextFinal = $("<h6></h6>").attr('id', "summary-total").text(totalAmount
+                .toLocaleString("vi-VN") + " VND");
             const hiddenTotalInput = $("<input>").attr("type", "hidden").attr("name", "total_amount").val(
                 totalAmount);
             totalDiv.append(totalText, totalAmountTextFinal, hiddenTotalInput);
@@ -229,10 +318,143 @@
                 .addClass("btn btn_black sm w-100 rounded")
                 .text("Đặt hàng");
             orderButtonDiv.append(orderButton);
+            // tạo vourcher 
+
+            // Tạo các phần tử HTML bằng jQuery
+            const couponBox = $("<div>").addClass("coupon-box");
+
+            // Tạo tiêu đề "Mã giảm giá"
+            const title = $("<h6>").text("Mã giảm giá");
+            couponBox.append(title);
+
+            // Tạo phần hiển thị mã giảm giá
+            const couponDisplay = $("<div>")
+                .attr("id", "coupon-display")
+                .addClass("mb-2")
+                .css("display", "none");
+
+            const couponContent = $("<div>")
+                .addClass(
+                    "border border-success rounded shadow-sm p-2 bg-light d-flex justify-content-between align-items-center"
+                );
+
+            const couponNameDiv = $("<div>").append(
+                $("<strong>")
+                .attr("id", "coupon-name")
+                .addClass("text-dark")
+                .text("Tên mã ở đây")
+            );
+
+            const removeCouponButton = $("<button>")
+                .attr("id", "remove-coupon")
+                .addClass("btn btn-danger btn-sm")
+                .css("font-size", "14px")
+                .text("X");
+
+            couponContent.append(couponNameDiv, removeCouponButton);
+            couponDisplay.append(couponContent);
+            couponBox.append(couponDisplay);
+
+            // Tạo phần nhập mã giảm giá và nút chọn
+            const ul = $("<ul>");
+            const li = $("<li>");
+
+            const span = $("<span>");
+            const input = $("<input>")
+                .attr("type", "text")
+                .attr("id", "coupon-code-input")
+                .attr("placeholder", "Sử dụng mã giảm giá");
+
+            const icon = $("<i>")
+                .addClass("iconsax me-1")
+                .attr("data-icon", "tag-2");
+
+            const selectButton = $("<button>")
+                .attr("type", "button")
+                .css({
+                    "font-size": "14px",
+                    padding: "5px",
+                    width: "107px"
+                })
+                .addClass("btn w-50%")
+                .attr("data-bs-toggle", "modal")
+                .attr("data-bs-target", "#voucherModal")
+                .text("Chọn");
+
+            span.append(input, icon);
+            li.append(span, selectButton);
+            ul.append(li);
+            couponBox.append(ul);
+
+            // Tạo input ẩn để lưu voucher_id
+            const hiddenInput = $("<input>")
+                .attr("type", "hidden")
+                .attr("id", "voucher-id-input")
+                .attr("name", "voucher_id")
+                .attr("value", "");
+
+            couponBox.append(hiddenInput);
+
+            // tạo modal
+            const modalHtml = `
+            <div class="modal fade" id="voucherModal" tabindex="-1" aria-labelledby="voucherModalLabel" aria-hidden="true">
+                <div class="modal-dialog modal-lg">
+                    <div class="modal-content">
+                        <!-- Header -->
+                        <div class="modal-header">
+                            <h5 class="modal-title" id="voucherModalLabel">Mã giảm giá</h5>
+                            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                        </div>
+                        <!-- Body -->
+                        <div class="modal-body">
+                            <div class="container">
+                                <div class="row" id="voucher-list">
+                                    <!-- Nội dung voucher sẽ được chèn ở đây -->
+                                </div>
+                            </div>
+                        </div>
+                        <!-- Footer -->
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-danger" data-bs-dismiss="modal">Đóng</button>
+                        </div>
+                    </div>
+                </div>
+            </div>`;
+            couponBox.append(modalHtml);
 
             // Thêm tất cả vào giỏ hàng
-            cartListing.append(productList, summaryTotal, totalDiv, orderButtonDiv);
+            cartListing.append(productList, couponBox, summaryTotal, totalDiv, orderButtonDiv);
+            // Chèn dữ liệu từ vouchers vào trong modal
+            vouchers.forEach(item => {
+                const voucher = item.voucher;
+                const discountValue = voucher.discount_type === 'PERCENTAGE' ?
+                    `${voucher.discount_value}%` :
+                    `${parseFloat(voucher.discount_value).toLocaleString('vi-VN')} VND`;
+
+                const voucherHtml = `
+                <div class="col-6 mb-3">
+                    <div class="border border-primary rounded shadow-sm p-3 bg-light d-flex justify-content-between align-items-center">
+                        <div>
+                            <strong class="text-dark">${voucher.name}</strong>
+                            <p class="mb-0">Giảm: ${discountValue}</p>
+                        </div>
+                        <button type="button" class="btn btn-primary apply-coupon" 
+                            data-voucher-name="${voucher.name}"
+                            data-voucher-id="${voucher.id}"
+                            data-discount-value="${voucher.discount_value}"
+                            data-discount-type="${voucher.discount_type}">
+                            Áp dụng
+                        </button>
+                    </div>
+                </div>`;
+
+                $("#voucher-list").append(voucherHtml);
+            });
         }
+
+
+
+
 
         // lay dia chi them moi
         $('#provinceAdd').change(function() {

@@ -5,8 +5,11 @@ namespace App\Http\Controllers\Client\Api;
 use App\Http\Controllers\Controller;
 use App\Models\Cart;
 use App\Models\ProductVariant;
+use App\Models\VoucherUsage;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
 use Illuminate\Http\Request;
+use Illuminate\Support\Carbon;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Log;
 use PhpParser\Builder\Class_;
 
@@ -185,9 +188,16 @@ class ProductController extends Controller
             $quantity = $request->input('quantity');
             $variantId = $request->input('variantId');
             $productResponse = ProductVariant::with(['product', 'attributeValues.attribute'])->where('id', $variantId)->first();
+            $voucher = VoucherUsage::with('voucher')
+                ->where('user_id', $userId)
+                ->Where('end_date', '>', Carbon::now())
+                ->Where('status', 'ACTIVE')
+                ->latest('id')
+                ->get();
             return response()->json([
                 'productResponse' => $productResponse,
-                'quantity' => $quantity
+                'quantity' => $quantity,
+                'vouchers'=>$voucher
             ]);
         }catch (\Throwable $exception){
             Log::error($exception->getMessage());
