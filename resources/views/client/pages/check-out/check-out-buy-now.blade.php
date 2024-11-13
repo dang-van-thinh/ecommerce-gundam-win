@@ -143,6 +143,7 @@
                 data: productStorage,
                 success: function(response) {
                     console.log(response);
+                    // console.log(response.vouchers);
                     showProduct(response.productResponse, response.quantity, response.vouchers)
                 }
             }).then(() => {
@@ -153,6 +154,7 @@
                         const voucherName = $(this).data('voucher-name');
                         // console.log(voucherName);
                         const voucherId = $(this).data('voucher-id');
+                        const Id = $(this).data('id');
                         const discountValue = parseFloat($(this).data(
                             'discount-value'));
                         console.log(discountValue);
@@ -165,6 +167,8 @@
 
                         // Cập nhật voucher_id vào input ẩn
                         $('#voucher-id-input').val(voucherId);
+
+                        $('#id-input').val(Id);
 
                         // Cập nhật giảm giá vào tổng giá
                         const totalAmount = parseFloat($('input[name="totalAmount"]')
@@ -206,6 +210,8 @@
 
                         // Làm trống voucher_id khi xoá mã giảm giá
                         $('#voucher-id-input').val('');
+
+                        $('#id-input').val('');
 
                         // Cập nhật lại tổng giá khi xoá mã giảm giá
                         const totalAmount = parseFloat($('input[name="totalAmount"]')
@@ -393,7 +399,13 @@
                 .attr("name", "voucher_id")
                 .attr("value", "");
 
-            couponBox.append(hiddenInput);
+            const hiddenInputUsage = $("<input>")
+                .attr("type", "hidden")
+                .attr("id", "id-input")
+                .attr("name", "id_voucherUsage")
+                .attr("value", "");
+
+            couponBox.append(hiddenInput,hiddenInputUsage);
 
             // tạo modal
             const modalHtml = `
@@ -440,6 +452,7 @@
                         </div>
                         <button type="button" class="btn btn-primary apply-coupon" 
                             data-voucher-name="${voucher.name}"
+                            data-id="${item.id}"
                             data-voucher-id="${voucher.id}"
                             data-discount-value="${voucher.discount_value}"
                             data-discount-type="${voucher.discount_type}">
