@@ -153,8 +153,6 @@
                                                 VND</p>
                                         </li>
                                     @endforeach
-
-
                                 </ul>
 
                                 <div class="coupon-box">
@@ -240,7 +238,6 @@
                                                         </div>
                                                     </div>
                                                 </div>
-
                                                 <!-- Footer -->
                                                 <div class="modal-footer">
                                                     <button type="button" class="btn btn-danger"
