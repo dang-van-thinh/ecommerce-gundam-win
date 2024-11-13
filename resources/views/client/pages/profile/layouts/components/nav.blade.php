@@ -46,7 +46,10 @@
         </li>
 
         <li>
-            <a href="{{ route('profile.myVoucher.index') }}" class="nav-link"> <i class="iconsax" data-icon="bank-card"></i>Ưu đãi</a>
+            <a href="{{ route('profile.myVoucher.index') }}" class="nav-link">
+                <i class="fa-solid fa-ticket"></i>
+                Ưu đãi
+            </a>
         </li>
 
         {{-- <li>
