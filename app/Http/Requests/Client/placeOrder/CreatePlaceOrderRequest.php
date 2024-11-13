@@ -28,6 +28,7 @@ class CreatePlaceOrderRequest extends FormRequest
             "note" => "nullable",
             "discount_amount" => "nullable",
             "voucher_id"      => "nullable",
+            'id_voucherUsage' => "nullable"
         ];
     }
 
