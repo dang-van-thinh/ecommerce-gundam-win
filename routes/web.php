@@ -73,6 +73,7 @@ Route::prefix('/admin')->middleware(['auth', 'checkAccountStatus', 'checkRole:2'
     Route::resource('orders', AdminOrderController::class);
     Route::resource('feedback', FeedbackController::class);
     Route::get('', [DashboardController::class, 'index'])->name('dashboard');
+    Route::post('refund/check-order', [RefundController::class, 'checkOrder'])->name('refund.checkOrder');
 });
 
 // client
