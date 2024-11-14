@@ -89,7 +89,7 @@ class ProfileController extends Controller
     public function orderDetail($id)
     {
         // Lấy thông tin đơn hàng theo ID
-        $order = Order::with('orderItems.productVariant.product')->findOrFail($id);
+        $order = Order::with('orderItems.productVariant.product','refund')->findOrFail($id);
         return view('client.pages.profile.layouts.components.details', compact('order'));
     }
 
