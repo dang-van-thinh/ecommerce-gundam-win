@@ -440,7 +440,7 @@
             vouchers.forEach(item => {
                 const voucher = item.voucher;
                 const discountValue = voucher.discount_type === 'PERCENTAGE' ?
-                    `${voucher.discount_value}%` :
+                    `${parseInt(voucher.discount_value)}%` :
                     `${parseFloat(voucher.discount_value).toLocaleString('vi-VN')} VND`;
 
                 const voucherHtml = `
