@@ -150,22 +150,7 @@ class AuthController extends Controller
             // gui bang event
             VerifyEmailEvent::dispatch($user);
 
-            $voucher = Voucher::where('type', 'REGISTER')->first();
-
-            if ($voucher) {
-                $startDate = Carbon::now()->lt($voucher->start_date) ? $voucher->start_date : Carbon::now();
-
-                $data = [
-                    "user_id"       => $user->id,
-                    "voucher_id"    => $voucher->id,
-                    "vourcher_code" => strtoupper(Str::random(8)),
-                    "start_date"    => $startDate,
-                    "end_date"      => $voucher->end_date,
-                    "status"        => "ACTIVE",
-                ];
-
-                VoucherUsage::create($data);
-            }
+           
         });
 
         // Thông báo đăng ký thành công và yêu cầu xác thực email
@@ -187,6 +172,22 @@ class AuthController extends Controller
             // Nếu chưa, cập nhật email_verified_at để xác thực tài khoản
             User::where('email', $email)->update(['email_verified_at' => now()]);
 
+            $voucher = Voucher::where('type', 'REGISTER')->first();
+
+            if ($voucher) {
+                $startDate = Carbon::now()->lt($voucher->start_date) ? $voucher->start_date : Carbon::now();
+
+                $data = [
+                    "user_id"       => $acc->id,
+                    "voucher_id"    => $voucher->id,
+                    "vourcher_code" => strtoupper(Str::random(8)),
+                    "start_date"    => $startDate,
+                    "end_date"      => $voucher->end_date,
+                    "status"        => "ACTIVE",
+                ];
+
+                VoucherUsage::create($data);
+            }
             // Thông báo xác thực thành công
             toastr("Tài khoản của bạn đã được xác thực thành công! <br> Vui lòng đăng nhập tài khoản", NotificationInterface::SUCCESS, "Xác thực tài khoản thành công", [
                 "closeButton" => true,

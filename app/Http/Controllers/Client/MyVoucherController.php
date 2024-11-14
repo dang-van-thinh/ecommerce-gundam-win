@@ -15,7 +15,7 @@ class MyVoucherController extends Controller
     {
         $data = VoucherUsage::with('voucher')
             ->where('user_id', Auth::id())
-            ->Where('end_date', '>', Carbon::now())
+            // ->Where('end_date', '>', Carbon::now())
             ->latest('id')
             ->get();
         // dd($data->toArray());
