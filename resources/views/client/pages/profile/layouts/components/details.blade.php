@@ -64,7 +64,8 @@ Chi tiết đơn hàng
                                     'DELIVERING' => 'Đang giao hàng',
                                     'SHIPPED' => 'Đã giao hàng',
                                     'COMPLETED' => 'Thành công',
-                                    'CANCELED' => 'Hủy đơn hàng'
+                                    'CANCELED' => 'Hủy đơn hàng',
+                                    'REFUND' => 'Hoàn hàng',
                                 ];
                                 $statusText = $tabs[$order->status] ?? 'Không xác định';
                             @endphp
@@ -157,6 +158,24 @@ Chi tiết đơn hàng
                                         class="btn btn-danger">Đã nhận hàng</button>
                                 </form>
                             </div>
+                        @endif
+                        <!-- trạng thái hoàn hàng -->
+                        @if ($order->status === 'REFUND')
+                                                <div class="text-end mt-3">
+                                                    @php
+                                                        // Mảng trạng thái hoàn hàng và các thông điệp tương ứng bằng tiếng Việt
+                                                        $refundStatuses = [
+                                                            'ORDER_CREATED' => 'Đơn hoàn hàng đã được tạo',
+                                                            'CANCEL_REFUND_ORDER' => 'Đơn hoàn hàng đã bị hủy',
+                                                            'HANDOVER_TO_SHIPPING' => 'Đơn hàng hoàn đã chuyển cho đơn vị vận chuyển',
+                                                            'REFUND_COMPLETED' => 'Hoàn tiền đã hoàn tất',
+                                                            'DELIVERY_FAILED' => 'Giao hàng hoàn không thành công',
+                                                        ];
+                                                    @endphp
+
+                                                    <label style="font-size: 16px; font-weight: 700;"
+                                                        for="">{{ $refundStatuses[$order->refund->status] ?? 'Trạng thái không xác định' }}</label>
+                                                </div>
                         @endif
                         <!-- Nút hủy đơn hàng -->
                         @if ($order->status === 'PENDING')
