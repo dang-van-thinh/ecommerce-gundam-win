@@ -31,8 +31,10 @@ class ProfileController extends Controller
 
     public function orderHistory()
     {
+        $userId = Auth::id();
         // Lấy tất cả các Order cùng với OrderItems và ProductVariants
         $orders = Order::with('orderItems.productVariant.attributeValues.attribute', 'orderItems.productVariant.product', 'user')
+            ->where('user_id', $userId)
             ->orderBy('id', 'desc')
             ->get();
         return view('client.pages.profile.order', compact('orders'));
@@ -57,7 +59,7 @@ class ProfileController extends Controller
         // Lưu feedback vào cơ sở dữ liệu
         $feedback->save();
 
-        $voucher = Voucher::where('type', 'REGISTER')->first();
+        $voucher = Voucher::where('type', 'SUCCESS')->first();
 
         if ($voucher) {
             $startDate = Carbon::now()->lt($voucher->start_date) ? $voucher->start_date : Carbon::now();
@@ -87,7 +89,7 @@ class ProfileController extends Controller
     public function orderDetail($id)
     {
         // Lấy thông tin đơn hàng theo ID
-        $order = Order::with('orderItems.productVariant.product')->findOrFail($id);
+        $order = Order::with('orderItems.productVariant.product','refund')->findOrFail($id);
         return view('client.pages.profile.layouts.components.details', compact('order'));
     }
 
