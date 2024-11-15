@@ -23,9 +23,9 @@ class ProductController extends Controller
     {
         $data = Product::with(['productImages', 'categoryProduct', 'productVariants'])
             ->latest('id')->paginate(5);
-
+        $categories = CategoryProduct::get();
         // dd($data->toArray());
-        return view('admin.pages.products.index', compact('data'));
+        return view('admin.pages.products.index', compact('data','categories'));
     }
 
     /**
