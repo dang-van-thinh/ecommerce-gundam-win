@@ -31,7 +31,7 @@ use App\Http\Controllers\Client\ProfileController;
 use App\Http\Controllers\Client\WishListController;
 use App\Http\Controllers\Controller;
 use App\Http\Controllers\DefaultController;
-use App\Http\Controllers\RefundController;
+use App\Http\Controllers\Admin\RefundController;
 use App\Models\Article;
 use App\Http\Controllers\Client\SearchController;
 
@@ -126,7 +126,7 @@ Route::get('/collection-product', [CollectionProductController::class, 'index'])
 // <!--Phần này giữ hay bỏ thì nhìn route  nhé - chọn 1 trong 2-->
 Route::get('/', [HomeController::class, 'index'])->name('home');
 Route::get('/product/{id}', [ProductController::class, 'index'])->name('product');
-Route::get('/collection-product', [CollectionProductController::class, 'index'])->name('collection-product');
+Route::get('/collection-product/{id?}', [CollectionProductController::class, 'index'])->name('collection-product');
 Route::get('/collection-blog', [CollectionBlogController::class, 'index'])->name('collection-blog');
 Route::get('/blog', [BlogController::class, 'index'])->name('blog');
 Route::get('/contact', [ContactController::class, 'index'])->name('contact');
