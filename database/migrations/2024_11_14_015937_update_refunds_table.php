@@ -20,8 +20,8 @@ return new class extends Migration
                 'REFUND_COMPLETED',           // Đã hoàn hàng thành công
                 'DELIVERY_FAILED'             // Giao hàng thất bại
             ])
-            ->default('ORDER_CREATED')  // Thiết lập giá trị mặc định
-            ->after('image');
+                ->default('ORDER_CREATED')  // Thiết lập giá trị mặc định
+                ->after('image')->change();
         });
     }
 
