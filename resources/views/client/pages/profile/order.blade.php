@@ -22,7 +22,8 @@ Lịch sử mua hàng
                                     'DELIVERING' => 'Đang giao hàng',
                                     'SHIPPED' => 'Đã giao hàng',
                                     'COMPLETED' => 'Thành công',
-                                    'CANCELED' => 'Hủy đơn hàng'
+                                    'CANCELED' => 'Hủy đơn hàng',
+                                    'REFUND'   =>'Hoàn hàng'
                                 ];
                             @endphp
                             @foreach ($tabs as $status => $tabName)

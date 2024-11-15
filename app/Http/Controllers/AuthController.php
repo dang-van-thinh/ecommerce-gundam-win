@@ -2,6 +2,8 @@
 
 namespace App\Http\Controllers;
 
+use App\Events\ForgotPasswordEvent;
+use App\Events\VerifyEmailEvent;
 use App\Http\Requests\Auth\FogetPassRequest;
 use App\Http\Requests\Auth\LoginRequest;
 use App\Http\Requests\Auth\RegisterRequest;
@@ -144,24 +146,11 @@ class AuthController extends Controller
             $user->roles()->sync([$role->id]);
 
             // Gửi email xác thực tài khoản
-            Mail::to($user->email)->send(new VerifyAccount($user));
+//            Mail::to($user->email)->send(new VerifyAccount($user));
+            // gui bang event
+            VerifyEmailEvent::dispatch($user);
 
-            $voucher = Voucher::where('type', 'SUCCESS')->first();
-
-            if ($voucher) {
-                $startDate = Carbon::now()->lt($voucher->start_date) ? $voucher->start_date : Carbon::now();
-
-                $data = [
-                    "user_id"       => $user->id,
-                    "voucher_id"    => $voucher->id,
-                    "vourcher_code" => strtoupper(Str::random(8)),
-                    "start_date"    => $startDate,
-                    "end_date"      => $voucher->end_date,
-                    "status"        => "ACTIVE",
-                ];
-
-                VoucherUsage::create($data);
-            }
+           
         });
 
         // Thông báo đăng ký thành công và yêu cầu xác thực email
@@ -183,6 +172,22 @@ class AuthController extends Controller
             // Nếu chưa, cập nhật email_verified_at để xác thực tài khoản
             User::where('email', $email)->update(['email_verified_at' => now()]);
 
+            $voucher = Voucher::where('type', 'REGISTER')->first();
+
+            if ($voucher) {
+                $startDate = Carbon::now()->lt($voucher->start_date) ? $voucher->start_date : Carbon::now();
+
+                $data = [
+                    "user_id"       => $acc->id,
+                    "voucher_id"    => $voucher->id,
+                    "vourcher_code" => strtoupper(Str::random(8)),
+                    "start_date"    => $startDate,
+                    "end_date"      => $voucher->end_date,
+                    "status"        => "ACTIVE",
+                ];
+
+                VoucherUsage::create($data);
+            }
             // Thông báo xác thực thành công
             toastr("Tài khoản của bạn đã được xác thực thành công! <br> Vui lòng đăng nhập tài khoản", NotificationInterface::SUCCESS, "Xác thực tài khoản thành công", [
                 "closeButton" => true,
@@ -236,7 +241,9 @@ class AuthController extends Controller
             $user->password_changed_at = now(); // Cập nhật thời gian thực
             $user->save(); // Lưu tất cả thay đổi
             // Gửi email chứa mật khẩu mới
-            Mail::to($user->email)->send(new FogotPass($user, $newPassword));
+//            Mail::to($user->email)->send(new FogotPass($user, $newPassword));
+            // gui bang event
+            ForgotPasswordEvent::dispatch($user,$newPassword);
             // Thông báo thành công
             toastr('Vui lòng kiểm tra email để nhận mật khẩu mới', NotificationInterface::SUCCESS, 'Lấy lại mật khẩu thành công', [
                 "closeButton" => true,
