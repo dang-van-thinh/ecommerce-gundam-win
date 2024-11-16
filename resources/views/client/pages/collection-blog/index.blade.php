@@ -41,7 +41,7 @@ Danh sách bài viết
                                 </a>
                                 <p>{!! Str::limit(strip_tags($article->content), 200) !!}</p>
                                 <div class="share-box">
-                                    <a href="{{ route('blog.show',  $article->id) }}"> Read More..</a>
+                                    <a href="{{ route('blog.show',  $article->id) }}"> Xem thêm..</a>
                                 </div>
                             </div>
                         </div>
@@ -61,7 +61,7 @@ Danh sách bài viết
                         <div class="col-12">
                             <div class="blog-search">
                                 <form method="GET" action="{{ route('collection-blog') }}" class="search-form">
-                                    <input type="search" name="query" placeholder="Search articles..."
+                                    <input type="search" name="query" placeholder="Tìm kiếm..."
                                         value="{{ request('query') }}" aria-label="Search" class="search-input">
                                     <span class="search-icon" aria-label="Submit search"
                                         onclick="this.parentElement.submit();">
@@ -116,7 +116,7 @@ Danh sách bài viết
                             <div class="sidebar-box">
                                 <div class="sidebar-title">
                                     <div class="loader-line"></div>
-                                    <h5>Follow Us</h5>
+                                    <h5>Theo dõi chúng tôi</h5>
                                 </div>
                                 <ul class="social-icon">
                                     <li> <a href="https://www.facebook.com/" target="_blank">
