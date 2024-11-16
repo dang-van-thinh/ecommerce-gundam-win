@@ -11,8 +11,11 @@ use App\Models\Order;
 use App\Models\OrderItem;
 use App\Models\ProductVariant;
 use App\Models\Province;
+use App\Models\Voucher;
+use App\Models\VoucherUsage;
 use Exception;
 use Flasher\Prime\Notification\NotificationInterface;
+use Illuminate\Support\Carbon;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Str;
@@ -36,10 +39,21 @@ class CheckOutController extends Controller
         // dd($productResponse);
         $userAddress = AddressUser::where('user_id', $userId)->get();
         $provinces = Province::all();
+        $voucher = VoucherUsage::with('voucher')
+            ->where('user_id', Auth::id())
+            ->Where('end_date', '>', Carbon::now())
+            ->Where('status', 'ACTIVE')
+            ->whereHas('voucher', function ($query) {        // Lọc các voucher có limit > 0
+                $query->where('limit', '>', 0);               // Điều kiện limit > 0
+            })
+            ->latest('id')
+            ->get();
+
         return view('client.pages.check-out.index', [
             'productResponse' => $productResponse,
             'userAddress' => $userAddress,
-            'provinces' => $provinces
+            'provinces' => $provinces,
+            'voucher' => $voucher
         ]);
     }
 
@@ -57,12 +71,11 @@ class CheckOutController extends Controller
 
     public function placeOrder(CreatePlaceOrderRequest $request)
     {
-
+        // dd($request->all());
         $userId = Auth::id();
         $productCarts = Cart::with(['productVariant.product', 'productVariant.attributeValues.attribute'])->where('user_id', $userId)->get();
         // dd($productCarts->toArray());
         // dd($request->payment_method);
-
         try {
             DB::beginTransaction();
             $paymentMethod = null;
@@ -105,7 +118,8 @@ class CheckOutController extends Controller
                 "phone" => $addressUser['phone'],
                 "customer_name" => $addressUser['name'],
                 "full_address" => $fullAddress,
-                "code" => $code
+                "code" => $code,
+                "discount_amount" => $request->discount_amount,
             ];
             $order = Order::create($dataOrder);
 
@@ -141,6 +155,20 @@ class CheckOutController extends Controller
                 }
             }
 
+            if ($request->voucher_id && $request->id_voucherUsage) {
+                $voucher = Voucher::find($request->voucher_id);
+                $voucherUsage = VoucherUsage::find($request->id_voucherUsage);
+                if ($voucher && $voucherUsage) {
+                    // Giảm số lượng limit và tăng số lượng voucher_used
+                    $voucher->update([
+                        'limit' => $voucher->limit - 1,       // Giảm số lần có thể sử dụng
+                        'voucher_used' => $voucher->voucher_used + 1, // Tăng số lần đã sử dụng
+                    ]);
+
+                    $voucherUsage->delete();
+                }
+            }
+
             //  giao dịch thành công
             DB::commit();
 
@@ -171,7 +199,7 @@ class CheckOutController extends Controller
 
     public function placeOrderBuyNow(CreateOrderBuyNow $request)
     {
-
+        // dd($request->all());
         $userId = Auth::id();
         $variantId = $request->variant;
         $productVariant = ProductVariant::with('product')->where('id', $variantId)->first();
@@ -214,7 +242,8 @@ class CheckOutController extends Controller
                 "phone" => $addressUser['phone'],
                 "customer_name" => $addressUser['name'],
                 "full_address" => $fullAddress,
-                "code" => $code
+                "code" => $code,
+                "discount_amount" => $request->discount_amount,
             ];
             $order = Order::create($dataOrder);
 
@@ -231,6 +260,19 @@ class CheckOutController extends Controller
             OrderItem::insert($data);
 
 
+            if ($request->voucher_id && $request->id_voucherUsage) {
+                $voucher = Voucher::find($request->voucher_id);
+                $voucherUsage = VoucherUsage::find($request->id_voucherUsage);
+                if ($voucher && $voucherUsage) {
+                    // Giảm số lượng limit và tăng số lượng voucher_used
+                    $voucher->update([
+                        'limit' => $voucher->limit - 1,       // Giảm số lần có thể sử dụng
+                        'voucher_used' => $voucher->voucher_used + 1, // Tăng số lần đã sử dụng
+                    ]);
+
+                    $voucherUsage->delete();
+                }
+            }
 
             //  giao dịch thành công
             DB::commit();
