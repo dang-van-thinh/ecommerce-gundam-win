@@ -13,7 +13,7 @@ use Illuminate\Support\Facades\DB;
 
 class CollectionProductController extends Controller
 {
-    public function index()
+    public function index($id = null)
     {
         // $products = Product::with(['productImages', 'categoryProduct', 'productVariants', 'favorites'])
         //     ->latest('id')
@@ -26,6 +26,8 @@ class CollectionProductController extends Controller
             ->groupBy('products.id')
             ->latest('products.id')
             ->paginate(20);
+
+        // dd($products);
 
         $categories = CategoryProduct::withCount('products')->get();
         $minPrice = ProductVariant::min('price') ?? 0;

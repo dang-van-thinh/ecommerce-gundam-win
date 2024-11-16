@@ -257,7 +257,7 @@
                         if (inputEl.value < maxQuantity) {
                             inputEl.value = Number(inputEl.value) + 1;
                             let data = {
-                                'idVariant': addButton.dataset.id,
+                                'cartId': addButton.dataset.id,
                                 'quantity': inputEl.value
                             };
                             updateQuantity(data)
@@ -275,7 +275,7 @@
                         if (inputEl.value >= 2) {
                             inputEl.value = Number(inputEl.value) - 1;
                             let data = {
-                                'idVariant': addButton.dataset.id,
+                                'cartId': addButton.dataset.id,
                                 'quantity': inputEl.value
                             };
                             updateQuantity(data)
