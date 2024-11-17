@@ -21,9 +21,9 @@ return new class extends Migration
             $table->timestamp('email_verified_at')->nullable();
             $table->string('password');
             $table->rememberToken();
-            $table->integer('login_attempts')->default(0)->after('password');     // Đếm số lần đăng nhập thất bại
-            $table->timestamp('last_login_attempt')->nullable()->after('login_attempts'); // Thời điểm đăng nhập thất bại cuối
-            $table->timestamp('password_changed_at')->nullable()->after('last_login_attempt'); // Lần thay đổi mật khẩu cuối
+            $table->integer('login_attempts')->default(0);     // Đếm số lần đăng nhập thất bại
+            $table->timestamp('last_login_attempt')->nullable(); // Thời điểm đăng nhập thất bại cuối
+            $table->timestamp('password_changed_at')->nullable(); // Lần thay đổi mật khẩu cuối
             $table->timestamps();
         });
     }
