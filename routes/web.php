@@ -127,7 +127,7 @@ Route::get('/collection-product', [CollectionProductController::class, 'index'])
 Route::get('/', [HomeController::class, 'index'])->name('home');
 Route::get('/product/{id}', [ProductController::class, 'index'])->name('product');
 Route::get('/collection-product/{id?}', [CollectionProductController::class, 'index'])->name('collection-product');
-Route::get('/collection-blog', [CollectionBlogController::class, 'index'])->name('collection-blog');
+Route::get('/collection-blog/{id?}', [CollectionBlogController::class, 'index'])->name('collection-blog');
 Route::get('/blog', [BlogController::class, 'index'])->name('blog');
 Route::get('/contact', [ContactController::class, 'index'])->name('contact');
 Route::post('/blog/{articleId}/comment', [BlogController::class, 'storeComment'])->name('blog.comment.store');
@@ -137,6 +137,8 @@ Route::get('/blog/category-blog/{id}', [BlogController::class, 'articlesByCatego
 Route::post('/product/filter', [CollectionProductController::class, 'filter'])->name('product.filter');
 Route::get('/404', [DefaultController::class, 'pageNotFound'])->name('404');
 Route::post('/feedback/reply', [ProductController::class, 'replyFeedback'])->name('feedback.reply');
+Route::delete('/comments/{id}', [BlogController::class, 'deleteComment'])->name('comments.delete');
+
 
 // auth
 Route::prefix('auth')->name('auth.')->group(function () {
