@@ -25,6 +25,7 @@ return new class extends Migration
                 'USED_ITEMS' // Hàng qua sử dụng
             ]);
             $table->text('description');
+            $table->string('code', 14);
             $table->string('image');
             // Thêm cột status với các giá trị có thể có
             $table->enum('status', [
