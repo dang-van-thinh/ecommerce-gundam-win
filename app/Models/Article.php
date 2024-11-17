@@ -10,7 +10,6 @@ class Article extends Model
     use HasFactory;
     protected $table = "articles";
     protected $fillable = ['category_article_id', 'title', 'content', 'image', 'created_at', 'updated_at'];
-    public $timestamps = false;
 
     public function categoryArticle()
     {

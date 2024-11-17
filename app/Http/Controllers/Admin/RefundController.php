@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Http\Controllers;
+namespace App\Http\Controllers\Admin;
 
 use App\Http\Requests\Admin\refund\RefundRequest;
 use Carbon\Carbon;
@@ -9,6 +9,7 @@ use App\Http\Controllers\Controller;
 use App\Models\Order;
 use App\Models\Refund;
 use Illuminate\Http\Request;
+use Illuminate\Support\Str;
 
 class RefundController extends Controller
 {
@@ -52,6 +53,7 @@ class RefundController extends Controller
             'description' => $request->description,
             'image' => $imagePath,
             'status' => 'ORDER_CREATED',
+            'code' => $this->codeRefund()
         ]);
         // Cập nhật trạng thái đơn hàng
         $order->status = 'REFUND';
@@ -87,5 +89,22 @@ class RefundController extends Controller
         }
 
         return back()->with('error', 'Không có thay đổi nào được thực hiện.');
+    }
+
+    private function codeRefund()
+    {
+        // Tạo một chuỗi ngẫu nhiên gồm các chữ cái viết hoa và số với độ dài 14 ký tự
+        // $code = Str::upper(Str::random(14));
+
+        $time = now()->format('YmdHis');
+        // dd($time);
+
+        // Đảm bảo chuỗi có cả số và chữ cái bằng cách trộn ký tự từ hai tập hợp riêng biệt
+        $letters = Str::random(7); // Lấy 7 chữ cái ngẫu nhiên
+        $numbers = substr(str_shuffle($time), 0, 7); // Lấy 4 số ngẫu nhiên
+
+        // Gộp và xáo trộn chữ cái và số để đảm bảo vị trí ngẫu nhiên
+        $mixedCode = str_shuffle($letters . $numbers);
+        return strtoupper($mixedCode);
     }
 }
