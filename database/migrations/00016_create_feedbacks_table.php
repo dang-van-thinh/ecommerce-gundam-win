@@ -18,11 +18,10 @@ return new class extends Migration
             $table->foreignIdFor(Product::class)->constrained();
             $table->foreignIdFor(User::class)->constrained();
             $table->bigInteger('parent_feedback_id')->nullable()->default(null);
-            $table->enum('rating',[1,2,3,4,5]);
+            $table->enum('rating', [1, 2, 3, 4, 5]);
             $table->text('comment')->nullable();
             $table->string('file_path')->nullable();
-            $table->
-            $table->timestamps();
+            $table->$table->timestamps();
         });
     }
 
