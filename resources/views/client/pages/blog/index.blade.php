@@ -195,71 +195,89 @@
     </div>
 </section>
 @endsection
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 <script>
- document.addEventListener('DOMContentLoaded', function() {
-    // Chọn tất cả các nút "Trả lời"
-    const replyButtons = document.querySelectorAll('.reply-btn');
-    replyButtons.forEach(button => {
-        button.addEventListener('click', function(e) {
-            e.preventDefault();
+    document.addEventListener('DOMContentLoaded', function() {
+        // Chọn tất cả các nút "Trả lời"
+        const replyButtons = document.querySelectorAll('.reply-btn');
+        replyButtons.forEach(button => {
+            button.addEventListener('click', function(e) {
+                e.preventDefault();
 
-            // Lấy ID của bình luận
-            const commentId = this.getAttribute('data-comment-id');
-            if (!commentId) return;
+                // Kiểm tra trạng thái đăng nhập
+                const isLoggedIn = {{ Auth::check() ? 'true' : 'false' }};
+                if (!isLoggedIn) {
+                    Swal.fire({
+                        title: "Bạn cần đăng nhập để thực hiện thao tác này!",
+                        icon: "warning",
+                        confirmButtonText: "Đăng nhập",
+                        showCancelButton: true,
+                        cancelButtonText: "Hủy"
+                    }).then((result) => {
+                        if (result.isConfirmed) {
+                            window.location.href = "{{ route('auth.login-view') }}";
+                        }
+                    });
+                    return;
+                }
 
-            // Tìm form trả lời tương ứng
-            const replyForm = document.getElementById('reply-form-' + commentId);
-            if (!replyForm) return;
+                // Lấy ID của bình luận
+                const commentId = this.getAttribute('data-comment-id');
+                if (!commentId) return;
 
-            // Ẩn tất cả các form trả lời khác
-            document.querySelectorAll('.reply-form').forEach(form => {
-                if (form !== replyForm) {
-                    form.style.display = 'none';
+                // Tìm form trả lời tương ứng
+                const replyForm = document.getElementById('reply-form-' + commentId);
+                if (!replyForm) return;
+
+                // Ẩn tất cả các form trả lời khác
+                document.querySelectorAll('.reply-form').forEach(form => {
+                    if (form !== replyForm) {
+                        form.style.display = 'none';
+                    }
+                });
+
+                // Toggle hiển thị form trả lời
+                replyForm.style.display = replyForm.style.display === 'none' || replyForm.style.display === '' ? 'block' : 'none';
+            });
+        });
+
+        // Xử lý nút "Quay lại" để ẩn form trả lời
+        const backButtons = document.querySelectorAll('.back-btn');
+        backButtons.forEach(button => {
+            button.addEventListener('click', function(e) {
+                e.preventDefault();
+
+                // Lấy ID của bình luận
+                const commentId = this.getAttribute('data-comment-id');
+                if (!commentId) return;
+
+                // Tìm form trả lời tương ứng và ẩn nó
+                const replyForm = document.getElementById('reply-form-' + commentId);
+                if (replyForm) replyForm.style.display = 'none';
+            });
+        });
+
+        // Chọn tất cả các nút "Xem câu trả lời"
+        const toggleReplyButtons = document.querySelectorAll('.toggle-replies-btn');
+        toggleReplyButtons.forEach(button => {
+            button.addEventListener('click', function() {
+                const commentId = this.getAttribute('data-comment-id');
+                if (!commentId) return;
+
+                // Tìm danh sách câu trả lời tương ứng
+                const repliesList = document.getElementById('replies-' + commentId);
+                if (!repliesList) return;
+
+                // Toggle hiển thị danh sách câu trả lời
+                repliesList.style.display = repliesList.style.display === 'none' || repliesList.style.display === '' ? 'block' : 'none';
+
+                // Thay đổi biểu tượng mũi tên
+                const arrow = this.querySelector('span');
+                if (arrow) {
+                    arrow.innerHTML = repliesList.style.display === 'block' ? '&#9650;' : '&#9660;';
                 }
             });
-
-            // Toggle hiển thị form trả lời
-            replyForm.style.display = replyForm.style.display === 'none' || replyForm.style.display === '' ? 'block' : 'none';
         });
     });
-
-    // Xử lý nút "Quay lại" để ẩn form trả lời
-    const backButtons = document.querySelectorAll('.back-btn');
-    backButtons.forEach(button => {
-        button.addEventListener('click', function(e) {
-            e.preventDefault();
-
-            // Lấy ID của bình luận
-            const commentId = this.getAttribute('data-comment-id');
-            if (!commentId) return;
-
-            // Tìm form trả lời tương ứng và ẩn nó
-            const replyForm = document.getElementById('reply-form-' + commentId);
-            if (replyForm) replyForm.style.display = 'none';
-        });
-    });
-
-    // Chọn tất cả các nút "Xem câu trả lời"
-    const toggleReplyButtons = document.querySelectorAll('.toggle-replies-btn');
-    toggleReplyButtons.forEach(button => {
-        button.addEventListener('click', function() {
-            const commentId = this.getAttribute('data-comment-id');
-            if (!commentId) return;
-
-            // Tìm danh sách câu trả lời tương ứng
-            const repliesList = document.getElementById('replies-' + commentId);
-            if (!repliesList) return;
-
-            // Toggle hiển thị danh sách câu trả lời
-            repliesList.style.display = repliesList.style.display === 'none' || repliesList.style.display === '' ? 'block' : 'none';
-
-            // Thay đổi biểu tượng mũi tên
-            const arrow = this.querySelector('span');
-            if (arrow) {
-                arrow.innerHTML = repliesList.style.display === 'block' ? '&#9650;' : '&#9660;';
-            }
-        });
-    });
-});
-
 </script>
+
