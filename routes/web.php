@@ -127,7 +127,7 @@ Route::get('/collection-product', [CollectionProductController::class, 'index'])
 Route::get('/', [HomeController::class, 'index'])->name('home');
 Route::get('/product/{id}', [ProductController::class, 'index'])->name('product');
 Route::get('/collection-product/{id?}', [CollectionProductController::class, 'index'])->name('collection-product');
-Route::get('/collection-blog', [CollectionBlogController::class, 'index'])->name('collection-blog');
+Route::get('/collection-blog/{id?}', [CollectionBlogController::class, 'index'])->name('collection-blog');
 Route::get('/blog', [BlogController::class, 'index'])->name('blog');
 Route::get('/contact', [ContactController::class, 'index'])->name('contact');
 Route::post('/blog/{articleId}/comment', [BlogController::class, 'storeComment'])->name('blog.comment.store');
