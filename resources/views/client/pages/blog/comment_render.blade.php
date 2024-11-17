@@ -9,17 +9,33 @@
                     <h6>
                         {{-- Kiểm tra xem đây có phải bình luận con không --}}
                         @if ($comment->parent_comment_id)
-                        {{ $comment->user->full_name }} trả lời: <strong style="color: rgb(110, 110, 238)">
-                            {{ $comment->parent->user->full_name }}
-                        </strong>
+                            {{ $comment->user->full_name }} trả lời: <strong style="color: rgb(110, 110, 238)">
+                                {{ $comment->parent->user->full_name }}
+                            </strong>
                         @else
-                        {{ $comment->user->full_name }}
+                            {{ $comment->user->full_name }}
                         @endif
                     </h6>
                 </div>
                 <div class="comment-date">
                     {{ $comment->comment }}
                     <a href="javascript:void(0);" class="reply-btn" data-comment-id="{{ $comment->id }}">Trả lời</a>
+                    @php
+                        // Lấy role_id từ bảng user_roles
+                        $roleIds = \DB::table('user_roles')->where('user_id', Auth::id())->pluck('role_id')->toArray();
+                    @endphp
+                    @if (in_array(2, $roleIds))
+                        <form action="{{ route('comments.delete', $comment->id) }}" method="POST"
+                            style="display:inline-block;">
+                            @csrf
+                            @method('DELETE')
+                            <button type="submit" class="btn link-danger ms-1"
+                                onclick="return confirm('Có chắc chắn muốn xóa không?')">
+                                Xóa
+                            </button>
+                        </form>
+                    @endif
+
                 </div>
                 <span>{{ $comment->created_at->format('d/m/Y') }}</span>
             </div>
@@ -44,6 +60,7 @@
             @endauth
             <!-- Hiển thị các câu trả lời -->
             @if ($comment->replies->isNotEmpty())
+
             <a href="javascript:void(0);" class="toggle-replies-btn" data-comment-id="{{ $comment->id }}">
                 Xem câu trả lời <span>&#9660;</span>
             </a>
@@ -54,6 +71,7 @@
                 </li>
                 @endforeach
             </ul>
+
             @endif
         </div>
         
