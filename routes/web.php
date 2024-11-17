@@ -137,6 +137,8 @@ Route::get('/blog/category-blog/{id}', [BlogController::class, 'articlesByCatego
 Route::post('/product/filter', [CollectionProductController::class, 'filter'])->name('product.filter');
 Route::get('/404', [DefaultController::class, 'pageNotFound'])->name('404');
 Route::post('/feedback/reply', [ProductController::class, 'replyFeedback'])->name('feedback.reply');
+Route::delete('/comments/{id}', [BlogController::class, 'deleteComment'])->name('comments.delete');
+
 
 // auth
 Route::prefix('auth')->name('auth.')->group(function () {
