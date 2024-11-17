@@ -18,7 +18,23 @@
             <!-- Bộ lọc và tìm kiếm -->
             <div class="row mb-3">
                 <div class="col-md-6">
-                    <input type="text" id="product-search" class="form-control" placeholder="Tìm kiếm mã hoặc tên sản phẩm">
+                    <input type="text" id="product-search" class="form-control"
+                        placeholder="Tìm kiếm mã hoặc tên sản phẩm">
+                </div>
+                <div class="col-md-3">
+                    <select class="form-select" id="status-filter">
+                        <option value="all">Trạng thái</option>
+                        <option value="ACTIVE">Hoạt động</option>
+                        <option value="IN_ACTIVE">Vô hiệu hoá</option>
+                    </select>
+                </div>
+                <div class="col-md-3">
+                    <select class="form-select" id="category-filter">
+                        <option value="all">Danh mục</option>
+                        @foreach ($categories as $category)
+                            <option value="{{ $category->id }}">{{ $category->name }}</option>
+                        @endforeach
+                    </select>
                 </div>
             </div>
 
@@ -30,23 +46,10 @@
                             <th scope="col" width="1px">STT</th>
                             <th scope="col">Mã sản phẩm</th>
                             <th scope="col">Ảnh</th>
-                            <th scope="col">Tên</th>
+                            <th scope="col">Tên sản phẩm</th>
                             <th scope="col">Giá</th>
-                            <th scope="col">
-                                <select class="form-select" id="status-filter">
-                                    <option value="all">Trạng thái</option>
-                                    <option value="ACTIVE">Hoạt động</option>
-                                    <option value="IN_ACTIVE">Vô hiệu hoá</option>
-                                </select>
-                            </th>
-                            <th scope="col"> 
-                                <select class="form-select" id="category-filter">
-                                <option value="all">Danh mục</option>
-                                @foreach($categories as $category)
-                                    <option value="{{ $category->id }}">{{ $category->name }}</option>
-                                @endforeach
-                            </select>
-                            </th>
+                            <th scope="col">Trạng thái</th>
+                            <th scope="col">Danh mục</th>
                             <th scope="col">Thao tác</th>
                         </tr>
                     </thead>
@@ -57,35 +60,45 @@
             </div>
 
             <!-- Phân trang -->
-            <div id="pagination" class="mt-3">
-                <!-- Phân trang sẽ được tải động -->
-            </div>
+            <div id="pagination" class="mt-3"></div>
         </div>
     </div>
 @endsection
 
 @push('admin-scripts')
-<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-<script>
-    $(document).ready(function() {
-        let currentPage = 1;
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script>
+        $(document).ready(function() {
+            let currentPage = 1;
 
-        // Hàm tải danh sách sản phẩm
-        function fetchProducts(page = 1) {
-            let category = $('#category-filter').val();
-            let search = $('#product-search').val();
-            let status = $('#status-filter').val(); // Lấy trạng thái từ bộ lọc
+            // Hàm tải danh sách sản phẩm
+            function fetchProducts(page = 1) {
+                let category = $('#category-filter').val();
+                let search = $('#product-search').val();
+                let status = $('#status-filter').val();
 
-            $.ajax({
-                url: `/api/admin/products/filter?page=${page}`,
-                type: 'GET',
-                data: { category: category, search: search, status: status }, // Thêm trạng thái vào dữ liệu
-                success: function(response) {
-                    $('#productData').empty();
+                $.ajax({
+                    url: `/api/admin/products/filter?page=${page}`,
+                    type: 'GET',
+                    data: {
+                        category,
+                        search,
+                        status
+                    },
+                    success: function(response) {
+                        $('#productData').empty();
 
-                    // Hiển thị danh sách sản phẩm
-                    response.products.data.forEach(function(product, index) {
-                        $('#productData').append(`
+                        if (response.products.length === 0) {
+                            $('#productData').html(
+                                '<tr><td colspan="8" class="text-center">Không tìm thấy sản phẩm nào.</td></tr>'
+                            );
+                            $('#pagination').html('');
+                            return;
+                        }
+
+                        // Hiển thị danh sách sản phẩm
+                        response.products.data.forEach(function(product, index) {
+                            $('#productData').append(`
                             <tr>
                                 <td>${(page - 1) * 5 + index + 1}</td>
                                 <td>${product.code}</td>
@@ -122,48 +135,68 @@
                                 </td>
                             </tr>
                         `);
-                    });
+                        });
 
-                    // Cập nhật phân trang
-                    $('#pagination').html(`
-                        <div class="pagination">
-                            <div class="page-item ${page === 1 ? 'disabled' : ''}">
-                                <span class="page-link" onclick="fetchProducts(${page - 1})">&lt;</span>
-                            </div>
-                            ${Array.from({ length: response.products.last_page }, (_, i) => `
-                                <div class="page-item ${page === i + 1 ? 'active' : ''}">
-                                    <span class="page-link" onclick="fetchProducts(${i + 1})">${i + 1}</span>
-                                </div>
-                            `).join('')}
-                            <div class="page-item ${page === response.products.last_page ? 'disabled' : ''}">
-                                <span class="page-link" onclick="fetchProducts(${page + 1})">&gt;</span>
-                            </div>
-                        </div>
-                    `);
+                        // Cập nhật phân trang
+                        renderPagination(response.pagination, page);
+                    },
+                    error: function(xhr, status, error) {
+                        console.error("Có lỗi xảy ra: ", error);
+                    }
+                });
+            }
 
-                    currentPage = page;
-                },
-                error: function(xhr, status, error) {
-                    console.error("Có lỗi xảy ra: ", error);
+            // Render phân trang
+            function renderPagination(pagination, currentPage) {
+                if (pagination.last_page <= 1) {
+                    $('#pagination').html('');
+                    return;
+                }
+
+                let paginationHtml = `
+                <nav>
+                    <ul class="pagination">
+                        <li class="page-item ${currentPage === 1 ? 'disabled' : ''}">
+                            <a class="page-link" href="#" data-page="${currentPage - 1}">&laquo;</a>
+                        </li>`;
+
+                for (let i = 1; i <= pagination.last_page; i++) {
+                    paginationHtml += `
+                    <li class="page-item ${currentPage === i ? 'active' : ''}">
+                        <a class="page-link" href="#" data-page="${i}">${i}</a>
+                    </li>`;
+                }
+
+                paginationHtml += `
+                        <li class="page-item ${currentPage === pagination.last_page ? 'disabled' : ''}">
+                            <a class="page-link" href="#" data-page="${currentPage + 1}">&raquo;</a>
+                        </li>
+                    </ul>
+                </nav>`;
+
+                $('#pagination').html(paginationHtml);
+            }
+
+            // Event delegation cho phân trang
+            $('#pagination').on('click', '.page-link', function(e) {
+                e.preventDefault();
+                const page = $(this).data('page');
+                if (page) {
+                    fetchProducts(page);
                 }
             });
-        }
 
-        // Sự kiện thay đổi bộ lọc
-        $('#category-filter, #status-filter').on('change', function() {
-            currentPage = 1;
+            // Sự kiện thay đổi bộ lọc và tìm kiếm
+            $('#category-filter, #status-filter').on('change', function() {
+                fetchProducts(1);
+            });
+
+            $('#product-search').on('keyup', function() {
+                fetchProducts(1);
+            });
+
+            // Tải danh sách sản phẩm khi trang load
             fetchProducts(currentPage);
         });
-
-        // Sự kiện tìm kiếm
-        $('#product-search').on('keyup', function() {
-            currentPage = 1;
-            fetchProducts(currentPage);
-        });
-
-        // Tải danh sách sản phẩm khi trang load
-        fetchProducts(currentPage);
-    });
-
-</script>
+    </script>
 @endpush
