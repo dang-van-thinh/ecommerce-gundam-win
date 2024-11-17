@@ -12,22 +12,22 @@ class ProductController extends Controller
     {
         $category = $request->category;
         $search = $request->search;
-        $status = $request->status;  // Lấy trạng thái từ request
+        $status = $request->status;
 
         try {
             $query = Product::with(['productImages', 'categoryProduct', 'productVariants'])->latest('id');
 
             // Lọc theo danh mục
-            if ($category !== 'all') {
+            if ($category && $category !== 'all') {
                 $query->where('category_product_id', $category);
             }
 
             // Lọc theo trạng thái
-            if ($status !== 'all') {
+            if ($status && $status !== 'all') {
                 $query->where('status', $status);
             }
 
-            // Tìm kiếm theo mã sản phẩm hoặc tên
+            // Tìm kiếm
             if (!empty($search)) {
                 $query->where(function ($q) use ($search) {
                     $q->where('code', 'like', '%' . $search . '%')
@@ -37,6 +37,19 @@ class ProductController extends Controller
 
             // Phân trang
             $products = $query->paginate(5);
+
+            if ($products->isEmpty()) {
+                return response()->json([
+                    'products' => [],
+                    'pagination' => [
+                        'prev_page_url' => null,
+                        'next_page_url' => null,
+                        'current_page' => 1,
+                        'last_page' => 1,
+                    ],
+                    'message' => 'Không tìm thấy sản phẩm nào phù hợp.',
+                ]);
+            }
 
             return response()->json([
                 'products' => $products,
