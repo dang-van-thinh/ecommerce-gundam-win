@@ -26,6 +26,8 @@
         </div>
 
         <div class="comment-text">
+            <!-- Kiểm tra người dùng đã đăng nhập -->
+            @auth
             <!-- Form trả lời bình luận -->
             <form action="{{ route('blog.comment.store', $article->id) }}" method="POST" class="reply-form"
                 id="reply-form-{{ $comment->id }}" style="display: none;">
@@ -39,7 +41,7 @@
                         data-comment-id="{{ $comment->id }}">Quay lại</button>
                 </div>
             </form>
-
+            @endauth
             <!-- Hiển thị các câu trả lời -->
             @if ($comment->replies->isNotEmpty())
             <a href="javascript:void(0);" class="toggle-replies-btn" data-comment-id="{{ $comment->id }}">
@@ -47,12 +49,13 @@
             </a>
             <ul class="replies-list" id="replies-{{ $comment->id }}" style="display: none;">
                 @foreach ($comment->replies as $reply)
-                    <li>
-                        @include('client.pages.blog.comment_render', ['comment' => $reply])
-                    </li>
+                <li>
+                    @include('client.pages.blog.comment_render', ['comment' => $reply])
+                </li>
                 @endforeach
             </ul>
             @endif
         </div>
+        
     </div>
 </li>
