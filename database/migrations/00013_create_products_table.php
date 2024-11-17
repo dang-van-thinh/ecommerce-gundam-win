@@ -17,9 +17,9 @@ return new class extends Migration
             $table->foreignIdFor(CategoryProduct::class)->constrained();
             $table->string('name');
             $table->string('code', 50)->unique();
-            $table->text('description')->nullable();
+            $table->longText('description')->nullable();
             $table->string('image');
-            $table->enum('status',['ACTIVE','IN_ACTIVE']);
+            $table->enum('status', ['ACTIVE', 'IN_ACTIVE']);
             $table->integer('love');
             $table->timestamps();
         });
