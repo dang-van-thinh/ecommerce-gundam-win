@@ -1,5 +1,6 @@
 <?php
 
+use App\Models\OrderItem;
 use App\Models\Product;
 use App\Models\User;
 use Illuminate\Database\Migrations\Migration;
@@ -15,13 +16,13 @@ return new class extends Migration
     {
         Schema::create('feedbacks', function (Blueprint $table) {
             $table->id();
-            $table->foreignIdFor(Product::class)->constrained();
+            $table->foreignIdFor(OrderItem::class)->constrained();
             $table->foreignIdFor(User::class)->constrained();
             $table->bigInteger('parent_feedback_id')->nullable()->default(null);
             $table->enum('rating', [1, 2, 3, 4, 5]);
             $table->text('comment')->nullable();
             $table->string('file_path')->nullable();
-            $table->$table->timestamps();
+            $table->timestamps();
         });
     }
 
