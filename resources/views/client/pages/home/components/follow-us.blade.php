@@ -14,7 +14,7 @@
                     <div class="instagram-box-1">
                         <div class="instagram-box">
                             <div class="instashop-effect">
-                                <img style="width: 300px; height: 400px;" class="img-fluid"
+                                <img style=" bject-fit: cover; width: 300px; height: 400px;" class="img-fluid"
                                     src="{{ asset('storage/' . $post->image) }}" alt="{{ $post->title }}">
                                 <div class="insta-txt">
                                     <div>
