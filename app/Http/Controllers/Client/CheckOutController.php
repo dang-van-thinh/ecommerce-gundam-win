@@ -317,12 +317,14 @@ class CheckOutController extends Controller
 
     private function codeOrder()
     {
-        // Tạo một chuỗi ngẫu nhiên gồm các chữ cái viết hoa và số với độ dài 8 ký tự
-        $code = Str::upper(Str::random(8));
+        // Tạo một chuỗi ngẫu nhiên gồm các chữ cái viết hoa và số với độ dài 14 ký tự
+        // $code = Str::upper(Str::random(14));
+        $time = now()->format('YmdHis');
+//        dd($time);
 
         // Đảm bảo chuỗi có cả số và chữ cái bằng cách trộn ký tự từ hai tập hợp riêng biệt
-        $letters = Str::random(4); // Lấy 4 chữ cái ngẫu nhiên
-        $numbers = substr(str_shuffle("0123456789"), 0, 4); // Lấy 4 số ngẫu nhiên
+        $letters = Str::random(7); // Lấy 7 chữ cái ngẫu nhiên
+        $numbers = substr(str_shuffle($time), 0, 7); // Lấy 4 số ngẫu nhiên
 
         // Gộp và xáo trộn chữ cái và số để đảm bảo vị trí ngẫu nhiên
         $mixedCode = str_shuffle($letters . $numbers);
