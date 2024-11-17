@@ -15,13 +15,16 @@ class CollectionProductController extends Controller
 {
     public function index($id = null)
     {
-        $products = Product::with(['productImages', 'categoryProduct', 'productVariants', 'favorites']);
-        if ($id != null) {
-            $products->whereHas('categoryProduct', function ($query) use ($id) {
-                $query->where('id', $id);
-            });
-        }
-        $products = $products->latest('id')
+        // $products = Product::with(['productImages', 'categoryProduct', 'productVariants', 'favorites'])
+        //     ->latest('id')
+        //     ->paginate(20);
+
+        $products = Product::leftJoin('product_variants as pv', 'products.id', '=', 'pv.product_id')
+            ->leftJoin('order_items as ot', 'pv.id', '=', 'ot.product_variant_id')
+            ->leftJoin('feedbacks as f', 'ot.id', '=', 'f.order_item_id')
+            ->select('products.*', DB::raw('COALESCE(AVG(f.rating), 0) as average_rating'))
+            ->groupBy('products.id')
+            ->latest('products.id')
             ->paginate(20);
 
         // dd($products);
@@ -42,8 +45,14 @@ class CollectionProductController extends Controller
         $minPrice = $request->input('minPrice');
         $maxPrice = $request->input('maxPrice');
         $sort = $request->input('sort'); // Nhận giá trị sắp xếp
+        // Lọc sản phẩm
+        $query = Product::leftJoin('product_variants as pv', 'products.id', '=', 'pv.product_id')
+            ->leftJoin('order_items as ot', 'pv.id', '=', 'ot.product_variant_id')
+            ->leftJoin('feedbacks as f', 'ot.id', '=', 'f.order_item_id')
+            ->select('products.*', DB::raw('COALESCE(AVG(f.rating), 0) as average_rating'))
+            ->groupBy('products.id');
 
-        $query = Product::with(['productImages', 'categoryProduct', 'productVariants.attributeValues']);
+        // $query = Product::with(['productImages', 'categoryProduct', 'productVariants.attributeValues']);
 
         if (!empty($categories)) {
             $query->whereIn('category_product_id', $categories);

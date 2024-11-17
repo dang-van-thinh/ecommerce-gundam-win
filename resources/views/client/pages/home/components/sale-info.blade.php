@@ -18,9 +18,6 @@
                                                 </use>
                                             </svg></a><a class="btn btn_underline link-strong link-strong-hovered"
                                             href="{{ $contentLeftTopBanners->link }}">Xem thêm<svg>
-
-
-
                                                 <use href="/template/client/assets/svg/icon-sprite.svg#arrow">
                                                 </use>
                                             </svg></a></div>
@@ -34,7 +31,6 @@
                             src="/template/client/assets/images/banner/banner-7.jpg" alt="" />
                         <div class="contain-banner">
                             <div>
-
                                 <h3>Hiện không có tiêu đề</h3>
                                 <div class="link-hover-anim underline"><a
                                         class="btn btn_underline link-strong link-strong-unhovered" href="#">Xem
@@ -65,12 +61,6 @@
                                                 </use>
                                             </svg></a><a class="btn btn_underline link-strong link-strong-hovered"
                                             href="{{ $contentLeftBelowBanners->link }}">Xem thêm<svg>
-
-
-
-
-
-                                                =
                                                 <use href="/template/client/assets/svg/icon-sprite.svg#arrow">
                                                 </use>
                                             </svg></a></div>
@@ -86,12 +76,13 @@
 
                                 <h3>Hiện không có tiêu đề</h3>
                                 <div class="link-hover-anim underline"><a
-                                        class="btn btn_underline link-strong link-strong-unhovered" href="#">Xem
+                                        class="btn btn_underline link-strong link-strong-unhovered"
+                                        href="{{ route('collection-product') }}">Xem
                                         ngay<svg>
                                             <use href="/template/client/assets/svg/icon-sprite.svg#arrow">
                                             </use>
                                         </svg></a><a class="btn btn_underline link-strong link-strong-hovered"
-                                        href="#">Xem ngay<svg>
+                                        href="{{ route('collection-product') }}">Xem ngay<svg>
                                             <use href="/template/client/assets/svg/icon-sprite.svg#arrow">
                                             </use>
                                         </svg></a></div>
@@ -104,68 +95,60 @@
         </div>
         <div class="col-xxl-3 col-4 d-none d-lg-block">
             <div class="special-offer-slider">
-                <h4>Sản phẩm yêu thích nhất</h4>
+                <h4>Sản phẩm mới nhất</h4>
                 <div class="swiper special-offer-slide">
                     <div class="swiper-wrapper trending-products">
-                        @foreach ($products as $product)
+                        @foreach ($productNew as $product)
                             <div class="swiper-slide product-box-3">
                                 <div class="img-wrapper">
+                                    <div class="label-block"><span class="lable-1">NEW</span><a
+                                            class="label-2 wishlist-icon" href="javascript:void(0)" tabindex="0"><i
+                                                class="iconsax" data-icon="heart" aria-hidden="true"
+                                                data-bs-toggle="tooltip" data-bs-title="Add to Wishlist"></i></a>
+                                    </div>
                                     <div class="label-block">
-                                        <span class="lable-1">NEW</span><a class="label-2 wishlist-icon"
-                                            href="javascript:void(0)" tabindex="0"><i class="iconsax"
-                                                data-icon="heart" aria-hidden="true" data-bs-toggle="tooltip"
-                                                data-bs-title="Add to Wishlist"></i></a>
+                                        <a class="label-2 wishlist-icon" data-id="{{ $product->id }}" tabindex="0">
+                                            <i class="fa-regular fa-heart"
+                                                style="{{ $product->favorites->isNotEmpty() ? 'display: none;' : '' }}"></i>
+                                            <i class="fa-solid fa-heart"
+                                                style="color: red; {{ $product->favorites->isNotEmpty() ? '' : 'display: none;' }}"></i>
+                                        </a>
                                     </div>
                                     <div class="product-image ratio_apos">
                                         <a class="pro-first" href="{{ route('product', $product->id) }}">
                                             <img class="bg-img" src="{{ '/storage/' . $product->image }}"
-                                                alt="product" />
-
+                                                alt="product" style="width: 100%; height: 300px; object-fit: cover;" />
                                         </a>
                                         @php
                                             $firstImage = $product->productImages->first();
                                         @endphp
                                         <a class="pro-sec" href="{{ route('product', $product->id) }}">
                                             <img class="bg-img" src="{{ '/storage/' . $firstImage->image_url }}"
-                                                alt="product" />
+                                                alt="product" style="width: 100%; height: 300px; object-fit: cover;" />
                                         </a>
                                     </div>
-                                    <div class="cart-info-icon">
-                                        <a href="#" data-bs-toggle="modal" data-bs-target="#addtocart"
-                                            tabindex="0">
-                                            <i class="iconsax" data-icon="basket-2" aria-hidden="true"
-                                                data-bs-toggle="tooltip" data-bs-title="Add to card">
-                                            </i>
-
-                                        </a>
-                                        @php
-                                            $firstImage = $product->productImages->first();
-                                        @endphp
-                                        <a class="pro-sec" href="{{ route('product', $product->id) }}">
-                                            <img class="bg-img" src="{{ '/storage/' . $firstImage->image_url }}"
-                                                alt="product" />
-                                        </a>
-                                    </div>
-
                                 </div>
                                 <div class="product-detail">
                                     <ul class="rating">
-                                        <li><i class="fa-solid fa-star"></i></li>
-                                        <li><i class="fa-solid fa-star"></i></li>
-                                        <li><i class="fa-solid fa-star"></i></li>
-                                        <li><i class="fa-solid fa-star-half-stroke"></i></li>
-                                        <li><i class="fa-regular fa-star"></i></li>
-                                        <li>4.3</li>
-                                    </ul><a href="{{ route('product', $product->id) }}">
+                                        @php
+                                            $rating = $product->average_rating ? $product->average_rating : 0; // Lấy rating từ feedback
+                                        @endphp
+                                        @for ($i = 1; $i <= 5; $i++)
+                                            <li>
+                                                <i class="fa-solid fa-star"
+                                                    style="color: {{ $i <= $rating ? '#f39c12' : '#000' }};"></i>
+                                            </li>
+                                        @endfor
+                                    </ul>
+                                    <a href="{{ route('product', $product->id) }}">
                                         <h6>{{ $product->name }}</h6>
                                     </a>
                                     <p>
                                         @if ($product->productVariants->count() === 1)
-                                            {{ number_format($product->productVariants->first()->price, 0, ',', '.') }}₫
+                                            {{ number_format($product->productVariants->first()->price, 0, ',', '.') }} VND
                                         @else
-                                            {{ number_format($product->productVariants->min('price'), 0, ',', '.') }}₫
-                                            -
-                                            {{ number_format($product->productVariants->max('price'), 0, ',', '.') }}₫
+                                            {{ number_format($product->productVariants->min('price'), 0, ',', '.') }} -
+                                            {{ number_format($product->productVariants->max('price'), 0, ',', '.') }} VND
                                         @endif
                                     </p>
                                 </div>

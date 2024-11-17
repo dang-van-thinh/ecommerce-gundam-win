@@ -28,7 +28,7 @@ class OrderItem extends Model
 
     public function feedback()
     {
-        return $this->hasOne(Feedback::class);
+        return $this->hasMany(Feedback::class);
     }
 
     public function productVariant()
