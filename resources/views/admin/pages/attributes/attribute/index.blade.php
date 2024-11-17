@@ -13,7 +13,7 @@ Trang này để thử cho ae nhé :)))
                         <form action="{{ route('attributes.store') }}" method="POST">
                             @csrf
                             <div class="form-group">
-                                <input type="text" name="name" class="form-control" placeholder="Tên thuộc tính">
+                                <input type="text" name="name" class="form-control" placeholder="Tên thuộc tính" value="{{ old('name') }}">
                                 @error('name')
                                 <div class="text-danger">{{ $message }}</div>
                                 @enderror
