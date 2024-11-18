@@ -2,6 +2,20 @@
 @section('title')
     Giỏ hàng
 @endsection
+@push('css')
+    <style>
+        td {
+            white-space: nowrap;
+            /* Giữ văn bản trên một dòng */
+            overflow: hidden;
+            /* An văn bản vượt quá giới hạn */
+            text-overflow: ellipsis;
+            /* Hiển thị dâu'...' khi văn bản vượt quá */
+            max-width: 200px;
+            /* Đặt chiêu rộng tôi đa cho ô văn bản */
+        }
+    </style>
+@endpush
 @section('content')
     @include('client.pages.components.breadcrumb', [
         'pageHeader' => 'Giỏ hàng',
@@ -30,7 +44,9 @@
                             <table class="table" id="cart-table">
                                 <thead>
                                     <tr>
-                                        <th>Sản phẩm </th>
+                                        <th
+                                            style="white-space: nowrap; overflow: hidden; text-overflow: ellipsis; max-width: 150px;">
+                                            Sản phẩm </th>
                                         <th>Giá </th>
                                         <th>Số lượng</th>
                                         <th>Tổng tiền</th>
@@ -98,11 +114,11 @@
                             </div>
                             <p>Almost there, add <span>$267.00 </span>more to get <span>FREE Shipping !! </span></p>
                         </div> --}}
-                        <div class="cart-body mt-0">
+                        {{-- <div class="cart-body mt-0">
                             <h6>Chi tiết giá </h6>
                             <ul>
                                 <li>
-                                    <p>Tổng </p><span>$220.00 </span>
+                                    <p>Tổng </p><span id="cart_total_detail">$220.00 </span>
                                 </li>
                                 <li>
                                     <p>Tiết kiệm được </p><span class="theme-color">-$20.00 </span>
@@ -111,13 +127,15 @@
                                     <p>Vận chuyển </p><span>$50.00 </span>
                                 </li>
                             </ul>
-                        </div>
+                        </div> --}}
                         <div class="cart-bottom">
-                            <p><i class="iconsax me-1" data-icon="tag-2"></i>Khuyến mãi đặc biệt (-$1.49) </p>
-                            <h6>Tổng cộng <span>$158.41 </span></h6>
+                            {{-- <p><i class="iconsax me-1" data-icon="tag-2"></i>Khuyến mãi đặc biệt (-$1.49) </p> --}}
+                            <h6>Tổng cộng
+                                <span id="cart_total">0 </span>
+                            </h6>
                             <span>Thuế và phí vận chuyển được tính khi thanh toán</span>
                         </div>
-                        <div class="coupon-box">
+                        {{-- <div class="coupon-box">
                             <h6>Mã giảm giá</h6>
                             <ul>
                                 <li>
@@ -129,8 +147,8 @@
                                         dụng</button>
                                 </li>
                             </ul>
-                        </div>
-                        <form action="{{ route('check-out') }}" method="get">
+                        </div> --}}
+                        <form action="{{ route('check-out') }}" method="get" class="mt-4">
                             @csrf
                             <button type="submit" class="btn btn_black w-100 sm rounded" id="submit_checkout">Thanh
                                 toán</button>
@@ -266,6 +284,7 @@
                             console.log(total);
                             totalPrice[index].innerHTML = new Intl.NumberFormat().format(total) +
                                 ' VND';
+                            showCartTotalPrice()
                         }
 
                     });
@@ -281,25 +300,39 @@
                             updateQuantity(data)
                             // thay doi hien thị tổng giá
                             let total = Number(subButton.dataset.price * inputEl.value)
-                            console.log(total);
+                            // console.log(total);
                             totalPrice[index].innerHTML = new Intl.NumberFormat().format(total) +
                                 ' VND';
+                            showCartTotalPrice()
                         }
                     });
                 });
             }
 
+            function showCartTotalPrice() {
+                const cartTotal = document.querySelector("#cart_total"); // hienr thi tong gia gio hang
+                let priceItemCart = document.querySelectorAll(".totalPrice");
+                let cartTotalPrice = 0;
+                priceItemCart.forEach(element => {
+                    cartTotalPrice += parseFloat(element.textContent.replace(/[^\d.-]/g, ''))
+                });
+                cartTotal.innerText = `${ Intl.NumberFormat().format(cartTotalPrice)} VND`;
+                // console.log("hiii", cartTotalPrice);
+
+            }
+
             function showTable() {
                 const tableBody = document.querySelector('#show-product'); // giả sử bạn có một tbody với id này
-
+                let cartTotalPrice = 0;
                 // Xóa dữ liệu cũ
                 tableBody.innerHTML = '';
 
                 // Lặp qua từng sản phẩm để tạo các hàng
                 if (productResponse.length > 0) {
                     productResponse.forEach(item => {
+                        const productRoute = `{{ route('product', ':id') }}`;
                         const row = document.createElement('tr');
-                        console.log(item);
+                        console.log(item.product.id);
                         // Cột sản phẩm
                         const productCell = document.createElement('td');
                         const cartBox = document.createElement('div');
@@ -317,7 +350,7 @@
                         // Thông tin sản phẩm
                         const infoDiv = document.createElement('div');
                         const nameLink = document.createElement('a');
-                        nameLink.href = 'product.html';
+                        nameLink.href = productRoute.replace(':id', item.product.id);
                         const name = document.createElement('h5');
                         name.textContent = item.product.name;
                         nameLink.appendChild(name);
@@ -376,9 +409,11 @@
                         // Tổng giá
                         const totalCell = document.createElement('td');
                         const total = item.product_variant.price * item.cart.quantity;
+                        let totalItemCell = new Intl.NumberFormat().format(total);
                         totalCell.className = 'totalPrice';
-                        totalCell.textContent = `${new Intl.NumberFormat().format(total)} VND`;
+                        totalCell.textContent = `${totalItemCell} VND`;
                         row.appendChild(totalCell);
+                        cartTotalPrice += Number(total);
 
                         // Nút xóa
                         const deleteCell = document.createElement('td');
@@ -392,7 +427,8 @@
 
                         // Thêm hàng vào bảng
                         tableBody.appendChild(row);
-
+                        document.querySelector("#cart_total").innerText =
+                            `${new Intl.NumberFormat().format(cartTotalPrice) } VND`;
                     });
                 } else {
                     console.log(productResponse);
@@ -406,6 +442,7 @@
                     document.querySelector("#item_not_product").innerHTML = div;
                     // tableBody.appendChild(div);
                 }
+                showCartTotalPrice()
             };
             showBtn();
         });
