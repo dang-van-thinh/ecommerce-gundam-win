@@ -2,6 +2,20 @@
 @section('title')
     Giỏ hàng
 @endsection
+@push('css')
+    <style>
+        td {
+            white-space: nowrap;
+            /* Giữ văn bản trên một dòng */
+            overflow: hidden;
+            /* An văn bản vượt quá giới hạn */
+            text-overflow: ellipsis;
+            /* Hiển thị dâu'...' khi văn bản vượt quá */
+            max-width: 200px;
+            /* Đặt chiêu rộng tôi đa cho ô văn bản */
+        }
+    </style>
+@endpush
 @section('content')
     @include('client.pages.components.breadcrumb', [
         'pageHeader' => 'Giỏ hàng',
@@ -298,8 +312,9 @@
                 // Lặp qua từng sản phẩm để tạo các hàng
                 if (productResponse.length > 0) {
                     productResponse.forEach(item => {
+                        const productRoute = `{{ route('product', ':id') }}`;
                         const row = document.createElement('tr');
-                        console.log(item);
+                        console.log(item.product.id);
                         // Cột sản phẩm
                         const productCell = document.createElement('td');
                         const cartBox = document.createElement('div');
@@ -317,7 +332,7 @@
                         // Thông tin sản phẩm
                         const infoDiv = document.createElement('div');
                         const nameLink = document.createElement('a');
-                        nameLink.href = 'product.html';
+                        nameLink.href = productRoute.replace(':id', item.product.id);
                         const name = document.createElement('h5');
                         name.textContent = item.product.name;
                         nameLink.appendChild(name);
