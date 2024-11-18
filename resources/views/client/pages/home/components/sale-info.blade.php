@@ -101,7 +101,7 @@
                         @foreach ($productNew as $product)
                             <div class="swiper-slide product-box-3">
                                 <div class="img-wrapper">
-                                    <div class="label-block"><span class="lable-1">NEW</span><a
+                                    <div class="label-block"><span class="lable-1">Mới</span><a
                                             class="label-2 wishlist-icon" href="javascript:void(0)" tabindex="0"><i
                                                 class="iconsax" data-icon="heart" aria-hidden="true"
                                                 data-bs-toggle="tooltip" data-bs-title="Add to Wishlist"></i></a>
