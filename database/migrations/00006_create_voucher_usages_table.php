@@ -24,7 +24,6 @@ return new class extends Migration
                 'ACTIVE',
                 'IN_ACTIVE'
             ]);
-            $table->enum('type', ['OTHER', 'REGISTER', 'SUCCESS'])->default('OTHER');
         });
     }
 
