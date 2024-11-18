@@ -20,7 +20,8 @@ return new class extends Migration
             $table->longText('description')->nullable();
             $table->string('image');
             $table->enum('status', ['ACTIVE', 'IN_ACTIVE']);
-            $table->integer('love');
+            $table->integer('love')->default(0);
+            $table->integer('view')->default(0); // Đặt giá trị mặc định là 0
             $table->timestamps();
         });
     }
