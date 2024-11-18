@@ -46,7 +46,7 @@ class DashboardController extends Controller
         // Đếm số đơn hàng có status là "SHIPPED" đã giao
         $shippedOrders = Order::where('status', 'SHIPPED')->count();
         // Đếm số đơn hàng có status là "CANCELLED" giao thất bại
-        $cancelledOrders = Order::where('status', 'CANCELLED')->count();
+        $cancelledOrders = Order::where('status', 'CANCELED')->count();
 
         // Tính phần trăm đơn hàng hoàn thành thành công
         $successRate = $totalOrders > 0 ? ($completedOrders / $totalOrders) * 100 : 0;

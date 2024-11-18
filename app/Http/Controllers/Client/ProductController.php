@@ -16,7 +16,10 @@ class ProductController extends Controller
     {
         $product = Product::with(['productImages', 'productVariants.attributeValues.attribute', 'categoryProduct'])->findOrFail($id);
         // dd($product);
-
+        if ($product) {
+            // Tăng view mỗi khi sản phẩm được xem
+            $product->increment('view');
+        }
         $productVariants = $product->toArray()['product_variants'];
         $variantResponse = [];
         $productResponse = [];
