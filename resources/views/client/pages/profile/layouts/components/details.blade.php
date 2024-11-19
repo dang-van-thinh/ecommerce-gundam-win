@@ -122,20 +122,7 @@ Chi tiết đơn hàng
                                                     </ul>
                                                     @if ($order->status === 'COMPLETED' && $order->confirm_status === 'ACTIVE')
                                                                             @if ($item->feedback)
-                                                                                                    @php
-                                                                                                        // Kiểm tra xem đã hơn 3 ngày kể từ khi đánh giá được tạo không
-                                                                                                        $threeDaysAgo = now()->subDays(3);
-                                                                                                        $canEditReview = $item->feedback->updated_at === null && $item->feedback->created_at > $threeDaysAgo;
-                                                                                                    @endphp
-
-                                                                                                    @if ($canEditReview)
-                                                                                                        <span data-bs-toggle="modal" data-bs-target="#EditReview-modal"
-                                                                                                            data-feedback="{{ $item->feedback->id }}" title="Sửa đánh giá" tabindex="0">Sửa đánh
-                                                                                                            giá</span>
-                                                                                                        @include('client.pages.profile.layouts.components.edit-rating-product')
-                                                                                                    @else
-                                                                                                        <span>Cảm ơn bạn đã mua sản phẩm của chúng tôi</span>
-                                                                                                    @endif
+                                                                                <span>Cảm ơn bạn đã mua sản phẩm của chúng tôi</span>
                                                                             @else
                                                                                 <span data-bs-toggle="modal" data-bs-target="#Reviews-modal" title="Đánh giá"
                                                                                     tabindex="0">Viết đánh giá</span>
