@@ -5,8 +5,9 @@
 
                 @if ($contentLeftTopBanners)
                     <div class="col-12">
-                        <div class="collection-banner p-left"> <img class="bg-img"
-                                src="{{ asset('storage/' . $contentLeftTopBanners->image_url) }}" alt="" />
+                        <div class="collection-banner p-left"> 
+                            <a href="{{ $contentLeftTopBanners->link }}"><img class="bg-img"
+                                src="{{ asset('storage/' . $contentLeftTopBanners->image_url) }}" alt="" /></a>
                             <div class="contain-banner">
                                 <div>
 
@@ -230,10 +231,9 @@
 
             @if ($contentRightBanners)
                 <div class="offer-banner-3 ratio1_3">
-                    <a href="#"> <img class="bg-img"
+                    <a href="{{ $contentRightBanners->link }}"> <img class="bg-img"
                             src="{{ asset('storage/' . $contentRightBanners->image_url) }}" alt="" />
-                        <div><img src="/template/client/assets/images/banner/2.png" alt="" />
-                            <h6>{{ $contentRightBanners->title }}</h6>
+                        <div>
                         </div>
                     </a>
                 </div>
