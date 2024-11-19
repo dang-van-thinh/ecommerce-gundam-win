@@ -64,13 +64,24 @@ class DashboardController extends Controller
 
 
         $salesData = Product::with(['productVariants'])->get();
-        // Lấy danh sách tên sản phẩm
-        $labels = $salesData->pluck('name');
-        // Lấy danh sách các số lượng bán (sold) của từng variants
-        $data = $salesData->map(function ($product) {
-            // Lấy tất cả các giá trị 'sold' của từng productVariants
-            return $product->productVariants->sum('sold');
+
+        // Tính tổng số lượng bán của từng sản phẩm
+        $processedData = $salesData->map(function ($product) {
+            return [
+                'code' => $product->code, // Mã sản phẩm
+                'name' => $product->name, // Tên sản phẩm
+                'sold' => $product->productVariants->sum('sold') // Tổng số lượng bán
+            ];
         });
+
+        // Lấy 10 sản phẩm bán nhiều nhất
+        $topProducts = $processedData->sortByDesc('sold')->take(12);
+
+        // Tách dữ liệu để truyền vào biểu đồ
+        $codes = $topProducts->pluck('code'); // Mã sản phẩm
+        $labels = $topProducts->pluck('name'); // Tên sản phẩm
+        $data = $topProducts->pluck('sold'); // Số lượng bán
+
 
 
         // tính số lượng tiền thu đc trong 1 tháng 
@@ -124,6 +135,7 @@ class DashboardController extends Controller
                 'totalArticles',
                 'feedbackCount',
                 'labels',
+                'codes',
                 'data',
                 'labelsMonthlyRevenue',
                 'dataMonthlyRevenue',
