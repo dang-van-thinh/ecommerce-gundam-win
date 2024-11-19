@@ -21,6 +21,7 @@ class Voucher extends Model
         'voucher_used',
         'start_date',
         'end_date',
+        'type'
     ];
     public $timestamps = false; 
 
