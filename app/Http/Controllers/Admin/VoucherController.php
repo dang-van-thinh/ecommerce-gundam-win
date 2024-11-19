@@ -61,6 +61,7 @@ class VoucherController extends Controller
             'min_order_value' => $request->min_order_value,
             'max_order_value' => $request->max_order_value,
             'status' => $request->status,
+            'type' => $request->type,
         ]);
 
         toastr("Thêm thành công dữ liệu voucher", NotificationInterface::SUCCESS, "Thành công !", [
@@ -98,6 +99,7 @@ class VoucherController extends Controller
             'min_order_value' => $request->min_order_value,
             'max_order_value' => $request->max_order_value,
             'status' => $request->status,
+            'type' => $request->type,
         ];
 
         $updateSuccess = $voucher->update($dataUpdate);
