@@ -316,7 +316,9 @@
                 priceItemCart.forEach(element => {
                     cartTotalPrice += parseFloat(element.textContent.replace(/[^\d.-]/g, ''))
                 });
-                cartTotal.innerText = `${ Intl.NumberFormat().format(cartTotalPrice)} VND`;
+
+                cartTotal.innerText =
+                    `${ Intl.NumberFormat('en-AU').number_format(cartTotalPrice, 0, ',', '.')} VND`;
                 // console.log("hiii", cartTotalPrice);
 
             }

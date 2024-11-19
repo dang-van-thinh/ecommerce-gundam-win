@@ -1,6 +1,6 @@
 <div class="modal fade" id="voucherDetailModal-{{ $voucher->id }}" tabindex="-1" role="dialog"
     aria-labelledby="voucherDetailModalLabel" aria-hidden="true">
-    <div class="modal-dialog " style="max-width: 60%;">
+    <div class="modal-dialog" style="max-width: 60%;">
         <div class="modal-content">
             <div class="modal-content">
                 <div class="modal-header d-flex">
@@ -38,6 +38,12 @@
                                 <label for="" class="form-control-label">Số lượng voucher</label>
                                 <input type="text" class="form-control" value="{{ $voucher->limit }}" readonly>
                             </div>
+                            <div class="form-group">
+                                <label for="" class="form-control-label">Loại voucher</label>
+                                <input type="text" class="form-control"
+                                    value="{{ $voucher->type === 'SUCCESS' ? 'Áp dụng khi mua hàng thành công' : ($voucher->type === 'FIXED' ? 'Áp dụng cho khách hàng mới' : 'Khác') }}"
+                                    readonly>
+                            </div>
                         </div>
                         <div class="col-6">
                             <div class="form-group">
@@ -49,7 +55,8 @@
 
                             <div class="form-group">
                                 <label for="" class="form-control-label">Giá trị giảm</label>
-                                <input type="text" class="form-control" value="{{ $voucher->discount_value }}" readonly>
+                                <input type="text" class="form-control" value="{{ $voucher->discount_value }}"
+                                    readonly>
                             </div>
 
                             <div class="form-group">
