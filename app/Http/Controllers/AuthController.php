@@ -130,7 +130,7 @@ class AuthController extends Controller
             );
             Role::firstOrCreate(
                 ['id' => 2],
-                ['name' => 'Adim', 'description' => 'Vai trò Quản lý']
+                ['name' => 'Admin', 'description' => 'Vai trò Quản lý']
             );
             // Tạo người dùng mới từ dữ liệu đã validate
             $user = User::create([
@@ -150,7 +150,7 @@ class AuthController extends Controller
             // gui bang event
             VerifyEmailEvent::dispatch($user);
 
-           
+
         });
 
         // Thông báo đăng ký thành công và yêu cầu xác thực email
