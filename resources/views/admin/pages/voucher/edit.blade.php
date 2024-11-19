@@ -5,7 +5,7 @@
 @section('content')
     <div class="card">
         <div class="card-header">
-            <strong>Cập Nhật Phiếu Giảm Giá</strong> Form
+            <strong>Cập Nhật Phiếu Giảm Giá</strong>
         </div>
         <div class="card-body card-block">
             <form action="{{ route('voucher.update', $voucher->id) }}" method="POST">
@@ -19,9 +19,8 @@
                                 <option value="OTHER" {{ $voucher->type == 'OTHER' ? 'selected' : '' }}>
                                     Khác
                                 </option>
-                                <option value="FIXED" {{ $voucher->type == 'FIXED' ? 'selected' : '' }}>
-                                    Áp dụng cho khách hàng mới
-                                </option>
+                                <option value="REGISTER" {{ $voucher->type == 'REGISTER' ? 'selected' : '' }}>
+                                    Áp dụng cho khách hàng mới</option>
                                 <option value="SUCCESS" {{ $voucher->type == 'FIXED' ? 'selected' : '' }}>
                                     Áp dụng khi mua hàng thành công
                                 </option>

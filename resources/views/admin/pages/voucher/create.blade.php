@@ -16,7 +16,7 @@
                             <label for="" class="form-control-label">Loại voucher</label>
                             <select name="type" class="form-control">
                                 <option value="OTHER">Khác</option>
-                                <option value="FIXED">Áp dụng cho khách hàng mới</option>
+                                <option value="REGISTER">Áp dụng cho khách hàng mới</option>
                                 <option value="SUCCESS">Áp dụng khi mua hàng thành công</option>
                             </select>
                         </div>
