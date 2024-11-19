@@ -17,7 +17,7 @@
                 <thead>
                     <tr class="text-center">
                         <th scope="col">#</th>
-                        <th scope="col">Tên loại</th>
+                        <th scope="col">Tên voucher</th>
                         <th scope="col">Số lượng</th>
                         <th scope="col">Loại voucher</th>
                         <th scope="col">Giá trị giảm</th>
@@ -36,9 +36,9 @@
                                 @if ($voucher->type === 'OTHER')
                                     Khác
                                 @elseif($voucher->type === 'REGISTER')
-                                    Cho khách hàng mới
+                                    Áp dụng khách hàng mới
                                 @elseif($voucher->type === 'SUCCESS')
-                                    Cho khách hàng mua hàng
+                                    Áp dụng khách hàng mua hàng
                                 @endif
                             </td>
                             <td>
