@@ -92,35 +92,6 @@ class ProfileController extends Controller
         $order = Order::with('orderItems.productVariant.product','refund')->findOrFail($id);
         return view('client.pages.profile.layouts.components.details', compact('order'));
     }
-
-    public function feedbackupdate(EditFeedbackRequest $request, $id)
-    {
-        $feedback = Feedback::findOrFail($id);
-        $feedback->order_item_id = $request->input('order_item_id');
-        $feedback->user_id = $request->input('user_id');
-        $feedback->rating = $request->input('rating');
-        $feedback->comment = $request->input('comment');
-        $feedback->updated_at = now();
-
-        // Xóa ảnh cũ nếu có ảnh mới được tải lên
-        if ($request->hasFile('file_path')) {
-            if ($feedback->file_path) {
-                Storage::delete($feedback->file_path); // Xóa file cũ nếu có
-            }
-            $feedback->file_path = $request->file('file_path')->store('feedbacks');
-        }
-
-        $feedback->save();
-
-        sweetalert("Sửa đánh giá sản phẩm thành công", NotificationInterface::INFO, [
-            'position' => "center",
-            'timeOut' => '',
-            'closeButton' => false,
-            'icon' => "success",
-        ]);
-
-        return redirect()->back();
-    }
     public function orderCancel($id)
     {
         $order = Order::findOrFail($id);
