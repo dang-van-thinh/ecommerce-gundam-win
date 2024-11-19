@@ -45,7 +45,7 @@ class DashboardController extends Controller
         $deliveringOrders = Order::where('status', 'DELIVERING')->count();
         // Đếm số đơn hàng có status là "SHIPPED" đã giao
         $shippedOrders = Order::where('status', 'SHIPPED')->count();
-        // Đếm số đơn hàng có status là "CANCELLED" giao thất bại 
+        // Đếm số đơn hàng có status là "CANCELLED" giao thất bại
         $cancelledOrders = Order::where('status', 'CANCELED')->count();
 
         // Tính phần trăm đơn hàng hoàn thành thành công
@@ -84,7 +84,7 @@ class DashboardController extends Controller
 
 
 
-        // tính số lượng tiền thu đc trong 1 tháng 
+        // tính số lượng tiền thu đc trong 1 tháng
         $monthlyRevenue = Order::selectRaw('MONTH(created_at) as month, SUM(total_amount) as total_revenue')
             ->where('status', 'COMPLETED')
             ->whereYear('created_at', Carbon::now()->year) // Lọc trong năm hiện tại
