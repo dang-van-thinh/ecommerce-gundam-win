@@ -7,7 +7,7 @@
         <div class="profile-contain">
             @if (Auth::user()->image)
                 <div class="profile-image">
-                    <img class="img-fluid" src="{{ '/storage/' . Auth::user()->image }}" alt="">
+                    <img class="img-fluid" style="width: 100px;height: 100px; object-fit: cover; " src="{{ '/storage/' . Auth::user()->image }}" alt="">
                 </div>
             @else
                 <div class="profile-image">
