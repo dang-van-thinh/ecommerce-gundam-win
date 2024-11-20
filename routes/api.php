@@ -44,8 +44,10 @@ Route::prefix('')->middleware(['authApi'])->group(function () {
     Route::post('/toggle-favorite', [WishListController::class, 'toggleFavorite'])->name('toggle.favorite');
     Route::delete('/remove-favorite', [WishListController::class, 'removeFavorite'])->name('remove.favorite');
 });
-Route::get('/admin/orders/filter', [OrderController::class, 'filter']);
+
+
 Route::prefix('admin')->middleware(['authApi'])->group(function () {
+    Route::get('/orders/filter', [OrderController::class, 'filter']);
     Route::get('/users/filter', [UserController::class, 'filter']);
+    Route::get('/products/filter', [AdminProductController::class, 'filter']);
 });
-Route::get('/admin/products/filter', [AdminProductController::class, 'filter']);
