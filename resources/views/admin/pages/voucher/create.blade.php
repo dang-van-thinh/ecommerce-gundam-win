@@ -31,12 +31,12 @@
                             @endif
                         </div>
                         <div class="form-group">
-                            <label for="" class="form-control-label">Mô tả về voucher</label>
-                            <input type="text" name="description" placeholder="Mô tả về voucher.." class="form-control"
-                                value="{{ old('description') }}">
-                            @if ($errors->has('description'))
+                            <label for="" class="form-control-label">Mã voucher</label>
+                            <input type="text" name="code" placeholder="Mã voucher.." class="form-control"
+                                value="{{ old('code') }}">
+                            @if ($errors->has('code'))
                                 <div class="form-text badge text-danger">
-                                    {{ $errors->first('description') }}
+                                    {{ $errors->first('code') }}
                                 </div>
                             @endif
                         </div>
@@ -126,11 +126,21 @@
                                 </div>
                             @endif
                         </div>
-                        <div class="form-group mt-5">
-                            <a class="btn btn-primary" href="{{ route('voucher.index') }}">Quay lại</a>
-                            <button type="submit" class="btn btn-success px-5">Thêm</button>
+                        <div class="form-group">
+                            <label for="" class="form-control-label">Mô tả thêm về voucher</label>
+                            <input type="text" name="description" placeholder="Mô tả về voucher.."
+                                class="form-control" value="{{ old('description') }}">
+                            @if ($errors->has('description'))
+                                <div class="form-text badge text-danger">
+                                    {{ $errors->first('description') }}
+                                </div>
+                            @endif
                         </div>
                     </div>
+                </div>
+                <div>
+                    <a class="btn btn-primary" href="{{ route('voucher.index') }}">Quay lại</a>
+                    <button type="submit" class="btn btn-success px-5">Thêm</button>
                 </div>
             </form>
         </div>
