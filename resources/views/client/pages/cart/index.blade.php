@@ -310,17 +310,18 @@
             }
 
             function showCartTotalPrice() {
-                const cartTotal = document.querySelector("#cart_total"); // hienr thi tong gia gio hang
+                const cartTotal = document.querySelector("#cart_total"); // hiển thị tổng giá giỏ hàng
                 let priceItemCart = document.querySelectorAll(".totalPrice");
                 let cartTotalPrice = 0;
+
                 priceItemCart.forEach(element => {
-                    cartTotalPrice += parseFloat(element.textContent.replace(/[^\d.-]/g, ''))
+                    // Loại bỏ tất cả ký tự không phải số và chuyển sang số nguyên
+                    let price = element.textContent.trim().replace(/[^0-9]/g, '');
+                    cartTotalPrice += parseInt(price, 10); // Chuyển sang số nguyên
                 });
 
-                cartTotal.innerText =
-                    `${ Intl.NumberFormat('en-AU').number_format(cartTotalPrice, 0, ',', '.')} VND`;
-                // console.log("hiii", cartTotalPrice);
-
+                // Hiển thị tổng tiền được định dạng
+                cartTotal.innerText = `${Intl.NumberFormat('vi-VN').format(cartTotalPrice)} VND`;
             }
 
             function showTable() {
