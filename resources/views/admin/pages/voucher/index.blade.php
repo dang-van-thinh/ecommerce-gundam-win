@@ -16,20 +16,20 @@
             <table class="table-bordered table">
                 <thead>
                     <tr class="text-center">
-                        <th scope="col">#</th>
+                        <th scope="col"># Mã voucher</th>
                         <th scope="col">Tên voucher</th>
                         <th scope="col">Số lượng</th>
                         <th scope="col">Loại voucher</th>
                         <th scope="col">Giá trị giảm</th>
                         <th scope="col">Trạng thái</th>
-                        <th scope="col">Số lần đã sử dụng</th>
+                        <th scope="col">Lần sử dụng</th>
                         <th scope="col">Thao tác</th>
                     </tr>
                 </thead>
                 <tbody>
                     @foreach ($getAllVoucher as $voucher)
                         <tr class="text-center">
-                            <th scope="row">{{ $loop->iteration }}</th>
+                            <th scope="row">{{ $voucher->code }}</th>
                             <td>{{ $voucher->name }}</td>
                             <td>{{ $voucher->limit }}</td>
                             <td>
@@ -51,11 +51,9 @@
                                 @endif
                             </td>
                             <td>
-                                @if ($voucher->status === 'ACTIVE')
-                                    Hoạt động
-                                @elseif($voucher->status === 'IN_ACTIVE')
-                                    Không hoạt động
-                                @endif
+                                <span class="badge {{ $voucher->status === 'ACTIVE' ? 'bg-primary' : 'bg-secondary' }}">
+                                    {{ $voucher->status === 'ACTIVE' ? 'Hoạt động' : ($voucher->status === 'IN_ACTIVE' ? 'Vô hiệu hóa' : '') }}
+                                </span>
                             </td>
                             <td>{{ $voucher->voucher_used }}</td>
                             <td class="d-flex justify-content-center">
