@@ -11,6 +11,7 @@ class Voucher extends Model
     protected $table = 'vouchers';
     protected $fillable = [
         'name',
+        'code',
         'description',
         'limit',
         'discount_type',
