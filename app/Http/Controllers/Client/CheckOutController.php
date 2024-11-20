@@ -80,12 +80,6 @@ class CheckOutController extends Controller
         // dd($request->payment_method);
         try {
             DB::beginTransaction();
-            $paymentMethod = null;
-            if ($request->payment_method == 'momo' || $request->payment_method == 'vnpay') {
-                $paymentMethod = "BANK_TRANSFER";
-            } else {
-                $paymentMethod = "CASH";
-            }
 
             foreach ($productCarts as $key => $item) {
                 $quantity = $item->productVariant->quantity - $item->quantity;
@@ -107,6 +101,17 @@ class CheckOutController extends Controller
             $fullAddress = $addressUser['address_detail'] . " - " . $addressUser['ward']['name']
                 . " - " . $addressUser['district']['name'] . " - " . $addressUser['province']['name'];
 
+            $paymentMethod = null;
+            $statusOrder = '';
+            if ($request->payment_method == 'momo' || $request->payment_method == 'vnpay') {
+                $paymentMethod = "BANK_TRANSFER";
+                $statusOrder = "PROCESSING";
+            } else {
+                $paymentMethod = "CASH";
+                $statusOrder = "PENDING";
+            }
+
+
             // ma don hang
             $code = $this->codeOrder();
             // dd($fullAddress);
@@ -116,7 +121,7 @@ class CheckOutController extends Controller
                 "payment_method" => $paymentMethod,
                 "note" => $request->note,
                 "confirm_status" => "IN_ACTIVE",
-                "status" => "PROCESSING",
+                "status" => $statusOrder,
                 "phone" => $addressUser['phone'],
                 "customer_name" => $addressUser['name'],
                 "full_address" => $fullAddress,
@@ -207,13 +212,6 @@ class CheckOutController extends Controller
         $productVariant = ProductVariant::with('product')->where('id', $variantId)->first();
         try {
             DB::beginTransaction();
-            $paymentMethod = null;
-            if ($request->payment_method == 'momo' || $request->payment_method == 'vnpay') {
-                $paymentMethod = "BANK_TRANSFER";
-            } else {
-                $paymentMethod = "CASH";
-            }
-
 
             $quantity = $productVariant->quantity - $request->quantity;
             $sold = $productVariant->sold + $request->quantity;
@@ -231,6 +229,16 @@ class CheckOutController extends Controller
             $fullAddress = $addressUser['address_detail'] . " - " . $addressUser['ward']['name']
                 . " - " . $addressUser['district']['name'] . " - " . $addressUser['province']['name'];
 
+            $paymentMethod = null;
+            $statusOrder = '';
+            if ($request->payment_method == 'momo' || $request->payment_method == 'vnpay') {
+                $paymentMethod = "BANK_TRANSFER";
+                $statusOrder = "PROCESSING";
+            } else {
+                $paymentMethod = "CASH";
+                $statusOrder = "PENDING";
+            }
+
             // ma don hang
             $code = $this->codeOrder();
             // dd($fullAddress);
@@ -240,7 +248,7 @@ class CheckOutController extends Controller
                 "payment_method" => $paymentMethod,
                 "note" => $request->note,
                 "confirm_status" => "IN_ACTIVE",
-                "status" => "PROCESSING",
+                "status" => $statusOrder,
                 "phone" => $addressUser['phone'],
                 "customer_name" => $addressUser['name'],
                 "full_address" => $fullAddress,
@@ -248,6 +256,7 @@ class CheckOutController extends Controller
                 "discount_amount" => $request->discount_amount,
             ];
             $order = Order::create($dataOrder);
+
 
 
             $data[] = [
