@@ -48,3 +48,4 @@ Route::get('/admin/orders/filter', [OrderController::class, 'filter']);
 Route::prefix('admin')->middleware(['authApi'])->group(function () {
     Route::get('/users/filter', [UserController::class, 'filter']);
 });
+Route::get('/admin/products/filter', [AdminProductController::class, 'filter']);
