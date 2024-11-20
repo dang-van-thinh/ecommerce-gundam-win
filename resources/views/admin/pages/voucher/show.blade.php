@@ -18,8 +18,8 @@
                             </div>
 
                             <div class="form-group">
-                                <label for="" class="form-control-label">Mô tả về voucher</label>
-                                <input type="text" class="form-control" value="{{ $voucher->description }}" readonly>
+                                <label for="" class="form-control-label">Mã voucher</label>
+                                <input type="text" class="form-control" value="{{ $voucher->code }}" readonly>
                             </div>
 
                             <div class="form-group">
@@ -77,8 +77,11 @@
                                     value="{{ $voucher->status === 'ACTIVE' ? 'Hoạt động' : 'Không hoạt động' }}"
                                     readonly>
                             </div>
-
-
+                            <div class="form-group">
+                                <label for="" class="form-control-label">Mô tả thêm về voucher</label>
+                                <input type="text" class="form-control" value="{{ $voucher->description }}"
+                                    readonly>
+                            </div>
                         </div>
                     </div>
 
