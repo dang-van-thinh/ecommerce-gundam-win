@@ -20,6 +20,8 @@ use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Str;
 
+use function PHPUnit\Framework\isEmpty;
+
 class CheckOutController extends Controller
 {
     public function checkOutByCart()
@@ -114,7 +116,7 @@ class CheckOutController extends Controller
                 "payment_method" => $paymentMethod,
                 "note" => $request->note,
                 "confirm_status" => "IN_ACTIVE",
-                "status" => "PENDING",
+                "status" => "PROCESSING",
                 "phone" => $addressUser['phone'],
                 "customer_name" => $addressUser['name'],
                 "full_address" => $fullAddress,
@@ -145,7 +147,7 @@ class CheckOutController extends Controller
                 $orderId = $order->id;
                 $urlRedirect = route('order-success', $orderId);
 
-                $url = $this->payMomo($request, $urlRedirect);
+                $url = $this->payMomo($dataOrder, $urlRedirect);
                 // dd($url);
                 if ($url) {
                     DB::commit();
@@ -238,7 +240,7 @@ class CheckOutController extends Controller
                 "payment_method" => $paymentMethod,
                 "note" => $request->note,
                 "confirm_status" => "IN_ACTIVE",
-                "status" => "PENDING",
+                "status" => "PROCESSING",
                 "phone" => $addressUser['phone'],
                 "customer_name" => $addressUser['name'],
                 "full_address" => $fullAddress,
@@ -280,7 +282,7 @@ class CheckOutController extends Controller
                 $orderId = $order->id;
                 $urlRedirect = route('order-success', $orderId);
 
-                $url = $this->payMomo($request, $urlRedirect);
+                $url = $this->payMomo($dataOrder, $urlRedirect);
                 // dd($url);
                 if ($url) {
                     DB::commit();
@@ -320,7 +322,7 @@ class CheckOutController extends Controller
         // Tạo một chuỗi ngẫu nhiên gồm các chữ cái viết hoa và số với độ dài 14 ký tự
         // $code = Str::upper(Str::random(14));
         $time = now()->format('YmdHis');
-//        dd($time);
+        //        dd($time);
 
         // Đảm bảo chuỗi có cả số và chữ cái bằng cách trộn ký tự từ hai tập hợp riêng biệt
         $letters = Str::random(7); // Lấy 7 chữ cái ngẫu nhiên
@@ -331,29 +333,27 @@ class CheckOutController extends Controller
         return strtoupper($mixedCode);
     }
 
-    private function payMomo($request, $urlRedirect)
+    private function payMomo($dataOrder, $urlRedirect)
     {
         $endpoint = "https://test-payment.momo.vn/v2/gateway/api/create";
 
-
-        $partnerCode = 'MOMOBKUN20180529';
-        $accessKey = 'klm05TvNBzhg7h7j';
-        $secretKey = 'at67qH6mk8w5Y1nAyMoYKMWACiEi2bsa';
-        $orderInfo = "Thanh toán qua MoMo";
-        $amount = $request->total_amount;
-        $orderId = time() . "";
+        $partnerCode = env("MOMO_PARTNER_CODE");
+        $accessKey = env("MOMO_ACCESS_KEY");
+        $secretKey = env("MOMO_SECRET_KEY");
+        $orderInfo = "Thanh toán MOMO"; // cai nay yeu cau khong duoc de trong
+        $amount = $dataOrder['total_amount'];
+        $orderId = $dataOrder['code'];
         $redirectUrl = $urlRedirect;
-        $ipnUrl = $urlRedirect;
+        $ipnUrl = $urlRedirect; // chuyen huong khi thanh cong
         $extraData = "";
-
-        $requestId = time() . "";
+        $requestId = $dataOrder['code'];
         $requestType = "payWithATM";
-        // $extraData = ($_POST["extraData"] ? $_POST["extraData"] : "");
+
         //before sign HMAC SHA256 signature
         $rawHash = "accessKey=" . $accessKey . "&amount=" . $amount . "&extraData=" . $extraData . "&ipnUrl=" . $ipnUrl . "&orderId=" . $orderId . "&orderInfo=" . $orderInfo . "&partnerCode=" . $partnerCode . "&redirectUrl=" . $redirectUrl . "&requestId=" . $requestId . "&requestType=" . $requestType;
+
         $signature = hash_hmac("sha256", $rawHash, $secretKey);
-        // dd($signature);
-        // die;
+
         $data = array(
             'partnerCode' => $partnerCode,
             'partnerName' => "Test",
@@ -369,11 +369,15 @@ class CheckOutController extends Controller
             'requestType' => $requestType,
             'signature' => $signature
         );
+
         $result = $this->execPostRequest($endpoint, json_encode($data));
+
         if (!$result) {
             // Nếu không có kết quả, API có thể đã gặp lỗi kết nối
             dd("Error: No response from MoMo API.");
         }
+
+
         $jsonResult = json_decode($result, true);
         if (isset($jsonResult['errorCode']) && $jsonResult['errorCode'] != 0) {
             // Nếu có lỗi, hiển thị mã lỗi
