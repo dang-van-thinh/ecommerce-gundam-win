@@ -37,12 +37,12 @@
                             @endif
                         </div>
                         <div class="form-group">
-                            <label for="description" class="form-control-label">Mô tả về voucher</label>
-                            <input type="text" name="description" value="{{ $voucher->description }}"
-                                placeholder="Mô tả về voucher.." class="form-control">
-                            @if ($errors->has('description'))
+                            <label for="code" class="form-control-label">Mã voucher</label>
+                            <input type="text" name="code" value="{{ $voucher->code }}" placeholder="Mã voucher.."
+                                class="form-control">
+                            @if ($errors->has('code'))
                                 <div class="form-text badge text-danger">
-                                    {{ $errors->first('description') }}
+                                    {{ $errors->first('code') }}
                                 </div>
                             @endif
                         </div>
@@ -139,11 +139,21 @@
                                 </div>
                             @endif
                         </div>
-                        <div class="form-group mt-5">
-                            <a class="btn btn-primary" href="{{ route('voucher.index') }}">Quay lại</a>
-                            <button type="submit" class="btn btn-success px-5">Cập nhật</button>
+                        <div class="form-group">
+                            <label for="description" class="form-control-label">Mô tả thêm về voucher</label>
+                            <input type="text" name="description" value="{{ $voucher->description }}"
+                                placeholder="Mô tả về voucher.." class="form-control">
+                            @if ($errors->has('description'))
+                                <div class="form-text badge text-danger">
+                                    {{ $errors->first('description') }}
+                                </div>
+                            @endif
                         </div>
                     </div>
+                </div>
+                <div>
+                    <a class="btn btn-primary" href="{{ route('voucher.index') }}">Quay lại</a>
+                    <button type="submit" class="btn btn-success px-5">Cập nhật</button>
                 </div>
             </form>
         </div>
