@@ -243,10 +243,10 @@
                                 'quantity': inputVariant.value
                             };
                             updateQuantity(data);
-                            // thay doi hien thị tổng giá
+                            // thay doi hien thị tổng tiền
                             let total = Number(inputVariant.dataset.price * inputEl.value)
                             console.log(total);
-                            totalPrice[index].innerHTML = new Intl.NumberFormat().format(total) +
+                            totalPrice[index].innerHTML = new Intl.NumberFormat("vi-VN").format(total) +
                                 ' VND';
                         } else {
                             alert("Khong duocj ")
@@ -279,7 +279,7 @@
                                 'quantity': inputEl.value
                             };
                             updateQuantity(data)
-                            // thay doi hien thị tổng giá
+                            // thay doi hien thị tổng tiền
                             let total = Number(addButton.dataset.price * inputEl.value)
                             console.log(total);
                             totalPrice[index].innerHTML = new Intl.NumberFormat().format(total) +
@@ -298,7 +298,7 @@
                                 'quantity': inputEl.value
                             };
                             updateQuantity(data)
-                            // thay doi hien thị tổng giá
+                            // thay doi hien thị tổng tiền
                             let total = Number(subButton.dataset.price * inputEl.value)
                             // console.log(total);
                             totalPrice[index].innerHTML = new Intl.NumberFormat().format(total) +
@@ -320,7 +320,7 @@
                     cartTotalPrice += parseInt(price, 10); // Chuyển sang số nguyên
                 });
 
-                // Hiển thị tổng tiền được định dạng
+                // Hiển thị tổng cộng tiền có trong giỏ được định dạng
                 cartTotal.innerText = `${Intl.NumberFormat('vi-VN').format(cartTotalPrice)} VND`;
             }
 
