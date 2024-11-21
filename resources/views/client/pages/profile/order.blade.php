@@ -18,6 +18,7 @@ Lịch sử mua hàng
                         <ul class="product-tab theme-scrollbar nav nav-tabs nav-underline" id="Product" role="tablist">
                             @php
                                 $tabs = [
+                                    'PROCESSING'=>'Chờ thanh toán',
                                     'PENDING' => 'Đang chờ xử lý',
                                     'DELIVERING' => 'Đang giao hàng',
                                     'SHIPPED' => 'Đã giao hàng',
