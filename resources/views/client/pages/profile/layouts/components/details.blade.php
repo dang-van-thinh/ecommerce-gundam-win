@@ -60,6 +60,7 @@ Chi tiết đơn hàng
                             @php
                                 // Danh sách các trạng thái và tên tab tương ứng
                                 $tabs = [
+                                    'PROCESSING' => 'Chờ thanh toán',
                                     'PENDING' => 'Đang chờ xử lý',
                                     'DELIVERING' => 'Đang giao hàng',
                                     'SHIPPED' => 'Đã giao hàng',
@@ -121,13 +122,13 @@ Chi tiết đơn hàng
                                                         @endif
                                                     </ul>
                                                     @if ($order->status === 'COMPLETED' && $order->confirm_status === 'ACTIVE')
-                                                                            @if ($item->feedback)
-                                                                                <span>Cảm ơn bạn đã mua sản phẩm của chúng tôi</span>
-                                                                            @else
-                                                                                <span data-bs-toggle="modal" data-bs-target="#Reviews-modal" title="Đánh giá"
-                                                                                    tabindex="0">Viết đánh giá</span>
-                                                                                @include('client.pages.profile.layouts.components.rating-product')
-                                                                            @endif
+                                                        @if ($item->feedback)
+                                                            <span>Cảm ơn bạn đã mua sản phẩm của chúng tôi</span>
+                                                        @else
+                                                            <span data-bs-toggle="modal" data-bs-target="#Reviews-modal" title="Đánh giá"
+                                                                tabindex="0">Viết đánh giá</span>
+                                                            @include('client.pages.profile.layouts.components.rating-product')
+                                                        @endif
 
                                                     @else
 
@@ -144,6 +145,41 @@ Chi tiết đơn hàng
                                     <button style="background-color: #c28f51; border:none;" type="submit"
                                         class="btn btn-danger">Đã nhận hàng</button>
                                 </form>
+                            </div>
+                        @endif
+                        @if ($order->confirm_status === 'IN_ACTIVE' && $order->status === 'PROCESSING')
+                            <div class="text-center mt-3">
+                                <button style="background-color: #c28f51; border:none;" type="button" class="btn btn-danger"
+                                    data-bs-toggle="modal" data-bs-target="#CancelOrderModal">Xóa đơn hàng</button>
+                                <button style="background-color: #c28f51; border:none;" type="submit"
+                                    class="btn btn-danger">Tiếp tục thanh toán</button>
+                            </div>
+                            <!-- Modal xác nhận xóa đơn hàng -->
+                            <div class="modal fade" id="CancelOrderModal" tabindex="-1"
+                                aria-labelledby="CancelOrderModalLabel" aria-hidden="true">
+                                <div class="modal-dialog">
+                                    <div class="modal-content">
+                                        <div class="modal-header">
+                                            <h5 class="modal-title" id="CancelOrderModalLabel">Xác nhận xóa đơn hàng
+                                            </h5>
+                                            <button type="button" class="btn-close" data-bs-dismiss="modal"
+                                                aria-label="Close"></button>
+                                        </div>
+                                        <div class="modal-body">
+                                            Bạn có chắc chắn muốn xóa đơn hàng này?
+                                        </div>
+                                        <div class="modal-footer">
+                                            <button type="button" class="btn btn-secondary"
+                                                data-bs-dismiss="modal">Đóng</button>
+                                            <form action="{{ route('profile.order.delete', $order->id) }}" method="POST"
+                                                style="display:inline;">
+                                                @csrf
+                                                @method('PUT')
+                                                <button type="submit" class="btn btn-danger">Xác nhận xóa</button>
+                                            </form>
+                                        </div>
+                                    </div>
+                                </div>
                             </div>
                         @endif
                         <!-- trạng thái hoàn hàng -->
@@ -164,42 +200,90 @@ Chi tiết đơn hàng
                                                         for="">{{ $refundStatuses[$order->refund->status] ?? 'Trạng thái không xác định' }}</label>
                                                 </div>
                         @endif
-                        <!-- Nút hủy đơn hàng -->
-                        @if ($order->status === 'PENDING')
-                            <div class="text-center mt-3">
-                                <button style="background-color: #c28f51; border:none;" type="button" class="btn btn-danger"
-                                    data-bs-toggle="modal" data-bs-target="#CancelOrderModal">Hủy đơn hàng</button>
-                            </div>
-                            <!-- Modal xác nhận hủy đơn hàng -->
-                            <div class="modal fade" id="CancelOrderModal" tabindex="-1"
-                                aria-labelledby="CancelOrderModalLabel" aria-hidden="true">
-                                <div class="modal-dialog">
-                                    <div class="modal-content">
-                                        <div class="modal-header">
-                                            <h5 class="modal-title" id="CancelOrderModalLabel">Xác nhận hủy đơn hàng
-                                            </h5>
-                                            <button type="button" class="btn-close" data-bs-dismiss="modal"
-                                                aria-label="Close"></button>
-                                        </div>
-                                        <div class="modal-body">
-                                            Bạn có chắc chắn muốn hủy đơn hàng này?
-                                        </div>
-                                        <div class="modal-footer">
-                                            <button type="button" class="btn btn-secondary"
-                                                data-bs-dismiss="modal">Đóng</button>
-                                            <form action="{{ route('profile.order.cancel', $order->id) }}" method="POST"
-                                                style="display:inline;">
-                                                @csrf
-                                                @method('PUT')
-                                                <button type="submit" class="btn btn-danger">Xác nhận hủy</button>
-                                            </form>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                        @endif
-                    </div>
+<!-- Nút hủy đơn hàng -->
+@if ($order->status === 'PENDING')
+    <div class="text-center mt-3">
+        <!-- Nút hủy đơn hàng -->
+        <button style="background-color: #c28f51; border:none;" type="button" class="btn btn-danger"
+            data-bs-toggle="modal" data-bs-target="#CancelOrderModal">Hủy đơn hàng</button>
+    </div>
+    <!-- Modal xác nhận hủy đơn hàng -->
+    <div class="modal fade" id="CancelOrderModal" tabindex="-1" aria-labelledby="CancelOrderModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="CancelOrderModalLabel">Xác nhận hủy đơn hàng</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    Bạn có chắc chắn muốn hủy đơn hàng này? Lý do hủy:
+                    <!-- Form nhập lý do hủy -->
+                    <form action="{{ route('profile.order.cancel', $order->id) }}" method="POST" id="cancelOrderForm">
+                        @csrf
+                        @method('PUT')
 
+                        <div class="form-group mt-3">
+                            <label for="cancel_reason">Chọn lý do hủy đơn hàng:</label><br>
+                            <input type="radio" name="cancel_reason" id="wrong_product" value="wrong_product">
+                            <label for="wrong_product">Sản phẩm sai</label><br>
+
+                            <input type="radio" name="cancel_reason" id="change_of_mind" value="change_of_mind">
+                            <label for="change_of_mind">Thay đổi ý định</label><br>
+
+                            <input type="radio" name="cancel_reason" id="price_too_high" value="price_too_high">
+                            <label for="price_too_high">Giá quá cao</label><br>
+
+                            <input type="radio" name="cancel_reason" id="payment_issue" value="payment_issue">
+                            <label for="payment_issue">Vấn đề thanh toán</label><br>
+
+                            <input type="radio" name="cancel_reason" id="long_wait_time" value="long_wait_time">
+                            <label for="long_wait_time">Chờ lâu</label><br>
+
+                            <input type="radio" name="cancel_reason" id="other" value="other">
+                            <label for="other">Khác</label>
+                        </div>
+
+                        <div class="form-group mt-3" id="other_reason_box" style="display: none;">
+                            <label for="cancel_reason_other">Lý do khác:</label>
+                            <input type="text" name="cancel_reason_other" id="cancel_reason_other" class="form-control" />
+                            @error('cancel_reason_other')
+                                <div class="text-danger">{{ $message }}</div>
+                            @enderror
+                        </div>
+
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Đóng</button>
+                            <button type="submit" class="btn btn-danger">Xác nhận hủy</button>
+                        </div>
+                    </form>
+
+                    @error('cancel_reason')
+                        <div class="text-danger">{{ $message }}</div>
+                    @enderror
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Script để hiển thị ô nhập lý do khi chọn "Khác" -->
+    <script>
+    document.querySelectorAll('input[name="cancel_reason"]').forEach(function (radio) {
+        radio.addEventListener('change', function () {
+            var otherReasonBox = document.getElementById('other_reason_box');
+            var cancelReasonOtherInput = document.getElementById('cancel_reason_other');
+
+            if (this.value === 'other') {
+                otherReasonBox.style.display = 'block'; // Hiển thị ô nhập lý do khác
+            } else {
+                otherReasonBox.style.display = 'none'; // Ẩn ô nhập lý do khác
+                cancelReasonOtherInput.value = ''; // Xóa nội dung đã nhập trong ô "Khác"
+            }
+        });
+    });
+</script>
+@endif
+
+                    </div>
                     <div class="text-center mt-3">
                         <a style="background-color: #c28f51; border:none;" href="{{ route('profile.order-history') }}"
                             class="btn btn-primary">Lịch sử đơn hàng</a>
