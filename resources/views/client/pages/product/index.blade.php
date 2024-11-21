@@ -916,7 +916,8 @@
                     quantityInput.value = 1;
                     document.getElementById('variant-price').textContent = new Intl.NumberFormat('vi-VN', {
                         style: 'currency',
-                        currency: 'VND'
+                        currency: 'VND',
+                        currencyDisplay: 'code'
                     }).format(priceValue);
                 } else {
                     console.log("nho hon 0");
