@@ -12,7 +12,7 @@ return new class extends Migration
     public function up(): void
     {
         Schema::table('users', function (Blueprint $table) {
-            $table->smallInteger("cancel_count")->nullable()->default(null);
+            $table->smallInteger("cancel_count")->default(0);
         });
     }
 
