@@ -44,7 +44,8 @@
                                                             data-value="{{ $key }}" id="{{ $key }}"
                                                             type="radio"
                                                             @if ($item['default'] == 1) checked="checked" @endif
-                                                            name="address_user_id">
+                                                            name="address_user_id"
+                                                            onclick="setDefaultAddress({{ $item->id }}, {{ $item->user_id }})">
                                                     </span>
                                                     <span class="address-detail">
 
@@ -160,6 +161,20 @@
                         console.log(discountValue);
                         const discountType = $(this).data('discount-type');
                         console.log(discountType);
+
+                        const minAmount = parseFloat($(this).data('min-amount'));
+                        const maxAmount = parseFloat($(this).data('max-amount'));
+
+                        const totalAmountOld = $('input[name="total_amount"]').val();
+                        console.log("xyz",totalAmountOld);
+
+                        // Kiểm tra nếu tổng giá nằm ngoài khoảng áp dụng
+                        if (totalAmountOld < minAmount || totalAmountOld > maxAmount) {
+                            alert(
+                                `Mã giảm giá chỉ áp dụng cho tổng giá từ ${minAmount.toLocaleString()} VND đến ${maxAmount.toLocaleString()} VND.`
+                            );
+                            return;
+                        }
 
                         // Hiển thị thẻ mã giảm giá đã áp dụng và ẩn ô input
                         $('#coupon-display').show();
@@ -405,7 +420,7 @@
                 .attr("name", "id_voucherUsage")
                 .attr("value", "");
 
-            couponBox.append(hiddenInput,hiddenInputUsage);
+            couponBox.append(hiddenInput, hiddenInputUsage);
 
             // tạo modal
             const modalHtml = `
@@ -449,13 +464,16 @@
                         <div>
                             <strong class="text-dark">${voucher.name}</strong>
                             <p class="mb-0">Giảm: ${discountValue}</p>
+                            <p class="mb-0">Hạn đến: ${voucher.end_date}</p>
                         </div>
-                        <button type="button" class="btn btn-primary apply-coupon" 
+                       <button type="button" class="btn btn-primary apply-coupon" 
                             data-voucher-name="${voucher.name}"
                             data-id="${item.id}"
                             data-voucher-id="${voucher.id}"
                             data-discount-value="${voucher.discount_value}"
-                            data-discount-type="${voucher.discount_type}">
+                            data-discount-type="${voucher.discount_type}"
+                            data-min-amount="${voucher.min_order_value}"
+                            data-max-amount="${voucher.max_order_value}">
                             Áp dụng
                         </button>
                     </div>
@@ -511,4 +529,24 @@
             }
         });
     });
+
+    function setDefaultAddress(addressId, userId) {
+        $.ajax({
+            url: '/api/profile/address/set-default/' + addressId,
+            type: 'POST',
+            data: {
+                user_id: userId, // Truyền user_id vào request
+            },
+            success: function(response) {
+                if (response.status === 'success') {
+                    Swal.fire(response.message, "", "success");
+                } else {
+                    alert('Có lỗi xảy ra');
+                }
+            },
+            error: function(xhr) {
+                alert('Có lỗi xảy ra');
+            }
+        });
+    }
 </script>
