@@ -24,9 +24,6 @@
                     </li>
                     <li><i class="fa fa-caret-square-o-right"></i><a href="{{ route('article.index') }}">Danh sách
                             bài viết</a></li>
-                    <li><i class="fa fa-caret-square-o-right"></i><a href="{{ route('imagearticle.index') }}">Danh
-                            sách hình ảnh</a>
-                    </li>
                 </ul>
             </li>
 
