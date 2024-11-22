@@ -132,8 +132,40 @@
 
                                                     @else
 
-                                                    @endif
-                                                </div>
+                                    <label style="font-size: 16px; font-weight: 700;"
+                                        for="">{{ $refundStatuses[$order->refund->status] ?? 'Trạng thái không xác định' }}</label>
+                                </div>
+                            @endif
+                            <!-- Nút hủy đơn hàng -->
+                            @if ($order->status === 'PENDING')
+                                <div class="mt-3 text-center">
+                                    <button style="background-color: #c28f51; border:none;" type="button"
+                                        class="btn btn-danger" data-bs-toggle="modal" data-bs-target="#CancelOrderModal">Hủy
+                                        đơn hàng</button>
+                                </div>
+                                <!-- Modal xác nhận hủy đơn hàng -->
+                                <div class="modal fade" id="CancelOrderModal" tabindex="-1"
+                                    aria-labelledby="CancelOrderModalLabel" aria-hidden="true">
+                                    <div class="modal-dialog">
+                                        <div class="modal-content">
+                                            <div class="modal-header">
+                                                <h5 class="modal-title" id="CancelOrderModalLabel">Xác nhận hủy đơn hàng
+                                                </h5>
+                                                <button type="button" class="btn-close" data-bs-dismiss="modal"
+                                                    aria-label="Close"></button>
+                                            </div>
+                                            <div class="modal-body">
+                                                Bạn có chắc chắn muốn hủy đơn hàng này?
+                                            </div>
+                                            <div class="modal-footer">
+                                                <button type="button" class="btn btn-secondary"
+                                                    data-bs-dismiss="modal">Đóng</button>
+                                                <form action="{{ route('profile.order.cancel', $order->id) }}"
+                                                    method="POST" style="display:inline;">
+                                                    @csrf
+                                                    @method('PUT')
+                                                    <button type="submit" class="btn btn-danger">Xác nhận hủy</button>
+                                                </form>
                                             </div>
                         @endforeach
                         @if ($order->confirm_status === 'IN_ACTIVE' && $order->status === 'SHIPPED')
