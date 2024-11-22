@@ -15,7 +15,7 @@ class RoleController extends Controller
      */
     public function index()
     {
-        $data = Role::latest('id')->paginate(5);
+        $data = Role::latest('id')->paginate(12);
 
         return view('admin.pages.roles.index', compact('data'));
     }
