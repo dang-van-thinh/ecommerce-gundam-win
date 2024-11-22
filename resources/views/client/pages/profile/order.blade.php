@@ -53,6 +53,7 @@
                                                                     <i class="iconsax" data-icon="box"></i>
                                                                     <div class="couplet"><i class="fa-solid fa-check"></i>
                                                                     </div>
+
                                                                 </div>
                                                                 <div class="order-detail d-flex flex-wrap">
                                                                     <!-- Cột trái -->

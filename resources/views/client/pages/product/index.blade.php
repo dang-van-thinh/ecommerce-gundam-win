@@ -556,7 +556,7 @@
                             <div class="product-box-3">
                                 <div class="img-wrapper">
                                     <div class="label-block">
-                                        <span class="lable-1">NEW</span>
+                                        <span class="lable-1">liên quan</span>
                                         <a class="label-2 wishlist-icon" data-id="{{ $product->id }}" tabindex="0">
                                             <i class="fa-regular fa-heart"
                                                 style="{{ $product->favorites->isNotEmpty() ? 'display: none;' : '' }}"></i>
@@ -582,22 +582,28 @@
                                 </div>
                                 <div class="product-detail">
                                     <ul class="rating">
-                                        <li><i class="fa-solid fa-star"></i></li>
-                                        <li><i class="fa-solid fa-star"></i></li>
-                                        <li><i class="fa-solid fa-star"></i></li>
-                                        <li><i class="fa-solid fa-star-half-stroke"></i></li>
-                                        <li><i class="fa-regular fa-star"></i></li>
-                                        <li>4.3</li>
-                                    </ul><a href="{{ route('product', $product->id) }}">
+                                        @php
+                                            $rating = $product->average_rating ? $product->average_rating : 0; // Lấy rating từ feedback
+                                        @endphp
+                                        @for ($i = 1; $i <= 5; $i++)
+                                            <li>
+                                                <i class="fa-solid fa-star"
+                                                    style="color: {{ $i <= $rating ? '#f39c12' : '#000' }};"></i>
+                                            </li>
+                                        @endfor
+                                    </ul>
+                                    <a href="{{ route('product', $product->id) }}">
                                         <h6>{{ $product->name }}</h6>
                                     </a>
                                     <p>
                                         @if ($product->productVariants->count() === 1)
-                                            {{ number_format($product->productVariants->first()->price, 0, ',', '.') }} vnđ
+                                            {{ number_format($product->productVariants->first()->price, 0, ',', '.') }}
+                                            VND
                                         @else
-                                            {{ number_format($product->productVariants->min('price'), 0, ',', '.') }} vnđ
+                                            {{ number_format($product->productVariants->min('price'), 0, ',', '.') }}
                                             -
-                                            {{ number_format($product->productVariants->max('price'), 0, ',', '.') }} vnđ
+                                            {{ number_format($product->productVariants->max('price'), 0, ',', '.') }}
+                                            VND
                                         @endif
                                     </p>
                                 </div>
@@ -916,7 +922,8 @@
                     quantityInput.value = 1;
                     document.getElementById('variant-price').textContent = new Intl.NumberFormat('vi-VN', {
                         style: 'currency',
-                        currency: 'VND'
+                        currency: 'VND',
+                        currencyDisplay: 'code'
                     }).format(priceValue);
                 } else {
                     console.log("nho hon 0");
