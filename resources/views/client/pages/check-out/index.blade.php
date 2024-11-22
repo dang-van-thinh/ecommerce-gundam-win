@@ -44,7 +44,8 @@
                                                             data-value="{{ $key }}" id="{{ $key }}"
                                                             type="radio"
                                                             @if ($item['default'] == 1) checked="checked" @endif
-                                                            name="address_user_id">
+                                                            name="address_user_id"
+                                                            onclick="setDefaultAddress({{ $item->id }}, {{ $item->user_id }})">
                                                     </span>
                                                     <span class="address-detail">
 
@@ -174,15 +175,19 @@
 
 
                                     <ul>
+                                        <li class="d-flex justify-content-end">
+                                            <a data-bs-toggle="modal" data-bs-target="#voucherModal">Kho ưu đãi >></a>
+                                        </li>
+
                                         <li>
                                             <span>
-                                                <input type="text" id="coupon-code-input"
+                                                <input type="text" 
                                                     placeholder="Sử dụng mã giảm giá">
                                                 <i class="iconsax me-1" data-icon="tag-2"></i>
                                             </span>
                                             <button type="button" style="font-size: 14px; padding: 5px; width: 107px;"
-                                                class="btn w-50%" data-bs-toggle="modal" data-bs-target="#voucherModal">
-                                                Chọn
+                                                class="btn w-50%">
+                                                Áp dụng
                                             </button>
                                         </li>
                                     </ul>
@@ -223,6 +228,9 @@
                                                                                     VND
                                                                                 @endif
                                                                             </p>
+                                                                            <p>Hạn đến:
+                                                                                {{ $item->voucher->end_date }}
+                                                                            </p>
                                                                         </div>
                                                                         <button type="button"
                                                                             class="btn btn-primary apply-coupon"
@@ -230,7 +238,9 @@
                                                                             data-id="{{ $item->id }}"
                                                                             data-voucher-id="{{ $item->voucher->id }}"
                                                                             data-discount-value="{{ $item->voucher->discount_value }}"
-                                                                            data-discount-type="{{ $item->voucher->discount_type }}">
+                                                                            data-discount-type="{{ $item->voucher->discount_type }}"
+                                                                            data-min-amount="{{ $item->voucher->min_order_value }}"
+                                                                            data-max-amount="{{ $item->voucher->max_order_value }}">
                                                                             Áp dụng
                                                                         </button>
 
@@ -333,12 +343,28 @@
         // Lắng nghe sự kiện nhấn nút "Áp dụng" trong modal
         document.querySelectorAll('.apply-coupon').forEach(button => {
             button.addEventListener('click', function() {
-                // Lấy mã giảm giá từ nút được nhấn
+                // Lấy các thông tin mã giảm giá từ nút được nhấn
                 const voucherName = this.getAttribute('data-voucher-name');
                 const Id = this.getAttribute('data-id'); // Lấy voucher_id
                 const voucherId = this.getAttribute('data-voucher-id'); // Lấy voucher_id
                 const discountValue = parseFloat(this.getAttribute('data-discount-value'));
                 const discountType = this.getAttribute('data-discount-type');
+                const minAmount = parseFloat(this.getAttribute(
+                    'data-min-amount')); // Khoảng giá tối thiểu
+                const maxAmount = parseFloat(this.getAttribute(
+                    'data-max-amount')); // Khoảng giá tối đa
+
+                // Lấy tổng giá hiện tại
+                const totalAmount = parseFloat(document.querySelector(
+                    'input[name="totalAmount"]').value);
+
+                // Kiểm tra nếu tổng giá nằm ngoài khoảng áp dụng
+                if (totalAmount < minAmount || totalAmount > maxAmount) {
+                    alert(
+                        `Mã giảm giá chỉ áp dụng cho tổng giá từ ${minAmount.toLocaleString()} VND đến ${maxAmount.toLocaleString()} VND.`
+                    );
+                    return; // Dừng nếu không thỏa mãn điều kiện
+                }
 
                 // Hiển thị thẻ mã giảm giá đã áp dụng và ẩn ô input
                 document.getElementById('coupon-display').style.display = 'block';
@@ -347,14 +373,9 @@
                 // Cập nhật voucher_id vào input ẩn
                 document.getElementById('voucher-id-input').value =
                     voucherId; // Gán voucher_id vào input ẩn
+                document.getElementById('id-input').value = Id; // Gán voucher_id vào input ẩn
 
-                document.getElementById('id-input').value =
-                    Id; // Gán voucher_id vào input ẩn
-
-                // Cập nhật giảm giá vào tổng giá
-                const totalAmount = parseFloat(document.querySelector(
-                    'input[name="totalAmount"]').value);
-
+                // Tính toán giảm giá
                 let discountAmount = 0;
                 if (discountType === 'PERCENTAGE') {
                     discountAmount = (discountValue / 100) *
@@ -395,8 +416,6 @@
 
             // Làm trống voucher_id khi xoá mã giảm giá
             document.getElementById('voucher-id-input').value = '';
-
-            // Làm trống id khi xoá mã giảm giá
             document.getElementById('id-input').value = '';
 
             // Cập nhật lại tổng giá khi xoá mã giảm giá
@@ -417,4 +436,25 @@
             document.getElementById('coupon-code-input').style.display = 'block';
         });
     });
+
+
+    function setDefaultAddress(addressId, userId) {
+        $.ajax({
+            url: '/api/profile/address/set-default/' + addressId,
+            type: 'POST',
+            data: {
+                user_id: userId, // Truyền user_id vào request
+            },
+            success: function(response) {
+                if (response.status === 'success') {
+                    Swal.fire(response.message, "", "success");
+                } else {
+                    alert('Có lỗi xảy ra');
+                }
+            },
+            error: function(xhr) {
+                alert('Có lỗi xảy ra');
+            }
+        });
+    }
 </script>
