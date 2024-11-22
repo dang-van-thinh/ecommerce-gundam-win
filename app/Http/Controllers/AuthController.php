@@ -50,7 +50,7 @@ class AuthController extends Controller
             return redirect()->route('auth.login-view');
         }
         if ($user->email_verified_at == null) {
-            Mail::to($user->email)->send(new VerifyAccount($user));
+            VerifyEmailEvent::dispatch($user);
             // Thông báo đăng ký thành công và yêu cầu xác thực email
             toastr("Vui lòng kiểm tra email để xác thực tài khoản", NotificationInterface::SUCCESS, "Xác thực email", [
                 "closeButton" => true,
@@ -146,11 +146,9 @@ class AuthController extends Controller
             $user->roles()->sync([$role->id]);
 
             // Gửi email xác thực tài khoản
-//            Mail::to($user->email)->send(new VerifyAccount($user));
+            //            Mail::to($user->email)->send(new VerifyAccount($user));
             // gui bang event
             VerifyEmailEvent::dispatch($user);
-
-
         });
 
         // Thông báo đăng ký thành công và yêu cầu xác thực email
@@ -241,9 +239,9 @@ class AuthController extends Controller
             $user->password_changed_at = now(); // Cập nhật thời gian thực
             $user->save(); // Lưu tất cả thay đổi
             // Gửi email chứa mật khẩu mới
-//            Mail::to($user->email)->send(new FogotPass($user, $newPassword));
+            //            Mail::to($user->email)->send(new FogotPass($user, $newPassword));
             // gui bang event
-            ForgotPasswordEvent::dispatch($user,$newPassword);
+            ForgotPasswordEvent::dispatch($user, $newPassword);
             // Thông báo thành công
             toastr('Vui lòng kiểm tra email để nhận mật khẩu mới', NotificationInterface::SUCCESS, 'Lấy lại mật khẩu thành công', [
                 "closeButton" => true,
