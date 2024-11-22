@@ -14,7 +14,7 @@ class VoucherController extends Controller
 {
     public function index()
     {
-        $getAllVoucher = Voucher::latest('id')->paginate(10);
+        $getAllVoucher = Voucher::latest('id')->paginate(12);
         return view('admin.pages.voucher.index', compact('getAllVoucher'));
     }
 
