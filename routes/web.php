@@ -32,6 +32,7 @@ use App\Http\Controllers\Client\WishListController;
 use App\Http\Controllers\Controller;
 use App\Http\Controllers\DefaultController;
 use App\Http\Controllers\Admin\RefundController;
+use App\Http\Controllers\Client\PolicyController;
 use App\Models\Article;
 use App\Http\Controllers\Client\SearchController;
 
@@ -137,6 +138,13 @@ Route::post('/product/filter', [CollectionProductController::class, 'filter'])->
 Route::get('/404', [DefaultController::class, 'pageNotFound'])->name('404');
 Route::post('/feedback/reply', [ProductController::class, 'replyFeedback'])->name('feedback.reply');
 Route::delete('/comments/{id}', [BlogController::class, 'deleteComment'])->name('comments.delete');
+
+Route::prefix('policies')->group(function () {
+    Route::get('/privacy', [PolicyController::class, 'privacy'])->name('policies.privacy');
+    Route::get('/shipping', [PolicyController::class, 'shipping'])->name('policies.shipping');
+    Route::get('/payment', [PolicyController::class, 'payment'])->name('policies.payment');
+    Route::get('/return', [PolicyController::class, 'return'])->name('policies.return');
+});
 
 
 // auth
