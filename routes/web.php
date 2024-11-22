@@ -98,6 +98,7 @@ Route::prefix('')->middleware(['auth', 'checkAccountStatus', 'checkRole:1', 'upd
         Route::get('address', [AddersController::class, 'index'])->name('address');
         Route::post('/feedback/store', [ProfileController::class, 'feedbackstore'])->name('feedback.store');
         Route::put('/orders/{order}/cancel', [ProfileController::class, 'orderCancel'])->name('order.cancel');
+        Route::put('/orders/{order}/delelte-order', [ProfileController::class, 'orderDelete'])->name('order.delete');
         Route::put('/orders/{order}/confirmstatus', [ProfileController::class, 'confirmstatus'])->name('order.confirmstatus');
 
         // Store a new address
