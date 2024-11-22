@@ -92,6 +92,8 @@ Route::prefix('')->middleware(['auth', 'checkAccountStatus', 'checkRole:1', 'upd
         Route::get('/', [ProfileController::class, 'infomation'])->name('infomation');
         Route::get('/order-history', [ProfileController::class, 'orderHistory'])->name('order-history');
         Route::get('/order/{id}', [ProfileController::class, 'orderDetail'])->name('order.details');
+        Route::get('/order-refunds/{id}', [ProfileController::class, 'createOrderRefunds'])->name('order.create.refunds');
+        Route::post('/order/create-refunds', [ProfileController::class, 'storeRefunds'])->name('order.store.refunds');
         // Route::get('/address', [ProfileController::class, 'address'])->name('address');
         Route::get('address', [AddersController::class, 'index'])->name('address');
         Route::post('/feedback/store', [ProfileController::class, 'feedbackstore'])->name('feedback.store');

@@ -11,7 +11,7 @@ class Refund extends Model
 
     protected $table = "refunds";
 
-    protected $fillable = ['order_id', 'reason', 'description', 'image', 'status','code'];
+    protected $fillable = ['order_id','status','code'];
     public $timestamps = false;
 
     public function order()
