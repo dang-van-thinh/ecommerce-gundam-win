@@ -1,59 +1,76 @@
 @extends('client.pages.profile.layouts.master')
 
 @section('title')
-Chi tiết đơn hàng
+    Chi tiết đơn hàng
 @endsection
 
 @section('profile')
-<style>
-    .rating {
-        list-style: none;
-        padding: 0;
-        display: flex;
-        align-items: center;
-        /* Căn giữa các sao với số lượng */
-    }
+    <style>
+        .rating {
+            list-style: none;
+            padding: 0;
+            display: flex;
+            align-items: center;
+            /* Căn giữa các sao với số lượng */
+        }
 
-    .rating li {
-        margin-right: 5px;
-    }
+        .rating li {
+            margin-right: 5px;
+        }
 
-    .rating input {
-        display: none;
-    }
+        .rating input {
+            display: none;
+        }
 
-    .rating label {
-        font-size: 24px;
-        color: #ddd;
-        cursor: pointer;
-    }
+        .rating label {
+            font-size: 24px;
+            color: #ddd;
+            cursor: pointer;
+        }
 
-    .rating input:checked+label,
-    .rating input:checked~label {
-        color: #f39c12;
-    }
+        .rating input:checked+label,
+        .rating input:checked~label {
+            color: #f39c12;
+        }
 
-    .rating span {
-        font-size: 16px;
-        /* Cỡ chữ cho số sao */
-        margin-left: 10px;
-        /* Khoảng cách giữa sao và số lượng */
-    }
-</style>
-<div class="dashboard-right-box">
-    <div class="order">
-        <div class="sidebar-title">
-            <div class="loader-line"></div>
-            <h4>Chi tiết đơn hàng</h4>
-        </div>
-        <div class="row gy-4">
-            <div class="col-12">
-                <div class="order-box">
-                    <div class="order-container">
-                        <div class="order-icon">
-                            <i class="iconsax" data-icon="box"></i>
-                            <div class="couplet">
-                                <i class="fa-solid fa-check"></i>
+        .rating span {
+            font-size: 16px;
+            /* Cỡ chữ cho số sao */
+            margin-left: 10px;
+            /* Khoảng cách giữa sao và số lượng */
+        }
+    </style>
+    <div class="dashboard-right-box">
+        <div class="order">
+            <div class="sidebar-title">
+                <div class="loader-line"></div>
+                <h4>Chi tiết đơn hàng</h4>
+            </div>
+            <div class="row gy-4">
+                <div class="col-12">
+                    <div class="order-box">
+                        <div class="order-container">
+                            <div class="order-icon">
+                                <i class="iconsax" data-icon="box"></i>
+                                <div class="couplet">
+                                    <i class="fa-solid fa-check"></i>
+                                </div>
+                            </div>
+                            <div class="order-detail">
+                                @php
+                                    // Danh sách các trạng thái và tên tab tương ứng
+                                    $tabs = [
+                                        'PENDING' => 'Đang chờ xử lý',
+                                        'DELIVERING' => 'Đang giao hàng',
+                                        'SHIPPED' => 'Đã giao hàng',
+                                        'COMPLETED' => 'Thành công',
+                                        'CANCELED' => 'Hủy đơn hàng',
+                                        'REFUND' => 'Hoàn hàng',
+                                    ];
+                                    $statusText = $tabs[$order->status] ?? 'Không xác định';
+                                @endphp
+                                <h5>Trạng thái: {{ $statusText }}</h5>
+                                <p>Ngày giao: {{ date('D, d M', strtotime($order->delivery_date)) }}</p>
                             </div>
                         </div>
                         <div class="order-detail">
@@ -132,8 +149,40 @@ Chi tiết đơn hàng
 
                                                     @else
 
-                                                    @endif
-                                                </div>
+                                    <label style="font-size: 16px; font-weight: 700;"
+                                        for="">{{ $refundStatuses[$order->refund->status] ?? 'Trạng thái không xác định' }}</label>
+                                </div>
+                            @endif
+                            <!-- Nút hủy đơn hàng -->
+                            @if ($order->status === 'PENDING')
+                                <div class="mt-3 text-center">
+                                    <button style="background-color: #c28f51; border:none;" type="button"
+                                        class="btn btn-danger" data-bs-toggle="modal" data-bs-target="#CancelOrderModal">Hủy
+                                        đơn hàng</button>
+                                </div>
+                                <!-- Modal xác nhận hủy đơn hàng -->
+                                <div class="modal fade" id="CancelOrderModal" tabindex="-1"
+                                    aria-labelledby="CancelOrderModalLabel" aria-hidden="true">
+                                    <div class="modal-dialog">
+                                        <div class="modal-content">
+                                            <div class="modal-header">
+                                                <h5 class="modal-title" id="CancelOrderModalLabel">Xác nhận hủy đơn hàng
+                                                </h5>
+                                                <button type="button" class="btn-close" data-bs-dismiss="modal"
+                                                    aria-label="Close"></button>
+                                            </div>
+                                            <div class="modal-body">
+                                                Bạn có chắc chắn muốn hủy đơn hàng này?
+                                            </div>
+                                            <div class="modal-footer">
+                                                <button type="button" class="btn btn-secondary"
+                                                    data-bs-dismiss="modal">Đóng</button>
+                                                <form action="{{ route('profile.order.cancel', $order->id) }}"
+                                                    method="POST" style="display:inline;">
+                                                    @csrf
+                                                    @method('PUT')
+                                                    <button type="submit" class="btn btn-danger">Xác nhận hủy</button>
+                                                </form>
                                             </div>
                         @endforeach
                         @if ($order->confirm_status === 'IN_ACTIVE' && $order->status === 'SHIPPED')
@@ -292,5 +341,4 @@ Chi tiết đơn hàng
             </div>
         </div>
     </div>
-</div>
 @endsection
