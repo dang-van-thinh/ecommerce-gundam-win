@@ -114,6 +114,34 @@
                                                                             hàng</a>
                                                                     </div>
                                                                 @endif
+                                                                @if ($item->status === 'REFUND')
+                                                                    <div class="mt-3 text-end">
+                                                                        @foreach ($item->refund as $refund)
+                                                                            @php
+                                                                                $refundStatuses = [
+                                                                                    'PENDING' =>
+                                                                                        'Đơn hoàn hàng đang chờ phê duyệt',
+                                                                                    'APPROVED' =>
+                                                                                        'Đơn hoàn hàng đã được phê duyệt',
+                                                                                    'IN_TRANSIT' =>
+                                                                                        'Đơn hàng hoàn đã chuyển cho đơn vị vận chuyển',
+                                                                                    'COMPLETED' =>
+                                                                                        'Hoàn tiền đã hoàn tất',
+                                                                                ];
+
+                                                                                // Kiểm tra và lấy trạng thái của đơn hoàn hàng
+                                                                                $statusMessage =
+                                                                                    $refundStatuses[$refund->status] ??
+                                                                                    'Trạng thái không xác định';
+                                                                            @endphp
+
+                                                                            <label
+                                                                                style="font-size: 16px; font-weight: 700;"
+                                                                                for="">{{ $statusMessage }}
+                                                                            </label>
+                                                                        @endforeach
+                                                                    </div>
+                                                                @endif
                                                             </div>
                                                             <div class="mt-3 text-center">
                                                                 <a style="background-color: #c28f51; border:none;"
