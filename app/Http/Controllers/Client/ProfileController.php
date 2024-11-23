@@ -36,10 +36,11 @@ class ProfileController extends Controller
     {
         $userId = Auth::id();
         // Lấy tất cả các Order cùng với OrderItems và ProductVariants
-        $orders = Order::with('orderItems.productVariant.attributeValues.attribute', 'orderItems.productVariant.product', 'user')
+        $orders = Order::with('orderItems.productVariant.attributeValues.attribute', 'orderItems.productVariant.product', 'user', 'refund')
             ->where('user_id', $userId)
             ->orderBy('id', 'desc')
             ->get();
+        // dd($orders);
         return view('client.pages.profile.order', compact('orders'));
     }
     public function feedbackstore(FeedbackRequest $request)
@@ -92,7 +93,11 @@ class ProfileController extends Controller
     public function orderDetail($id)
     {
         // Lấy thông tin đơn hàng theo ID
-        $order = Order::with('orderItems.productVariant.product', 'refund')->findOrFail($id);
+        $order = Order::with([
+            'orderItems.productVariant.product',
+            'refund.refundItem.productVariant.product',
+        ])->findOrFail($id);
+        // dd($order);
         return view('client.pages.profile.layouts.components.details', compact('order'));
     }
     public function orderCancel(Request $request, $id)
@@ -163,7 +168,7 @@ class ProfileController extends Controller
 
         return redirect()->back();
     }
-        public function orderDelete($id)
+    public function orderDelete($id)
     {
         $order = Order::findOrFail($id);
         $user = Auth::user();
@@ -286,38 +291,25 @@ class ProfileController extends Controller
 
     public function storeRefunds(Request $request)
     {
-        // Xác thực dữ liệu
-        $request->validate([
-            'refund' => 'required|array', // Kiểm tra nếu refund là mảng
-            'refund.*.reason' => 'required', // Lý do hoàn là bắt buộc
-            'refund.*.description' => 'required', // Mô tả là bắt buộc
-            'refund.*.quantity' => 'required|integer|min:1', // Số lượng là bắt buộc và phải là số nguyên lớn hơn 0
-            'refund.*.image' => 'required|image|mimes:jpg,jpeg,png,gif|max:2048', // Hình ảnh là bắt buộc và phải có định dạng hợp lệ
-        ], [
-            'refund.required' => 'Danh sách hoàn hàng không được trống.',
-            'refund.*.reason.required' => 'Lý do hoàn hàng là bắt buộc.',
-            'refund.*.description.required' => 'Mô tả không được bỏ trống.',
-            'refund.*.quantity.required' => 'Số lượng không được bỏ trống.',
-            'refund.*.quantity.integer' => 'Số lượng phải là số nguyên.',
-            'refund.*.quantity.min' => 'Số lượng phải lớn hơn 0.',
-            'refund.*.image.required' => 'Ảnh là bắt buộc.',
-            'refund.*.image.image' => 'Tệp ảnh không hợp lệ.',
-            'refund.*.image.mimes' => 'Ảnh phải có định dạng jpg, jpeg, png hoặc gif.',
-            'refund.*.image.max' => 'Ảnh không được quá 2MB.',
-        ]);
-
         // Kiểm tra nếu 'refund' tồn tại và là mảng
         if ($request->has('refund') && is_array($request->refund)) {
-            // Lấy thông tin đơn hoàn hiện tại
-            $refund = Refund::where('order_id', $request->order_id)->first();
-
-            // Nếu không có đơn hoàn hợp lệ, tạo mới
-            if (!$refund) {
-                $refund = Refund::create([
-                    'order_id' => $request->order_id,
-                    'code' => $this->codeRefund(),
+            // Kiểm tra xem đơn hàng đã có đơn hoàn hàng hay chưa
+            if (Refund::where('order_id', $request->order_id)->exists()) {
+                // Thông báo lỗi nếu đã có đơn hoàn hàng
+                toastr("Đơn hàng này đã có đơn hoàn hàng", NotificationInterface::ERROR, "Thất bại", [
+                    "closeButton" => true,
+                    "progressBar" => true,
+                    "timeOut" => "3000",
                 ]);
+
+                return redirect()->back();
             }
+
+            // Lấy thông tin đơn hoàn hiện tại hoặc tạo mới nếu không có
+            $refund = Refund::create([
+                'order_id' => $request->order_id,
+                'code' => $this->codeRefund(),
+            ]);
 
             // Cập nhật trạng thái đơn hàng thành "Đơn hoàn hàng"
             $order = Order::find($request->order_id);
@@ -329,17 +321,15 @@ class ProfileController extends Controller
 
             // Lặp qua từng sản phẩm trong mảng 'refund'
             foreach ($request->refund as $key => $item) {
-                // Xử lý ảnh (nếu có)
                 $imagePath = null;
-
-                // Kiểm tra và lưu ảnh từ input file
                 if (isset($item['image']) && $request->hasFile("refund.$key.image")) {
                     $imagePath = $request->file("refund.$key.image")->store('refund_images', 'public');
                 }
+
                 // Lưu thông tin refund item
                 RefundItem::create([
                     'refund_id' => $refund->id,
-                    'product_id' => $item['product_id'],
+                    'product_variant_id' => $item['product_variant_id'],
                     'quantity' => $item['quantity'],
                     'reason' => $item['reason'],
                     'description' => $item['description'],
@@ -354,7 +344,7 @@ class ProfileController extends Controller
                 "timeOut" => "3000",
             ]);
 
-            return redirect()->back();
+            return view('client.pages.profile.layouts.components.details', compact('order'));
         } else {
             // Thông báo thất bại
             toastr("Tạo đơn hoàn hàng thất bại", NotificationInterface::ERROR, "Thất bại", [
@@ -366,6 +356,7 @@ class ProfileController extends Controller
             return redirect()->back();
         }
     }
+
 
 
     private function codeRefund()
