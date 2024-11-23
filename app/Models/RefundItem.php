@@ -13,10 +13,14 @@ class RefundItem extends Model
 
     protected $fillable = [
         'refund_id',
-        'product_id',
+        'product_variant_id',
         'quantity',
         'reason',
         'description',
         'img',
     ];
+    public function productVariant()
+    {
+        return $this->belongsTo(ProductVariant::class, 'product_variant_id');
+    }
 }

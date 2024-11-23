@@ -183,21 +183,42 @@
                             @endif
                             <!-- trạng thái hoàn hàng -->
                             @if ($order->status === 'REFUND')
-                                <div class="mt-3 text-end">
-                                    @php
-                                        // Mảng trạng thái hoàn hàng và các thông điệp tương ứng bằng tiếng Việt
-                                        $refundStatuses = [
-                                            'ORDER_CREATED' => 'Đơn hoàn hàng đã được tạo',
-                                            'CANCEL_REFUND_ORDER' => 'Đơn hoàn hàng đã bị hủy',
-                                            'HANDOVER_TO_SHIPPING' => 'Đơn hàng hoàn đã chuyển cho đơn vị vận chuyển',
-                                            'REFUND_COMPLETED' => 'Hoàn tiền đã hoàn tất',
-                                            'DELIVERY_FAILED' => 'Giao hàng hoàn không thành công',
-                                        ];
-                                    @endphp
+                                @php
+                                    $refundItemStatus = [
+                                        'PENDING' => ' Đang chờ phê duyệt',
+                                        'APPROVED' => ' Đã được phê duyệt',
+                                        'REJECTED' => 'Bị từ chối',
+                                    ];
+                                    $refundItemReason = [
+                                        'NOT_RECEIVED' => 'Chưa nhận được hàng',
+                                        'MISSING_ITEMS' => 'Thiếu sản phẩm',
+                                        'DAMAGED_ITEMS' => 'Sản phẩm bị hư hỏng',
+                                        'INCORRECT_ITEMS' => 'Sản phẩm không đúng',
+                                        'FAULTY_ITEMS' => 'Sản phẩm bị lỗi',
+                                        'DIFFERENT_FROM_DESCRIPTION' => 'Sản phẩm khác mô tả',
+                                        'USED_ITEMS' => 'Sản phẩm đã qua sử dụng',
+                                    ];
 
-                                    <label style="font-size: 16px; font-weight: 700;"
-                                        for="">{{ $refundStatuses[$order->refund->status] ?? 'Trạng thái không xác định' }}</label>
-                                </div>
+                                @endphp
+                                @foreach ($order->refund as $refund)
+                                    <h5>Thông tin hoàn hàng:</h5>
+                                    @foreach ($refund->refundItem as $item)
+                                        <div class="mb-3">
+                                            <p>Sản phẩm hoàn trả:
+                                                {{ $item->productVariant->product->name }}
+                                                ({{ $item->productVariant->attributeValues->pluck('name')->implode(' - ') }})
+                                            </p>
+                                            <p>Số lượng hoàn: {{ $item->quantity }}</p>
+                                            <p>Lý do:
+                                                {{ $refundItemReason[$item->reason] }}
+                                            </p>
+                                            <p>Mô tả chi tiết: {{ $item->description }}</p>
+                                            <img width="100px" height="120px" src="{{ '/storage/' . $item->img }}"
+                                                alt="" />
+                                            <p>Trạng thái: {{ $refundItemStatus[$item->status] }}</p>
+                                        </div>
+                                    @endforeach
+                                @endforeach
                             @endif
                             <!-- Nút hủy đơn hàng -->
                             @if ($order->status === 'PENDING')
