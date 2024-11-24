@@ -1,8 +1,37 @@
+<style>
+    .readed {
+        background-color: white;
+    }
+
+    .readed:hover {
+        background-color: gray;
+    }
+
+    .not-read {
+        background-color: #ff004229;
+    }
+
+    .not-read:hover {
+        background-color: gray;
+    }
+
+    .icon-number {
+        border-radius: 50%;
+        color: #fff;
+        font-size: 11px;
+        height: 15px;
+        width: 15px;
+        line-height: 15px;
+        right: 0;
+        top: 12px;
+        position: absolute;
+    }
+</style>
 <div class="top-left">
     <div class="navbar-header">
         <a class="navbar-brand" href="{{ route('dashboard') }}"><img src="/template/images/logo.png" alt="Logo"></a>
         <a class="navbar-brand hidden" href="{{ route('dashboard') }}"><img src="/template/images/logo2.png"
-                alt="Logo"></a>
+                                                                            alt="Logo"></a>
         <a id="menuToggle" class="menutoggle"><i class="fa fa-bars"></i></a>
     </div>
 </div>
@@ -19,30 +48,24 @@
 
             <div class="dropdown for-notification">
                 <button class="btn btn-secondary dropdown-toggle" type="button" id="notification"
-                    data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                        data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                     <i class="fa fa-bell"></i>
-                    <span class="count bg-danger">3</span>
+                    <p class="bg-danger icon-number" id="number-noti">0</p>
                 </button>
-                <div class="dropdown-menu" aria-labelledby="notification">
-                    <p class="red">You have 3 Notification</p>
-                    <a class="dropdown-item media" href="#">
-                        <i class="fa fa-check"></i>
-                        <p>Server #1 overloaded.</p>
-                    </a>
-                    <a class="dropdown-item media" href="#">
-                        <i class="fa fa-info"></i>
-                        <p>Server #2 overloaded.</p>
-                    </a>
-                    <a class="dropdown-item media" href="#">
-                        <i class="fa fa-warning"></i>
-                        <p>Server #3 overloaded.</p>
-                    </a>
+                <div class="dropdown-menu" aria-labelledby="notification"
+                     id="notifications"
+                     style="max-height: 30rem;overflow: scroll; max-width: 30rem">
+                    <p class="red" id="count-noti"></p>
+                    {{--                    <a class="dropdown-item media" href="#">--}}
+                    {{--                        <i class="fa fa-check"></i>--}}
+                    {{--                        <p>Server #1 overloaded.</p>--}}
+                    {{--                    </a>--}}
                 </div>
             </div>
 
             <div class="dropdown for-message">
                 <button class="btn btn-secondary dropdown-toggle" type="button" id="message" data-toggle="dropdown"
-                    aria-haspopup="true" aria-expanded="false">
+                        aria-haspopup="true" aria-expanded="false">
                     <i class="fa fa-envelope"></i>
                     <span class="count bg-primary">4</span>
                 </button>
@@ -86,7 +109,7 @@
 
         <div class="user-area dropdown float-right">
             <a href="#" class="dropdown-toggle active" data-toggle="dropdown" aria-haspopup="true"
-                aria-expanded="false">
+               aria-expanded="false">
                 <img class="user-avatar rounded-circle" src="/template/images/admin.jpg" alt="User Avatar">
             </a>
 
@@ -109,3 +132,132 @@
 
     </div>
 </div>
+
+
+@push('admin-scripts')
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.js"></script>
+    <script>
+        document.addEventListener("DOMContentLoaded", function () {
+            var notificationElement = document.getElementById("notifications");
+
+            // load notifications
+            // {
+            //     "title": "Xác nhận đơn hàng mới ",
+            //     "message": "Đơn hàng #51J2A452IZBG05 đã được tạo ",
+            //     "redirect_url": "http://127.0.0.1:8000/admin/orders/79/edit",
+            //     "user_id": 1,
+            //     "updated_at": "2024-11-23T19:55:03.000000Z",
+            //     "created_at": "2024-11-23T19:55:03.000000Z",
+            //     "id": 11
+            // }
+
+            handlenotification();
+            // console.log("heloo")
+            window.Echo.channel("order-to-admin")
+                .listen("OrderToAdminEvent", function (data) {
+                    let numberNoti = document.getElementById("number-noti");
+                    let countNoti = document.getElementById("count-noti");
+                    numberNoti.textContent = Number(numberNoti.textContent) + 1;
+                    countNoti.textContent = Number(countNoti.textContent) + 1;
+                    console.log(JSON.stringify(data), data.noties);
+                    let noties = data.noties;
+
+                    let aElement = document.createElement("a");
+                    let iElementCheck = document.createElement("i")
+                    iElementCheck.classList.add("fa");
+                    aElement.setAttribute("data-id", noties.id)
+                    iElementCheck.classList.add("fa-check");
+                    let pElement = document.createElement("p");
+                    aElement.classList.add("dropdown-item");
+                    aElement.classList.add("media");
+                    aElement.classList.add("notification");
+
+                    if (noties.redirect_url != null) {
+                        aElement.setAttribute("href", noties.redirect_url)
+                    } else {
+                        aElement.setAttribute("href", "#")
+                    }
+
+                    if (noties.read_at == null) {
+                        aElement.classList.add("not-read")
+                    } else {
+                        aElement.classList.add("readed")
+                    }
+                    pElement.innerText = noties.message
+
+                    aElement.appendChild(iElementCheck)
+                    aElement.appendChild(pElement);
+                    notificationElement.appendChild(aElement);
+
+                    // hien thị thông báo
+                    toastr.options = {
+                        "closeButton": true,
+                        "progressBar": true,
+                        "positionClass": "toast-bottom-right",
+                        "timeOut": "5000",
+                    };
+
+                    toastr.info(noties.message);
+
+
+                })
+        })
+
+        function handlenotification() {
+            let notificationElement = document.getElementById("notifications");
+            let countNoti = document.getElementById("count-noti");
+            window.axios.get("/api/notification").then((response) => {
+                let numberNoti = document.getElementById("number-noti");
+                // console.log(response.data, notificationElement)
+
+                let noties = response.data;
+                numberNoti.textContent = noties.countNoties;
+                countNoti.textContent = `Bạn có ${noties.countNoties} thông báo mới`;
+
+                noties.allNoties.forEach((noti, index) => {
+                    // console.log(noti)
+                    let aElement = document.createElement("a");
+                    let iElementCheck = document.createElement("i")
+                    iElementCheck.classList.add("fa");
+                    iElementCheck.classList.add("fa-check");
+                    aElement.setAttribute("data-id", noti.id)
+                    let pElement = document.createElement("p");
+                    aElement.classList.add("dropdown-item");
+                    aElement.classList.add("media");
+                    aElement.classList.add("notification");
+
+                    if (noti.redirect_url != null) {
+                        aElement.setAttribute("href", noti.redirect_url)
+                    } else {
+                        aElement.setAttribute("href", "#")
+                    }
+
+                    if (noti.read_at == null) {
+                        aElement.classList.add("not-read")
+                    } else {
+                        aElement.classList.add("readed")
+                    }
+                    pElement.innerText = noti.message
+
+                    aElement.appendChild(iElementCheck)
+                    aElement.appendChild(pElement);
+                    notificationElement.appendChild(aElement);
+                })
+
+
+            }).then(() => {
+                document.querySelectorAll(".notification").forEach((element) => {
+
+                    element.addEventListener("click", async (e) => {
+                        await window.axios.put("/notification/update", {
+                            id: element.getAttribute("data-id")
+                        }).then((res) => {
+                            alert("sadsa")
+                        })
+                    })
+                })
+            })
+        }
+    </script>
+@endpush
