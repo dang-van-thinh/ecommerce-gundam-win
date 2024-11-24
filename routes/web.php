@@ -25,18 +25,18 @@ use App\Http\Controllers\Client\ContactController;
 use App\Http\Controllers\Client\HomeController;
 use App\Http\Controllers\Client\MyVoucherController;
 use App\Http\Controllers\Client\OrderController;
+use App\Http\Controllers\Client\PolicyController;
 use App\Http\Controllers\Client\ProductController;
 use App\Http\Controllers\Client\ProfileController;
+use App\Http\Controllers\Client\SearchController;
 use App\Http\Controllers\Client\WishListController;
 use App\Http\Controllers\Controller;
 use App\Http\Controllers\DefaultController;
 use App\Http\Controllers\Admin\RefundController;
-use App\Http\Controllers\Client\PolicyController;
 use App\Http\Controllers\Admin\NewroleController;
 use App\Http\Controllers\Admin\NewUserController;
 use App\Http\Controllers\Admin\PermissionController;
 use App\Models\Article;
-use App\Http\Controllers\Client\SearchController;
 
 use Illuminate\Support\Facades\Route;
 
