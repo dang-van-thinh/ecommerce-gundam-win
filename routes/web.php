@@ -32,6 +32,7 @@ use App\Http\Controllers\Client\WishListController;
 use App\Http\Controllers\Controller;
 use App\Http\Controllers\DefaultController;
 use App\Http\Controllers\Admin\RefundController;
+use App\Http\Controllers\Client\PolicyController;
 use App\Http\Controllers\NewroleController;
 use App\Http\Controllers\NewUserController;
 use App\Http\Controllers\PermissionController;
@@ -112,6 +113,8 @@ Route::prefix('')->middleware(['auth', 'checkAccountStatus', 'updateOrderStatus'
         Route::get('/', [ProfileController::class, 'infomation'])->name('infomation');
         Route::get('/order-history', [ProfileController::class, 'orderHistory'])->name('order-history');
         Route::get('/order/{id}', [ProfileController::class, 'orderDetail'])->name('order.details');
+        Route::get('/order-refunds/{id}', [ProfileController::class, 'createOrderRefunds'])->name('order.create.refunds');
+        Route::post('/order/create-refunds', [ProfileController::class, 'storeRefunds'])->name('order.store.refunds');
         // Route::get('/address', [ProfileController::class, 'address'])->name('address');
         Route::get('address', [AddersController::class, 'index'])->name('address');
         Route::post('/feedback/store', [ProfileController::class, 'feedbackstore'])->name('feedback.store');
@@ -158,6 +161,13 @@ Route::post('/product/filter', [CollectionProductController::class, 'filter'])->
 Route::get('/404', [DefaultController::class, 'pageNotFound'])->name('404');
 Route::post('/feedback/reply', [ProductController::class, 'replyFeedback'])->name('feedback.reply');
 Route::delete('/comments/{id}', [BlogController::class, 'deleteComment'])->name('comments.delete');
+
+Route::prefix('policies')->group(function () {
+    Route::get('/privacy', [PolicyController::class, 'privacy'])->name('policies.privacy');
+    Route::get('/shipping', [PolicyController::class, 'shipping'])->name('policies.shipping');
+    Route::get('/payment', [PolicyController::class, 'payment'])->name('policies.payment');
+    Route::get('/return', [PolicyController::class, 'return'])->name('policies.return');
+});
 
 
 // auth
