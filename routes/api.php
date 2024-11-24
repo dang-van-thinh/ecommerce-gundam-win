@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\Admin\Api\ImageBlogApiController;
+use App\Http\Controllers\Admin\Api\NotificationApiController;
 use App\Http\Controllers\Admin\Api\OrderController;
 use App\Http\Controllers\Admin\Api\ProductController as AdminProductController;
 use App\Http\Controllers\Admin\Api\UserController;
@@ -9,7 +10,6 @@ use App\Http\Controllers\Client\Api\ProductController;
 use App\Http\Controllers\Client\Api\VoucherController;
 use App\Http\Controllers\Client\ProfileController;
 use App\Http\Controllers\Client\Api\WishlistController;
-use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -23,11 +23,9 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
-// Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
-//     return $request->user();
-// });
-
 Route::prefix('')->middleware(['authApi'])->group(function () {
+
+
     // ajax them moi anh bai viet
     Route::post('/image-blog', [ImageBlogApiController::class, 'store'])->name('api.image');
 
@@ -56,3 +54,6 @@ Route::prefix('admin')->middleware(['authApi'])->group(function () {
     Route::get('/users/filter', [UserController::class, 'filter']);
     Route::get('/products/filter', [AdminProductController::class, 'filter']);
 });
+// notification public channel
+Route::get("/notification", [NotificationApiController::class, "notifications"])->name("notication");
+Route::put("/notification/update", [NotificationApiController::class, "updateReadNotification"])->name("notication.update");
