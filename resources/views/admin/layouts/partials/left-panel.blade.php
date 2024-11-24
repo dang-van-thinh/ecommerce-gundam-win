@@ -52,17 +52,22 @@
                 </ul>
             </li>
             @endcan
-
+            @can('voucher')
+            <li class="menu-item-has-children dropdown">
+                <a href="#" class="dropdown-toggle" data-toggle="dropdown" aria-haspopup="true"
+                    aria-expanded="false"><i class="menu-icon fa fa-ticket"></i>QL Phiếu Giảm Giá</a>
+                <ul class="sub-menu children dropdown-menu">
+                    <li><i class="fa fa-caret-square-o-right"></i><a href="{{ route('voucher.index') }}">Danh sách </a>
+                    <li><i class="fa fa-caret-square-o-right"></i><a href="{{ route('voucher.create') }}">Thêm mới</a>
+                    </li>
+                </ul>
+            </li>
+            @endcan
             @can('users')
             <li class="menu-item-has-children dropdown">
                 <a href="#" class="dropdown-toggle" data-toggle="dropdown" aria-haspopup="true"
                     aria-expanded="false"><i class="menu-icon fa fa-users"></i>QL Người Dùng</a>
                 <ul class="sub-menu children dropdown-menu">
-                    <li><i class="fa fa-caret-square-o-right"></i><a href="{{ route('users.index') }}">Danh sách
-                            người dùng</a>
-                    </li>
-                    <li><i class="fa fa-caret-square-o-right"></i><a href="{{ route('roles.index') }}">Vai trò</a>
-                    </li>
                     <li><i class="fa fa-caret-square-o-right"></i><a href="{{ route('new-user.index') }}">Danh sách
                             người dùng 2.0</a>
                     </li>

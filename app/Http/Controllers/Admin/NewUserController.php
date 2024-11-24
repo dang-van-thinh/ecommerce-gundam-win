@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Http\Controllers;
+namespace App\Http\Controllers\Admin;
 
 use App\Http\Requests\Admin\user\StoreUserRequest;
 use App\Http\Requests\Admin\user\UpdateUserRequest;
@@ -8,6 +8,7 @@ use App\Models\User;
 use Flasher\Prime\Notification\NotificationInterface;
 use Illuminate\Support\Facades\Storage;
 use Spatie\Permission\Models\Role;
+use App\Http\Controllers\Controller;
 
 class NewUserController extends Controller
 {
