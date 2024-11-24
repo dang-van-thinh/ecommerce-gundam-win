@@ -11,7 +11,6 @@ use App\Http\Controllers\Admin\FeedbackController;
 use App\Http\Controllers\Admin\ImageArticleController;
 use App\Http\Controllers\Admin\OrderController as AdminOrderController;
 use App\Http\Controllers\Admin\ProductController as AdminProductController;
-use App\Http\Controllers\Admin\RefundController;
 use App\Http\Controllers\Admin\RoleController;
 use App\Http\Controllers\Admin\UserController;
 use App\Http\Controllers\Admin\VoucherController;
@@ -31,10 +30,16 @@ use App\Http\Controllers\Client\OrderController;
 use App\Http\Controllers\Client\PolicyController;
 use App\Http\Controllers\Client\ProductController;
 use App\Http\Controllers\Client\ProfileController;
-use App\Http\Controllers\Client\SearchController;
 use App\Http\Controllers\Client\WishListController;
 use App\Http\Controllers\Controller;
 use App\Http\Controllers\DefaultController;
+use App\Http\Controllers\Admin\RefundController;
+use App\Http\Controllers\NewroleController;
+use App\Http\Controllers\NewUserController;
+use App\Http\Controllers\PermissionController;
+use App\Models\Article;
+use App\Http\Controllers\Client\SearchController;
+
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -49,10 +54,32 @@ use Illuminate\Support\Facades\Route;
 */
 
 // test
-//Route::get("/test/noti", [Controller::class, 'testNotification']);
+
+// Route::get('/', function () {
+//     return view('welcome');
+// });
+// Route::get("/home", [Controller::class, 'notification'])->name("home");
+
+// hiện tại quy ước 1 là user 2 là admin ae nào ngược đời thì sửa lại nhé=))
+Route::middleware(['auth', 'checkAccountStatus','permission:articles'  ])->group(function () {
+    // Các route yêu cầu đăng nhập
+    Route::get("/test", [Controller::class, 'test'])->name("test");
+});
+Route::prefix('/admin')->middleware(['auth', 'checkAccountStatus', 'role:Admin','permission:articles' ])->group(function () {
+    Route::get("/test", [Controller::class, 'test'])->name("test");
+ });
+Route::resource('permission',PermissionController::class);
+Route::resource('new-role',NewroleController::class);
+Route::get('new-role/give-permission/{id}',[NewroleController::class,'addPermissionToRole'])->name('new-role.give-permission');
+Route::put('new-role/assign-permissions/{id}', [NewroleController::class, 'assignPermissions'])->name('role.assign-permissions');
+
+Route::resource('new-user',NewUserController::class);
+
+
+
 
 // admin
-Route::prefix('/admin')->middleware(['auth', 'checkAccountStatus', 'checkRole:2'])->group(function () {
+Route::prefix('/admin')->middleware(['auth', 'checkAccountStatus','checkRole:Admin|Staff' ])->group(function () {
     Route::resource('article', ArticleController::class);
     Route::resource('banner', BannerController::class);
     Route::resource('attributes', AttributeController::class);
@@ -67,13 +94,13 @@ Route::prefix('/admin')->middleware(['auth', 'checkAccountStatus', 'checkRole:2'
     Route::resource('imagearticle', ImageArticleController::class);
     Route::resource('orders', AdminOrderController::class);
     Route::resource('feedback', FeedbackController::class);
-    Route::get('', [DashboardController::class, 'index'])->name('dashboard');
+    Route::get('', [DashboardController::class, 'index'])->name('dashboard')->middleware('permission:dashboard');
     Route::post('refund/check-order', [RefundController::class, 'checkOrder'])->name('refund.checkOrder');
     Route::get("/chat", [ChatController::class, "showViewAdmin"])->name("chat.show");
 });
 
 // client
-Route::prefix('')->middleware(['auth', 'checkAccountStatus', 'checkRole:1', 'updateOrderStatus'])->group(function () {
+Route::prefix('')->middleware(['auth', 'checkAccountStatus', 'updateOrderStatus','checkRole:Client'])->group(function () {
     Route::get('/cart', [CartController::class, 'index'])->name('cart');
     Route::get('/check-out', [CheckOutController::class, 'checkOutByCart'])->name('check-out');
     Route::get('/check-out-now', [CheckOutController::class, 'checkOutByNow'])->name('check-out-now');
@@ -156,10 +183,4 @@ Route::prefix('auth')->name('auth.')->group(function () {
     Route::get('/verify-account/{email}', [AuthController::class, 'verify'])->name('verify-account');
     Route::post('/logout', [AuthController::class, 'logout'])->name('logout');
     Route::post('/profile/change-password', [AuthController::class, 'changePassword'])->name('profile.change-password');
-});
-
-// hiện tại quy ước 1 là user 2 là admin ae nào ngược đời thì sửa lại nhé=))
-Route::middleware(['auth', 'checkAccountStatus', 'checkRole:2'])->group(function () {
-    // Các route yêu cầu đăng nhập
-    Route::get("/test", [Controller::class, 'test'])->name("test");
 });
