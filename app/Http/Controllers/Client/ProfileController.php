@@ -65,15 +65,9 @@ class ProfileController extends Controller
         $voucher = Voucher::where('type', 'SUCCESS')->first();
 
         if ($voucher) {
-            $startDate = Carbon::now()->lt($voucher->start_date) ? $voucher->start_date : Carbon::now();
-
             $data = [
                 "user_id" => Auth::id(),
-                "voucher_id" => $voucher->id,
-                "vourcher_code" => strtoupper(string: Str::random(8)),
-                "start_date" => $startDate,
-                "end_date" => $voucher->end_date,
-                "status" => "ACTIVE",
+                "voucher_id" => $voucher->id
             ];
 
             VoucherUsage::create($data);

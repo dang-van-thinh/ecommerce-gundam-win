@@ -173,19 +173,21 @@ class AuthController extends Controller
             $voucher = Voucher::where('type', 'REGISTER')->first();
 
             if ($voucher) {
-                $startDate = Carbon::now()->lt($voucher->start_date) ? $voucher->start_date : Carbon::now();
-
-                $data = [
-                    "user_id"       => $acc->id,
-                    "voucher_id"    => $voucher->id,
-                    "vourcher_code" => strtoupper(Str::random(8)),
-                    "start_date"    => $startDate,
-                    "end_date"      => $voucher->end_date,
-                    "status"        => "ACTIVE",
-                ];
-
-                VoucherUsage::create($data);
+                // Kiểm tra xem đã tồn tại bản ghi chưa
+                $existingUsage = VoucherUsage::where('user_id', $acc->id)
+                    ->where('voucher_id', $voucher->id)
+                    ->first();
+            
+                if (!$existingUsage) {
+                    // Nếu chưa có thì tạo mới
+                    $data = [
+                        "user_id"    => $acc->id,
+                        "voucher_id" => $voucher->id,
+                    ];
+                    VoucherUsage::create($data);
+                }
             }
+            
             // Thông báo xác thực thành công
             toastr("Tài khoản của bạn đã được xác thực thành công! <br> Vui lòng đăng nhập tài khoản", NotificationInterface::SUCCESS, "Xác thực tài khoản thành công", [
                 "closeButton" => true,
