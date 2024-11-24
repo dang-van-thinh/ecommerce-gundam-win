@@ -2,6 +2,8 @@
 
 namespace Database\Seeders;
 
+use App\Models\User;
+use Carbon\Carbon;
 use Illuminate\Database\Seeder;
 use Spatie\Permission\Models\Permission;
 use Spatie\Permission\Models\Role;
@@ -19,7 +21,8 @@ class RolePermissionSeeder extends Seeder
             'voucher', // Quyền tổng quát cho quản lý phiếu giảm giá (sửa từ 'vouchers' thành 'voucher')
             'orders',   // Quyền tổng quát cho quản lý đơn hàng
             'feedback', // Quyền tổng quát cho quản lý phản hồi
-            'banner',//Quền tôngt quát cho banner
+            'banner',//Quền tổng quát cho banner
+            'refund',//Quyền hoàn hàng
         ];
 
         // Tạo quyền nếu chưa tồn tại
@@ -50,5 +53,19 @@ class RolePermissionSeeder extends Seeder
             'orders',      // Xem đơn hàng
             'feedback',    // Gửi phản hồi
         ]);
+         // Tạo tài khoản admin
+         $admin = User::firstOrCreate(
+            ['email' => 'admin@admin.com'], // Email cố định cho admin
+            [
+                'full_name' => 'Admin 01',
+                'phone' => '01234567890',
+                'status' => 'ACTIVE',
+                'email_verified_at'=> now(),
+                'password' => bcrypt('admin12345'), // Mật khẩu mặc định
+            ]
+        );
+
+        // Gán vai trò Admin cho tài khoản
+        $admin->assignRole($adminRole, $staffRole, $clientRole);
     }
 }

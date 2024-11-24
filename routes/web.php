@@ -34,9 +34,10 @@ use App\Http\Controllers\Client\WishListController;
 use App\Http\Controllers\Controller;
 use App\Http\Controllers\DefaultController;
 use App\Http\Controllers\Admin\RefundController;
-use App\Http\Controllers\NewroleController;
-use App\Http\Controllers\NewUserController;
-use App\Http\Controllers\PermissionController;
+use App\Http\Controllers\Client\PolicyController;
+use App\Http\Controllers\Admin\NewroleController;
+use App\Http\Controllers\Admin\NewUserController;
+use App\Http\Controllers\Admin\PermissionController;
 use App\Models\Article;
 use App\Http\Controllers\Client\SearchController;
 
@@ -61,46 +62,44 @@ use Illuminate\Support\Facades\Route;
 // Route::get("/home", [Controller::class, 'notification'])->name("home");
 
 // hiện tại quy ước 1 là user 2 là admin ae nào ngược đời thì sửa lại nhé=))
-Route::middleware(['auth', 'checkAccountStatus','permission:articles'  ])->group(function () {
+Route::middleware(['auth', 'checkAccountStatus', 'permission:articles'])->group(function () {
     // Các route yêu cầu đăng nhập
     Route::get("/test", [Controller::class, 'test'])->name("test");
 });
-Route::prefix('/admin')->middleware(['auth', 'checkAccountStatus', 'role:Admin','permission:articles' ])->group(function () {
+Route::prefix('/admin')->middleware(['auth', 'checkAccountStatus', 'role:Admin', 'permission:articles'])->group(function () {
     Route::get("/test", [Controller::class, 'test'])->name("test");
- });
-Route::resource('permission',PermissionController::class);
-Route::resource('new-role',NewroleController::class);
-Route::get('new-role/give-permission/{id}',[NewroleController::class,'addPermissionToRole'])->name('new-role.give-permission');
-Route::put('new-role/assign-permissions/{id}', [NewroleController::class, 'assignPermissions'])->name('role.assign-permissions');
-
-Route::resource('new-user',NewUserController::class);
-
+});
 
 
 
 // admin
-Route::prefix('/admin')->middleware(['auth', 'checkAccountStatus','checkRole:Admin|Staff' ])->group(function () {
-    Route::resource('article', ArticleController::class);
-    Route::resource('banner', BannerController::class);
-    Route::resource('attributes', AttributeController::class);
-    Route::resource('attributeValues', AttributeValueController::class);
-    Route::resource('category-product', CategoryProductController::class);
-    Route::resource('category-article', CategoryArticleController::class);
-    Route::resource('roles', RoleController::class);
-    Route::resource('users', UserController::class);
-    Route::resource('voucher', VoucherController::class);
-    Route::resource('refund', RefundController::class);
-    Route::resource('products', AdminProductController::class);
-    Route::resource('imagearticle', ImageArticleController::class);
-    Route::resource('orders', AdminOrderController::class);
-    Route::resource('feedback', FeedbackController::class);
+Route::prefix('/admin')->middleware(['auth', 'checkAccountStatus', 'checkRole:Admin|Staff'])->group(function () {
+    Route::resource('article', ArticleController::class)->middleware('permission:articles');
+    Route::resource('banner', BannerController::class)->middleware('permission:banner');
+    Route::resource('attributes', AttributeController::class)->middleware('permission:products');
+    Route::resource('attributeValues', AttributeValueController::class)->middleware('permission:products');
+    Route::resource('category-product', CategoryProductController::class)->middleware('permission:products');
+    Route::resource('category-article', CategoryArticleController::class)->middleware('permission:articles');
+    // Route::resource('roles', RoleController::class);
+    // Route::resource('users', UserController::class);
+    Route::resource('voucher', VoucherController::class)->middleware('permission:voucher');
+    Route::resource('refund', RefundController::class)->middleware('permission:refund');
+    Route::resource('products', AdminProductController::class)->middleware('permission:products');
+    Route::resource('imagearticle', ImageArticleController::class)->middleware('permission:articles');
+    Route::resource('orders', AdminOrderController::class)->middleware('permission:orders');
+    Route::resource('feedback', FeedbackController::class)->middleware('permission:feedback');
     Route::get('', [DashboardController::class, 'index'])->name('dashboard')->middleware('permission:dashboard');
-    Route::post('refund/check-order', [RefundController::class, 'checkOrder'])->name('refund.checkOrder');
-    Route::get("/chat", [ChatController::class, "showViewAdmin"])->name("chat.show");
+    Route::post('refund/check-order', [RefundController::class, 'checkOrder'])->name('refund.checkOrder')->middleware('permission:refund');
+    Route::resource('permission', PermissionController::class)->middleware('permission:users');
+    Route::resource('new-role', NewroleController::class)->middleware('permission:users');
+    Route::get('new-role/give-permission/{id}', [NewroleController::class, 'addPermissionToRole'])->name('new-role.give-permission');
+    Route::put('new-role/assign-permissions/{id}', [NewroleController::class, 'assignPermissions'])->name('role.assign-permissions');
+
+    Route::resource('new-user', NewUserController::class)->middleware('permission:users');
 });
 
 // client
-Route::prefix('')->middleware(['auth', 'checkAccountStatus', 'updateOrderStatus','checkRole:Client'])->group(function () {
+Route::prefix('')->middleware(['auth', 'checkAccountStatus', 'updateOrderStatus', 'checkRole:Client'])->group(function () {
     Route::get('/cart', [CartController::class, 'index'])->name('cart');
     Route::get('/check-out', [CheckOutController::class, 'checkOutByCart'])->name('check-out');
     Route::get('/check-out-now', [CheckOutController::class, 'checkOutByNow'])->name('check-out-now');

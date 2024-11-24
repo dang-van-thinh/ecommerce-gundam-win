@@ -1,13 +1,13 @@
 <?php
 
-namespace App\Http\Controllers;
+namespace App\Http\Controllers\Admin;
 
 use App\Http\Requests\StoreNewRoleRequest;
 use App\Http\Requests\UpdateNewRoleRequest;
 use Spatie\Permission\Models\Permission;
 use Spatie\Permission\Models\Role;
 use Flasher\Prime\Notification\NotificationInterface;
-
+use App\Http\Controllers\Controller;
 
 use Illuminate\Http\Request;
 
