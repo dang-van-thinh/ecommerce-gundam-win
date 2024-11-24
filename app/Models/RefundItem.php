@@ -18,6 +18,7 @@ class RefundItem extends Model
         'reason',
         'description',
         'img',
+        'status',
     ];
     public function productVariant()
     {
