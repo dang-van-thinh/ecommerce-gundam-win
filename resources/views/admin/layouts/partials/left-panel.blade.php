@@ -7,12 +7,13 @@
     <nav class="navbar navbar-expand-sm navbar-default mt-3">
         <div id="main-menu" class="main-menu navbar-collapse collapse" />
         <ul class="nav navbar-nav" style="">
+        @can('dashboard')
             <li class="">
                 <a href="{{ route('dashboard') }}"><i class="menu-icon fa fa-bar-chart"></i>Thống kê</a>
             </li>
+        @endcan
 
-            {{-- <li class="menu-title">UI elements</li><!-- /.menu-title --> --}}
-
+            @can('articles')
             <li class="menu-item-has-children dropdown">
                 <a href="#" class="dropdown-toggle" data-toggle="dropdown" aria-haspopup="true"
                     aria-expanded="false">
@@ -26,11 +27,9 @@
                             bài viết</a></li>
                 </ul>
             </li>
+            @endcan
 
-            {{-- <li class="menu-item-has-children">
-                <a href="{{ route('banner.index') }}"><i class="menu-icon fa fa-book"></i>Quản lý Banner</a>
-            </li> --}}
-
+            @can('products')
             <li class="menu-item-has-children dropdown">
                 <a href="#" class="dropdown-toggle" data-toggle="dropdown" aria-haspopup="true"
                     aria-expanded="false"><i class="menu-icon fa fa-cubes"></i>QL Sản Phẩm
@@ -52,20 +51,9 @@
 
                 </ul>
             </li>
+            @endcan
 
-            {{-- <li class="menu-item-has-children dropdown">
-                <a href="#" class="dropdown-toggle" data-toggle="dropdown" aria-haspopup="true"
-                    aria-expanded="false"><i class="menu-icon fa fa-th-list"></i>QL Danh mục</a>
-                <ul class="sub-menu children dropdown-menu">
-                    <li><i class="fa fa-caret-square-o-right"></i><a href="{{ route('category-product.index') }}">Danh
-                            mục sản
-                            phẩm</a></li>
-                    <li><i class="fa fa-caret-square-o-right"></i><a href="{{ route('category-article.index') }}">Danh
-                            mục bài
-                            viết</a></li>
-                </ul>
-            </li> --}}
-
+            @can('users')
             <li class="menu-item-has-children dropdown">
                 <a href="#" class="dropdown-toggle" data-toggle="dropdown" aria-haspopup="true"
                     aria-expanded="false"><i class="menu-icon fa fa-users"></i>QL Người Dùng</a>
@@ -75,9 +63,18 @@
                     </li>
                     <li><i class="fa fa-caret-square-o-right"></i><a href="{{ route('roles.index') }}">Vai trò</a>
                     </li>
+                    <li><i class="fa fa-caret-square-o-right"></i><a href="{{ route('new-user.index') }}">Danh sách
+                            người dùng 2.0</a>
+                    </li>
+                    <li><i class="fa fa-caret-square-o-right"></i><a href="{{ route('permission.index') }}">Quyền tài khoản 2.0</a>
+                    </li>
+                    <li><i class="fa fa-caret-square-o-right"></i><a href="{{ route('new-role.index') }}">Vai trò tài khoản 2.0</a>
+                    </li>
                 </ul>
             </li>
+            @endcan
 
+            @can('vouchers')
             <li class="menu-item-has-children dropdown">
                 <a href="#" class="dropdown-toggle" data-toggle="dropdown" aria-haspopup="true"
                     aria-expanded="false"><i class="menu-icon fa fa-ticket"></i>QL Phiếu Giảm Giá</a>
@@ -87,11 +84,13 @@
                     </li>
                 </ul>
             </li>
+            @endcan
 
+            @can('orders')
             <li class="menu-item-has-children dropdown">
                 <a href="#" class="dropdown-toggle" data-toggle="dropdown" aria-haspopup="true"
                     aria-expanded="false">
-                    <i class="fa fa-cart-arrow-down menu-icon"></i>
+                    <i class="menu-icon fa fa-cart-arrow-down menu-icon"></i>
                     QL Đơn Hàng</a>
                 <ul class="sub-menu children dropdown-menu">
                     <li>
@@ -104,24 +103,9 @@
                     </li>
                 </ul>
             </li>
+            @endcan
 
-            {{-- <li class="menu-item-has-children dropdown">
-                <a href="#" class="dropdown-toggle" data-toggle="dropdown" aria-haspopup="true"
-                    aria-expanded="false"><i class="menu-icon fa fa-book"></i>QL sản phẩm</a>
-                <ul class="sub-menu children dropdown-menu">
-                    <li><i class="fa fa-list"></i><a href="{{ route('products.index') }}">Danh sách</a></li>
-                </ul>
-            </li> --}}
-
-            {{-- <li class="menu-item-has-children dropdown">
-                <a href="#" class="dropdown-toggle" data-toggle="dropdown" aria-haspopup="true"
-                    aria-expanded="false"><i class="menu-icon fa fa-list-alt"></i>Đơn hàng</a>
-                <ul class="sub-menu children dropdown-menu">
-                    <li><i class="fa fa-list"></i><a href="{{ route('orders.index') }}">Tất cả đơn hàng</a></li>
-                </ul>
-            </li> --}}
-
-
+            @can('feedback')
             <li class="menu-item-has-children dropdown">
                 <a href="#" class="dropdown-toggle" data-toggle="dropdown" aria-haspopup="true"
                     aria-expanded="false"><i class="menu-icon fa fa-comments"></i>QL Phản Hồi</a>
@@ -130,16 +114,22 @@
                     </li>
                 </ul>
             </li>
+            @endcan
+
+            @can('banner')
             <li class="menu-item-has-children dropdown">
                 <a href="#" class="dropdown-toggle" data-toggle="dropdown" aria-haspopup="true"
                     aria-expanded="false"><i class="menu-icon fa fa-cogs"></i>Cấu hình</a>
                 <ul class="sub-menu children dropdown-menu">
+
                     <li>
                         <i class="fa fa fa-picture-o"></i>
                         <a href="{{ route('banner.index') }}">QL Banner</a>
                     </li>
+
                 </ul>
             </li>
+            @endcan
         </ul>
         </div>
     </nav>
