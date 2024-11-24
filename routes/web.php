@@ -1,20 +1,22 @@
 <?php
 
 use App\Http\Controllers\Admin\ArticleController;
-use App\Http\Controllers\Admin\BannerController;
 use App\Http\Controllers\Admin\AttributeController;
 use App\Http\Controllers\Admin\AttributeValueController;
+use App\Http\Controllers\Admin\BannerController;
 use App\Http\Controllers\Admin\CategoryArticleController;
 use App\Http\Controllers\Admin\CategoryProductController;
 use App\Http\Controllers\Admin\DashboardController;
 use App\Http\Controllers\Admin\FeedbackController;
-use App\Http\Controllers\Admin\ProductController as AdminProductController;
 use App\Http\Controllers\Admin\ImageArticleController;
 use App\Http\Controllers\Admin\OrderController as AdminOrderController;
+use App\Http\Controllers\Admin\ProductController as AdminProductController;
+use App\Http\Controllers\Admin\RefundController;
 use App\Http\Controllers\Admin\RoleController;
 use App\Http\Controllers\Admin\UserController;
 use App\Http\Controllers\Admin\VoucherController;
 use App\Http\Controllers\AuthController;
+use App\Http\Controllers\ChatController;
 use App\Http\Controllers\Client\AddersController;
 use App\Http\Controllers\Client\BlogController;
 use App\Http\Controllers\Client\CartController;
@@ -26,16 +28,13 @@ use App\Http\Controllers\Client\ContactController;
 use App\Http\Controllers\Client\HomeController;
 use App\Http\Controllers\Client\MyVoucherController;
 use App\Http\Controllers\Client\OrderController;
+use App\Http\Controllers\Client\PolicyController;
 use App\Http\Controllers\Client\ProductController;
 use App\Http\Controllers\Client\ProfileController;
+use App\Http\Controllers\Client\SearchController;
 use App\Http\Controllers\Client\WishListController;
 use App\Http\Controllers\Controller;
 use App\Http\Controllers\DefaultController;
-use App\Http\Controllers\Admin\RefundController;
-use App\Http\Controllers\Client\PolicyController;
-use App\Models\Article;
-use App\Http\Controllers\Client\SearchController;
-
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -50,12 +49,7 @@ use Illuminate\Support\Facades\Route;
 */
 
 // test
-
-// Route::get('/', function () {
-//     return view('welcome');
-// });
-// Route::get("/home", [Controller::class, 'notification'])->name("home");
-Route::get("/test", [Controller::class, 'test'])->name("test");
+//Route::get("/test/noti", [Controller::class, 'testNotification']);
 
 // admin
 Route::prefix('/admin')->middleware(['auth', 'checkAccountStatus', 'checkRole:2'])->group(function () {
@@ -75,6 +69,7 @@ Route::prefix('/admin')->middleware(['auth', 'checkAccountStatus', 'checkRole:2'
     Route::resource('feedback', FeedbackController::class);
     Route::get('', [DashboardController::class, 'index'])->name('dashboard');
     Route::post('refund/check-order', [RefundController::class, 'checkOrder'])->name('refund.checkOrder');
+    Route::get("/chat", [ChatController::class, "showViewAdmin"])->name("chat.show");
 });
 
 // client

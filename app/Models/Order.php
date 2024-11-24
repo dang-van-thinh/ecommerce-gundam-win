@@ -2,8 +2,12 @@
 
 namespace App\Models;
 
+use App\Events\OrderToAdminEvent;
+use App\Events\OrderToAdminNotification;
+use App\Events\TestEvent;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Support\Facades\Log;
 
 class Order extends Model
 {
@@ -29,7 +33,6 @@ class Order extends Model
         'phone',
         'customer_name'
     ];
-
 
     public function orderItems()
     {

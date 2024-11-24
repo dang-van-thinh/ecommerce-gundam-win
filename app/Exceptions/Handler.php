@@ -33,13 +33,13 @@ class Handler extends ExceptionHandler
     public function render($request, Throwable $exception)
     {
         if ($exception instanceof NotFoundHttpException) {
-            Log::info('404 Exception triggered');
+            // Log::debug(__CLASS__ . "  " . __FUNCTION__ . '404 Exception triggered');
 
             if ($request->is('admin/*')) {
-                Log::info('404 Admin View Triggered');
+                // Log::debug(__CLASS__ . "  " . __FUNCTION__ . '404 Admin View Triggered');
                 return response()->view('errors.404', [], 404);
             } else {
-                Log::info('404 Client View Triggered');
+                // Log::debug(__CLASS__ . "  " . __FUNCTION__ . '404 Client View Triggered');
                 return response()->view('errors.404-client', [], 404);
             }
         }
