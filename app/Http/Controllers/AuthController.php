@@ -10,7 +10,6 @@ use App\Http\Requests\Auth\RegisterRequest;
 use App\Http\Requests\Auth\ChangePassRequest;
 use App\Mail\FogotPass;
 use App\Mail\VerifyAccount;
-use App\Models\Role;
 use App\Models\User;
 use App\Models\Voucher;
 use App\Models\VoucherUsage;
@@ -23,6 +22,7 @@ use Mail;
 use Carbon\Carbon;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Str;
+use Spatie\Permission\Models\Role;
 
 class AuthController extends Controller
 {
@@ -123,15 +123,6 @@ class AuthController extends Controller
 
         // Thực hiện các thao tác trong một giao dịch
         DB::transaction(function () use ($validatedData) {
-            // Kiểm tra và thêm vai trò mặc định nếu chưa tồn tại
-            $role = Role::firstOrCreate(
-                ['id' => 1],
-                ['name' => 'User', 'description' => 'Vai trò mặc định cho người dùng']
-            );
-            Role::firstOrCreate(
-                ['id' => 2],
-                ['name' => 'Admin', 'description' => 'Vai trò Quản lý']
-            );
             // Tạo người dùng mới từ dữ liệu đã validate
             $user = User::create([
                 'full_name' => $validatedData['full_name'],
@@ -143,7 +134,7 @@ class AuthController extends Controller
             ]);
 
             // Gán vai trò mặc định cho người dùng
-            $user->roles()->sync([$role->id]);
+            $user->roles()->sync([3]);
 
             // Gửi email xác thực tài khoản
             //            Mail::to($user->email)->send(new VerifyAccount($user));
