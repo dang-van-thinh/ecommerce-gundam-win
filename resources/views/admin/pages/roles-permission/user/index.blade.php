@@ -118,10 +118,10 @@
                                     </td>
                                     <td>
                                         <div class="d-flex justify-content-center">
-                                            <a href="/new-user/${user.id}/edit" class="btn btn-warning btn-sm mr-1">
+                                            <a href="/admin/new-user/${user.id}/edit" class="btn btn-warning btn-sm mr-1">
                                                 <i class="fa fa-pencil-square-o"></i>
                                             </a>
-                                            <form action="/new-user/${user.id}" method="POST">
+                                            <form action="/admin/new-user/${user.id}" method="POST">
                                                 @method('DELETE')
                                                 @csrf
                                                 <button type="submit" class="btn btn-danger btn-sm" onclick="return confirm('Có chắc chắn muốn xóa không?')">

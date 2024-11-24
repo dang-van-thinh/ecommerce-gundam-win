@@ -1,11 +1,12 @@
 <?php
 
-namespace App\Http\Controllers;
+namespace App\Http\Controllers\Admin;
 use App\Http\Requests\StorePermissionRequest;
 use App\Http\Requests\UpdatePermissionRequest;
 use Spatie\Permission\Models\Permission;
 use Illuminate\Http\Request;
 use Flasher\Prime\Notification\NotificationInterface;
+use App\Http\Controllers\Controller;
 
 class PermissionController extends Controller
 {
