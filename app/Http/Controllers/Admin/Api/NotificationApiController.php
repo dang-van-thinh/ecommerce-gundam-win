@@ -11,7 +11,7 @@ class NotificationApiController extends Controller
     public function updateReadNotification(Request $request)
     {
         Notification::findOrFail($request->input("id"))->update(["read_at" => now()]);
-//        dd($request->all());
+        //        dd($request->all());
         return response()->json(["success" => true]);
     }
 
