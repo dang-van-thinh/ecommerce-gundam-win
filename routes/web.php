@@ -1,18 +1,22 @@
 <?php
 
 use App\Http\Controllers\Admin\ArticleController;
-use App\Http\Controllers\Admin\BannerController;
 use App\Http\Controllers\Admin\AttributeController;
 use App\Http\Controllers\Admin\AttributeValueController;
+use App\Http\Controllers\Admin\BannerController;
 use App\Http\Controllers\Admin\CategoryArticleController;
 use App\Http\Controllers\Admin\CategoryProductController;
 use App\Http\Controllers\Admin\DashboardController;
 use App\Http\Controllers\Admin\FeedbackController;
-use App\Http\Controllers\Admin\ProductController as AdminProductController;
 use App\Http\Controllers\Admin\ImageArticleController;
 use App\Http\Controllers\Admin\OrderController as AdminOrderController;
+use App\Http\Controllers\Admin\ProductController as AdminProductController;
+use App\Http\Controllers\Admin\RefundController;
+use App\Http\Controllers\Admin\RoleController;
+use App\Http\Controllers\Admin\UserController;
 use App\Http\Controllers\Admin\VoucherController;
 use App\Http\Controllers\AuthController;
+use App\Http\Controllers\ChatController;
 use App\Http\Controllers\Client\AddersController;
 use App\Http\Controllers\Client\BlogController;
 use App\Http\Controllers\Client\CartController;
@@ -24,18 +28,17 @@ use App\Http\Controllers\Client\ContactController;
 use App\Http\Controllers\Client\HomeController;
 use App\Http\Controllers\Client\MyVoucherController;
 use App\Http\Controllers\Client\OrderController;
+use App\Http\Controllers\Client\PolicyController;
 use App\Http\Controllers\Client\ProductController;
 use App\Http\Controllers\Client\ProfileController;
+use App\Http\Controllers\Client\SearchController;
 use App\Http\Controllers\Client\WishListController;
 use App\Http\Controllers\Controller;
 use App\Http\Controllers\DefaultController;
-use App\Http\Controllers\Admin\RefundController;
-use App\Http\Controllers\Client\PolicyController;
 use App\Http\Controllers\Admin\NewroleController;
 use App\Http\Controllers\Admin\NewUserController;
 use App\Http\Controllers\Admin\PermissionController;
 use App\Models\Article;
-use App\Http\Controllers\Client\SearchController;
 
 use Illuminate\Support\Facades\Route;
 
@@ -67,6 +70,7 @@ Route::prefix('/admin')->middleware(['auth', 'checkAccountStatus', 'role:Admin',
 });
 
 
+//Route::get("/test/noti", [Controller::class, 'testNotification']);
 
 // admin
 Route::prefix('/admin')->middleware(['auth', 'checkAccountStatus', 'checkRole:Admin|Staff'])->group(function () {
@@ -90,6 +94,22 @@ Route::prefix('/admin')->middleware(['auth', 'checkAccountStatus', 'checkRole:Ad
     Route::put('new-role/assign-permissions/{id}', [NewroleController::class, 'assignPermissions'])->name('role.assign-permissions');
 
     Route::resource('new-user', NewUserController::class)->middleware('permission:users');
+Route::prefix('/admin')->middleware(['auth', 'checkAccountStatus', 'checkRole:2'])->group(function () {
+    Route::resource('article', ArticleController::class);
+    Route::resource('banner', BannerController::class);
+    Route::resource('attributes', AttributeController::class);
+    Route::resource('attributeValues', AttributeValueController::class);
+    Route::resource('category-product', CategoryProductController::class);
+    Route::resource('category-article', CategoryArticleController::class);
+    Route::resource('voucher', VoucherController::class);
+    Route::resource('refund', RefundController::class);
+    Route::resource('products', AdminProductController::class);
+    Route::resource('imagearticle', ImageArticleController::class);
+    Route::resource('orders', AdminOrderController::class);
+    Route::resource('feedback', FeedbackController::class);
+    Route::get('', [DashboardController::class, 'index'])->name('dashboard');
+    Route::post('refund/check-order', [RefundController::class, 'checkOrder'])->name('refund.checkOrder');
+    Route::get("/chat", [ChatController::class, "showViewAdmin"])->name("chat.show");
 });
 
 // client
@@ -176,4 +196,5 @@ Route::prefix('auth')->name('auth.')->group(function () {
     Route::get('/verify-account/{email}', [AuthController::class, 'verify'])->name('verify-account');
     Route::post('/logout', [AuthController::class, 'logout'])->name('logout');
     Route::post('/profile/change-password', [AuthController::class, 'changePassword'])->name('profile.change-password');
+});
 });
