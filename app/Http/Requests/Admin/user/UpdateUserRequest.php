@@ -21,13 +21,12 @@ class UpdateUserRequest extends FormRequest
      */
     public function rules(): array
     {
-
         return [
             'full_name' => 'required|string|max:255',
-            'email' => 'required|email',  // Bỏ qua email của người dùng hiện tại
+            'email' => 'required|email|unique:users,email,' . $this->route('new_user'),
             'password' => 'nullable|string|min:8',  // Password không bắt buộc khi cập nhật
             'image' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048',
-            'phone' => 'required|digits_between:10,15,',  // Bỏ qua phone của người dùng hiện tại
+            'phone' => 'required|digits_between:10,15,|unique:users,phone,' . $this->route('new_user'),  // Bỏ qua phone của người dùng hiện tại
             'status' => 'required|in:ACTIVE,IN_ACTIVE',
             'roles' => 'required|array',
         ];
