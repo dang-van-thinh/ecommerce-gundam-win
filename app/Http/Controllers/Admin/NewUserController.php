@@ -43,7 +43,7 @@ class NewUserController extends Controller
             if ($request->hasFile('image')) {
                 $data['image'] = Storage::put('users', $request->file('image'));
             }
-            dd($data);
+            // dd($data);
             // Tạo người dùng
             $user = User::create($data);
 
@@ -57,7 +57,7 @@ class NewUserController extends Controller
                 "timeOut" => "3000"
             ]);
 
-            return redirect()->route('users.index'); // Chuyển hướng về danh sách người dùng
+            return redirect()->route('new-user.index'); // Chuyển hướng về danh sách người dùng
         } catch (\Throwable $th) {
             // Thông báo thất bại
             toastr("Thêm mới người dùng thất bại: " . $th->getMessage(), NotificationInterface::ERROR, "Thất bại", [
