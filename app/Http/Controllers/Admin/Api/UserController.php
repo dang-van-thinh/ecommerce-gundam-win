@@ -33,7 +33,7 @@ class UserController extends Controller
             }
 
             // Phân trang
-            $users = $query->paginate(5);
+            $users = $query->paginate(12);
 
             return response()->json([
                 'users' => $users,
@@ -44,6 +44,25 @@ class UserController extends Controller
                     'last_page' => $users->lastPage(),
                 ],
                 'message' => 'Không tìm thấy tài khoản.',
+            ]);
+        } catch (\Exception $e) {
+            return response()->json([
+                'error' => 'Có lỗi xảy ra: ' . $e->getMessage(),
+            ], 500);
+        }
+    }
+
+    public function changeStatus(User $user)
+    {
+        try {
+            // Chuyển trạng thái người dùng
+            $newStatus = $user->status === 'ACTIVE' ? 'IN_ACTIVE' : 'ACTIVE';
+            $user->status = $newStatus;
+            $user->save();
+
+            return response()->json([
+                'message' => 'Trạng thái người dùng đã được cập nhật.',
+                'status' => $newStatus,
             ]);
         } catch (\Exception $e) {
             return response()->json([
@@ -85,6 +104,7 @@ class UserController extends Controller
                 'users' => $users
             ]);
         } catch (\Throwable $exception) {
+
         }
     }
 }
