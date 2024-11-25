@@ -9,8 +9,12 @@ use App\Http\Controllers\Admin\CategoryProductController;
 use App\Http\Controllers\Admin\DashboardController;
 use App\Http\Controllers\Admin\FeedbackController;
 use App\Http\Controllers\Admin\ImageArticleController;
+use App\Http\Controllers\Admin\NewroleController;
+use App\Http\Controllers\Admin\NewUserController;
 use App\Http\Controllers\Admin\OrderController as AdminOrderController;
+use App\Http\Controllers\Admin\PermissionController;
 use App\Http\Controllers\Admin\ProductController as AdminProductController;
+use App\Http\Controllers\Admin\RefundController;
 use App\Http\Controllers\Admin\VoucherController;
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\ChatController;
@@ -25,19 +29,13 @@ use App\Http\Controllers\Client\ContactController;
 use App\Http\Controllers\Client\HomeController;
 use App\Http\Controllers\Client\MyVoucherController;
 use App\Http\Controllers\Client\OrderController;
+use App\Http\Controllers\Client\PolicyController;
 use App\Http\Controllers\Client\ProductController;
 use App\Http\Controllers\Client\ProfileController;
 use App\Http\Controllers\Client\SearchController;
 use App\Http\Controllers\Client\WishListController;
 use App\Http\Controllers\Controller;
 use App\Http\Controllers\DefaultController;
-use App\Http\Controllers\Admin\RefundController;
-use App\Http\Controllers\Admin\NewroleController;
-use App\Http\Controllers\Admin\NewUserController;
-use App\Http\Controllers\Admin\PermissionController;
-use App\Http\Controllers\Client\PolicyController;
-use App\Models\Article;
-
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -67,7 +65,7 @@ Route::prefix('/admin')->middleware(['auth', 'checkAccountStatus', 'role:Admin',
     Route::get("/test", [Controller::class, 'test'])->name("test");
 });
 
-
+Route::get("admin/chat", [ChatController::class, 'showViewAdmin'])->name("chat");
 
 // admin
 Route::prefix('/admin')->middleware(['auth', 'checkAccountStatus', 'checkRole:Admin|Staff'])->group(function () {
@@ -91,6 +89,8 @@ Route::prefix('/admin')->middleware(['auth', 'checkAccountStatus', 'checkRole:Ad
     Route::put('new-role/assign-permissions/{id}', [NewroleController::class, 'assignPermissions'])->name('role.assign-permissions');
 
     Route::resource('new-user', NewUserController::class)->middleware('permission:users');
+
+
 });
 
 // client

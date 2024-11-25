@@ -19,7 +19,7 @@ return new class extends Migration
             $table->enum("type", ["USER", "ADMIN", "SYSTEMS", "INFO", "ERROR", "WARNING"])->default("ADMIN");
             $table->timestamp("read_at")->nullable();
             $table->string("redirect_url")->nullable();
-            $table->foreignIdFor(User::class)->constrained();
+            $table->foreignIdFor(User::class)->nullable()->constrained();
             $table->timestamps();
         });
     }
