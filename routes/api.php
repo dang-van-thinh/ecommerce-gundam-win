@@ -5,10 +5,10 @@ use App\Http\Controllers\Admin\Api\NotificationApiController;
 use App\Http\Controllers\Admin\Api\OrderController;
 use App\Http\Controllers\Admin\Api\ProductController as AdminProductController;
 use App\Http\Controllers\Admin\Api\UserController;
+use App\Http\Controllers\ChatController;
 use App\Http\Controllers\Client\Api\AddressApiController;
 use App\Http\Controllers\Client\Api\ProductController;
 use App\Http\Controllers\Client\Api\VoucherController;
-use App\Http\Controllers\Client\ProfileController;
 use App\Http\Controllers\Client\Api\WishlistController;
 use Illuminate\Support\Facades\Route;
 
@@ -24,7 +24,6 @@ use Illuminate\Support\Facades\Route;
 */
 
 Route::prefix('')->middleware(['authApi'])->group(function () {
-
 
     // ajax them moi anh bai viet
     Route::post('/image-blog', [ImageBlogApiController::class, 'store'])->name('api.image');
@@ -45,7 +44,6 @@ Route::prefix('')->middleware(['authApi'])->group(function () {
     Route::post('/voucher/check', [VoucherController::class, 'checkVoucher']);
     Route::post('/voucher/apply', [VoucherController::class, 'applyVoucher']);
     Route::post('voucher/usage-check', [VoucherController::class, 'checkVoucherUsage']);
-
 });
 
 
@@ -54,6 +52,13 @@ Route::prefix('admin')->middleware(['authApi'])->group(function () {
     Route::get('/users/filter', [UserController::class, 'filter']);
     Route::get('/products/filter', [AdminProductController::class, 'filter']);
 });
+Route::get("/chat/search-user", [UserController::class, "searchUserChat"]);
 // notification public channel
 Route::get("/notification", [NotificationApiController::class, "notifications"])->name("notication");
-Route::put("/notification/update", [NotificationApiController::class, "updateReadNotification"])->name("notication.update");
+Route::put("/notification/update", [NotificationApiController::class, "updateReadNotification"]);
+
+// chat
+Route::post("/chat-send", [ChatController::class, "send"]);
+Route::get("/chat-messages", [ChatController::class, "allChatOfMe"]);
+Route::delete("/chat-messages", [ChatController::class, "deleteMessage"]);
+Route::get("/chat-users", [UserController::class, 'getAllUser']);

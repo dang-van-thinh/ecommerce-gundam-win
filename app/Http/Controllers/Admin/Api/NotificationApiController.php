@@ -10,20 +10,20 @@ class NotificationApiController extends Controller
 {
     public function updateReadNotification(Request $request)
     {
-        Notification::findOrFail($request->id)->update(["read_at" => now()]);
-        dd($request->all());
+        Notification::findOrFail($request->input("id"))->update(["read_at" => now()]);
+//        dd($request->all());
         return response()->json(["success" => true]);
     }
 
-
     public function notifications()
     {
-        $noties = Notification::where("type", "ADMIN");
-        $countNoties = $noties->count();
-        $allNoties = $noties->get()->toArray();
+        $noties = Notification::where("type", "ADMIN")->get()->toArray();
+        $countNoties = Notification::where("type", "ADMIN")
+            ->whereNull("read_at") // hoặc `where("is_read", false)` nếu bạn sử dụng cột `is_read`
+            ->count();
         // dd($countNoties, $allNoties);
         return response()->json([
-            "allNoties" => $allNoties,
+            "allNoties" => $noties,
             "countNoties" => $countNoties
         ]);
     }
