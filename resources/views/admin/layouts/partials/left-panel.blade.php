@@ -69,11 +69,11 @@
                     aria-expanded="false"><i class="menu-icon fa fa-users"></i>QL Người Dùng</a>
                 <ul class="sub-menu children dropdown-menu">
                     <li><i class="fa fa-caret-square-o-right"></i><a href="{{ route('new-user.index') }}">Danh sách
-                            người dùng 2.0</a>
+                            người dùng</a>
                     </li>
-                    <li><i class="fa fa-caret-square-o-right"></i><a href="{{ route('permission.index') }}">Quyền tài khoản 2.0</a>
+                    <li><i class="fa fa-caret-square-o-right"></i><a href="{{ route('permission.index') }}">Quyền tài khoản</a>
                     </li>
-                    <li><i class="fa fa-caret-square-o-right"></i><a href="{{ route('new-role.index') }}">Vai trò tài khoản 2.0</a>
+                    <li><i class="fa fa-caret-square-o-right"></i><a href="{{ route('new-role.index') }}">Vai trò tài khoản</a>
                     </li>
                 </ul>
             </li>
@@ -90,25 +90,27 @@
                 </ul>
             </li>
             @endcan
-
-            @can('orders')
             <li class="menu-item-has-children dropdown">
                 <a href="#" class="dropdown-toggle" data-toggle="dropdown" aria-haspopup="true"
                     aria-expanded="false">
                     <i class="menu-icon fa fa-cart-arrow-down menu-icon"></i>
                     QL Đơn Hàng</a>
                 <ul class="sub-menu children dropdown-menu">
+                @can('orders')
                     <li>
                         <i class="fa fa-caret-square-o-right"></i>
                         <a href="{{ route('orders.index') }}">Danh sách đơn hàng</a>
                     </li>
+                @endcan
+                @can('refund')
                     <li>
                         <i class="fa fa-caret-square-o-right"></i>
                         <a href="{{ route('refund.index') }}">Danh sách đơn hoàn</a>
                     </li>
+                @endcan
                 </ul>
             </li>
-            @endcan
+
 
             @can('feedback')
             <li class="menu-item-has-children dropdown">
