@@ -34,7 +34,7 @@ return new class extends Migration
             $table->unique(['name', 'guard_name']);
         });
 
-        Schema::create('new_roles', function (Blueprint $table) use ($teams, $columnNames) {
+        Schema::create('roles', function (Blueprint $table) use ($teams, $columnNames) {
             //$table->engine('InnoDB');
             $table->bigIncrements('id'); // role id
             if ($teams || config('permission.testing')) { // permission.testing is a fix for sqlite testing
@@ -84,7 +84,7 @@ return new class extends Migration
 
             $table->foreign($pivotRole)
                 ->references('id') // role id
-                ->on($tableNames['new_roles'])
+                ->on($tableNames['roles'])
                 ->onDelete('cascade');
             if ($teams) {
                 $table->unsignedBigInteger($columnNames['team_foreign_key']);
@@ -109,7 +109,7 @@ return new class extends Migration
 
             $table->foreign($pivotRole)
                 ->references('id') // role id
-                ->on($tableNames['new_roles'])
+                ->on($tableNames['roles'])
                 ->onDelete('cascade');
 
             $table->primary([$pivotPermission, $pivotRole], 'role_has_permissions_permission_id_role_id_primary');
