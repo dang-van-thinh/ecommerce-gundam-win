@@ -11,8 +11,6 @@ use App\Http\Controllers\Admin\FeedbackController;
 use App\Http\Controllers\Admin\ProductController as AdminProductController;
 use App\Http\Controllers\Admin\ImageArticleController;
 use App\Http\Controllers\Admin\OrderController as AdminOrderController;
-use App\Http\Controllers\Admin\RoleController;
-use App\Http\Controllers\Admin\UserController;
 use App\Http\Controllers\Admin\VoucherController;
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\Client\AddersController;
@@ -78,8 +76,6 @@ Route::prefix('/admin')->middleware(['auth', 'checkAccountStatus', 'checkRole:Ad
     Route::resource('attributeValues', AttributeValueController::class)->middleware('permission:products');
     Route::resource('category-product', CategoryProductController::class)->middleware('permission:products');
     Route::resource('category-article', CategoryArticleController::class)->middleware('permission:articles');
-    // Route::resource('roles', RoleController::class);
-    // Route::resource('users', UserController::class);
     Route::resource('voucher', VoucherController::class)->middleware('permission:voucher');
     Route::resource('refund', RefundController::class)->middleware('permission:refund');
     Route::resource('products', AdminProductController::class)->middleware('permission:products');
