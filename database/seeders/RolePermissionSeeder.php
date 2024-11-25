@@ -37,6 +37,7 @@ class RolePermissionSeeder extends Seeder
         // Tạo vai trò staff và gán quyền
         $staffRole = Role::create(['name' => 'Staff']);
         $staffRole->givePermissionTo([
+            'dashboard',
             'articles',    // Quản lý bài viết
             'products',    // Quản lý sản phẩm
             'voucher',     // Quản lý phiếu giảm giá
@@ -46,13 +47,6 @@ class RolePermissionSeeder extends Seeder
 
         // Tạo vai trò client và gán quyền
         $clientRole = Role::create(['name' => 'Client']);
-        $clientRole->givePermissionTo([
-            'articles',    // Xem bài viết
-            'products',    // Xem sản phẩm
-            'voucher',     // Sử dụng phiếu giảm giá
-            'orders',      // Xem đơn hàng
-            'feedback',    // Gửi phản hồi
-        ]);
          // Tạo tài khoản admin
          $admin = User::firstOrCreate(
             ['email' => 'admin@admin.com'], // Email cố định cho admin
