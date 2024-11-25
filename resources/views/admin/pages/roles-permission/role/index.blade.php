@@ -75,7 +75,7 @@ Vai trò
                     </tbody>
 
                 </table>
-
+                {{ $role->links() }}
             </div>
         </div>
     </div>
