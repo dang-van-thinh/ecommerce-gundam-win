@@ -29,6 +29,7 @@ use App\Http\Controllers\Client\ContactController;
 use App\Http\Controllers\Client\HomeController;
 use App\Http\Controllers\Client\MyVoucherController;
 use App\Http\Controllers\Client\OrderController;
+use App\Http\Controllers\Client\PolicyController;
 use App\Http\Controllers\Client\ProductController;
 use App\Http\Controllers\Client\ProfileController;
 use App\Http\Controllers\Client\SearchController;

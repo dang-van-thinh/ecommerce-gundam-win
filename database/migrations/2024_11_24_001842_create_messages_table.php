@@ -20,6 +20,7 @@ return new class extends Migration {
             // Thời gian tạo và cập nhật
             $table->timestamps();
         });
+
     }
 
     /**
