@@ -55,4 +55,5 @@ Route::prefix('admin')->middleware(['authApi'])->group(function () {
     Route::get('/orders/filter', [OrderController::class, 'filter']);
     Route::get('/users/filter', [UserController::class, 'filter']);
     Route::get('/products/filter', [AdminProductController::class, 'filter']);
+    Route::patch('/users/{user}/status', [UserController::class, 'changeStatus']);
 });
