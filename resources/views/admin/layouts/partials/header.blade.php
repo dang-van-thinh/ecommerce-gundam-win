@@ -7,6 +7,10 @@
         background-color: gray;
     }
 
+    #delete-notification {
+        text-decoration-line: underline;
+    }
+
     .not-read {
         background-color: #ff004229;
     }
@@ -55,7 +59,9 @@
                 <div class="dropdown-menu" aria-labelledby="notification"
                      id="notifications"
                      style="max-height: 30rem;overflow: scroll; max-width: 30rem">
-                    <p class="red" id="count-noti"></p>
+                    <div class="flex justify-content-between px-5">
+                        <a href="" class="text-decoration-underline " id="delete-notification">Xóa</a>
+                    </div>
                     {{--                    <a class="dropdown-item media" href="#">--}}
                     {{--                        <i class="fa fa-check"></i>--}}
                     {{--                        <p>Server #1 overloaded.</p>--}}
@@ -141,7 +147,7 @@
         document.addEventListener("DOMContentLoaded", function () {
             var notificationElement = document.getElementById("notifications");
 
-            // load notifications
+            // load notifications json
             // {
             //     "title": "Xác nhận đơn hàng mới ",
             //     "message": "Đơn hàng #51J2A452IZBG05 đã được tạo ",
@@ -157,9 +163,7 @@
             window.Echo.channel("order-to-admin")
                 .listen("OrderToAdminEvent", function (data) {
                     let numberNoti = document.getElementById("number-noti");
-                    let countNoti = document.getElementById("count-noti");
                     numberNoti.textContent = Number(numberNoti.textContent) + 1;
-                    countNoti.textContent = Number(countNoti.textContent) + 1;
                     console.log(JSON.stringify(data), data.noties);
                     let noties = data.noties;
 
@@ -197,23 +201,18 @@
                         "positionClass": "toast-bottom-right",
                         "timeOut": "5000",
                     };
-
                     toastr.info(noties.message);
-
-
-                })
+                });
         })
 
         function handlenotification() {
             let notificationElement = document.getElementById("notifications");
-            let countNoti = document.getElementById("count-noti");
             window.axios.get("/api/notification").then((response) => {
                 let numberNoti = document.getElementById("number-noti");
                 // console.log(response.data, notificationElement)
 
                 let noties = response.data;
                 numberNoti.textContent = noties.countNoties;
-                countNoti.textContent = `Bạn có ${noties.countNoties} thông báo mới`;
 
                 noties.allNoties.forEach((noti, index) => {
                     // console.log(noti)
@@ -245,17 +244,19 @@
                     notificationElement.appendChild(aElement);
                 })
 
-
             }).then(() => {
                 document.querySelectorAll(".notification").forEach((element) => {
-
-                    element.addEventListener("click", async (e) => {
-                        await window.axios.put("/notification/update", {
+                    console.log(element.getAttribute("data-id"))
+                    element.addEventListener("click", (e) => {
+                        // alert("sadsa")
+                        window.axios.put("/api/notification/update", {
                             id: element.getAttribute("data-id")
-                        }).then((res) => {
-                            alert("sadsa")
-                        })
+                        });
                     })
+                })
+
+                document.getElementById('delete-notification').addEventListener("click", (e) => {
+                    e.preventDefault();
                 })
             })
         }
