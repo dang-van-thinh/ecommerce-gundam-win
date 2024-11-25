@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Admin\Api;
 use App\Http\Controllers\Controller;
 use App\Models\User;
 use Illuminate\Http\Request;
+use PhpParser\Node\Expr\Throw_;
 
 class UserController extends Controller
 {
@@ -48,6 +49,42 @@ class UserController extends Controller
             return response()->json([
                 'error' => 'Có lỗi xảy ra: ' . $e->getMessage(),
             ], 500);
+        }
+    }
+
+    // danh sach user kenh chat
+    public function getAllUser(Request $request)
+    {
+        $userId = $request->input("userId");
+        //        dd($userId);
+        $users = User::whereNotIn('id', [$userId])->get();
+        return response()->json([
+            "users" => $users,
+            "userId" => $userId
+        ]);
+    }
+
+    public function searchUserChat(Request $request)
+    {
+        $search = $request->search;
+        $userId = $request->userId;
+
+        try {
+            $query = User::query()->whereNotIn('id', [$userId]);
+
+            // Tìm kiếm theo tên hoặc email
+            if (!empty($search)) {
+                $query->where(function ($q) use ($search) {
+                    $q->where('full_name', 'LIKE', '%' . $search . '%')
+                        ->orWhere('email', 'LIKE', '%' . $search . '%');
+                });
+            }
+            // Phân trang
+            $users = $query->get();
+            return response()->json([
+                'users' => $users
+            ]);
+        } catch (\Throwable $exception) {
         }
     }
 }
