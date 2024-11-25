@@ -36,7 +36,7 @@ class Handler extends ExceptionHandler
     {
         // Xử lý lỗi 404
         if ($exception instanceof NotFoundHttpException) {
-            Log::info('404 Exception triggered');
+            // Log::debug(__CLASS__ . "  " . __FUNCTION__ . '404 Exception triggered');
 
             if ($request->is('admin/*')) {
                 Log::info('404 Admin View Triggered');
