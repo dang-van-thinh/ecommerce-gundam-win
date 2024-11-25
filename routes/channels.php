@@ -21,6 +21,6 @@ Broadcast::channel('chat.{id}', function ($user, $id) {
     return (int)$user->id === (int)$id || $user->hasRole('Admin');
 });
 
-// Broadcast::channel('channel-test', function ($user) {
-//     return true; // Cho phép tất cả người dùng (hoặc thêm logic kiểm tra quyền)
-// });
+Broadcast::channel('chat.{id}', function ($user, $id) {
+    return (int)$user->id === (int)$id || $user->hasRole('Admin');
+});
