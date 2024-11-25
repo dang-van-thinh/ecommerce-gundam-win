@@ -73,7 +73,7 @@
         background-color: #fff;
         border-radius: 5px;
         box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
-        overflow: hidden;
+        /*overflow: hidden;*/
         display: flex;
         flex-direction: column;
         justify-content: space-between;
@@ -116,14 +116,22 @@
         margin-bottom: 10px;
         padding: 10px;
         border-radius: 5px;
+        max-width: 100%;
+        word-wrap: break-word;
+        /* Đảm bảo các từ dài sẽ xuống dòng */
+        overflow-wrap: break-word;
+        /* Phòng tránh các từ dài không gãy xuống dòng */
+
+        display: flex;
+        flex-direction: column-reverse;
     }
 
     .incoming {
-        background-color: #cdcdcd;
+        background-color: rgba(57, 192, 237, .2);
     }
 
     .outgoing {
-        background-color: #e4e4e4;
+        background-color: rgba(248, 249, 250, 1);
         text-align: right;
     }
 
@@ -242,19 +250,23 @@
                 </svg>
             </a>
         </li>
-        <li>
-            <a target="_blank" data-form="#form-chat" id="button-chat">
-                <svg xmlns="http://www.w3.org/2000/svg" x="0px" y="0px" width="100" height="100"
-                     viewBox="0 0 40 40">
-                    <path fill="#8bb7f0"
-                          d="M4.893,36.471c0.787-1.35,1.711-3,2.56-4.577l0.199-0.37l-0.329-0.26 C3.568,28.296,1.5,24.296,1.5,20C1.5,11.453,9.799,4.5,20,4.5S38.5,11.453,38.5,20S30.201,35.5,20,35.5 c-2.173,0-4.339-0.332-6.436-0.985l-0.163-0.051l-0.16,0.06C10.296,35.618,7.254,36.322,4.893,36.471z">
-                    </path>
-                    <path fill="#4e7ab5"
-                          d="M20,5c9.925,0,18,6.729,18,15s-8.075,15-18,15c-2.123,0-4.239-0.324-6.287-0.962l-0.326-0.102 l-0.32,0.119c-2.521,0.936-5.108,1.583-7.26,1.831c0.671-1.171,1.402-2.487,2.086-3.756l0.398-0.739l-0.658-0.52 C4,28.001,2,24.14,2,20C2,11.729,10.075,5,20,5 M20,4C9.507,4,1,11.163,1,20c0,4.601,2.32,8.737,6.013,11.656 C5.947,33.635,4.837,35.596,4,37c2.597,0,6.172-0.803,9.415-2.007C15.47,35.633,17.681,36,20,36c10.493,0,19-7.163,19-16 S30.493,4,20,4L20,4z">
-                    </path>
-                </svg>
-            </a>
-        </li>
+
+        {{--       tam thoi phai co tai khoan thi moi hien --}}
+        @if (Auth::id())
+            <li>
+                <a target="_blank" data-form="#form-chat" id="button-chat">
+                    <svg xmlns="http://www.w3.org/2000/svg" x="0px" y="0px" width="100" height="100"
+                        viewBox="0 0 40 40">
+                        <path fill="#8bb7f0"
+                            d="M4.893,36.471c0.787-1.35,1.711-3,2.56-4.577l0.199-0.37l-0.329-0.26 C3.568,28.296,1.5,24.296,1.5,20C1.5,11.453,9.799,4.5,20,4.5S38.5,11.453,38.5,20S30.201,35.5,20,35.5 c-2.173,0-4.339-0.332-6.436-0.985l-0.163-0.051l-0.16,0.06C10.296,35.618,7.254,36.322,4.893,36.471z">
+                        </path>
+                        <path fill="#4e7ab5"
+                            d="M20,5c9.925,0,18,6.729,18,15s-8.075,15-18,15c-2.123,0-4.239-0.324-6.287-0.962l-0.326-0.102 l-0.32,0.119c-2.521,0.936-5.108,1.583-7.26,1.831c0.671-1.171,1.402-2.487,2.086-3.756l0.398-0.739l-0.658-0.52 C4,28.001,2,24.14,2,20C2,11.729,10.075,5,20,5 M20,4C9.507,4,1,11.163,1,20c0,4.601,2.32,8.737,6.013,11.656 C5.947,33.635,4.837,35.596,4,37c2.597,0,6.172-0.803,9.415-2.007C15.47,35.633,17.681,36,20,36c10.493,0,19-7.163,19-16 S30.493,4,20,4L20,4z">
+                        </path>
+                    </svg>
+                </a>
+            </li>
+        @endif
     </ul>
 
 </div>
@@ -270,41 +282,130 @@
             </button>
         </div>
     </div>
-    <div class="chat-body">
-        <div class="message incoming">
-            <p>Hello, how can I assist you today?</p>
-        </div>
-        <div class="message outgoing">
-            <p>I have a question about your services.</p>
-        </div>
-        <div class="message incoming">
-            <p>Sure, I'm here to help. What would you like to know?</p>
-        </div>
-
+    <div class="chat-body" id="chat-body">
     </div>
-    <div class="chat-footer">
-        <input placeholder="Type your message" type="text">
-        <button>Send</button>
-    </div>
+    <form class="chat-footer" id="client-chat">
+        <input placeholder="Nhập tin nhắn" type="text" id="message">
+        <button type="submit">
+            <img width="20" height="20" src="https://img.icons8.com/color/48/sent--v2.png" alt="sent--v2" />
+        </button>
+    </form>
 </div>
 
 @push('scripts')
     <script>
         document.addEventListener("DOMContentLoaded", function() {
-
             // an hien form chat
+            const userId = {{ Auth::check() ? Auth::id() : 'null' }};
             const btnFormChat = document.getElementById("button-chat");
             const btnMinus = document.querySelector(".button-minus");
-            console.log(btnMinus)
+            const btnRevert = document.querySelector(".button-revert");
+            const btnClientChat = document.getElementById("client-chat");
+
+            // console.log(btnMinus)
             btnMinus.addEventListener("click", function() {
-                toogleFormChat()
+                toogleFormChat();
+
+            });
+            // xoa tin nhan
+            btnRevert.addEventListener("click", () => {
+                deleteMessage(userId);
+                document.getElementById("chat-body").innerHTML = '';
             })
+            // hien form chat
             btnFormChat.addEventListener("click", function(e) {
                 toogleFormChat()
-            })
+                showAllMessage(userId);
+
+            });
+
+            // SU LY SU KIEN CHAT REALTIME
+            console.log("User ID:", userId);
+
+            window.Echo.private(`chat.${userId}`)
+                .listen("ChatMessage", function(data) {
+                    const message = data.message;
+                    console.log({
+                        message
+                    });
+                    if (message.sender_id == userId) {
+                        showChatSend(message.message);
+                    } else {
+                        showChatReceive(message.message);
+                    }
+                })
+
+            btnClientChat.addEventListener("submit", (e) => {
+                e.preventDefault();
+                const message = document.getElementById("message");
+                console.log(message.value);
+
+                window.axios.post("/api/chat-send", {
+                    message: message.value,
+                    sender_id: userId,
+                    receiver_id: null
+                })
+                message.value = '';
+            });
+
+
         });
 
-        function toogleFormChat() {
+        function deleteMessage(userId) {
+            window.axios.delete("/api/chat-messages", {
+                data: {
+                    userId: userId
+                }
+            });
+        }
+
+        function showAllMessage(userId) {
+            window.axios.get("/api/chat-messages", {
+                params: {
+                    userId: userId
+                }
+            }).then((data) => {
+                const messages = data.data.messages;
+
+                console.log(messages)
+                messages.forEach((message, index) => {
+                    console.log(message)
+                    if (message.sender_id == userId) {
+                        showChatSend(message.message);
+                    } else {
+                        showChatReceive(message.message)
+                    }
+                });
+
+            })
+        }
+
+        function showChatReceive(message) {
+            const showChat = document.getElementById("chat-body");
+            let divElement = document.createElement("div");
+            let pElement = document.createElement("p");
+            divElement.className = "message incoming";
+            pElement.textContent = message;
+            divElement.appendChild(pElement);
+            showChat.appendChild(divElement);
+            
+            // Cuộn đến tin nhắn mới nhất
+            showChat.scrollTop = showChat.scrollHeight;
+        }
+
+        function showChatSend(message) {
+            const showChat = document.getElementById("chat-body");
+            let divElement = document.createElement("div");
+            let pElement = document.createElement("p");
+            divElement.className = "message outgoing";
+            pElement.textContent = message;
+            divElement.appendChild(pElement);
+            showChat.appendChild(divElement);
+            // Cuộn đến tin nhắn mới nhất
+            showChat.scrollTop = showChat.scrollHeight;
+        }
+
+        function toogleFormChat() { // AN HIEN FORM CHAT
             let formChat = document.getElementById("form-chat")
             let hidden = formChat.dataset.hidden;
             console.log(hidden)
