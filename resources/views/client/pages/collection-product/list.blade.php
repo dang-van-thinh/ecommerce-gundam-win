@@ -12,7 +12,7 @@
                                     style="color: red; {{ $product->favorites->isNotEmpty() ? '' : 'display: none;' }}"></i>
                             </a>
                         </div>
-                        <div class="product-image ratio_apos">
+                        <div class="product-image ratio_apos" style="position: relative;">
                             <a class="pro-first" href="{{ route('product', $product->id) }}">
                                 <img class="bg-img" src="{{ '/storage/' . $product->image }}" alt="product"
                                     style="width: 100%; height: 300px; object-fit: cover;" />
@@ -24,6 +24,17 @@
                                 <img class="bg-img" src="{{ '/storage/' . $firstImage->image_url }}" alt="product"
                                     style="width: 100%; height: 300px; object-fit: cover;" />
                             </a>
+
+                            @if ($product->is_out_of_stock)
+                                <!-- Lớp phủ cho sản phẩm hết hàng -->
+                                <div
+                                    style="position: absolute; top: 0; left: 0; width: 100%; height: 100%; 
+                            background-color: rgba(0, 0, 0, 0.6); display: flex; 
+                            justify-content: center; align-items: center; color: #fff; 
+                            font-size: 25px; font-weight: bold; z-index: 10;">
+                                    HẾT HÀNG
+                                </div>
+                            @endif
                         </div>
                     </div>
                     <div class="product-detail">
@@ -53,6 +64,8 @@
                 </div>
             </div>
         @endforeach
+
+
     </div>
 </div>
 
