@@ -18,12 +18,17 @@ class CollectionProductController extends Controller
         //     ->latest('id')
         //     ->paginate(20);
         $products = Product::leftJoin('product_variants as pv', 'products.id', '=', 'pv.product_id')
+        // Query sản phẩm
+        $products = Product::query()
+            ->leftJoin('product_variants as pv', 'products.id', '=', 'pv.product_id')
+
             ->leftJoin('order_items as ot', 'pv.id', '=', 'ot.product_variant_id')
             ->leftJoin('feedbacks as f', 'ot.id', '=', 'f.order_item_id')
             ->leftJoin('category_products as cp', 'cp.id', '=', 'products.category_product_id')
             ->select(
                 'products.*',
                 DB::raw('COALESCE(AVG(f.rating), 0) as average_rating'),
+
                 DB::raw('CASE WHEN SUM(pv.quantity) IS NULL OR SUM(pv.quantity) = 0 THEN 1 ELSE 0 END as is_out_of_stock') // Kiểm tra hết hàng
             )
             ->groupBy('products.id');
@@ -32,9 +37,17 @@ class CollectionProductController extends Controller
             $products = $products->where('cp.id', '=', $id);
         }
 
-        $products = $products->where('status', 'ACTIVE')->latest('products.id')->paginate(20);
+        $products = $products->where('status', 'ACTIVE')->latest('products.id')->paginate(
+                DB::raw('SUM(pv.quantity) as total_stock') // Tổng số lượng tồn kho
+            )
+            ->groupBy('products.id');
 
-
+        // Lọc theo danh mục nếu có
+        if ($id !== null) {
+            $products->where('cp.id', '=', $id);
+        }
+        // Sắp xếp mặc định theo ID mới nhất
+        $products = $products->latest('products.id')->paginate(20);
 
         // Dữ liệu danh mục, giá, và thuộc tính
         $categories = CategoryProduct::withCount('products')->get();
@@ -64,6 +77,7 @@ class CollectionProductController extends Controller
                 'products.*',
                 DB::raw('COALESCE(AVG(f.rating), 0) as average_rating'),
                 DB::raw('CASE WHEN SUM(pv.quantity) IS NULL OR SUM(pv.quantity) = 0 THEN 1 ELSE 0 END as is_out_of_stock') // Kiểm tra hết hàng
+                DB::raw('SUM(pv.quantity) as total_stock') // Tổng số lượng tồn kho
             )
             ->groupBy('products.id');
 
