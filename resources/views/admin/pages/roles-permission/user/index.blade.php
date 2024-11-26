@@ -83,7 +83,7 @@
                         response.users.data.forEach(function(user, index) {
                             $('#userData').append(`
                                 <tr>
-                                    <td>${(page - 1) * 5 + index + 1}</td>
+                                    <td>${(page - 1) * 12 + index + 1}</td>
                                     <td>${user.avatar ? `<img src="/storage/${user.avatar}" alt="Ảnh" width="50px">` : ''}</td>
                                     <td>${user.full_name}</td>
                                     <td>${user.email}</td>
@@ -121,13 +121,9 @@
                                             <a href="/admin/new-user/${user.id}/edit" class="btn btn-warning btn-sm mr-1">
                                                 <i class="fa fa-pencil-square-o"></i>
                                             </a>
-                                            <form action="/admin/new-user/${user.id}" method="POST">
-                                                @method('DELETE')
-                                                @csrf
-                                                <button type="submit" class="btn btn-danger btn-sm" onclick="return confirm('Có chắc chắn muốn xóa không?')">
-                                                    <i class="fa fa-trash"></i>
-                                                </button>
-                                            </form>
+                                            <button class="btn btn-info btn-sm change-status" data-user-id="${user.id}">
+                                                Chuyển trạng thái
+                                            </button>
                                         </div>
                                     </td>
                                 </tr>
@@ -197,6 +193,23 @@
 
             // Tải danh sách người dùng khi trang load
             fetchUsers(currentPage);
+
+            // Sự kiện chuyển trạng thái
+            $(document).on('click', '.change-status', function() {
+                const userId = $(this).data('user-id');
+
+                $.ajax({
+                    url: `/api/admin/users/${userId}/status`,
+                    type: 'PATCH',
+                    success: function(response) {
+                        alert(response.message);
+                        fetchUsers(currentPage); // Tải lại danh sách người dùng
+                    },
+                    error: function(xhr, status, error) {
+                        console.error("Có lỗi xảy ra: ", error);
+                    }
+                });
+            });
         });
     </script>
 @endpush

@@ -43,7 +43,7 @@ class NewUserController extends Controller
             if ($request->hasFile('image')) {
                 $data['image'] = Storage::put('users', $request->file('image'));
             }
-            dd($data);
+            $data['email_verified_at'] = now();
             // Tạo người dùng
             $user = User::create($data);
 
@@ -57,7 +57,7 @@ class NewUserController extends Controller
                 "timeOut" => "3000"
             ]);
 
-            return redirect()->route('users.index'); // Chuyển hướng về danh sách người dùng
+            return redirect()->route('new-user.index'); // Chuyển hướng về danh sách người dùng
         } catch (\Throwable $th) {
             // Thông báo thất bại
             toastr("Thêm mới người dùng thất bại: " . $th->getMessage(), NotificationInterface::ERROR, "Thất bại", [
@@ -94,7 +94,7 @@ class NewUserController extends Controller
     /**
      * Update the specified resource in storage.
      */
-    public function update(UpdateUserRequest $request, $id)
+    public function update(UpdateUserRequest $request, string $id)
     {
         // Lấy dữ liệu đã được xác thực từ request
         $data = $request->validated();
@@ -122,12 +122,12 @@ class NewUserController extends Controller
             $user->roles()->sync($data['roles']);
 
             // Thông báo thành công
-            toastr('Cập nhật người dùng thành công',NotificationInterface::SUCCESS, 'Thành công', [
+            toastr('Cập nhật người dùng thành công', NotificationInterface::SUCCESS, 'Thành công', [
                 'closeButton' => true,
                 'progressBar' => true,
                 'timeOut' => 3000,
             ]);
-            return redirect()->route('new-user.index');
+            return redirect()->back();
         } catch (\Exception $e) {
             // Thông báo lỗi
             toastr()->error('Đã xảy ra lỗi khi cập nhật người dùng: ' . $e->getMessage(), 'Lỗi', [

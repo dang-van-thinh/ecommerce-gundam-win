@@ -2,11 +2,14 @@
 
 namespace App\Http\Controllers\Client;
 
+use App\Events\OrderToAdminEvent;
+use App\Events\OrderToAdminNotification;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Client\placeOrder\CreateOrderBuyNow;
 use App\Http\Requests\Client\placeOrder\CreatePlaceOrderRequest;
 use App\Models\AddressUser;
 use App\Models\Cart;
+use App\Models\Notification;
 use App\Models\Order;
 use App\Models\OrderItem;
 use App\Models\ProductVariant;
@@ -19,8 +22,6 @@ use Illuminate\Support\Carbon;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Str;
-
-use function PHPUnit\Framework\isEmpty;
 
 class CheckOutController extends Controller
 {
@@ -175,6 +176,17 @@ class CheckOutController extends Controller
             //  giao dịch thành công
             DB::commit();
 
+            // giao dichj thanh cong tien hanh them thong bao cho admin
+            $notiMessage = "Đơn hàng #" . $order->code . " đã được tạo ";
+            $notiData = [
+                "title" => "Xác nhận đơn hàng mới ",
+                "message" => $notiMessage,
+                "redirect_url" => route("orders.edit", $order->id),
+                "user_id" => 1 // mac dinh dang de la id admin , sau ma co nhieu hon 1 admin thi them sau
+            ];
+            $newNoti = Notification::create($notiData);
+            broadcast(new OrderToAdminEvent($newNoti));
+
 
             // Thông báo thành công và chuyển hướng
             sweetalert("Đơn hàng đã được đặt!", NotificationInterface::SUCCESS, [
@@ -253,8 +265,6 @@ class CheckOutController extends Controller
             ];
             $order = Order::create($dataOrder);
 
-
-
             $data[] = [
                 'order_id' => $order->id,
                 'product_variant_id' => $productVariant['id'],
@@ -283,8 +293,23 @@ class CheckOutController extends Controller
                 }
             }
 
+            // event(new OrderToAdminNotification($order));
+
             //  giao dịch thành công
             DB::commit();
+
+            // giao dichj thanh cong tien hanh them thong bao cho admin
+            $notiMessage = "Đơn hàng #" . $order->code . " đã được tạo ";
+            $notiData = [
+                "title" => "Xác nhận đơn hàng mới ",
+                "message" => $notiMessage,
+                "redirect_url" => route("orders.edit", $order->id),
+                "user_id" => 1 // mac dinh dang de la id admin , sau ma co nhieu hon 1 admin thi them sau
+            ];
+            $newNoti = Notification::create($notiData);
+            broadcast(new OrderToAdminEvent($newNoti));
+
+
             if ($request->payment_method == 'momo') {
                 $orderId = $order->id;
                 $urlRedirect = route('order-success', $orderId);
@@ -340,7 +365,7 @@ class CheckOutController extends Controller
         return strtoupper($mixedCode);
     }
 
-    private function payMomo($dataOrder, $urlRedirect)
+    public function payMomo($dataOrder, $urlRedirect)
     {
         $endpoint = "https://test-payment.momo.vn/v2/gateway/api/create";
 
@@ -378,7 +403,7 @@ class CheckOutController extends Controller
         );
 
         $result = $this->execPostRequest($endpoint, json_encode($data));
-
+        // dd($result);
         if (!$result) {
             // Nếu không có kết quả, API có thể đã gặp lỗi kết nối
             dd("Error: No response from MoMo API.");
@@ -391,6 +416,7 @@ class CheckOutController extends Controller
             dd("MoMo API error: " . $jsonResult['errorCode'] . " - " . $jsonResult['localMessage']);
         }
 
+
         // $jsonResult = json_decode($result, true);  // decode json
 
         //Just a example, please check more in there
@@ -401,7 +427,8 @@ class CheckOutController extends Controller
         }
         // header('Location: ' . $jsonResult['payUrl']);
     }
-    private function execPostRequest($url, $data)
+
+    public function execPostRequest($url, $data)
     {
         $ch = curl_init($url);
         curl_setopt($ch, CURLOPT_CUSTOMREQUEST, "POST");
