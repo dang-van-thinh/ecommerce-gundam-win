@@ -6,7 +6,7 @@
 
 @section('content')
     <div class="card">
-        <div class="card-header"><strong>Thêm mới người dùng 2.0</strong></div>
+        <div class="card-header"><strong>Thêm mới người dùng</strong></div>
         <div class="card-body card-block">
             <form action="{{ route('new-user.store') }}" method="POST" enctype="multipart/form-data">
                 @csrf
