@@ -7,6 +7,7 @@ use App\Http\Controllers\Admin\Api\ProductController as AdminProductController;
 use App\Http\Controllers\Admin\Api\UserController;
 use App\Http\Controllers\ChatController;
 use App\Http\Controllers\Client\Api\AddressApiController;
+use App\Http\Controllers\Client\Api\CheckOutApiController;
 use App\Http\Controllers\Client\Api\ProductController;
 use App\Http\Controllers\Client\Api\VoucherController;
 use App\Http\Controllers\Client\Api\WishlistController;
@@ -34,6 +35,7 @@ Route::prefix('')->middleware(['authApi'])->group(function () {
 
     Route::post('/buy-now', [ProductController::class, 'productBuyNow'])->name('api.buy-now');
     Route::post('/product/buy-now', [ProductController::class, 'getPrductVariant'])->name('api.product-variant');
+    Route::post('/check-out/continue', [CheckOutApiController::class, 'continueCheckOut'])->name('api.check-out-continue');
     // api dia chi tinh thanh viet nam
     Route::get('get-districts/{province_id}', [AddressApiController::class, 'getDistricts'])->name('api.districts');
     Route::get('get-wards/{district_id}', [AddressApiController::class, 'getWards'])->name('api.wards');
