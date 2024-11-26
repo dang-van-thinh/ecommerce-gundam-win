@@ -39,7 +39,7 @@ class Handler extends ExceptionHandler
             // Log::debug(__CLASS__ . "  " . __FUNCTION__ . '404 Exception triggered');
 
             if ($request->is('admin/*')) {
-                Log::info('404 Admin View Triggered');
+                // Log::info('404 Admin View Triggered');
                 toastr('Sai đường dẫn mất rồi', NotificationInterface::ERROR,'Cảnh báo', [
                     "closeButton" => true,
                     "progressBar" => true,
@@ -47,7 +47,7 @@ class Handler extends ExceptionHandler
                 ]);
                 return response()->view('errors.404', [], 404);
             } else {
-                Log::info('404 Client View Triggered');
+                // Log::info('404 Client View Triggered');
                 toastr('Sai đường dẫn mất rồi', NotificationInterface::ERROR,'Cảnh báo', [
                     "closeButton" => true,
                     "progressBar" => true,
