@@ -5,9 +5,10 @@
 
                 @if ($contentLeftTopBanners)
                     <div class="col-12">
-                        <div class="collection-banner p-left"> 
+                        <div class="collection-banner p-left">
                             <a href="{{ $contentLeftTopBanners->link }}"><img class="bg-img"
-                                src="{{ asset('storage/' . $contentLeftTopBanners->image_url) }}" alt="" /></a>
+                                    src="{{ asset('storage/' . $contentLeftTopBanners->image_url) }}"
+                                    alt="" /></a>
                             <div class="contain-banner">
                                 <div>
 
@@ -102,10 +103,12 @@
                         @foreach ($productNew as $product)
                             <div class="swiper-slide product-box-3">
                                 <div class="img-wrapper">
-                                    <div class="label-block"><span class="lable-1">Mới</span><a
-                                            class="label-2 wishlist-icon" href="javascript:void(0)" tabindex="0"><i
-                                                class="iconsax" data-icon="heart" aria-hidden="true"
-                                                data-bs-toggle="tooltip" data-bs-title="Add to Wishlist"></i></a>
+                                    <div class="label-block">
+                                        <span class="lable-1">Mới</span>
+                                        <a class="label-2 wishlist-icon" href="javascript:void(0)" tabindex="0">
+                                            <i class="iconsax" data-icon="heart" aria-hidden="true"
+                                                data-bs-toggle="tooltip" data-bs-title="Add to Wishlist"></i>
+                                        </a>
                                     </div>
                                     <div class="label-block">
                                         <a class="label-2 wishlist-icon" data-id="{{ $product->id }}" tabindex="0">
@@ -115,7 +118,7 @@
                                                 style="color: red; {{ $product->favorites->isNotEmpty() ? '' : 'display: none;' }}"></i>
                                         </a>
                                     </div>
-                                    <div class="product-image ratio_apos">
+                                    <div class="product-image ratio_apos" style="position: relative;">
                                         <a class="pro-first" href="{{ route('product', $product->id) }}">
                                             <img class="bg-img" src="{{ '/storage/' . $product->image }}"
                                                 alt="product" style="width: 100%; height: 300px; object-fit: cover;" />
@@ -127,12 +130,23 @@
                                             <img class="bg-img" src="{{ '/storage/' . $firstImage->image_url }}"
                                                 alt="product" style="width: 100%; height: 300px; object-fit: cover;" />
                                         </a>
+
+                                        @if ($product->is_out_of_stock)
+                                            <!-- Lớp phủ cho sản phẩm hết hàng -->
+                                            <div
+                                                style="position: absolute; top: 0; left: 0; width: 100%; height: 100%; 
+                                        background-color: rgba(0, 0, 0, 0.6); display: flex; 
+                                        justify-content: center; align-items: center; color: #fff; 
+                                        font-size: 25px; font-weight: bold; z-index: 10;">
+                                                HẾT HÀNG
+                                            </div>
+                                        @endif
                                     </div>
                                 </div>
                                 <div class="product-detail">
                                     <ul class="rating">
                                         @php
-                                            $rating = $product->average_rating ? $product->average_rating : 0; // Lấy rating từ feedback
+                                            $rating = $product->average_rating ? $product->average_rating : 0;
                                         @endphp
                                         @for ($i = 1; $i <= 5; $i++)
                                             <li>
@@ -146,15 +160,19 @@
                                     </a>
                                     <p>
                                         @if ($product->productVariants->count() === 1)
-                                            {{ number_format($product->productVariants->first()->price, 0, ',', '.') }} VND
+                                            {{ number_format($product->productVariants->first()->price, 0, ',', '.') }}
+                                            VND
                                         @else
                                             {{ number_format($product->productVariants->min('price'), 0, ',', '.') }} -
-                                            {{ number_format($product->productVariants->max('price'), 0, ',', '.') }} VND
+                                            {{ number_format($product->productVariants->max('price'), 0, ',', '.') }}
+                                            VND
                                         @endif
                                     </p>
                                 </div>
                             </div>
                         @endforeach
+
+
                         {{-- <div class="swiper-slide product-box-3">
                             <div class="img-wrapper">
                                 <div class="label-block"><span class="lable-1">NEW</span><a

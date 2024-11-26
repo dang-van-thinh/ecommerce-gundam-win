@@ -18,18 +18,24 @@ class CollectionProductController extends Controller
         // $products = Product::with(['productImages', 'categoryProduct', 'productVariants', 'favorites'])
         //     ->latest('id')
         //     ->paginate(20);
-
         $products = Product::leftJoin('product_variants as pv', 'products.id', '=', 'pv.product_id')
             ->leftJoin('order_items as ot', 'pv.id', '=', 'ot.product_variant_id')
             ->leftJoin('feedbacks as f', 'ot.id', '=', 'f.order_item_id')
             ->leftJoin('category_products as cp', 'cp.id', '=', 'products.category_product_id')
-            ->select('products.*', DB::raw('COALESCE(AVG(f.rating), 0) as average_rating'))
+            ->select(
+                'products.*',
+                DB::raw('COALESCE(AVG(f.rating), 0) as average_rating'),
+                DB::raw('CASE WHEN SUM(pv.quantity) IS NULL OR SUM(pv.quantity) = 0 THEN 1 ELSE 0 END as is_out_of_stock') // Kiểm tra hết hàng
+            )
             ->groupBy('products.id');
+
         if ($id != null) {
             $products = $products->where('cp.id', '=', $id);
         }
-        $products = $products->latest('products.id')
-            ->paginate(20);
+
+        $products = $products->where('status', 'ACTIVE')->latest('products.id')->paginate(20);
+
+
 
         // dd($products);
 
@@ -53,7 +59,11 @@ class CollectionProductController extends Controller
         $query = Product::leftJoin('product_variants as pv', 'products.id', '=', 'pv.product_id')
             ->leftJoin('order_items as ot', 'pv.id', '=', 'ot.product_variant_id')
             ->leftJoin('feedbacks as f', 'ot.id', '=', 'f.order_item_id')
-            ->select('products.*', DB::raw('COALESCE(AVG(f.rating), 0) as average_rating'))
+            ->select(
+                'products.*',
+                DB::raw('COALESCE(AVG(f.rating), 0) as average_rating'),
+                DB::raw('CASE WHEN SUM(pv.quantity) IS NULL OR SUM(pv.quantity) = 0 THEN 1 ELSE 0 END as is_out_of_stock') // Kiểm tra hết hàng
+            )
             ->groupBy('products.id');
 
         // $query = Product::with(['productImages', 'categoryProduct', 'productVariants.attributeValues']);
