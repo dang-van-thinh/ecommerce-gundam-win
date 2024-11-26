@@ -104,6 +104,8 @@
                                         <span class="badge bg-danger">Đã Huỷ</span>
                                     @elseif ($order->status === 'REFUND')
                                         <span class="badge bg-danger">Hoàn hàng</span>
+                                    @elseif ($order->status === 'PROCESSING')
+                                        <span class="badge bg-danger">Chưa thanh toán</span>
                                     @endif
                                 </h4>
                                 @if ($order->status === 'PENDING')
@@ -125,6 +127,8 @@
                                     <div class="alert alert-danger">Đơn hàng đã bị hủy.</div>
                                 @elseif ($order->status === 'REFUND')
                                     <div class="alert alert-danger">Hoàn hàng.</div>
+                                @elseif ($order->status === 'PROCESSING')
+                                    <div class="alert alert-danger">Chưa thanh toán.</div>
                                 @endif
                             </div>
                         </div>

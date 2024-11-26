@@ -25,11 +25,11 @@ class StoreUserRequest extends FormRequest
             'full_name' =>'required|string|max:255',
             'email'     =>'required|email|unique:users,email',
             'password'  =>'required|string|min:8',
-            'image'     =>'required|image|mimes:jpeg,png,jpg,gif|max:2048',
-            'phone'     =>'required|digits_between:10,15',
+            'image'     =>'nullable|image|mimes:jpeg,png,jpg,gif|max:2048',
+            'phone'     =>'required|digits_between:10,15|unique:users,phone',
             'status'    =>'required|in:ACTIVE,IN_ACTIVE',
-
             'roles'     => 'required|array', 
+            'email_verified_at' => 'nullable'
         ];
     }
 
@@ -48,7 +48,6 @@ class StoreUserRequest extends FormRequest
             'password.min'       => 'Mật khẩu phải chứa ít nhất :min ký tự.',
             'password.confirmed' => 'Xác nhận mật khẩu không khớp.',
 
-            'image.required'     => 'Ảnh đại diện là bắt buộc.',
             'image.image'        => 'File tải lên phải là hình ảnh.',
             'image.mimes'        => 'Ảnh đại diện phải có định dạng jpeg, png, jpg hoặc gif.',
             'image.max'          => 'Dung lượng ảnh đại diện không được vượt quá 2MB.',
