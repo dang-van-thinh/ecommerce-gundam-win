@@ -365,7 +365,7 @@ class CheckOutController extends Controller
         return strtoupper($mixedCode);
     }
 
-    private function payMomo($dataOrder, $urlRedirect)
+    public function payMomo($dataOrder, $urlRedirect)
     {
         $endpoint = "https://test-payment.momo.vn/v2/gateway/api/create";
 
@@ -403,7 +403,7 @@ class CheckOutController extends Controller
         );
 
         $result = $this->execPostRequest($endpoint, json_encode($data));
-
+        // dd($result);
         if (!$result) {
             // Nếu không có kết quả, API có thể đã gặp lỗi kết nối
             dd("Error: No response from MoMo API.");
@@ -416,6 +416,7 @@ class CheckOutController extends Controller
             dd("MoMo API error: " . $jsonResult['errorCode'] . " - " . $jsonResult['localMessage']);
         }
 
+
         // $jsonResult = json_decode($result, true);  // decode json
 
         //Just a example, please check more in there
@@ -427,7 +428,7 @@ class CheckOutController extends Controller
         // header('Location: ' . $jsonResult['payUrl']);
     }
 
-    private function execPostRequest($url, $data)
+    public function execPostRequest($url, $data)
     {
         $ch = curl_init($url);
         curl_setopt($ch, CURLOPT_CUSTOMREQUEST, "POST");
