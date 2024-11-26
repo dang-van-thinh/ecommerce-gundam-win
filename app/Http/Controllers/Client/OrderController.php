@@ -14,6 +14,7 @@ class OrderController extends Controller
         $requestData = $request->all();
 
         // dd(count($requestData));
+        // kiem tra don hang that bai
         if (count($requestData) != 0) {
 
             // Kiểm tra và xác thực chữ ký (signature)
@@ -52,7 +53,8 @@ class OrderController extends Controller
                 return view('client.pages.order-success.index', compact('data'));
             }
 
-            return view('errors.404-client'); // thay bang trang thanh toan loi
+           
+            return redirect()->route("home"); // thay bang trang thanh toan loi
 
         } else {
             $data = Order::with('orderItems.productVariant.attributeValues.attribute', 'orderItems.productVariant.product')->findOrFail($id);
