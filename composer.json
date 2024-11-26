@@ -17,6 +17,7 @@
         "php-flasher/flasher-laravel": "^1.15",
         "php-flasher/flasher-sweetalert-laravel": "^1.15",
         "php-flasher/flasher-toastr-laravel": "^1.15",
+        "pusher/pusher-php-server": "^7.2",
         "spatie/laravel-permission": "^6.10"
     },
     "require-dev": {
