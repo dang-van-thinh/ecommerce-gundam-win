@@ -31,10 +31,14 @@
 
             @if (Auth::id())
                 @php
-                    // Lấy role_id từ bảng user_roles
-                    $roleIds = \DB::table('user_roles')->where('user_id', Auth::id())->pluck('role_id')->toArray();
+                    // Lấy role_id từ bảng model_has_roles
+                    $roleIds = \DB::table('model_has_roles')
+                        ->where('model_id', Auth::id())
+                        ->pluck('role_id')
+                        ->toArray();
                 @endphp
-                @if (in_array(2, $roleIds))
+                @if (!empty(array_intersect([1, 2], $roleIds)))
+                    <!-- Kiểm tra nếu user có role_id 1 hoặc 2 -->
                     <a href="javascript:void(0);" class="reply-btn mt-2" data-feedback-id="{{ $feedback->id }}">
                         <span>
                             <i class="iconsax" data-icon="undo"></i>
