@@ -84,7 +84,7 @@
                             $('#userData').append(`
                                 <tr>
                                     <td>${(page - 1) * 12 + index + 1}</td>
-                                    <td>${user.avatar ? `<img src="/storage/${user.avatar}" alt="Ảnh" width="50px">` : ''}</td>
+                                    <td>${user.image ? `<img src="/storage/${user.image}" alt="Ảnh" width="50px">` : ''}</td>
                                     <td>${user.full_name}</td>
                                     <td>${user.email}</td>
                                     <td>
