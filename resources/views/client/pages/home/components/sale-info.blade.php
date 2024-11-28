@@ -9,87 +9,22 @@
                             <a href="{{ $contentLeftTopBanners->link }}"><img class="bg-img"
                                     src="{{ asset('storage/' . $contentLeftTopBanners->image_url) }}"
                                     alt="" /></a>
-                            <div class="contain-banner">
-                                <div>
-
-                                    <h3>{{ $contentLeftTopBanners->title }}</h3>
-                                    <div class="link-hover-anim underline"><a
-                                            class="btn btn_underline link-strong link-strong-unhovered"
-                                            href="{{ $contentLeftTopBanners->link }}">Xem thêm<svg>
-                                                <use href="/template/client/assets/svg/icon-sprite.svg#arrow">
-                                                </use>
-                                            </svg></a><a class="btn btn_underline link-strong link-strong-hovered"
-                                            href="{{ $contentLeftTopBanners->link }}">Xem thêm<svg>
-                                                <use href="/template/client/assets/svg/icon-sprite.svg#arrow">
-                                                </use>
-                                            </svg></a></div>
-                                </div>
-                            </div>
-
                         </div>
                     </div>
                 @else
                     <div class="collection-banner p-left"> <img class="bg-img"
                             src="/template/client/assets/images/banner/banner-7.jpg" alt="" />
-                        <div class="contain-banner">
-                            <div>
-                                <h3>Hiện không có tiêu đề</h3>
-                                <div class="link-hover-anim underline"><a
-                                        class="btn btn_underline link-strong link-strong-unhovered" href="#">Xem
-                                        ngay<svg>
-                                            <use href="/template/client/assets/svg/icon-sprite.svg#arrow">
-                                            </use>
-                                        </svg></a><a class="btn btn_underline link-strong link-strong-hovered"
-                                        href="#">Xem ngay<svg>
-                                            <use href="/template/client/assets/svg/icon-sprite.svg#arrow">
-                                            </use>
-                                        </svg></a></div>
-                            </div>
-                        </div>
                     </div>
                 @endif
                 @if ($contentLeftBelowBanners)
                     <div class="col-12">
                         <div class="collection-banner p-right"><img class="bg-img"
                                 src="{{ asset('storage/' . $contentLeftBelowBanners->image_url) }}" alt="" />
-                            <div class="contain-banner">
-                                <div>
-
-                                    <h3>{{ $contentLeftBelowBanners->title }}</h3>
-                                    <div class="link-hover-anim underline"><a
-                                            class="btn btn_underline link-strong link-strong-unhovered"
-                                            href="{{ $contentLeftBelowBanners->link }}">Xem thêm<svg>
-                                                <use href="/template/client/assets/svg/icon-sprite.svg#arrow">
-                                                </use>
-                                            </svg></a><a class="btn btn_underline link-strong link-strong-hovered"
-                                            href="{{ $contentLeftBelowBanners->link }}">Xem thêm<svg>
-                                                <use href="/template/client/assets/svg/icon-sprite.svg#arrow">
-                                                </use>
-                                            </svg></a></div>
-                                </div>
-                            </div>
                         </div>
                     </div>
                 @else
                     <div class="collection-banner p-left"> <img class="bg-img"
                             src="/template/client/assets/images/banner/banner-7.jpg" alt="" />
-                        <div class="contain-banner">
-                            <div>
-
-                                <h3>Hiện không có tiêu đề</h3>
-                                <div class="link-hover-anim underline"><a
-                                        class="btn btn_underline link-strong link-strong-unhovered"
-                                        href="{{ route('collection-product') }}">Xem
-                                        ngay<svg>
-                                            <use href="/template/client/assets/svg/icon-sprite.svg#arrow">
-                                            </use>
-                                        </svg></a><a class="btn btn_underline link-strong link-strong-hovered"
-                                        href="{{ route('collection-product') }}">Xem ngay<svg>
-                                            <use href="/template/client/assets/svg/icon-sprite.svg#arrow">
-                                            </use>
-                                        </svg></a></div>
-                            </div>
-                        </div>
                     </div>
                 @endif
 
@@ -120,8 +55,8 @@
                                     </div>
                                     <div class="product-image ratio_apos" style="position: relative;">
                                         <a class="pro-first" href="{{ route('product', $product->id) }}">
-                                            <img class="bg-img" src="{{ '/storage/' . $product->image }}"
-                                                alt="product" style="width: 100%; height: 300px; object-fit: cover;" />
+                                            <img class="bg-img" src="{{ '/storage/' . $product->image }}" alt="product"
+                                                style="width: 100%; height: 300px; object-fit: cover;" />
                                         </a>
                                         @php
                                             $firstImage = $product->productImages->first();
