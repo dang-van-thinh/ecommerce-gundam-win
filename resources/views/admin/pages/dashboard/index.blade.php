@@ -160,16 +160,16 @@
 
         <div class="col-sm-12 mb-4">
             <div class="row">
-                <div class="col-lg-3 col-md-6">
+                <div class="col-lg-4 col-md-4">
                     <div class="card">
                         <div class="card-body">
                             <div class="stat-widget-four">
-                                <div class="stat-icon dib">
-                                    <i class="fa fa-cubes text-muted"></i>
+                                <div class="stat-icon me-3">
+                                    <i class="fa fa-cubes text-primary fs-3"></i>
                                 </div>
                                 <div class="stat-content">
                                     <div class="dib text-left">
-                                        <div class="stat-heading">SL sản phẩm</div>
+                                        <div class="stat-heading">Số lượng sản phẩm</div>
                                         <div class="stat-text">Còn hàng: {{ $totalProduct }}</div>
                                     </div>
                                 </div>
@@ -178,16 +178,16 @@
                     </div>
                 </div>
 
-                <div class="col-lg-3 col-md-6">
+                <div class="col-lg-4 col-md-4">
                     <div class="card">
                         <div class="card-body">
                             <div class="stat-widget-four">
-                                <div class="stat-icon dib">
-                                    <i class="fa fa-cart-arrow-down text-muted"></i>
+                                <div class="stat-icon me-3">
+                                    <i class="fa fa-cart-arrow-down text-success fs-3"></i>
                                 </div>
                                 <div class="stat-content">
                                     <div class="dib text-left">
-                                        <div class="stat-heading">SL đơn hàng</div>
+                                        <div class="stat-heading">Số lượng đơn hàng</div>
                                         <div class="stat-text">Tổng số: {{ $totalOrders }}</div>
                                     </div>
                                 </div>
@@ -196,16 +196,16 @@
                     </div>
                 </div>
 
-                <div class="col-lg-3 col-md-6">
+                <div class="col-lg-4 col-md-4">
                     <div class="card">
                         <div class="card-body">
                             <div class="stat-widget-four">
-                                <div class="stat-icon dib">
-                                    <i class="fa fa-comments text-muted"></i>
+                                <div class="stat-icon me-3">
+                                    <i class="fa fa-comments text-warning fs-3"></i>
                                 </div>
                                 <div class="stat-content">
                                     <div class="dib text-left">
-                                        <div class="stat-heading">SL đánh giá</div>
+                                        <div class="stat-heading">Số lượng đánh giá</div>
                                         <div class="stat-text">Tổng số: {{ $feedbackCount }}</div>
                                     </div>
                                 </div>
@@ -214,38 +214,21 @@
                     </div>
                 </div>
 
-                <div class="col-lg-3 col-md-6">
-                    <div class="card">
-                        <div class="card-body">
-                            <div class="stat-widget-four">
-                                <div class="stat-icon dib">
-                                    <i class="fa fa-file-text text-muted"></i>
-                                </div>
-                                <div class="stat-content">
-                                    <div class="dib text-left">
-                                        <div class="stat-heading">SL bài viết</div>
-                                        <div class="stat-text">Tổng số: {{ $totalArticles }} </div>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
             </div>
         </div>
 
         <div class="col-sm-12 mb-4">
             <div class="row">
-                <div class="col-lg-3 col-md-6">
+                <div class="col-lg-4 col-md-4">
                     <div class="card">
                         <div class="card-body">
                             <div class="stat-widget-four">
-                                <div class="stat-icon dib">
-                                    <i class="fa fa-users text-muted"></i>
+                                <div class="stat-icon me-3">
+                                    <i class="fa fa-users text-info fs-3"></i>
                                 </div>
                                 <div class="stat-content">
                                     <div class="dib text-left">
-                                        <div class="stat-heading">Khách hàng</div>
+                                        <div class="stat-heading">Số lượng khách hàng</div>
                                         <div class="stat-text">Tổng số: {{ $totalUsers }}</div>
                                     </div>
                                 </div>
@@ -254,13 +237,36 @@
                     </div>
                 </div>
 
-                <div class="col-lg-3 col-md-6">
+                <div class="col-lg-4 col-md-4">
                     <div class="card">
                         <div class="card-body">
                             <div class="stat-widget-four">
-                                <div class="dib text-left">
-                                    <div class="stat-heading">Sản phẩm hết hàng</div>
-                                    <div class="stat-text">Tổng số: {{ $inactiveProductsCount }}</div>
+                                <div class="stat-icon me-3">
+                                    <i class="fa fa-cubes text-danger fs-3"></i>
+                                </div>
+                                <div class="stat-content">
+                                    <div class="dib text-left">
+                                        <div class="stat-heading">Số lượng sp hết hàng</div>
+                                        <div class="stat-text">Tổng số: {{ $totalOutOfStockProducts }}</div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="col-lg-4 col-md-4">
+                    <div class="card">
+                        <div class="card-body">
+                            <div class="stat-widget-four">
+                                <div class="stat-icon me-3">
+                                    <i class="fa fa-file-text text-secondary fs-3"></i>
+                                </div>
+                                <div class="stat-content">
+                                    <div class="dib text-left">
+                                        <div class="stat-heading">Số lượng bài viết</div>
+                                        <div class="stat-text">Tổng số: {{ $totalArticles }} </div>
+                                    </div>
                                 </div>
                             </div>
                         </div>
@@ -273,7 +279,7 @@
 
         <div class="col-sm-12 mb-4">
             <div class="row">
-                <div class="col">
+                <div class="col-lg-4 col-md-4">
                     <div class="card">
                         <div class="card-body">
                             <div class="stat-widget-one">
@@ -282,19 +288,19 @@
                                             style="font-size: 15px; padding: 5px;"></i>
                                     </div>
                                     <div class="ml-3">
-                                        <div class="stat-text">ĐH thành công</div>
+                                        <div class="stat-heading">Đơn hàng thành công</div>
                                     </div>
                                 </div>
                                 <div class="dib mt-1">
 
-                                    <div class="stat-digit">Tổng số: {{ $completedOrders }}</div>
+                                    <div class="stat-text">Tổng số: {{ $completedOrders }}</div>
                                 </div>
                             </div>
                         </div>
                     </div>
                 </div>
 
-                <div class="col">
+                <div class="col-lg-4 col-md-4">
                     <div class="card">
                         <div class="card-body">
                             <div class="stat-widget-one">
@@ -302,18 +308,18 @@
                                     <div class="stat-icon dib"><i class="fa fa-check text-primary border-primary"
                                             style="font-size: 15px; padding: 5px;"></i></div>
                                     <div class="ml-3">
-                                        <div class="stat-text">ĐH đã giao</div>
+                                        <div class="stat-heading">Đơn hàng đã giao</div>
                                     </div>
                                 </div>
                                 <div class="dib mt-1">
-                                    <div class="stat-digit">Tổng số: {{ $shippedOrders }}</div>
+                                    <div class="stat-text">Tổng số: {{ $shippedOrders }}</div>
                                 </div>
                             </div>
                         </div>
                     </div>
                 </div>
 
-                <div class="col">
+                <div class="col-lg-4 col-md-4">
                     <div class="card">
                         <div class="card-body">
                             <div class="stat-widget-one">
@@ -323,19 +329,21 @@
                                             style="font-size: 15px; padding: 5px;"></i>
                                     </div>
                                     <div class="ml-3">
-                                        <div class="stat-text">ĐH đang giao</div>
+                                        <div class="stat-heading">Đơn hàng đang giao</div>
                                     </div>
                                 </div>
 
                                 <div class="dib mt-1">
-                                    <div class="stat-digit">Tổng số: {{ $deliveringOrders }}</div>
+                                    <div class="stat-text">Tổng số: {{ $deliveringOrders }}</div>
                                 </div>
                             </div>
                         </div>
                     </div>
                 </div>
+            </div>
 
-                <div class="col">
+            <div class="row">
+                <div class="col-lg-4 col-md-4">
                     <div class="card">
                         <div class="card-body">
                             <div class="stat-widget-one">
@@ -345,30 +353,50 @@
                                             style="font-size: 15px; padding: 5px;"></i>
                                     </div>
                                     <div class="ml-3">
-                                        <div class="stat-text">ĐH chờ xử lý</div>
+                                        <div class="stat-heading">Đơn hàng chờ xử lý</div>
                                     </div>
                                 </div>
                                 <div class="dib mt-1">
-                                    <div class="stat-digit">Tổng số: {{ $pendingOrders }}</div>
+                                    <div class="stat-text">Tổng số: {{ $pendingOrders }}</div>
                                 </div>
                             </div>
                         </div>
                     </div>
                 </div>
 
-                <div class="col">
+                <div class="col-lg-4 col-md-4">
                     <div class="card">
                         <div class="card-body">
                             <div class="stat-widget-one">
                                 <div class="d-flex align-items-center">
-                                    <div class="stat-icon dib"><i class="fa fa-times text-danger border-danger"
-                                            style="font-size: 15px; padding: 5px;"></i></div>
+                                    <div class="stat-icon dib">
+                                        <i class="fa fa-times text-danger border-danger"
+                                            style="font-size: 15px; padding: 5px;"></i>
+                                    </div>
                                     <div class="ml-3">
-                                        <div class="stat-text">ĐH đã hủy</div>
+                                        <div class="stat-heading">Đơn hàng đã hủy</div>
                                     </div>
                                 </div>
                                 <div class="dib mt-1">
-                                    <div class="stat-digit">Tổng số: {{ $cancelledOrders }}</div>
+                                    <div class="stat-text">Tổng số: {{ $cancelledOrders }}</div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-lg-4 col-md-4">
+                    <div class="card">
+                        <div class="card-body">
+                            <div class="stat-widget-one">
+                                <div class="d-flex align-items-center">
+                                    <div class="stat-icon dib"><i class="fa fa-exclamation-triangle text-dark border-dark"
+                                            style="font-size: 15px; padding: 5px;"></i></div>
+                                    <div class="ml-3">
+                                        <div class="stat-heading">Đơn hàng hoàn trả</div>
+                                    </div>
+                                </div>
+                                <div class="dib mt-1">
+                                    <div class="stat-text">Tổng số: {{ $refundOrders }}</div>
                                 </div>
                             </div>
                         </div>
