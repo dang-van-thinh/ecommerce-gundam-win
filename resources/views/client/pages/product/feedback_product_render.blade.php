@@ -70,6 +70,7 @@
 
     @if ($feedback->replies->isNotEmpty())
         @foreach ($feedback->replies as $reply)
+            {{-- @dd($reply) --}}
 <li class="reply" style="width:90%">
     <div class="comment-items">
         <div class="user-content">
@@ -77,7 +78,7 @@
                 <div class="d-flex justify-content-between gap-3">
                     <h6>
                         <i class="iconsax" data-icon="user-1"></i>
-                        Admin
+                        {{ $reply->user->full_name }}
                     </h6>
                     <span>
                         <i class="iconsax" data-icon="clock"></i>
