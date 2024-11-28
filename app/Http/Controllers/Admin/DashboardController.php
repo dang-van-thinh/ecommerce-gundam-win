@@ -47,6 +47,8 @@ class DashboardController extends Controller
         $shippedOrders = Order::where('status', 'SHIPPED')->count();
         // Đếm số đơn hàng có status là "CANCELLED" giao thất bại
         $cancelledOrders = Order::where('status', 'CANCELED')->count();
+        // Đếm số đơn hàng có status là "REFUND" hoàn trả
+        $refundOrders = Order::where('status', 'REFUND')->count();
 
         // Tính phần trăm đơn hàng hoàn thành thành công
         $successRate = $totalOrders > 0 ? ($completedOrders / $totalOrders) * 100 : 0;
@@ -116,17 +118,17 @@ class DashboardController extends Controller
 
         $feedbackCount = Feedback::whereNull('parent_feedback_id')->count();
 
-        
+
         // Sản phẩm hết hàng
-        $inactiveProductsCount = Product::with('productVariants')
-        ->get() // Lấy tất cả sản phẩm
-        ->filter(function ($product) {
-            // Tính tổng số lượng của tất cả biến thể của sản phẩm
-            $totalQuantity = $product->productVariants->sum('quantity');
-            // Kiểm tra nếu tổng số lượng = 0, thì sản phẩm này hết hàng
-            return $totalQuantity == 0;
-        })
-        ->count();
+        $totalOutOfStockProducts = Product::with('productVariants')
+            ->get() // Lấy tất cả sản phẩm
+            ->filter(function ($product) {
+                // Tính tổng số lượng của tất cả biến thể của sản phẩm
+                $totalQuantity = $product->productVariants->sum('quantity');
+                // Kiểm tra nếu tổng số lượng = 0, thì sản phẩm này hết hàng
+                return $totalQuantity == 0;
+            })
+            ->count();
         return view(
             'admin.pages.dashboard.index',
             compact(
@@ -137,6 +139,7 @@ class DashboardController extends Controller
                 'deliveringOrders',
                 'shippedOrders',
                 'cancelledOrders',
+                'refundOrders',
                 'newUsers',
                 'successRate',
                 'totalOrders',
@@ -149,7 +152,7 @@ class DashboardController extends Controller
                 'labelsMonthlyRevenue',
                 'dataMonthlyRevenue',
                 'totalTodayRevenue',
-                'inactiveProductsCount'
+                'totalOutOfStockProducts'
             )
         );
     }
