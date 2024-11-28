@@ -1,19 +1,19 @@
 @extends('admin.layouts.master')
 @section('title')
-    Danh sách hoàn hàng
+    Danh sách đơn hoàn
 @endsection
 @section('content')
     <div>
         <div class="col-lg-12">
             <div class="card">
                 <div class="card-header">
-                    <strong class="card-title">Danh sách hoàn hàng</strong>
+                    <strong class="card-title">Danh sách đơn hoàn</strong>
                 </div>
                 <div class="card-body">
                     <table class="table-bordered table">
                         <thead>
                             <tr>
-                                <th class="text-center" scope="col">Mã đơn hoàn hàng</th>
+                                <th class="text-center" scope="col">Mã đơn hoàn </th>
                                 <th class="text-center" scope="col">Giá trị đơn hàng</th>
                                 <th class="text-center" scope="col">Khách hàng</th>
                                 <th class="text-center" scope="col">Liên hệ</th>
