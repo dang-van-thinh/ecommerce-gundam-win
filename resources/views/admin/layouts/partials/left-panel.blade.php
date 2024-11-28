@@ -1,12 +1,11 @@
 @push('admin-css')
     <style>
-        .nav_custom {
-        }
+        .nav_custom {}
     </style>
 @endpush
 <aside id="left-panel" class="left-panel">
     <nav class="navbar navbar-expand-sm navbar-default mt-3">
-        <div id="main-menu" class="main-menu navbar-collapse collapse"/>
+        <div id="main-menu" class="main-menu navbar-collapse collapse" />
         <ul class="nav navbar-nav" style="">
             @can('dashboard')
                 <li class="">
@@ -17,7 +16,7 @@
             @can('articles')
                 <li class="menu-item-has-children dropdown">
                     <a href="#" class="dropdown-toggle" data-toggle="dropdown" aria-haspopup="true"
-                       aria-expanded="false">
+                        aria-expanded="false">
                         <i class="fa fa-file-text menu-icon"></i>
                         QL Bài viết</a>
                     <ul class="sub-menu children dropdown-menu">
@@ -33,7 +32,7 @@
             @can('products')
                 <li class="menu-item-has-children dropdown">
                     <a href="#" class="dropdown-toggle" data-toggle="dropdown" aria-haspopup="true"
-                       aria-expanded="false"><i class="menu-icon fa fa-cubes"></i>QL Sản Phẩm
+                        aria-expanded="false"><i class="menu-icon fa fa-cubes"></i>QL Sản Phẩm
                     </a>
                     <ul class="sub-menu children dropdown-menu">
                         <li><i class="fa fa-caret-square-o-right"></i><a href="{{ route('products.index') }}">Danh sách
@@ -56,7 +55,7 @@
             @can('voucher')
                 <li class="menu-item-has-children dropdown">
                     <a href="#" class="dropdown-toggle" data-toggle="dropdown" aria-haspopup="true"
-                       aria-expanded="false"><i class="menu-icon fa fa-ticket"></i>QL Phiếu Giảm Giá</a>
+                        aria-expanded="false"><i class="menu-icon fa fa-ticket"></i>QL Phiếu Giảm Giá</a>
                     <ul class="sub-menu children dropdown-menu">
                         <li><i class="fa fa-caret-square-o-right"></i><a href="{{ route('voucher.index') }}">Danh
                                 sách </a>
@@ -67,25 +66,27 @@
                 </li>
             @endcan
             @can('users')
-            <li class="menu-item-has-children dropdown">
-                <a href="#" class="dropdown-toggle" data-toggle="dropdown" aria-haspopup="true"
-                    aria-expanded="false"><i class="menu-icon fa fa-users"></i>QL Người Dùng</a>
-                <ul class="sub-menu children dropdown-menu">
-                    <li><i class="fa fa-caret-square-o-right"></i><a href="{{ route('new-user.index') }}">Danh sách
-                            người dùng</a>
-                    </li>
-                    <li><i class="fa fa-caret-square-o-right"></i><a href="{{ route('permission.index') }}">Quyền tài khoản</a>
-                    </li>
-                    <li><i class="fa fa-caret-square-o-right"></i><a href="{{ route('new-role.index') }}">Vai trò tài khoản</a>
-                    </li>
-                </ul>
-            </li>
+                <li class="menu-item-has-children dropdown">
+                    <a href="#" class="dropdown-toggle" data-toggle="dropdown" aria-haspopup="true"
+                        aria-expanded="false"><i class="menu-icon fa fa-users"></i>QL Người Dùng</a>
+                    <ul class="sub-menu children dropdown-menu">
+                        <li><i class="fa fa-caret-square-o-right"></i><a href="{{ route('new-user.index') }}">Danh sách
+                                người dùng</a>
+                        </li>
+                        <li><i class="fa fa-caret-square-o-right"></i><a href="{{ route('permission.index') }}">Quyền tài
+                                khoản</a>
+                        </li>
+                        <li><i class="fa fa-caret-square-o-right"></i><a href="{{ route('new-role.index') }}">Vai trò tài
+                                khoản</a>
+                        </li>
+                    </ul>
+                </li>
             @endcan
 
             @can('vouchers')
                 <li class="menu-item-has-children dropdown">
                     <a href="#" class="dropdown-toggle" data-toggle="dropdown" aria-haspopup="true"
-                       aria-expanded="false"><i class="menu-icon fa fa-ticket"></i>QL Phiếu Giảm Giá</a>
+                        aria-expanded="false"><i class="menu-icon fa fa-ticket"></i>QL Phiếu Giảm Giá</a>
                     <ul class="sub-menu children dropdown-menu">
                         <li><i class="fa fa-caret-square-o-right"></i><a href="{{ route('voucher.index') }}">Danh
                                 sách </a>
@@ -101,18 +102,18 @@
                     <i class="menu-icon fa fa-cart-arrow-down menu-icon"></i>
                     QL Đơn Hàng</a>
                 <ul class="sub-menu children dropdown-menu">
-                @can('orders')
-                    <li>
-                        <i class="fa fa-caret-square-o-right"></i>
-                        <a href="{{ route('orders.index') }}">Danh sách đơn hàng</a>
-                    </li>
-                @endcan
-                @can('refund')
-                    <li>
-                        <i class="fa fa-caret-square-o-right"></i>
-                        <a href="{{ route('refund.index') }}">Danh sách đơn hoàn</a>
-                    </li>
-                @endcan
+                    @can('orders')
+                        <li>
+                            <i class="fa fa-caret-square-o-right"></i>
+                            <a href="{{ route('orders.index') }}">Danh sách đơn hàng</a>
+                        </li>
+                    @endcan
+                    @can('refund')
+                        <li>
+                            <i class="fa fa-caret-square-o-right"></i>
+                            <a href="{{ route('refund.index') }}">Danh sách đơn hoàn</a>
+                        </li>
+                    @endcan
                 </ul>
             </li>
 
@@ -120,11 +121,11 @@
             @can('feedback')
                 <li class="menu-item-has-children dropdown">
                     <a href="#" class="dropdown-toggle" data-toggle="dropdown" aria-haspopup="true"
-                       aria-expanded="false"><i class="menu-icon fa fa-comments"></i>QL Phản Hồi</a>
+                        aria-expanded="false"><i class="menu-icon fa fa-comments"></i>QL Phản Hồi</a>
                     <ul class="sub-menu children dropdown-menu">
                         <li>
                             <i class="fa fa-caret-square-o-right"></i><a href="{{ route('feedback.index') }}">Danh
-                                sách</a>
+                                sách feedback</a>
                         </li>
                         <li>
                             <i class="fa fa-caret-square-o-right"></i><a href="{{ route('chat') }}">Chat</a>
@@ -136,16 +137,16 @@
             @can('banner')
                 <li class="menu-item-has-children dropdown">
                     <a href="#" class="dropdown-toggle" data-toggle="dropdown" aria-haspopup="true"
-                       aria-expanded="false"><i class="menu-icon fa fa-cogs"></i>Cấu hình</a>
+                        aria-expanded="false"><i class="menu-icon fa fa-cogs"></i>Cấu hình</a>
                     <ul class="sub-menu children dropdown-menu">
 
                         <li>
                             <i class="fa fa fa-picture-o"></i>
                             <a href="{{ route('banner.index') }}">QL Banner</a>
-                    </li>
+                        </li>
 
-                </ul>
-            </li>
+                    </ul>
+                </li>
             @endcan
         </ul>
         </div>
