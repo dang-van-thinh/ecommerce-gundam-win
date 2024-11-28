@@ -78,7 +78,7 @@ class ProductController extends Controller
             ->get();
 
 
-        $feedbacks = Feedback::with(['orderItem.productVariant.product', 'user', 'replies'])
+        $feedbacks = Feedback::with(['orderItem.productVariant.product', 'user', 'replies.user'])
             ->whereHas('orderItem.productVariant.product', function ($query) use ($id) {
                 $query->where('id', $id)->whereNull('parent_feedback_id');
             })
@@ -90,7 +90,8 @@ class ProductController extends Controller
         $feedbackCount = $feedbacks->count();
 
         // tính giá trị đánh giá trung bình của sản phẩm trả về giá trị làm tròn (1.0)
-        $averageRating = $feedbacks->avg('rating');
+        $averageRating = ceil($feedbacks->avg('rating'));
+
         $averageRating = round($averageRating, 1);
 
 
