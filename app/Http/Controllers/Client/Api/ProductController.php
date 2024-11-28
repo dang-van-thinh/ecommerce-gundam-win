@@ -187,6 +187,7 @@ class ProductController extends Controller
             $variantId = $request->input('variantId');
             $productResponse = ProductVariant::with(['product', 'attributeValues.attribute'])->where('id', $variantId)->first();
             $voucher = VoucherUsage::with('voucher')
+                ->where('user_id', $userId)
                 ->latest('id')
                 ->get();
             return response()->json([

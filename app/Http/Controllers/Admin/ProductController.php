@@ -24,7 +24,7 @@ class ProductController extends Controller
         $data = Product::with(['productImages', 'categoryProduct', 'productVariants'])->latest('id')->paginate(12);
         $categories = CategoryProduct::get();
         // dd($data->toArray());
-        return view('admin.pages.products.index', compact('data','categories'));
+        return view('admin.pages.products.index', compact('data', 'categories'));
     }
 
     /**
@@ -208,8 +208,8 @@ class ProductController extends Controller
                     // In ra giá trị delete_variants để kiểm tra
                     ProductVariant::whereIn('id', $request->delete_variants)->delete();
                 }
-    
-                
+
+
 
                 // 5. Cập nhật hoặc tạo mới các biến thể sản phẩm còn tồn tại
                 if ($request->has('variants')) {
@@ -282,15 +282,20 @@ class ProductController extends Controller
     public function destroy(Product $product)
     {
         try {
+            // xóa sản phẩm
+            $product->delete();
+
             // Xóa ảnh chính của sản phẩm (nếu có)
-            if ($product->image) {
+            if ($product->image &&  Storage::exists($product->image)) {
                 Storage::delete($product->image);
             }
 
             // Xóa các ảnh album liên quan
-            foreach ($product->productImages as $productImage) {
-                Storage::delete($productImage->image_url); // Xóa ảnh album khỏi storage
-                $productImage->delete(); // Xóa bản ghi trong DB
+            if ($product->productImages &&  Storage::exists($product->image)) {
+                foreach ($product->productImages as $productImage) {
+                    Storage::delete($productImage->image_url); // Xóa ảnh album khỏi storage
+                    $productImage->delete(); // Xóa bản ghi trong DB
+                }
             }
 
             // Xóa các biến thể sản phẩm (product variants)
@@ -300,8 +305,6 @@ class ProductController extends Controller
                 $variant->delete();
             }
 
-            // xóa sản phẩm
-            $product->delete();
 
             toastr("Sản phẩm đã được xóa thành công!", NotificationInterface::SUCCESS, "Thành công", [
                 "closeButton" => true,
