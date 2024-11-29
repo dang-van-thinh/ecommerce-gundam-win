@@ -73,47 +73,6 @@
                 @if ($rightBanners)
                     <a href="{{ $rightBanners->link }}"><img class="bg-img"
                             src="{{ asset('storage/' . $rightBanners->image_url) }}" alt="" /></a>
-
-
-                    <div class="banner-2">
-                        <h3>{{ $rightBanners->title }}</h3>
-
-                        <div class="countdown">
-                            <ul class="clockdiv8">
-                                <li>
-                                    <div class="timer">
-                                        <div class="days"></div>
-                                    </div><span class="title">Ngày</span>
-                                </li>
-                                <li class="dot"> <span> </span><span></span></li>
-                                <li>
-                                    <div class="timer">
-                                        <div class="hours"></div>
-                                    </div><span class="title">Giờ</span>
-                                </li>
-                                <li class="dot"> <span> </span><span></span></li>
-                                <li>
-                                    <div class="timer">
-                                        <div class="minutes"></div>
-                                    </div><span class="title">Phút</span>
-                                </li>
-                                <li class="dot"> <span> </span><span></span></li>
-                                <li>
-                                    <div class="timer">
-                                        <div class="seconds"></div>
-                                    </div><span class="title">Giây</span>
-                                </li>
-                            </ul>
-                        </div>
-                        <div class="link-hover-anim underline"><a
-                                class="btn btn_underline link-strong link-strong-unhovered"
-                                href="collection-left-sidebar.html">Xem thêm<svg>
-                                    <use href="/template/client/assets/svg/icon-sprite.svg#arrow"></use>
-                                </svg></a><a class="btn btn_underline link-strong link-strong-hovered"
-                                href="collection-left-sidebar.html">Xem thêm<svg>
-                                    <use href="/template/client/assets/svg/icon-sprite.svg#arrow"></use>
-                                </svg></a></div>
-                    </div>
                 @else
                     <a href="collection-left-sidebar.html"><img class="bg-img"
                             src="/template/client/assets/images/banner/banner-10.jpg" alt="" /></a>

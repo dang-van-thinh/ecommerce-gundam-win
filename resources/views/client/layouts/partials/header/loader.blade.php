@@ -19,10 +19,10 @@
                 <div class="main-menu">
                     <a class="brand-logo" href="#">
                         <img class="img-fluid for-light"
-                            src="/template/client/assets/images/logo/logoGumdamWin-removebg-preview.png"
+                            src="/template/client/assets/images/logo/logo-gd1.png"
                             alt="logo" />
                         <img class="img-fluid for-dark"
-                            src="/template/client/assets/images/logo/logoGumdamWin-removebg-preview.png"
+                            src="/template/client/assets/images/logo/logo-gd1.png"
                             alt="logo" />
                     </a>
                     <nav id="main-nav-1">
