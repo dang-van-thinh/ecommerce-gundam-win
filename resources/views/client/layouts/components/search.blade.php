@@ -3,6 +3,20 @@
         border: 0px;
         background-color: transparent;
     }
+
+    .bg-img {
+        width: 200px;
+        height: 250px;
+    }
+
+    @media (max-width: 768px) {
+
+        /* Áp dụng khi màn hình nhỏ hơn 768px */
+        .bg-img {
+            width: 145.2px;
+            height: 152.45px;
+        }
+    }
 </style>
 <div class="offcanvas offcanvas-top search-details" id="offcanvasTop" tabindex="-1" aria-labelledby="offcanvasTopLabel">
     <div class="offcanvas-header"><button class="btn-close" type="button" data-bs-dismiss="offcanvas" aria-label="Close"><i
@@ -91,7 +105,7 @@
                 //         <div class="product-box-6">
                 //             <div class="img-wrapper">
                 //                 <div class="product-image" style="text-align: center;">
-                //                     <a href="product.html">
+                //                     <a href="product.html" class="bg-size">
                 //                         <img width="200px" height="250px" class="bg-img" src="{{ asset('storage/') }}/${product.image}" alt="" />
                 //                     </a>
                 //                 </div>
@@ -147,8 +161,6 @@
 
                     const img = document.createElement('img');
                     img.className = 'bg-img';
-                    img.style.width = '200px'
-                    img.style.height = '250px'
                     img.src = `/storage/${product.image}`;
                     img.alt = product.name;
 
