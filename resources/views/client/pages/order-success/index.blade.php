@@ -42,7 +42,7 @@
                                                 <td>
                                                     <div class="cart-box">
                                                         <a href="product.html">
-                                                            <img src="{{ '/Storage/' . $item->productVariant->product->image }}"
+                                                            <img src="{{ '/storage/' . $item->productVariant->product->image }}"
                                                                 alt="Ảnh sản phẩm">
                                                         </a>
                                                         <div>

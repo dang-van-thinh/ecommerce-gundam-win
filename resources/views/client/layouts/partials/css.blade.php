@@ -4,10 +4,8 @@
 <meta name="description" content="Katie">
 <meta name="keywords" content="Katie">
 <meta name="author" content="pixelstrap">
-<link rel="icon" href="/template/client/assets/images/favicon.png" type="image/x-icon">
-<link rel="shortcut icon" href="/template/client/assets/images/favicon.png" type="image/x-icon">
-<link rel="icon" href="/template/client/assets/images/favicon.png" type="image/x-icon">
-<link rel="shortcut icon" href="/template/client/assets/images/favicon.png" type="image/x-icon">
+<link rel="icon" href="/template/client/assets/images/logoGW.png" type="image/x-icon">
+<link rel="shortcut icon" href="/template/client/assets/images/logoGW.png" type="image/x-icon">
 {{-- <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin="">
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300..900&display=swap" rel="stylesheet"> --}}
