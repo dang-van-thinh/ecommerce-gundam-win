@@ -85,10 +85,10 @@
         <div class="col-12">
             <div class="main-menu">
                 <a class="brand-logo" href="{{ route('home') }}">
-                    <img class="img-fluid for-light"
-                        src="/template/client/assets/images/logo/logoGumdamWin-removebg-preview.png" alt="logo" />
-                    <img class="img-fluid for-dark"
-                        src="/template/client/assets/images/logo/logoGW01-removebg-preview.png" alt="logo" />
+                    <img class="img-fluid for-light" src="/template/client/assets/images/logo/logo-gd1.png"
+                        alt="logo" />
+                    <img class="img-fluid for-dark" src="/template/client/assets/images/logo/logo-gd2.png"
+                        alt="logo" />
                 </a>
                 <nav id="main-nav">
                     <ul class="nav-menu sm-horizontal theme-scrollbar" id="sm-horizontal">
