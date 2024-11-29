@@ -125,7 +125,7 @@
                     <ul class="sub-menu children dropdown-menu">
                         <li>
                             <i class="fa fa-caret-square-o-right"></i><a href="{{ route('feedback.index') }}">Danh
-                                sách feedback</a>
+                                sách phản hồi</a>
                         </li>
                         <li>
                             <i class="fa fa-caret-square-o-right"></i><a href="{{ route('chat') }}">Chat</a>

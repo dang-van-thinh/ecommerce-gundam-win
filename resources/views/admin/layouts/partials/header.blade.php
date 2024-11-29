@@ -33,9 +33,10 @@
 </style>
 <div class="top-left">
     <div class="navbar-header">
-        <a class="navbar-brand" href="{{ route('dashboard') }}"><img src="/template/images/logo.png" alt="Logo"></a>
+        <a class="navbar-brand" href="{{ route('dashboard') }}"><img src="/template/images/logo-gundam.png"
+                alt="Logo"></a>
         <a class="navbar-brand hidden" href="{{ route('dashboard') }}"><img src="/template/images/logo2.png"
-                                                                            alt="Logo"></a>
+                alt="Logo"></a>
         <a id="menuToggle" class="menutoggle"><i class="fa fa-bars"></i></a>
     </div>
 </div>
@@ -52,26 +53,25 @@
 
             <div class="dropdown for-notification">
                 <button class="btn btn-secondary dropdown-toggle" type="button" id="notification"
-                        data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                    data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                     <i class="fa fa-bell"></i>
                     <p class="bg-danger icon-number" id="number-noti">0</p>
                 </button>
-                <div class="dropdown-menu" aria-labelledby="notification"
-                     id="notifications"
-                     style="max-height: 30rem;overflow: scroll; max-width: 30rem">
+                <div class="dropdown-menu" aria-labelledby="notification" id="notifications"
+                    style="max-height: 30rem;overflow: scroll; max-width: 30rem">
                     <div class="flex justify-content-between px-5">
                         <a href="" class="text-decoration-underline " id="delete-notification">Xóa</a>
                     </div>
-                    {{--                    <a class="dropdown-item media" href="#">--}}
-                    {{--                        <i class="fa fa-check"></i>--}}
-                    {{--                        <p>Server #1 overloaded.</p>--}}
-                    {{--                    </a>--}}
+                    {{--                    <a class="dropdown-item media" href="#"> --}}
+                    {{--                        <i class="fa fa-check"></i> --}}
+                    {{--                        <p>Server #1 overloaded.</p> --}}
+                    {{--                    </a> --}}
                 </div>
             </div>
 
             <div class="dropdown for-message">
                 <button class="btn btn-secondary dropdown-toggle" type="button" id="message" data-toggle="dropdown"
-                        aria-haspopup="true" aria-expanded="false">
+                    aria-haspopup="true" aria-expanded="false">
                     <i class="fa fa-envelope"></i>
                     <span class="count bg-primary">4</span>
                 </button>
@@ -115,17 +115,12 @@
 
         <div class="user-area dropdown float-right">
             <a href="#" class="dropdown-toggle active" data-toggle="dropdown" aria-haspopup="true"
-               aria-expanded="false">
+                aria-expanded="false">
                 <img class="user-avatar rounded-circle" src="/template/images/admin.jpg" alt="User Avatar">
             </a>
 
             <div class="user-menu dropdown-menu">
                 <a class="nav-link" href="{{ route('home') }}"><i class="fa fa- user"></i>Trang chủ</a>
-
-                <a class="nav-link" href="#"><i class="fa fa- user"></i>Notifications <span
-                        class="count">13</span></a>
-
-                <a class="nav-link" href=""><i class="fa fa -cog"></i>Settings</a>
 
                 <form action="{{ route('auth.logout') }}" method="POST" style="display: inline;">
                     @csrf
@@ -144,7 +139,7 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.css">
     <script src="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.js"></script>
     <script>
-        document.addEventListener("DOMContentLoaded", function () {
+        document.addEventListener("DOMContentLoaded", function() {
             var notificationElement = document.getElementById("notifications");
 
             // load notifications json
@@ -161,7 +156,7 @@
             handlenotification();
             // console.log("heloo")
             window.Echo.channel("order-to-admin")
-                .listen("OrderToAdminEvent", function (data) {
+                .listen("OrderToAdminEvent", function(data) {
                     let numberNoti = document.getElementById("number-noti");
                     numberNoti.textContent = Number(numberNoti.textContent) + 1;
                     console.log(JSON.stringify(data), data.noties);
