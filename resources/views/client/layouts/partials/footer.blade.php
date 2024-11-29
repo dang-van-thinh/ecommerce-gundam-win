@@ -5,8 +5,7 @@
                 <div class="col-xl-3 col-lg-3 col-md-6">
                     <div class="footer-content">
                         <div class="footer-logo"><a href="index.html"> <img class="img-fluid"
-                                    src="/template/client/assets/images/logo/logoGW01-removebg-preview.png"
-                                    alt="Footer Logo" /></a>
+                                    src="/template/client/assets/images/logo/logo-gd2.png" alt="Footer Logo" /></a>
                         </div>
                         <ul>
                             <li> <i class="iconsax" data-icon="location"></i>

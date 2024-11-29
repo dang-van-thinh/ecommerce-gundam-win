@@ -42,8 +42,10 @@ class CheckOutController extends Controller
         // dd($productResponse);
         $userAddress = AddressUser::where('user_id', $userId)->get();
         $provinces = Province::all();
+        $userId = Auth::id();
         $voucher = VoucherUsage::with('voucher')
-            ->latest('id')
+            ->where('user_id', $userId)
+            ->latest('id') // Sắp xếp theo id giảm dần
             ->get();
 
         return view('client.pages.check-out.index', [
