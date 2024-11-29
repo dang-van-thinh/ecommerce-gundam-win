@@ -193,6 +193,21 @@
     .chat-card .message:nth-child(odd) {
         animation-delay: 0.3s;
     }
+
+
+    @media (max-width: 768px) {
+        .contact-button {
+            position: fixed;
+            bottom: 130px;
+            right: 15px;
+            z-index: 1000;
+        }
+
+        .contact-icon {
+            width: 40px;
+            height: 40px;
+        }
+    }
 </style>
 {{-- @endpush --}}
 
@@ -388,7 +403,7 @@
             pElement.textContent = message;
             divElement.appendChild(pElement);
             showChat.appendChild(divElement);
-            
+
             // Cuộn đến tin nhắn mới nhất
             showChat.scrollTop = showChat.scrollHeight;
         }
