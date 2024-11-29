@@ -5,7 +5,7 @@
 @section('content')
     <div class="card">
         <div class="card-header">
-            <strong class="card-title">Danh sách Feedback</strong>
+            <strong class="card-title">Danh sách phản hồi</strong>
         </div>
         <div class="d-flex justify-content-end mx-3 mt-4">
         </div>
