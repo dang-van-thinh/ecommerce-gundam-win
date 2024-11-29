@@ -21,9 +21,9 @@
         @include('client.pages.home.components.trending')
     </section>
     <!--Banner 2-->
-    {{-- <section class="section-t-space">
+    <section class="section-t-space">
         @include('client.pages.home.components.banner-2')
-    </section> --}}
+    </section>
     <!--san pham brand-->
     <section class="section-t-space">
         @include('client.pages.home.components.brand')
