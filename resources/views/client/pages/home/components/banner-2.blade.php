@@ -1,4 +1,4 @@
-<div class="custom-container container">
+{{-- <div class="custom-container container">
     <div class="style-banner">
         @if ($leftBanners)
             <div class="row gy-4 align-items-end">
@@ -31,4 +31,4 @@
             
         </div>
     </div>
-</div>
+</div> --}}
