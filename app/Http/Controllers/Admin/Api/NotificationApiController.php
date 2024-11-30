@@ -27,4 +27,15 @@ class NotificationApiController extends Controller
             "countNoties" => $countNoties
         ]);
     }
+
+    public function deleteNotification(Request $request)
+    {
+        $isDelete = Notification::whereNotNull("read_at")->delete();
+        if ($isDelete) {
+            return response()->json([
+                "success" => true
+            ]);
+        }
+        return response()->json(["success" => false], 500);
+    }
 }
