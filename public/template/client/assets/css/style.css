@@ -13200,9 +13200,9 @@ body.skeleton_body {
     position: relative;
 }
 @media (max-width: 991px) {
-    .home-section-3 .home-banner img {
+    /* .home-section-3 .home-banner img {
         opacity: 0.2;
-    }
+    } */
 }
 .home-section-3 .home-banner .img-part {
     transition: all 0.5s ease;
@@ -16519,7 +16519,6 @@ body div canvas:first-child {
         opacity 0.4s cubic-bezier(0.165, 0.84, 0.44, 1);
     width: 70%;
 }
-
 @media (max-width: 768px) {
     .tap-top.top {
         display: block;
