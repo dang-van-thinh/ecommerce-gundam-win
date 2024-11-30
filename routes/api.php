@@ -59,6 +59,7 @@ Route::get("/chat/search-user", [UserController::class, "searchUserChat"]);
 // notification public channel
 Route::get("/notification", [NotificationApiController::class, "notifications"])->name("notication");
 Route::put("/notification/update", [NotificationApiController::class, "updateReadNotification"]);
+Route::delete("/notification/delete", [NotificationApiController::class, "deleteNotification"]);
 
 // chat
 Route::post("/chat-send", [ChatController::class, "send"]);
