@@ -1,73 +1,35 @@
 {{-- @dd($categoryProduct) --}}
+<style></style>
 <div class="custom-container header-1 container">
     <div class="row">
         <div class="col-12 p-0">
             <div class="mobile-fix-option">
                 <ul>
                     <li>
-                        <a href="index.html"><i class="iconsax" data-icon="home-1"></i>Trang chủ</a>
+                        <a href="{{ route('home') }}"><i class="iconsax" data-icon="home-1"></i>Trang chủ</a>
                     </li>
 
                     <li>
                         <a href="search" data-bs-toggle="offcanvas" data-bs-target="#offcanvasTop"
                             aria-controls="offcanvasTop"><i class="iconsax" data-icon="search-normal-2"></i>Tìm kiếm</a>
                     </li>
-                    <li class="shopping-cart"> <a href="cart.html"><i class="iconsax"
-                                data-icon="shopping-cart"></i>Cart</a></li>
                     <li>
-                        <a href="{{ route('wish-list') }}">
-                            <i class="iconsax" data-icon="heart"></i>
-                            Yêu thích
-                            {{-- <span id="love" class="cart_qty_cls">{{ $love }}</span> --}}
+                        <a href="{{ Auth::check() ? route('cart') : route('auth.login-view') }}">
+                            <i class="iconsax" data-icon="shopping-cart"></i>
+                            Giỏ hàng
                         </a>
                     </li>
-                    {{-- <li> <a href="dashboard.html"><i class="iconsax" data-icon="user-2"></i>Account</a>
-                    </li> --}}
-                    <li class="onhover-div">
+                    <li>
+                        <a href="{{ Auth::check() ? route('wish-list') : route('auth.login-view') }}">
+                            <i class="iconsax" data-icon="heart"></i>
+                            Yêu thích
+                        </a>
+                    </li>
+                    <li>
                         <a href="{{ Auth::check() ? route('profile.infomation') : route('auth.login-view') }}">
                             <i class="iconsax" data-icon="user-2"></i>
                             Tài khoản
                         </a>
-                        {{-- @if (Auth::id())
-                            <!-- Người dùng đã đăng nhập -->
-                            <div class="onhover-show-div user" style="width: 200px;">
-                                <ul>
-                                    @php
-                                        // Kiểm tra vai trò của người dùng
-                                        $user = Auth::user();
-                                        $isAdmin = $user->hasRole('Admin'); // Kiểm tra vai trò Admin
-                                        $isStaff = $user->hasRole('Staff'); // Kiểm tra vai trò Nhân viên
-                                    @endphp
-
-                                    @if ($isAdmin)
-                                        <li><a href="{{ route('dashboard') }}">Trang quản lý</a></li>
-                                    @elseif ($isStaff)
-                                        <li><a href="{{ route('article.index') }}">Quản lý bài viết</a></li>
-                                    @endif
-                                    <li><a href="{{ route('profile.infomation') }}">Thông tin tài khoản</a></li>
-                                    <li><a href="{{ route('profile.order-history') }}">Lịch sử mua hàng</a></li>
-                                    <li>
-                                        <!-- Form đăng xuất để xử lý bằng phương thức POST -->
-                                        <form action="{{ route('auth.logout') }}" method="POST"
-                                            style="display: inline;">
-                                            @csrf
-                                            <button type="submit" title="Đăng xuất"
-                                                style="background: none; border: none; padding: 0; cursor: pointer; text-decoration: none;">
-                                                <a>Đăng xuất</a>
-                                            </button>
-                                        </form>
-                                    </li>
-                                </ul>
-                            </div>
-                        @else
-                            <!--Nếu người dùng chưa đăng nhập nhé-->
-                            <div class="onhover-show-div user">
-                                <ul>
-                                    <li> <a href="{{ route('auth.login-view') }}">Đăng nhập </a></li>
-                                    <li> <a href="{{ route('auth.register-view') }}">Đăng ký</a></li>
-                                </ul>
-                            </div>
-                        @endif --}}
                     </li>
                 </ul>
             </div>
@@ -99,24 +61,26 @@
                             <a class="nav-link" href="{{ route('home') }}">Trang chủ
                             </a>
                         </li>
+
                         <li>
-                            <a class="nav-link" href="{{ route('collection-product') }}">Sản phẩm
+                            <a class="nav-link" href="{{ route('collection-product') }}">
+                                Sản phẩm
                                 <span>
                                     <i class="fa-solid fa-angle-down"></i>
                                 </span>
                             </a>
-                            <ul class="nav-submenu">
+                            <ul class="nav-submenu accordion-hidden">
                                 @isset($categoryProduct)
                                     @foreach ($categoryProduct as $cate)
-                                        {{-- @dd($cate) --}}
                                         <li>
-                                            <a href="{{ route('collection-product', ['id' => $cate->id]) }}">
-                                                {{ $cate->name }} </a>
+                                            <a
+                                                href="{{ route('collection-product', ['id' => $cate->id]) }}">{{ $cate->name }}</a>
                                         </li>
                                     @endforeach
                                 @endisset
                             </ul>
                         </li>
+
 
                         <li>
                             <a class="nav-link" href="{{ route('collection-blog') }}">Bài viết
