@@ -41,12 +41,12 @@
                                             <tr>
                                                 <td>
                                                     <div class="cart-box">
-                                                        <a href="product.html">
+                                                        <a href="{{ route('product', $item->productVariant->product) }}">
                                                             <img src="{{ '/storage/' . $item->productVariant->product->image }}"
                                                                 alt="Ảnh sản phẩm">
                                                         </a>
                                                         <div>
-                                                            <a href="product.html">
+                                                            <a href="{{ route('product', $item->productVariant->product) }}">
                                                                 <h5>{{ $item->product_name }}</h5>
                                                             </a>
                                                             @foreach ($item->productVariant->attributeValues as $attributeValue)
