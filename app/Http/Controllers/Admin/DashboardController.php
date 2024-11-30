@@ -19,17 +19,16 @@ class DashboardController extends Controller
     public function index()
     {
         $totalUsers = User::whereHas('roles', function ($query) {
-            $query->where('role_id', 1);
+            $query->where('name', 'Client');
         })->count();
 
         $oneWeekAgo = Carbon::now()->subWeek()->toDateTimeString();
 
         $newUsers = User::whereHas('roles', function ($query) {
-            $query->where('role_id', 1);
+            $query->where('name', 'Client');
         })
             ->where('created_at', '>=', $oneWeekAgo)
             ->count();
-
 
         $totalCompleted = Order::where('status', 'COMPLETED')->sum('total_amount');
 
