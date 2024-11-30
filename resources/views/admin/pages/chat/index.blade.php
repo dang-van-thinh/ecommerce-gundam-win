@@ -78,9 +78,10 @@
 
                         let nameUser = this.querySelector(".name-user")
                         let userId = nameUser.getAttribute("data-id");
-                        console.log(userId);
+                        let image = this.querySelector("img").getAttribute("src");
+                        // console.log(image);
 
-                        showRoomChat(userId, nameUser.textContent, adminId);
+                        showRoomChat(userId, nameUser.textContent, adminId, image);
 
                         // huy channel neu da co truoc do de tranh bij gui nham
                         if (currentChannel) {
@@ -136,10 +137,13 @@
                         element.addEventListener("click", function(e) {
 
                             let nameUser = this.querySelector(".name-user")
+                            let image = this.querySelector("img").getAttribute(
+                                "src");
                             let userId = nameUser.getAttribute("data-id");
-                            console.log(userId);
+                            // alert("anhr ot ".image);
 
-                            showRoomChat(userId, nameUser.textContent, adminId);
+                            showRoomChat(userId, nameUser.textContent, adminId,
+                                image);
 
                             // huy channel neu da co truoc do de tranh bij gui nham
                             if (currentChannel) {
@@ -194,12 +198,17 @@
                 let userName = user.full_name;
                 let userId = user.id;
                 let email = user.email;
-                let image = '';
-
+                console.log(user.image);
+                let image = "";
+                if (user.image == null) {
+                    image = "https://mdbcdn.b-cdn.net/img/Photos/new-templates/bootstrap-chat/ava1-bg.webp";
+                } else {
+                    image = `/storage/${user.image}`
+                }
                 html += `
                     <div class="d-flex justify-content-start mb-3 flex-row box-user">
-                        <img src="https://mdbcdn.b-cdn.net/img/Photos/new-templates/bootstrap-chat/ava1-bg.webp"
-                             alt="avatar 1" style="width: 45px; height: 100%;">
+                        <img src="${image}"
+                             alt="avatar 1" style="width: 45px; height:45px" class="rounded-circle">
                         <div class="d-flex flex-column ms-2 flex-shrink-0">
                             <h3 class="fs-6 name-user" data-id="${userId}">${userName}</h3>
                             <p class="my-1" style="font-size: 12px">${email}</p>
@@ -219,18 +228,19 @@
                 console.log(messages)
                 messages.forEach((message, index) => {
                     console.log(message)
+                    let img = message.user_sender.image
                     // doan nay phai nguoc laij voi ben nguoi dung
                     if (message.sender_id == userId) {
-                        showChatReceive(message.message);
+                        showChatReceive(message.message, img);
                     } else {
-                        showChatSend(message.message)
+                        showChatSend(message.message, img)
                     }
                 });
 
             })
         }
 
-        function showRoomChat(userId, userName) {
+        function showRoomChat(userId, userName, adminId, image) {
             let roomChat = document.getElementById("room-chat");
             let html = `
                          <div class="col-12" style="height: 85vh">
@@ -243,7 +253,7 @@
                                             <div class="d-flex align-items-center">
                                                 <div
                                                     class="position-relative w-50 d-flex align-items-center justify-content-start h-50">
-                                                    <img src="/template/images/admin.jpg" width="40px"
+                                                    <img src="${image}" width="40px" height="40px"
                                                          class="rounded-circle" alt="">
                                                     <div
                                                         class="d-flex h-100 flex-column justify-content-center align-items-center mx-2 pt-2">
@@ -286,18 +296,25 @@
             showMessageOfRoom(userId);
         }
 
-        function showChatReceive(message) { // hien thi message nhan
+        function showChatReceive(message, img) { // hien thi message nhan
             const showChat = document.getElementById("show-chat");
+            let imgReceive = "";
+            if (img == null) {
+                imgReceive = "https://mdbcdn.b-cdn.net/img/Photos/new-templates/bootstrap-chat/ava1-bg.webp";
+            } else {
+                imgReceive = `/storage/${img}`
+            }
             // Tạo div cha
             let messageContainer = document.createElement('div');
             messageContainer.classList.add('d-flex', 'flex-row', 'justify-content-start', 'mb-4');
 
             // Tạo phần tử img cho avatar
             let avatar = document.createElement('img');
-            avatar.setAttribute('src', 'https://mdbcdn.b-cdn.net/img/Photos/new-templates/bootstrap-chat/ava1-bg.webp');
+            avatar.setAttribute('src', imgReceive);
             avatar.setAttribute('alt', 'avatar 1');
+            avatar.classList = ["rounded-circle"]
             avatar.style.width = '45px';
-            avatar.style.height = '100%';
+            avatar.style.height = '45px';
 
             // Tạo phần tử div cho message
             let messageBox = document.createElement('div');
@@ -325,8 +342,13 @@
 
         }
 
-        function showChatSend(message) { // hien thi message gui
-            let imgSend = "https://mdbcdn.b-cdn.net/img/Photos/new-templates/bootstrap-chat/ava2-bg.webp";
+        function showChatSend(message, image) { // hien thi message gui
+            let imgSend = '';
+            if (image == null) {
+                imgSend = "https://mdbcdn.b-cdn.net/img/Photos/new-templates/bootstrap-chat/ava2-bg.webp";
+            } else {
+                imgSend = `/storage/${image}`
+            }
             const showChat = document.getElementById("show-chat");
             let messageContent = message;
             // Tạo các phần tử DOM
@@ -342,7 +364,8 @@
             avatar.src = imgSend;
             avatar.alt = "avatar 1";
             avatar.style.width = "45px";
-            avatar.style.height = "100%";
+            avatar.style.height = "45px";
+            avatar.classList = ['rounded-circle'];
             // Ghép nối các phần tử lại với nhau
             messageBox.appendChild(messageText);
             chatContainer.appendChild(messageBox);

@@ -246,8 +246,8 @@
                             // thay doi hien thị tổng tiền
                             let total = Number(inputVariant.dataset.price * inputEl.value)
                             console.log(total);
-                            totalPrice[index].innerHTML = new Intl.NumberFormat("vi-VN").format(total) +
-                                ' VND';
+                            totalPrice[index].innerHTML =
+                                `${new Intl.NumberFormat("vi-VN").format(total)} VND`;
                         } else {
                             alert("Khong duocj ")
                         }
@@ -343,7 +343,7 @@
 
                         // Ảnh sản phẩm
                         const imgLink = document.createElement('a');
-                        imgLink.href = 'product.html';
+                        imgLink.href = productRoute.replace(':id', item.product.id);
                         const img = document.createElement('img');
                         img.src = `/storage/${item.product.image}`;
                         img.alt = '';

@@ -76,7 +76,8 @@ class UserController extends Controller
     {
         $userId = $request->input("userId");
         //        dd($userId);
-        $users = User::whereNotIn('id', [$userId])->get();
+        $users = User::whereNotIn('id', [$userId])->get()->toArray();
+        // dd($users);
         return response()->json([
             "users" => $users,
             "userId" => $userId
@@ -104,7 +105,6 @@ class UserController extends Controller
                 'users' => $users
             ]);
         } catch (\Throwable $exception) {
-
         }
     }
 }
