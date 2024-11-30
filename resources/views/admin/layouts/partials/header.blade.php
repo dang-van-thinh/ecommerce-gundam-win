@@ -7,7 +7,7 @@
         background-color: gray;
     }
 
-    #delete-notification {
+    #delete-notification:hover {
         text-decoration-line: underline;
     }
 
@@ -59,8 +59,8 @@
                 </button>
                 <div class="dropdown-menu" aria-labelledby="notification" id="notifications"
                     style="max-height: 30rem;overflow: scroll; max-width: 30rem">
-                    <div class="flex justify-content-between px-5">
-                        <a href="" class="text-decoration-underline " id="delete-notification">Xóa</a>
+                    <div class="justify-content-between flex px-1">
+                        <p href="" class="" style="cursor: pointer" id="delete-notification">Xóa</p>
                     </div>
                     {{--                    <a class="dropdown-item media" href="#"> --}}
                     {{--                        <i class="fa fa-check"></i> --}}
@@ -251,7 +251,14 @@
                 })
 
                 document.getElementById('delete-notification').addEventListener("click", (e) => {
-                    e.preventDefault();
+                    window.axios.delete("/api/notification/delete").then((res) => {
+                        let parent = e.target.parentNode.parentNode;
+                        let notiNotRead = parent.querySelectorAll(".readed");
+
+                        notiNotRead.forEach(el => {
+                            parent.removeChild(el);
+                        })
+                    })
                 })
             })
         }
