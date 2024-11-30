@@ -103,10 +103,10 @@ function initializeCounter(counterId, totalId, addBtnId, removeBtnId) {
     const addBtn = document.querySelector(`#${addBtnId}`);
     const removeBtn = document.querySelector(`#${removeBtnId}`);
 
-    quantityPrevious.innerHTML = 0;
-    quantityCurrent.innerHTML = 1;
-    quantityNext.innerHTML = 2;
-    total.innerHTML = 35;
+    // quantityPrevious.innerHTML = 0;
+    // quantityCurrent.innerHTML = 1;
+    // quantityNext.innerHTML = 2;
+    // total.innerHTML = 35;
 
     addBtn.addEventListener("click", () => {
         total.innerHTML = parseInt(total.innerHTML) + 35;
@@ -169,6 +169,7 @@ document.querySelectorAll(".wishlist-icon").forEach(function (element) {
    =======================*/
 
 const footerButton = document.querySelectorAll(".footer-content h5");
+console.error(footerButton)
 const showNav = document.querySelector(".nav");
 for (var i = 0; i < footerButton.length; ++i) {
     footerButton[i].addEventListener('click', function () {
