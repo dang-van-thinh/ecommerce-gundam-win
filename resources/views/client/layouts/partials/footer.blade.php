@@ -24,24 +24,23 @@
                     <div class="footer-content">
                         <div>
                             <div class="footer-title d-md-block">
-                                <h5></h5>
+                                <h5>Danh mục</h5>
                                 <ul class="footer-details accordion-hidden">
-                                    <li> <a class="nav" href="{{ route('home') }}">Trang chủ</a></li>
-                                    <li> <a class="nav" href="{{ route('collection-product') }}">Sản phẩm</a></li>
-                                    <li> <a class="nav" href="">Về chúng tôi</a></li>
-                                    <li> <a class="nav" href="{{ route('collection-blog') }}">Bài viết</a></li>
-                                    <li> <a class="nav" href="{{ route('contact') }}">Liên hệ</a></li>
+                                    <li><a class="nav" href="{{ route('home') }}">Trang chủ</a></li>
+                                    <li><a class="nav" href="{{ route('collection-product') }}">Sản phẩm</a></li>
+                                    <li><a class="nav" href="">Về chúng tôi</a></li>
+                                    <li><a class="nav" href="{{ route('collection-blog') }}">Bài viết</a></li>
+                                    <li><a class="nav" href="{{ route('contact') }}">Liên hệ</a></li>
                                 </ul>
                             </div>
                         </div>
                     </div>
-
                 </div>
                 <div class="col-xl-3 col-lg-3 col-md-4 col-sm-6">
                     <div class="footer-content">
                         <div>
                             <div class="footer-title d-md-block">
-                                <h5></h5>
+                                <h5>Chính sách</h5>
                                 <ul class="footer-details accordion-hidden">
                                     <li> <a class="nav" href="{{ route('policies.privacy') }}">Chính sách bảo mật</a>
                                     </li>
@@ -55,7 +54,6 @@
                             </div>
                         </div>
                     </div>
-
                 </div>
                 <div class="col-xl-4 col-lg-3 col-md-6">
                     <div class="footer-content">
@@ -91,4 +89,25 @@
             </div>
         </div>
     </div>
+    @push('scripts')
+        <script>
+            // Lấy tất cả các tiêu đề h5
+            const footerTitles = document.querySelectorAll(".footer-title h5");
+
+            // Lặp qua tất cả các tiêu đề và thêm sự kiện click
+            footerTitles.forEach(function(title) {
+                title.addEventListener('click', function() {
+                    // Tìm <ul> kế tiếp của mỗi tiêu đề (h5)
+                    const ul = this.nextElementSibling; // <ul> sẽ là phần tử kế tiếp của <h5>
+
+                    // Kiểm tra nếu <ul> có class 'footer-deta' hoặc 'footer-details'
+                    if (ul && (ul.classList.contains("footer-deta") || ul.classList.contains(
+                            "footer-details"))) {
+                        // Toggle lớp 'accordion-hidden' để ẩn/hiện
+                        ul.classList.toggle("accordion-hidden");
+                    }
+                });
+            });
+        </script>
+    @endpush
 </footer>

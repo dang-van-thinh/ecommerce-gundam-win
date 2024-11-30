@@ -1,5 +1,4 @@
-<div class="left-dashboard-show"><button class="btn btn_black sm bg-primary rounded">Show
-        Menu</button></div>
+<div class="left-dashboard-show"><button class="btn btn_black sm bg-primary rounded">Hiện Tùy Chọn</button></div>
 <div class="dashboard-left-sidebar sticky">
     <div class="profile-box">
         <div class="profile-bg-img"></div>
@@ -7,7 +6,8 @@
         <div class="profile-contain">
             @if (Auth::user()->image)
                 <div class="profile-image">
-                    <img class="img-fluid" style="width: 100px;height: 100px; object-fit: cover; " src="{{ '/storage/' . Auth::user()->image }}" alt="">
+                    <img class="img-fluid" style="width: 100px;height: 100px; object-fit: cover; "
+                        src="{{ '/storage/' . Auth::user()->image }}" alt="">
                 </div>
             @else
                 <div class="profile-image">
