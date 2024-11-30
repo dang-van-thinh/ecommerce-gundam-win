@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use Auth;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
@@ -39,6 +40,6 @@ class Product extends Model
     }
     public function favorites()
     {
-        return $this->belongsToMany(User::class, 'favorites', 'product_id', 'user_id');
+        return $this->belongsToMany(User::class, 'favorites', 'product_id', 'user_id')->where('user_id', Auth::id());;
     }
 }
