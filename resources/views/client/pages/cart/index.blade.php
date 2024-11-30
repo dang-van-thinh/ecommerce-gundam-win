@@ -164,6 +164,7 @@
 
 @push('scripts')
     <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
     <script>
         @php
             $productJson = json_encode($productResponse);
@@ -189,7 +190,17 @@
                         @endphp,
                         "cartId": cart,
                     }
-                    deleteProductCart(data);
+                    Swal.fire({
+                        title: "Bạn có muốn xóa sản phẩm này ra khỏi giỏ hàng ?",
+                        icon: "warning",
+                        confirmButtonText: "Đồng ý",
+                        showCancelButton: true,
+                        cancelButtonText: "Hủy"
+                    }).then((result) => {
+                        if (result.isConfirmed) {
+                            deleteProductCart(data);
+                        }
+                    });
                 });
             }
 

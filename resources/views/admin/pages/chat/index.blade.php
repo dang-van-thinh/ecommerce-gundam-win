@@ -154,13 +154,14 @@
                                 .listen("ChatMessage", function(data) {
                                     // console.log("sadjkajs")
                                     const message = data.message;
-                                    console.log({
-                                        message
-                                    });
+                                    const user = data.message.user_sender;
+                                    console.log(user, message);
                                     if (message.sender_id == adminId) {
-                                        showChatSend(message.message)
+                                        showChatSend(message.message, user
+                                            .image)
                                     } else {
-                                        showChatReceive(message.message)
+                                        showChatReceive(message.message, user
+                                            .image)
                                     }
                                 });
 
