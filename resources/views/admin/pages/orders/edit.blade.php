@@ -54,8 +54,8 @@
                                             <td>
                                                 <div class="row">
                                                     <div class="col-4">
-                                                        <a href="product.html">
-                                                            <img src="{{ '/Storage/' . $item->productVariant->product->image }}"
+                                                        <a href="">
+                                                            <img src="{{ '/storage/' . $item->productVariant->product->image }}"
                                                                 alt="Ảnh sản phẩm">
                                                         </a>
                                                     </div>
@@ -69,16 +69,16 @@
                                                     </div>
                                                 </div>
                                             </td>
-                                            <td>{{ number_format($item->product_price) }}đ</td>
+                                            <td>{{ number_format($item->product_price) }}VND</td>
                                             <td>{{ $item->quantity }}</td>
-                                            <td>{{ number_format($item->total_price) }}đ</td>
+                                            <td>{{ number_format($item->total_price) }}VND</td>
                                         </tr>
                                     @endforeach
                                     <tr>
                                         <td> </td>
                                         <td></td>
                                         <td class="total fw-bold">Tổng: </td>
-                                        <td class="total fw-bold ">{{ number_format($order->total_amount) }}đ</td>
+                                        <td class="total fw-bold ">{{ number_format($order->total_amount) }}VND</td>
                                     </tr>
                                 </tbody>
                             </table>
