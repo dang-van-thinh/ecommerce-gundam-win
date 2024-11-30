@@ -16,7 +16,7 @@ class ChatController extends Controller
     public function send(Request $request)
     {
         $dataMessage = [
-//            "sender_id" => Auth::id(),
+            //            "sender_id" => Auth::id(),
             "sender_id" => $request->input("sender_id"),
             "message" => $request->input('message'),
             "receiver_id" => $request->input('receiver_id'),
@@ -33,8 +33,8 @@ class ChatController extends Controller
     public function allChatOfMe(Request $request)
     {
         $userId = $request->query("userId");
-        $messages = Message::query()->where("receiver_id", $userId)->orWhere("sender_id", $userId)->get()->toArray();
-//        dd($messageReceiver->toArray(), $userId);
+        $messages = Message::with("userSender")->where("receiver_id", $userId)->orWhere("sender_id", $userId)->get()->toArray();
+        //        dd($messageReceiver->toArray(), $userId);
         return response()->json([
             "messages" => $messages,
         ]);
@@ -63,8 +63,5 @@ class ChatController extends Controller
     }
 
     // id cua user nao nhan tin
-    public function messageOfRoom($id)
-    {
-
-    }
+    public function messageOfRoom($id) {}
 }

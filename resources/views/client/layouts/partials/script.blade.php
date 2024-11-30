@@ -12,3 +12,4 @@
 <script src="/template/client/assets/js/toastify.js"></script>
 <script src="/template/client/assets/js/theme-setting.js"></script><!-- Theme js-->
 <script src="/template/client/assets/js/script.js"></script>
+<script src="/template/client/assets/js/dashboard-left-sidebar.js"></script>
