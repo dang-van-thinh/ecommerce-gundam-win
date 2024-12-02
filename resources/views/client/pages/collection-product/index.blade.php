@@ -11,284 +11,280 @@
         ],
     ])
     <section class="section-b-space pt-0">
-        <div class="custom-container container">
-            <div class="row">
-                <div class="col-3">
-                    <div class="custom-accordion theme-scrollbar left-box">
-                        <div class="left-accordion">
-                            <h5>Back </h5><i class="back-button fa-solid fa-xmark"></i>
-                        </div>
-                        <div class="accordion" id="accordionPanelsStayOpenExample">
-                            <div class="accordion-item">
-                                <!-- Danh mục -->
-                                <h2 class="accordion-header">
-                                    <button class="accordion-button" data-bs-toggle="collapse"
-                                        data-bs-target="#panelsStayOpen-collapseTwo">
-                                        <span>Danh mục</span>
-                                    </button>
-                                </h2>
-                                <div class="accordion-collapse show collapse" id="panelsStayOpen-collapseTwo">
-                                    <div class="accordion-body">
-                                        <ul class="catagories-side theme-scrollbar">
-                                            @foreach ($categories as $category)
-                                                <li>
-                                                    <input class="custom-checkbox" id="category{{ $category->id }}"
-                                                        type="checkbox" name="categories[]" value="{{ $category->id }}">
-                                                    <label for="category{{ $category->id }}">{{ $category->name }}
-                                                        ({{ $category->products_count }})
-                                                    </label>
-                                                </li>
-                                            @endforeach
-                                        </ul>
-                                    </div>
-                                </div>
-
-                                <!-- Thuộc tính -->
-                                <h2 class="accordion-header">
-                                    <button class="accordion-button" data-bs-toggle="collapse"
-                                        data-bs-target="#panelsStayOpen-collapseOne">
-                                        <span>Thuộc tính</span>
-                                    </button>
-                                </h2>
-                                <div class="accordion-collapse show collapse" id="panelsStayOpen-collapseOne">
-                                    <div class="accordion-body">
-                                        <ul class="catagories-side theme-scrollbar">
-                                            @foreach ($attributes as $attribute)
-                                                <!-- Hiển thị tên thuộc tính -->
-                                                <h6 style="margin-left: 10px">{{ ucfirst($attribute->name) }}</h6>
-                                                <!-- Lặp qua các giá trị của thuộc tính -->
-                                                @foreach ($attribute->attributeValues as $attributeValue)
+        <form action="{{ route('product.filter') }}" method="GET">
+            <div class="custom-container container">
+                <div class="row">
+                    <div class="col-3">
+                        {{-- @dd($condited) --}}
+                        <div class="custom-accordion theme-scrollbar left-box">
+                            <div class="left-accordion">
+                                <h5>Back </h5><i class="back-button fa-solid fa-xmark"></i>
+                            </div>
+                            <div class="accordion" id="accordionPanelsStayOpenExample">
+                                <div class="accordion-item">
+                                    <!-- Danh mục -->
+                                    <h2 class="accordion-header">
+                                        <button class="accordion-button" data-bs-toggle="collapse"
+                                            data-bs-target="#panelsStayOpen-collapseTwo">
+                                            <span>Danh mục</span>
+                                        </button>
+                                    </h2>
+                                    <div class="accordion-collapse show collapse" id="panelsStayOpen-collapseTwo">
+                                        <div class="accordion-body">
+                                            <ul class="catagories-side theme-scrollbar">
+                                                @foreach ($categories as $category)
                                                     <li>
-                                                        <input class="custom-checkbox"
-                                                            id="attribute{{ $attributeValue->id }}" type="checkbox"
-                                                            name="attributes[]" value="{{ $attributeValue->id }}">
-                                                        <label
-                                                            for="attribute{{ $attributeValue->id }}">{{ $attributeValue->name }}</label>
+                                                        <input class="custom-checkbox" id="category{{ $category->id }}"
+                                                            type="checkbox" name="categories[]" value="{{ $category->id }}"
+                                                            {{ in_array($category->id, $condited['categories'] ?? []) ? 'checked' : '' }}>
+                                                        <label for="category{{ $category->id }}">{{ $category->name }}
+                                                            ({{ $category->products_count }})
+                                                        </label>
                                                     </li>
                                                 @endforeach
-                                            @endforeach
-                                        </ul>
-                                    </div>
-                                </div>
-                                <!-- Lọc giá -->
-                                <h2 class="accordion-header">
-                                    <button class="accordion-button" data-bs-toggle="collapse"
-                                        data-bs-target="#panelsStayOpen-collapseFour">
-                                        <span>Giá</span>
-                                    </button>
-                                </h2>
-                                <div class="accordion-collapse show collapse" id="panelsStayOpen-collapseFour">
-                                    <div class="accordion-body">
-                                        <div class="range-slider">
-                                            <input class="range-slider-input" type="range" min="{{ $minPrice }}"
-                                                max="{{ $maxPrice }}" step="1" value="{{ $minPrice }}"
-                                                id="minRange" oninput="updateMinPriceDisplay()">
-                                            <input class="range-slider-input" type="range" min="{{ $minPrice }}"
-                                                max="{{ $maxPrice }}" step="1" value="{{ $maxPrice }}"
-                                                id="maxRange" oninput="updateMaxPriceDisplay()">
-                                        </div>
-                                        <div class="range-slider-display">
-                                            <span>Giá: <span
-                                                    id="minPriceDisplay">{{ number_format($minPrice, 0, ',', '.') }}</span>
-                                                VND</span> -
-                                            <span><span
-                                                    id="maxPriceDisplay">{{ number_format($maxPrice, 0, ',', '.') }}</span>
-                                                VND</span>
+                                            </ul>
                                         </div>
                                     </div>
-                                </div>
 
-                                <!-- Tình trạng -->
-                                <h2 class="accordion-header">
-                                    <button class="accordion-button" data-bs-toggle="collapse"
-                                        data-bs-target="#panelsStayOpen-collapseSix">
-                                        <span>Tình trạng</span>
-                                    </button>
-                                </h2>
-                                <div class="accordion-collapse show collapse" id="panelsStayOpen-collapseSix">
-                                    <div class="accordion-body">
-                                        <ul class="categories-side d-flex">
-                                            <li class="me-3">
-                                                <input class="custom-radio" id="all" type="radio"
-                                                    name="stock_status" value="all" checked>
-                                                <label for="all">Tất cả</label>
-                                            </li>
-                                            <li class="me-3">
-                                                <input class="custom-radio" id="in_stock" type="radio"
-                                                    name="stock_status" value="in_stock">
-                                                <label for="in_stock">Còn hàng</label>
-                                            </li>
-                                            <li>
-                                                <input class="custom-radio" id="out_of_stock" type="radio"
-                                                    name="stock_status" value="out_of_stock">
-                                                <label for="out_of_stock">Hết hàng</label>
-                                            </li>
-                                        </ul>
+                                    <!-- Thuộc tính -->
+                                    <h2 class="accordion-header">
+                                        <button class="accordion-button" data-bs-toggle="collapse"
+                                            data-bs-target="#panelsStayOpen-collapseOne">
+                                            <span>Thuộc tính</span>
+                                        </button>
+                                    </h2>
+                                    <div class="accordion-collapse show collapse" id="panelsStayOpen-collapseOne">
+                                        <div class="accordion-body">
+                                            <ul class="catagories-side theme-scrollbar">
+                                                @foreach ($attributes as $attribute)
+                                                    <!-- Hiển thị tên thuộc tính -->
+                                                    <h6 style="margin-left: 10px">{{ ucfirst($attribute->name) }}</h6>
+                                                    <!-- Lặp qua các giá trị của thuộc tính -->
+                                                    @foreach ($attribute->attributeValues as $attributeValue)
+                                                        <li>
+                                                            <input class="custom-checkbox"
+                                                                id="attribute{{ $attributeValue->id }}" type="checkbox"
+                                                                {{ in_array($attributeValue->id, $condited['attributes'] ?? []) ? 'checked' : '' }}
+                                                                name="attributes[]" value="{{ $attributeValue->id }}">
+                                                            <label
+                                                                for="attribute{{ $attributeValue->id }}">{{ $attributeValue->name }}</label>
+                                                        </li>
+                                                    @endforeach
+                                                @endforeach
+                                            </ul>
+                                        </div>
                                     </div>
+                                    <!-- Lọc giá -->
+                                    <h2 class="accordion-header">
+                                        <button class="accordion-button" data-bs-toggle="collapse"
+                                            data-bs-target="#panelsStayOpen-collapseFour">
+                                            <span>Giá</span>
+                                        </button>
+                                    </h2>
+                                    <div class="accordion-collapse show collapse" id="panelsStayOpen-collapseFour">
+                                        <div class="accordion-body">
+                                            <div class="range-slider">
+                                                <input class="range-slider-input" name="minPrice" type="range"
+                                                    min="{{ $minPrice }}" max="{{ $maxPrice }}" step="1"
+                                                    value="{{ $condited['minPrice'] ?? $minPrice }}" id="minRange"
+                                                    oninput="updateMinPriceDisplay()">
+                                                <input class="range-slider-input" name="maxPrice" type="range"
+                                                    min="{{ $minPrice }}" max="{{ $maxPrice }}" step="1"
+                                                    value="{{ $condited['maxPrice'] ?? $maxPrice }}" id="maxRange"
+                                                    oninput="updateMaxPriceDisplay()">
+                                            </div>
+                                            <div class="range-slider-display">
+                                                <span>Giá: <span
+                                                        id="minPriceDisplay">{{ number_format($condited['minPrice'] ?? $minPrice, 0, ',', '.') }}</span>
+                                                    VND</span> -
+                                                <span><span
+                                                        id="maxPriceDisplay">{{ number_format($condited['maxPrice'] ?? $maxPrice, 0, ',', '.') }}</span>
+                                                    VND</span>
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    <!-- Tình trạng -->
+                                    <h2 class="accordion-header">
+                                        <button class="accordion-button" data-bs-toggle="collapse"
+                                            data-bs-target="#panelsStayOpen-collapseSix">
+                                            <span>Tình trạng</span>
+                                        </button>
+                                    </h2>
+                                    <div class="accordion-collapse show collapse" id="panelsStayOpen-collapseSix">
+                                        <div class="accordion-body">
+                                            <ul class="categories-side d-flex">
+                                                <li class="me-3">
+                                                    <input class="custom-radio" id="all" type="radio"
+                                                        name="stockStatus" value="all"
+                                                        {{ ($condited['stockStatus'] ?? 'all') === 'all' ? 'checked' : '' }}>
+                                                    <label for="all">Tất cả</label>
+                                                </li>
+                                                <li class="me-3">
+                                                    <input class="custom-radio" id="in_stock" type="radio"
+                                                        name="stockStatus" value="in_stock"
+                                                        {{ ($condited['stockStatus'] ?? 'all') === 'in_stock' ? 'checked' : '' }}>
+                                                    <label for="in_stock">Còn hàng</label>
+                                                </li>
+                                                <li>
+                                                    <input class="custom-radio" id="out_of_stock" type="radio"
+                                                        name="stockStatus" value="out_of_stock"
+                                                        {{ ($condited['stockStatus'] ?? 'all') === 'out_of_stock' ? 'checked' : '' }}>
+                                                    <label for="out_of_stock">Hết hàng</label>
+                                                </li>
+                                            </ul>
+                                        </div>
+                                    </div>
+
                                 </div>
 
-                            </div>
+                                <div class="accordion-footer mt-2">
+                                    <button style="background-color: #c28f51; border:none" type="submit"
+                                        class="btn btn-secondary">Lọc</button>
+                                    <button style="background-color: #c28f51; border:none" id="reset" type="button"
+                                        class="btn btn-secondary">Đặt lại</button>
+                                </div>
 
-                            <div class="accordion-footer">
-                                <button style="background-color: #c28f51; border:none" type="button"
-                                    class="btn btn-secondary" onclick="handleSubmit()">Lọc</button>
-                            </div>
-
-                            <div class="accordion-item">
-                                <h2 class="accordion-header tags-header"><button class="accordion-button"><span>Vận chuyển
-                                            &
-                                            Giao hàng</span><span></span></button></h2>
-                                <div class="accordion-collapse show collapse" id="panelsStayOpen-collapseSeven">
-                                    <div class="accordion-body">
-                                        <ul class="widget-card">
-                                            <li><i class="iconsax" data-icon="truck-fast"></i>
-                                                <div>
-                                                    <h6>Vận chuyển miễn phí</h6>
-                                                    <p>Miễn phí vận chuyển cho tất cả các đơn hàng tại Việt nam</p>
-                                                </div>
-                                            </li>
-                                            <li><i class="iconsax" data-icon="headphones"></i>
-                                                <div>
-                                                    <h6>Hỗ trợ 24/7</h6>
-                                                    <p>Miễn phí vận chuyển cho tất cả các đơn hàng tại Việt nam</p>
-                                                </div>
-                                            </li>
-                                            <li><i class="iconsax" data-icon="exchange"></i>
-                                                <div>
-                                                    <h6>Đổi hàng trong 30 ngày</h6>
-                                                    <p>Miễn phí vận chuyển cho tất cả các đơn hàng tại Việt nam</p>
-                                                </div>
-                                            </li>
-                                        </ul>
+                                <div class="accordion-item">
+                                    <h2 class="accordion-header tags-header"><button class="accordion-button"><span>Vận
+                                                chuyển
+                                                &
+                                                Giao hàng</span><span></span></button></h2>
+                                    <div class="accordion-collapse show collapse" id="panelsStayOpen-collapseSeven">
+                                        <div class="accordion-body">
+                                            <ul class="widget-card">
+                                                <li><i class="iconsax" data-icon="truck-fast"></i>
+                                                    <div>
+                                                        <h6>Vận chuyển miễn phí</h6>
+                                                        <p>Miễn phí vận chuyển cho tất cả các đơn hàng tại Việt nam</p>
+                                                    </div>
+                                                </li>
+                                                <li><i class="iconsax" data-icon="headphones"></i>
+                                                    <div>
+                                                        <h6>Hỗ trợ 24/7</h6>
+                                                        <p>Miễn phí vận chuyển cho tất cả các đơn hàng tại Việt nam</p>
+                                                    </div>
+                                                </li>
+                                                <li><i class="iconsax" data-icon="exchange"></i>
+                                                    <div>
+                                                        <h6>Đổi hàng trong 30 ngày</h6>
+                                                        <p>Miễn phí vận chuyển cho tất cả các đơn hàng tại Việt nam</p>
+                                                    </div>
+                                                </li>
+                                            </ul>
+                                        </div>
                                     </div>
                                 </div>
                             </div>
                         </div>
                     </div>
-                </div>
-                <div class="col-xl-9">
-                    <div class="sticky">
-                        <div style="padding-left: 800px" class="top-filter-menu">
-                            <div>
-                                <a class="filter-button btn">
-                                    <h6> <i class="iconsax" data-icon="filter"></i>Filter Menu </h6>
-                                </a>
-                                <div class="category-dropdown">
-                                    <label for="cars">Sắp xếp :</label>
-                                    <select class="form-select" id="cars" name="sort">
-                                        <option value="name_asc">Sắp xếp A-Z</option>
-                                        <option value="name_desc">Sắp xếp Z-A</option>
-                                        <option value="created_at_desc">Mới nhất</option>
-                                        <option value="created_at_asc">Cũ nhất</option>
-                                        <option value="best_selling">Bán chạy nhất</option>
-                                        <option value="least_selling">Bán ít nhất</option>
-                                        <option value="price_asc">Giá từ thấp đến cao</option>
-                                        <option value="price_desc">Giá từ cao đến thấp</option>
-                                        <option value="rating_desc">Đánh giá từ cao đến thấp</option>
-                                        <option value="rating_asc">Đánh giá từ thấp đến cao</option>
+                    <div class="col-xl-9">
+                        <div class="sticky">
+                            <div style="padding-left: 800px" class="top-filter-menu">
+                                <div>
+                                    <a class="filter-button btn">
+                                        <h6> <i class="iconsax" data-icon="filter"></i>Filter Menu </h6>
+                                    </a>
+                                    <div class="category-dropdown">
+                                        <label for="cars">Sắp xếp :</label>
+                                        <select class="form-select" id="cars" name="sort">
+                                            <option value="name-asc"
+                                                {{ ($condited['sort'] ?? 'name-asc') === 'name-asc' ? 'selected' : '' }}>
+                                                Sắp xếp A-Z</option>
+                                            <option value="name-desc"
+                                                {{ ($condited['sort'] ?? '') === 'name-desc' ? 'selected' : '' }}>Sắp xếp
+                                                Z-A</option>
+                                            <option value="created-at-desc"
+                                                {{ ($condited['sort'] ?? '') === 'created-at-desc' ? 'selected' : '' }}>Mới
+                                                nhất</option>
+                                            <option value="created-at-asc"
+                                                {{ ($condited['sort'] ?? '') === 'created-at-asc' ? 'selected' : '' }}>Cũ
+                                                nhất</option>
+                                            <option value="best-selling"
+                                                {{ ($condited['sort'] ?? '') === 'best-selling' ? 'selected' : '' }}>Bán
+                                                chạy nhất</option>
+                                            <option value="least-selling"
+                                                {{ ($condited['sort'] ?? '') === 'least-selling' ? 'selected' : '' }}>Bán
+                                                ít nhất</option>
+                                            <option value="price-asc"
+                                                {{ ($condited['sort'] ?? '') === 'price-asc' ? 'selected' : '' }}>Giá từ
+                                                thấp đến cao</option>
+                                            <option value="price-desc"
+                                                {{ ($condited['sort'] ?? '') === 'price-desc' ? 'selected' : '' }}>Giá từ
+                                                cao đến thấp</option>
+                                            <option value="rating-desc"
+                                                {{ ($condited['sort'] ?? '') === 'rating-desc' ? 'selected' : '' }}>Đánh
+                                                giá từ cao đến thấp</option>
+                                            <option value="rating-asc"
+                                                {{ ($condited['sort'] ?? '') === 'rating-asc' ? 'selected' : '' }}>Đánh giá
+                                                từ thấp đến cao</option>
+                                        </select>
 
-                                    </select>
+                                    </div>
                                 </div>
                             </div>
-                        </div>
 
-                        <div id="notification" style="display: none; color: green; margin-bottom: 15px;"></div>
-                        <div id="productList">
-                            @include('client.pages.collection-product.list')
-                        </div>
-                        <div class="pagination-wrap">
-                            <ul class="pagination">
-                                @if ($products->onFirstPage())
-                                    <li><span class="prev disabled"><i data-icon="chevron-left"></i></span></li>
-                                @else
-                                    <li><a class="prev" href="{{ $products->previousPageUrl() }}"><i class="iconsax"
-                                                data-icon="chevron-left"></i></a></li>
+                            <div id="notification" class="badge badge-success fs-6"
+                                style=" color: green; margin-bottom: 15px;">
+                                @if (isset($message))
+                                    {{ $message }}
                                 @endif
+                            </div>
+                            <div id="productList">
+                                @include('client.pages.collection-product.list')
+                            </div>
+                            <!--Pani nay thi su dung theo cai tra ra du lieu nhe-->
+                            <div class="pagination-wrap">
+                                {{-- {{ $products->links() }} --}}
+                                <ul class="pagination">
+                                    @if ($products->onFirstPage())
+                                        <li><span class="prev disabled"><i data-icon="chevron-left"></i></span></li>
+                                    @else
+                                        <li><a class="prev" href="{{ $products->previousPageUrl() }}"><i
+                                                    class="iconsax" data-icon="chevron-left"></i></a></li>
+                                    @endif
 
-                                @foreach ($products->getUrlRange(1, $products->lastPage()) as $page => $url)
-                                    <li class="{{ $products->currentPage() == $page ? 'active' : '' }}">
-                                        <a href="{{ $url }}">{{ $page }}</a>
-                                    </li>
-                                @endforeach
+                                    @foreach ($products->getUrlRange(1, $products->lastPage()) as $page => $url)
+                                        <li class="{{ $products->currentPage() == $page ? 'active' : '' }}">
+                                            <a href="{{ $url }}">{{ $page }}</a>
+                                        </li>
+                                    @endforeach
 
-                                @if ($products->hasMorePages())
-                                    <li><a class="next" href="{{ $products->nextPageUrl() }}"><i class="iconsax"
-                                                data-icon="chevron-right"></i></a></li>
-                                @else
-                                    <li><span class="next disabled"><i data-icon="chevron-right"></i></span></li>
-                                @endif
-                            </ul>
+                                    @if ($products->hasMorePages())
+                                        <li><a class="next" href="{{ $products->nextPageUrl() }}"><i class="iconsax"
+                                                    data-icon="chevron-right"></i></a></li>
+                                    @else
+                                        <li><span class="next disabled"><i data-icon="chevron-right"></i></span></li>
+                                    @endif
+                                </ul>
+                            </div>
                         </div>
-
-
-                        <!--Pani nay thi su dung theo cai tra ra du lieu nhe-->
-
                     </div>
                 </div>
-            </div>
+        </form>
+
         </div>
     </section>
 
     <script>
-        const productRoute = '{{ url('product') }}'; // Định nghĩa route cơ bản cho sản phẩm
+        document.addEventListener("DOMContentLoaded", function() {
+            //dat lai cac gia tri
+            document.getElementById("reset").addEventListener("click", function(e) {
+                // alert("okee");
+                let minPrice = document.querySelector("input[name='minPrice']");
+                let maxPrice = document.querySelector("input[name='maxPrice']");
+                // Lấy tất cả các checkbox có name="categories[]"
+                const checkboxes = document.querySelectorAll("input[name='categories[]']");
 
-        // Hàm xử lý gửi yêu cầu lọc sản phẩm
-        function handleSubmit() {
-            const selectedCategories = Array.from(document.querySelectorAll('input[name="categories[]"]:checked'))
-                .map(el => el.value);
-            const selectedAttributes = Array.from(document.querySelectorAll('input[name="attributes[]"]:checked'))
-                .map(el => el.value);
-            const minPrice = document.getElementById('minRange').value;
-            const maxPrice = document.getElementById('maxRange').value;
-            const sort = document.getElementById('cars').value;
-            const stockStatus = document.querySelector('input[name="stock_status"]:checked')?.value;
-
-            const notificationContainer = document.querySelector('#notification');
-            notificationContainer.style.display = 'none';
-
-            fetch('{{ route('product.filter') }}', {
-                    method: 'POST',
-                    headers: {
-                        'Content-Type': 'application/json',
-                        'X-CSRF-TOKEN': '{{ csrf_token() }}'
-                    },
-                    body: JSON.stringify({
-                        categories: selectedCategories,
-                        attributes: selectedAttributes,
-                        minPrice: minPrice,
-                        maxPrice: maxPrice,
-                        stock_status: stockStatus,
-                        sort: sort,
-                    })
-                })
-                .then(response => {
-                    if (!response.ok) {
-                        return response.json().then(error => {
-                            throw new Error(error.message || 'Lỗi không xác định');
-                        });
-                    }
-                    return response.json();
-                })
-                .then(data => {
-                    document.querySelector('#productList').innerHTML = data.html;
-
-                    if (data.count > 0) {
-                        notificationContainer.innerText = `Tìm thấy ${data.count} sản phẩm phù hợp.`;
-                        notificationContainer.style.display = 'block';
-                    } else {
-                        notificationContainer.innerText = data.message;
-                        notificationContainer.style.display = 'block';
-                    }
-
-                    // Khởi tạo lại sự kiện sắp xếp sau khi danh sách sản phẩm được cập nhật
-                    initSortEvent();
-                })
-                .catch(error => {
-                    document.querySelector('#productList').innerHTML =
-                        `<p>Đã xảy ra lỗi: ${error.message}</p>`;
+                // Đặt trạng thái tất cả checkbox về không được chọn
+                checkboxes.forEach(function(checkbox) {
+                    checkbox.checked = false;
                 });
-        }
 
+                minPrice.value = minPrice.getAttribute("min");
+                maxPrice.value = maxPrice.getAttribute("max");
+            })
+        })
         // Hàm khởi tạo sự kiện cho dropdown sắp xếp
         function initSortEvent() {
             const sortSelect = document.getElementById('cars');
@@ -315,6 +311,8 @@
             initSortEvent();
             document.getElementById('minRange').addEventListener('input', updateMinPriceDisplay);
             document.getElementById('maxRange').addEventListener('input', updateMaxPriceDisplay);
+
+
         });
     </script>
 @endsection

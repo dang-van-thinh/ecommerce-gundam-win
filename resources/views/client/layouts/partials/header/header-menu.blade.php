@@ -74,7 +74,7 @@
                                     @foreach ($categoryProduct as $cate)
                                         <li>
                                             <a
-                                                href="{{ route('collection-product', ['id' => $cate->id]) }}">{{ $cate->name }}</a>
+                                                href="{{ route('collection-product', ['category' => $cate->id]) }}">{{ $cate->name }}</a>
                                         </li>
                                     @endforeach
                                 @endisset
