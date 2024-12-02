@@ -8,12 +8,15 @@ use App\Models\Attribute;
 use App\Models\CategoryProduct;
 use App\Models\Product;
 use App\Models\ProductVariant;
+use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 
 class CollectionProductController extends Controller
 {
-    public function index($id = null)
+    public function index(Request $request)
     {
+        $idCategory = $request->query("category");
+
         // $products = Product::with(['productImages', 'categoryProduct', 'productVariants', 'favorites'])
         //     ->latest('id')
         //     ->paginate(20);
@@ -33,8 +36,8 @@ class CollectionProductController extends Controller
             )
             ->groupBy('products.id');
 
-        if ($id != null) {
-            $products = $products->where('cp.id', '=', $id);
+        if ($idCategory != null) {
+            $products = $products->where('cp.id', '=', $idCategory);
         }
 
         // $products = $products->where('status', 'ACTIVE')->latest('products.id')->paginate(
@@ -43,9 +46,6 @@ class CollectionProductController extends Controller
         //     ->groupBy('products.id');
 
         // Lọc theo danh mục nếu có
-        if ($id !== null) {
-            $products->where('cp.id', '=', $id);
-        }
         // Sắp xếp mặc định theo ID mới nhất
         $products = $products->latest('products.id')->where('status', 'ACTIVE')->paginate(20);
 
@@ -54,19 +54,20 @@ class CollectionProductController extends Controller
         $minPrice = ProductVariant::min('price') ?? 0;
         $maxPrice = ProductVariant::max('price') ?? 0;
         $attributes = Attribute::with('attributeValues')->get();
-
+        $condited['categories'][] = $idCategory;
         // Trả về view
-        return view('client.pages.collection-product.index', compact('products', 'categories', 'minPrice', 'maxPrice', 'attributes'));
+        return view('client.pages.collection-product.index', compact('products', 'categories', 'minPrice', 'maxPrice', 'attributes', 'condited'));
     }
 
-    public function filter(FilterProductRequest $request)
+    public function filter(Request $request)
     {
-        $categories = $request->input('categories');
-        $attributes = $request->input('attributes');
-        $minPrice = $request->input('minPrice');
-        $maxPrice = $request->input('maxPrice');
-        $sort = $request->input('sort');
-        $stockStatus = $request->input('stock_status');
+        // dd($request->all());
+        $categories = $request->query('categories');
+        $attributes = $request->query('attributes');
+        $minPrice = $request->query('minPrice');
+        $maxPrice = $request->query('maxPrice');
+        $sort = $request->query('sort');
+        $stockStatus = $request->query('stockStatus');
 
         // Khởi tạo query cơ bản
         $query = Product::query()
@@ -101,7 +102,7 @@ class CollectionProductController extends Controller
         }
 
         // Lọc theo trạng thái tồn kho
-        if ($stockStatus === 'in_stock') {
+        if ($stockStatus === 'inStock') {
             $query->having('total_stock', '>', 0);
         } elseif ($stockStatus === 'out_of_stock') {
             $query->having('total_stock', '=', 0);
@@ -111,24 +112,40 @@ class CollectionProductController extends Controller
         $query = $this->applySorting($query, $sort);
 
         // Lấy danh sách sản phẩm
-        $products = $query->paginate(12);
+        $products = $query->paginate(12)->withQueryString();
 
         // Render HTML danh sách sản phẩm
         $view = view('client.pages.collection-product.list', compact('products'))->render();
+
         $count = $products->total();
 
-        // Trả về JSON
-        return response()->json([
-            'html' => $view,
-            'count' => $count,
-            'message' => $count > 0 ? '' : 'Không có sản phẩm nào phù hợp với tiêu chí lọc.',
+        // Dữ liệu danh mục, giá, và thuộc tính de hien thi
+        $categoriesData = CategoryProduct::withCount('products')->get();
+        $minPriceData = ProductVariant::min('price') ?? 0;
+        $maxPriceData = ProductVariant::max('price') ?? 0;
+        $attributesData = Attribute::with('attributeValues')->get();
+
+        // tieu chi loc cũ
+        $condited = $request->all();
+
+        // message
+        $message =  $count > 0 ? 'Tìm thấy ' . $count . ' sản phẩm phù hợp.' : 'Không có sản phẩm nào phù hợp với tiêu chí lọc.';
+        // tra ra view binh thuong 
+        return view("client.pages.collection-product.index", [
+            "products" => $products,
+            'categories' => $categoriesData,
+            'minPrice' => $minPriceData,
+            'maxPrice' => $maxPriceData,
+            'attributes' => $attributesData,
+            'condited' => $condited,
+            'message' => $message,
         ]);
     }
 
     private function applySorting($query, $sort)
     {
         switch ($sort) {
-            case 'price_asc':
+            case 'price-asc':
                 $subQuery = DB::table('product_variants')
                     ->select('product_id', DB::raw('MIN(price) as min_price'))
                     ->groupBy('product_id');
@@ -139,7 +156,7 @@ class CollectionProductController extends Controller
                     ->orderBy('prices.min_price', 'ASC');
                 break;
 
-            case 'price_desc':
+            case 'price-desc':
                 $subQuery = DB::table('product_variants')
                     ->select('product_id', DB::raw('MAX(price) as max_price'))
                     ->groupBy('product_id');
@@ -150,19 +167,19 @@ class CollectionProductController extends Controller
                     ->orderBy('prices.max_price', 'DESC');
                 break;
 
-            case 'name_asc':
+            case 'name-asc':
                 $query->orderBy('products.name', 'asc');
                 break;
 
-            case 'name_desc':
+            case 'name-desc':
                 $query->orderBy('products.name', 'desc');
                 break;
 
-            case 'created_at_desc':
+            case 'created-at-desc':
                 $query->orderBy('products.created_at', 'desc');
                 break;
 
-            case 'created_at_asc':
+            case 'created-at-asc':
                 $query->orderBy('products.created_at', 'asc');
                 break;
 
@@ -172,14 +189,14 @@ class CollectionProductController extends Controller
                 //         ->groupBy('products.id')
                 //         ->orderBy('total_sold', 'DESC');
                 //     break;
-            case 'best_selling':
+            case 'best-selling':
                 $query->join('product_variants', 'products.id', '=', 'product_variants.product_id')
                     ->select('products.*', DB::raw('SUM(product_variants.sold) as total_sold')) // Tính tổng số lượng đã bán
                     ->groupBy('products.id') // Nhóm theo ID sản phẩm
                     ->orderBy('total_sold', 'DESC'); // Sắp xếp theo tổng số lượng đã bán
                 break;
 
-            case 'least_selling':
+            case 'least-selling':
                 $subQuery = DB::table('product_variants')
                     ->select('product_id', DB::raw('SUM(sold) as total_sold')) // Tính tổng số lượng đã bán
                     ->groupBy('product_id'); // Nhóm theo ID sản phẩm
@@ -191,7 +208,7 @@ class CollectionProductController extends Controller
                     ->orderBy('sold_counts.total_sold', 'ASC'); // Sắp xếp theo tổng số lượng đã bán, bán ít nhất trước
                 break;
 
-            case 'rating_asc':
+            case 'rating-asc':
                 $query->orderBy('average_rating', 'ASC');
                 break;
 
