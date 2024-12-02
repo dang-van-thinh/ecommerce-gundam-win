@@ -35,26 +35,30 @@ class Handler extends ExceptionHandler
     public function render($request, Throwable $exception)
     {
         // Xử lý lỗi 404
-        if ($exception instanceof NotFoundHttpException) {
-            // Log::debug(__CLASS__ . "  " . __FUNCTION__ . '404 Exception triggered');
+        // if ($exception instanceof NotFoundHttpException) {
+        //     // Log::debug(__CLASS__ . "  " . __FUNCTION__ . '404 Exception triggered');
 
-            if ($request->is('admin/*')) {
-                // Log::info('404 Admin View Triggered');
-                toastr('Sai đường dẫn mất rồi', NotificationInterface::ERROR,'Cảnh báo', [
-                    "closeButton" => true,
-                    "progressBar" => true,
-                    "timeOut" => "3000",
-                ]);
-                return response()->view('errors.404', [], 404);
-            } else {
-                // Log::info('404 Client View Triggered');
-                toastr('Sai đường dẫn mất rồi', NotificationInterface::ERROR,'Cảnh báo', [
-                    "closeButton" => true,
-                    "progressBar" => true,
-                    "timeOut" => "3000",
-                ]);
-                return response()->view('errors.404-client', [], 404);
-            }
+        //     if ($request->is('admin/*')) {
+        //         // Log::info('404 Admin View Triggered');
+        //         toastr('Sai đường dẫn mất rồi', NotificationInterface::ERROR,'Cảnh báo', [
+        //             "closeButton" => true,
+        //             "progressBar" => true,
+        //             "timeOut" => "3000",
+        //         ]);
+        //         return response()->view('errors.404', [], 404);
+        //     } else {
+        //         // Log::info('404 Client View Triggered');
+        //         toastr('Sai đường dẫn mất rồi', NotificationInterface::ERROR,'Cảnh báo', [
+        //             "closeButton" => true,
+        //             "progressBar" => true,
+        //             "timeOut" => "3000",
+        //         ]);
+        //         return response()->view('errors.404-client', [], 404);
+        //     }
+        // }
+
+        if ($exception instanceof NotFoundHttpException) {
+            Log::warning('404 Not Found - URL: ' . $request->url());
         }
 
         // Xử lý lỗi 403
@@ -63,7 +67,7 @@ class Handler extends ExceptionHandler
 
             // Kiểm tra nếu yêu cầu từ admin
             if ($request->is('admin/*')) {
-                toastr('Tài khoản không đủ quyền truy cập', NotificationInterface::ERROR,'Cảnh báo', [
+                toastr('Tài khoản không đủ quyền truy cập', NotificationInterface::ERROR, 'Cảnh báo', [
                     "closeButton" => true,
                     "progressBar" => true,
                     "timeOut" => "3000",
