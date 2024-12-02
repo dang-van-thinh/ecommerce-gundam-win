@@ -68,7 +68,7 @@ Route::prefix('/admin')->middleware(['auth', 'checkAccountStatus', 'role:Admin',
 Route::get("admin/chat", [ChatController::class, 'showViewAdmin'])->name("chat");
 
 // admin
-Route::prefix('/admin')->middleware(['auth', 'checkAccountStatus', 'checkRole:Admin|Staff'])->group(function () {
+Route::prefix('admin')->middleware(['auth', 'checkAccountStatus', 'checkRole:Admin|Staff'])->group(function () {
     Route::resource('article', ArticleController::class)->middleware('permission:articles');
     Route::resource('banner', BannerController::class)->middleware('permission:banner');
     Route::resource('attributes', AttributeController::class)->middleware('permission:products');
@@ -90,16 +90,18 @@ Route::prefix('/admin')->middleware(['auth', 'checkAccountStatus', 'checkRole:Ad
 
     Route::resource('new-user', NewUserController::class)->middleware('permission:users');
 
-
+    Route::fallback(function () { // 404 admin
+        return response()->view('errors.404', [], 404);
+    });
 });
+
+
 
 // client
 Route::prefix('')->middleware(['auth', 'checkAccountStatus', 'updateOrderStatus', 'checkRole:Client'])->group(function () {
     Route::get('/cart', [CartController::class, 'index'])->name('cart');
     Route::get('/check-out', [CheckOutController::class, 'checkOutByCart'])->name('check-out');
     Route::get('/check-out-now', [CheckOutController::class, 'checkOutByNow'])->name('check-out-now');
-
-    // Route::get('check-out-now', [CheckOutController::class, '']);
 
     Route::post("/place-order", [CheckOutController::class, 'placeOrder'])->name('place-order');
     Route::post("/place-order/buy-now", [CheckOutController::class, 'placeOrderBuyNow'])->name('place-order-buy-now');
@@ -111,7 +113,7 @@ Route::prefix('')->middleware(['auth', 'checkAccountStatus', 'updateOrderStatus'
         Route::get('/order/{id}', [ProfileController::class, 'orderDetail'])->name('order.details');
         Route::get('/order-refunds/{id}', [ProfileController::class, 'createOrderRefunds'])->name('order.create.refunds');
         Route::post('/order/create-refunds', [ProfileController::class, 'storeRefunds'])->name('order.store.refunds');
-        // Route::get('/address', [ProfileController::class, 'address'])->name('address');
+
         Route::get('address', [AddersController::class, 'index'])->name('address');
         Route::post('/feedback/store', [ProfileController::class, 'feedbackstore'])->name('feedback.store');
         Route::put('/orders/{order}/cancel', [ProfileController::class, 'orderCancel'])->name('order.cancel');
@@ -136,6 +138,7 @@ Route::prefix('')->middleware(['auth', 'checkAccountStatus', 'updateOrderStatus'
     });
     // Yêu thích sản phẩm
     // Route::post('/toggle-favorite', [WishListController::class, 'toggleFavorite'])->name('toggle.favorite');
+
 });
 
 Route::post('/search', [SearchController::class, 'search'])->name('search');
@@ -144,8 +147,10 @@ Route::get('/wish-list', [WishListController::class, 'index'])->name('wish-list'
 Route::get('/collection-product', [CollectionProductController::class, 'index'])->name('collection-product');
 // <!--Phần này giữ hay bỏ thì nhìn route  nhé - chọn 1 trong 2-->
 Route::get('/', [HomeController::class, 'index'])->name('home');
+Route::get('/product/filter', [CollectionProductController::class, 'filter'])->name('product.filter');
+
 Route::get('/product/{id}', [ProductController::class, 'index'])->name('product');
-Route::get('/collection-product/{id?}', [CollectionProductController::class, 'index'])->name('collection-product');
+Route::get('/collection-product', [CollectionProductController::class, 'index'])->name('collection-product');
 Route::get('/collection-blog/{id?}', [CollectionBlogController::class, 'index'])->name('collection-blog');
 Route::get('/blog', [BlogController::class, 'index'])->name('blog');
 Route::get('/contact', [ContactController::class, 'index'])->name('contact');
@@ -153,7 +158,6 @@ Route::post('/blog/{articleId}/comment', [BlogController::class, 'storeComment']
 Route::get('/blog/{id}', [BlogController::class, 'show'])->name('blog.show');
 Route::get('/category-blog/{id}', [CollectionBlogController::class, 'articlesByCategory'])->name('category-articles');
 Route::get('/blog/category-blog/{id}', [BlogController::class, 'articlesByCategory'])->name('category-blog');
-Route::post('/product/filter', [CollectionProductController::class, 'filter'])->name('product.filter');
 Route::get('/404', [DefaultController::class, 'pageNotFound'])->name('404');
 Route::post('/feedback/reply', [ProductController::class, 'replyFeedback'])->name('feedback.reply');
 Route::delete('/comments/{id}', [BlogController::class, 'deleteComment'])->name('comments.delete');
@@ -178,3 +182,8 @@ Route::prefix('auth')->name('auth.')->group(function () {
     Route::post('/logout', [AuthController::class, 'logout'])->name('logout');
     Route::post('/profile/change-password', [AuthController::class, 'changePassword'])->name('profile.change-password');
 });
+
+
+// Route::fallback(function () { // 404 client
+//     return response()->view('errors.404-client', [], 404);
+// });
