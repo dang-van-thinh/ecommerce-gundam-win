@@ -87,7 +87,7 @@
                                         <ul>
                                             <li>
                                                 <p>Giá:</p>
-                                                <span>{{ number_format($item->product_price) }} Vnd</span>
+                                                <span>{{ number_format($item->product_price) }} VND</span>
                                             </li>
                                             <li>
                                                 <p>Số lượng:</p>
@@ -99,7 +99,7 @@
                                             </li>
                                             <li>
                                                 <p>Mã đơn hàng:</p>
-                                                <span>{{ $order->id }}</span>
+                                                <span>{{ $order->code }}</span>
                                             </li>
                                         </ul>
                                     </div>
