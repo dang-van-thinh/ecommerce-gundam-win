@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Client;
 
 use App\Events\OrderToAdminEvent;
 use App\Events\OrderToAdminNotification;
+use App\Http\Controllers\Client\Api\ProductController;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Client\placeOrder\CreateOrderBuyNow;
 use App\Http\Requests\Client\placeOrder\CreatePlaceOrderRequest;
@@ -25,6 +26,11 @@ use Illuminate\Support\Str;
 
 class CheckOutController extends Controller
 {
+    public $productControllerApi;
+    public function __construct(ProductController $productControllerApi)
+    {
+        $this->productControllerApi = $productControllerApi;
+    }
     public function checkOutByCart()
     {
         $userId = Auth::id();
@@ -39,7 +45,41 @@ class CheckOutController extends Controller
                 $productResponse[$key]['product'] = $productCart['product_variant']['product'];
             }
         }
-        // dd($productResponse);
+        // dd($productResponse, $productCarts);
+        $totalOrder = 0;
+
+        foreach ($productCarts as $key => $product) {
+            $totalOrder += $product['quantity'] * $product['product_variant']['price'];
+        }
+
+        // phan suggest voucher khi thanh toán đon hàng
+        $vouchers = VoucherUsage::join("vouchers as v", 'voucher_usages.voucher_id', '=', 'v.id')
+            ->where([ // check dieu kien voucher hop le
+                ['v.status', '=', 'ACTIVE'],
+                ['user_id', $userId],
+                ['v.start_date', '<=', now()],
+                ['v.end_date', '>=', now()]
+            ])->orderBy('voucher_usages.id', 'desc')
+            ->get();
+
+        $voucherApply = null;
+        $discountMax = 0;
+        foreach ($vouchers as $key => $voucher) { // kiem tra gia tri don hang hop le voi voucher
+            $limitUse = $voucher->limited_uses;
+            $used = $voucher->used;
+            // dd($voucher,$limitUse,$used);
+            if ($totalOrder >= $voucher->min_order_value && $totalOrder <= $voucher->max_order_value && $used != $limitUse) { // hop le ve gia va so lan su dung
+                $discount = $this->productControllerApi->calcuDiscountVoucher($voucher, $totalOrder);
+                // dd($discount);
+                // so sanh de lay voucher co gia tri giam cao nhat cao nhat
+                if ($discount > $discountMax) {
+                    $discountMax = $discount;
+                    $voucherApply = $voucher;
+                }
+            }
+        }
+
+
         $userAddress = AddressUser::where('user_id', $userId)->get();
         $provinces = Province::all();
         $userId = Auth::id();
@@ -48,11 +88,13 @@ class CheckOutController extends Controller
             ->latest('id') // Sắp xếp theo id giảm dần
             ->get();
 
+
         return view('client.pages.check-out.index', [
             'productResponse' => $productResponse,
             'userAddress' => $userAddress,
             'provinces' => $provinces,
-            'voucher' => $voucher
+            'voucher' => $voucher,
+            'voucherApply'=>$voucherApply
         ]);
     }
 
