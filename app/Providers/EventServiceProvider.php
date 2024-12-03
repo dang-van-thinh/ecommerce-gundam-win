@@ -2,9 +2,13 @@
 
 namespace App\Providers;
 
+use App\Events\CartReminder;
+use App\Events\OrderReminder;
 use App\Events\TestNotification;
 use App\Listeners\NotificationListenerTest;
+use App\Listeners\SendCartReminderEmail;
 use App\Listeners\SendEmailListener;
+use App\Listeners\SendOrderReminderEmail;
 use Illuminate\Auth\Events\Registered;
 use Illuminate\Auth\Listeners\SendEmailVerificationNotification;
 use Illuminate\Foundation\Support\Providers\EventServiceProvider as ServiceProvider;
