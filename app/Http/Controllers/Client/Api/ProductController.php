@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Client\Api;
 use App\Http\Controllers\Controller;
 use App\Models\Cart;
 use App\Models\ProductVariant;
+use App\Models\Voucher;
 use App\Models\VoucherUsage;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
 use Illuminate\Http\Request;
@@ -186,20 +187,62 @@ class ProductController extends Controller
             $quantity = $request->input('quantity');
             $variantId = $request->input('variantId');
             $productResponse = ProductVariant::with(['product', 'attributeValues.attribute'])->where('id', $variantId)->first();
+
+            // phan suggest voucher khi thanh toán đon hàng
+            $totalOrder = $productResponse->price * $quantity;
+            $vouchers = VoucherUsage::join("vouchers as v", 'voucher_usages.voucher_id', '=', 'v.id')
+                ->where([ // check dieu kien voucher hop le
+                    ['v.status', '=', 'ACTIVE'],
+                    ['user_id', $userId],
+                    ['v.start_date', '<=', now()],
+                    ['v.end_date', '>=', now()]
+                ])->orderBy('voucher_usages.id', 'desc')
+                ->get();
+
+
+            $voucherApply = null;
+            $discountMax = 0;
+            foreach ($vouchers as $key => $voucher) { // kiem tra gia tri don hang hop le voi voucher
+                $limitUse = $voucher->limited_uses;
+                $used = $voucher->used;
+                // dd($voucher,$limitUse,$used);
+                if ($totalOrder >= $voucher->min_order_value && $totalOrder <= $voucher->max_order_value && $used != $limitUse) { // hop le ve gia va so lan su dung
+                    $discount = $this->calcuDiscountVoucher($voucher, $totalOrder);
+                    // dd($discount);
+                    // so sanh de lay voucher co gia tri giam cao nhat cao nhat
+                    if ($discount > $discountMax) {
+                        $discountMax = $discount;
+                        $voucherApply = $voucher;
+                    }
+                }
+            }
+
+            // dd($voucherApply);
             $voucher = VoucherUsage::with('voucher')
                 ->where('user_id', $userId)
                 ->latest('id')
                 ->get();
+            // dd($voucher);
             return response()->json([
                 'productResponse' => $productResponse,
                 'quantity' => $quantity,
-                'vouchers' => $voucher
+                'vouchers' => $voucher,
+                'voucherApply' => $voucherApply
             ]);
         } catch (\Throwable $exception) {
             Log::error($exception->getMessage());
             return response()->json([
                 "message" => get_class($exception) . ": " . $exception->getMessage()
             ], 404);
+        }
+    }
+
+    public function calcuDiscountVoucher($voucher, $totalOrder)
+    { // tinh ra gia tri voucher giam duoc
+        if ($voucher->discount_type == 'PERCENTAGE') {
+            return $totalOrder * ($voucher->discount_value / 100);
+        } else {
+            return $voucher->discount_value;
         }
     }
 }
