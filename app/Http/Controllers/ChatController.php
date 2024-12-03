@@ -15,6 +15,14 @@ class ChatController extends Controller
 
     public function send(Request $request)
     {
+        $rules = [
+            'message'=>'required|string|max:200'
+        ];
+
+        $messages = [
+            'message.max' => 'Tin nhắn không được vượt quá 200 ký tự!'
+        ];
+        $request->validate($rules,$messages);
         $dataMessage = [
             //            "sender_id" => Auth::id(),
             "sender_id" => $request->input("sender_id"),
