@@ -8,7 +8,7 @@
     <div class="card">
         <div class="card-header"><strong>Cập nhật người dùng: {{ $user->full_name }}</strong></div>
         <div class="card-body card-block">
-            <form action="{{ route('new-user.update', $user->id) }}" method="POST" enctype="multipart/form-data">
+            <form action="{{ route('new-user.update', $user->id) }}" method="POST" enctype="multipart/form-data" id="updateUserForm">
                 @method('PUT')
                 @csrf
                 <div class="row">
@@ -100,9 +100,30 @@
                 <!-- Submit Button -->
                 <div>
                     <a class="btn btn-primary btn-sm" href="{{ route('new-user.index') }}">Quay lại</a>
-                    <button type="submit" class="btn btn-success btn-sm">Lưu thay đổi</button>
+                    <button type="button" class="btn btn-success btn-sm" id="saveButtonRoles">Lưu thay đổi</button>
                 </div>
             </form>
         </div>
     </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    <script>
+        document.getElementById('saveButtonRoles').addEventListener('click', function () {
+            Swal.fire({
+                title: 'Bạn có chắc chắn?',
+                text: "Vai trò người dùng sẽ được thay đổi!",
+                icon: 'warning',
+                showCancelButton: true,
+                confirmButtonColor: '#3085d6',
+                cancelButtonColor: '#d33',
+                confirmButtonText: 'Thay đổi vai trò',
+                cancelButtonText: 'Hủy bỏ'
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    // Nếu người dùng xác nhận, gửi form
+                    document.getElementById('updateUserForm').submit();
+                }
+            });
+        });
+    </script>
 @endsection
