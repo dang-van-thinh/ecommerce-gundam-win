@@ -15,7 +15,7 @@
             <div class="custom-container container">
                 <div class="row">
                     <div class="col-3">
-                        {{-- @dd($condited) --}}
+                        {{-- @dd($products) --}}
                         <div class="custom-accordion theme-scrollbar left-box">
                             <div class="left-accordion">
                                 <h5>Back </h5><i class="back-button fa-solid fa-xmark"></i>
@@ -48,7 +48,7 @@
 
                                     <!-- Thuộc tính -->
                                     <h2 class="accordion-header">
-                                        <button class="accordion-button" data-bs-toggle="collapse"
+                                        <button class="accordion-button" type="button" data-bs-toggle="collapse"
                                             data-bs-target="#panelsStayOpen-collapseOne">
                                             <span>Thuộc tính</span>
                                         </button>
@@ -76,7 +76,7 @@
                                     </div>
                                     <!-- Lọc giá -->
                                     <h2 class="accordion-header">
-                                        <button class="accordion-button" data-bs-toggle="collapse"
+                                        <button class="accordion-button" type="button" data-bs-toggle="collapse"
                                             data-bs-target="#panelsStayOpen-collapseFour">
                                             <span>Giá</span>
                                         </button>
@@ -106,7 +106,7 @@
 
                                     <!-- Tình trạng -->
                                     <h2 class="accordion-header">
-                                        <button class="accordion-button" data-bs-toggle="collapse"
+                                        <button class="accordion-button" type="button" data-bs-toggle="collapse"
                                             data-bs-target="#panelsStayOpen-collapseSix">
                                             <span>Tình trạng</span>
                                         </button>
@@ -122,14 +122,14 @@
                                                 </li>
                                                 <li class="me-3">
                                                     <input class="custom-radio" id="in_stock" type="radio"
-                                                        name="stockStatus" value="in_stock"
-                                                        {{ ($condited['stockStatus'] ?? 'all') === 'in_stock' ? 'checked' : '' }}>
+                                                        name="stockStatus" value="inStock"
+                                                        {{ ($condited['stockStatus'] ?? 'all') === 'inStock' ? 'checked' : '' }}>
                                                     <label for="in_stock">Còn hàng</label>
                                                 </li>
                                                 <li>
                                                     <input class="custom-radio" id="out_of_stock" type="radio"
-                                                        name="stockStatus" value="out_of_stock"
-                                                        {{ ($condited['stockStatus'] ?? 'all') === 'out_of_stock' ? 'checked' : '' }}>
+                                                        name="stockStatus" value="outOfStock"
+                                                        {{ ($condited['stockStatus'] ?? 'all') === 'outOfStock' ? 'checked' : '' }}>
                                                     <label for="out_of_stock">Hết hàng</label>
                                                 </li>
                                             </ul>
@@ -146,7 +146,8 @@
                                 </div>
 
                                 <div class="accordion-item">
-                                    <h2 class="accordion-header tags-header"><button class="accordion-button"><span>Vận
+                                    <h2 class="accordion-header tags-header"><button type="button"
+                                            class="accordion-button"><span>Vận
                                                 chuyển
                                                 &
                                                 Giao hàng</span><span></span></button></h2>
@@ -167,7 +168,7 @@
                                                 </li>
                                                 <li><i class="iconsax" data-icon="exchange"></i>
                                                     <div>
-                                                        <h6>Đổi hàng trong 30 ngày</h6>
+                                                        <h6>Hoàn hàng trong 3 ngày</h6>
                                                         <p>Miễn phí vận chuyển cho tất cả các đơn hàng tại Việt nam</p>
                                                     </div>
                                                 </li>
@@ -180,7 +181,13 @@
                     </div>
                     <div class="col-xl-9">
                         <div class="sticky">
-                            <div style="padding-left: 800px" class="top-filter-menu">
+                            <div style="width: 115%;
+                                        padding-left: 44rem ;
+                                        display: flex;
+                                        justify-content: end;
+                                        width: 115%;
+                                        float: right;"
+                                class="top-filter-menu">
                                 <div>
                                     <a class="filter-button btn">
                                         <h6> <i class="iconsax" data-icon="filter"></i>Filter Menu </h6>
@@ -219,8 +226,9 @@
                                                 {{ ($condited['sort'] ?? '') === 'rating-asc' ? 'selected' : '' }}>Đánh giá
                                                 từ thấp đến cao</option>
                                         </select>
-
                                     </div>
+                                    <button style="background-color: #c28f51; border:none" type="submit"
+                                        class="btn btn-secondary">Lọc</button>
                                 </div>
                             </div>
 
@@ -270,19 +278,8 @@
         document.addEventListener("DOMContentLoaded", function() {
             //dat lai cac gia tri
             document.getElementById("reset").addEventListener("click", function(e) {
-                // alert("okee");
-                let minPrice = document.querySelector("input[name='minPrice']");
-                let maxPrice = document.querySelector("input[name='maxPrice']");
-                // Lấy tất cả các checkbox có name="categories[]"
-                const checkboxes = document.querySelectorAll("input[name='categories[]']");
 
-                // Đặt trạng thái tất cả checkbox về không được chọn
-                checkboxes.forEach(function(checkbox) {
-                    checkbox.checked = false;
-                });
-
-                minPrice.value = minPrice.getAttribute("min");
-                maxPrice.value = maxPrice.getAttribute("max");
+                window.location.href = "{{ route('product.filter') }}";
             })
         })
         // Hàm khởi tạo sự kiện cho dropdown sắp xếp
