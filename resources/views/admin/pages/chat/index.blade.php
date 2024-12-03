@@ -267,7 +267,7 @@
                                         </div>
                                     </div>
                                     <div style="max-height: 83%; height: 83%">
-                                        <div  class="card-body overflow-y-scroll"  id="show-chat" style="height: 100%"></div>
+                                        <div  class="card-body overflow-y-scroll"  id="show-chat" style="height: 100%; padding-bottom: 3rem"></div>
                                     </div>
                                     <div class="card-body position-absolute bottom-0 border border-1"
                                          style="max-height: 10%">
@@ -336,7 +336,7 @@
             messageContainer.appendChild(messageBox);
 
             // Cuộn xuống cuối mỗi khi có tin nhắn mới
-            showChat.scrollTop = showChat.scrollHeight + 100;
+            showChat.scrollTop = showChat.scrollHeight;
 
             // Gắn messageContainer vào vị trí cần hiển thị (ví dụ là trong phần tử có id "chat-container")
             showChat.appendChild(messageContainer);
@@ -373,7 +373,7 @@
             chatContainer.appendChild(avatar);
 
             // Cuộn xuống cuối mỗi khi có tin nhắn mới
-            showChat.scrollTop = showChat.scrollHeight + 100;
+            showChat.scrollTop = showChat.scrollHeight;
             // Thêm vào phần hiển thị chat
             showChat.appendChild(chatContainer);
         }
