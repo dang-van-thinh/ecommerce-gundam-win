@@ -300,10 +300,19 @@
     <div class="chat-body" id="chat-body">
     </div>
     <form class="chat-footer" id="client-chat">
-        <input placeholder="Nhập tin nhắn" type="text" id="message">
+        <input placeholder="Nhập tin nhắn" type="text" id="message" style="padding-right: 3.75rem">
+        <p id="char-count"
+            style="position: absolute;
+                right: 3.5rem;
+                bottom: 1.75rem;
+                font-size: 14px;
+                ">
+            0/200</p>
         <button type="submit">
             <img width="20" height="20" src="https://img.icons8.com/color/48/sent--v2.png" alt="sent--v2" />
+
         </button>
+
     </form>
 </div>
 
@@ -334,6 +343,42 @@
 
             });
 
+
+            // validate ky tu  tin nhan nguoi dung
+            const chatInput = document.getElementById('message');
+            const charCount = document.getElementById('char-count');
+            const maxChars = 200;
+
+            // Cập nhật số ký tự và xử lý giới hạn
+            const updateCharacterCount = () => {
+                const currentLength = chatInput.value.length;
+
+                if (currentLength > maxChars) {
+                    // Nếu vượt quá, cắt nội dung và hiển thị thông báo
+                    chatInput.value = chatInput.value.substring(0, maxChars);
+
+                }
+                charCount.textContent = `${chatInput.value.length}/${maxChars}`;
+            };
+
+            // Lắng nghe sự kiện 'input' và 'paste'
+            chatInput.addEventListener('input', updateCharacterCount);
+
+            chatInput.addEventListener('paste', (event) => {
+                // Xử lý nội dung dán
+                const pasteContent = (event.clipboardData || window.clipboardData).getData('text');
+                const newContent = chatInput.value + pasteContent;
+
+                if (newContent.length > maxChars) {
+                    event.preventDefault(); // Ngăn không cho dán vượt quá
+                    chatInput.value = newContent.substring(0, maxChars); // Chỉ giữ lại tối đa 200 ký tự
+                }
+
+                charCount.textContent = `${chatInput.value.length}/${maxChars}`;
+            });
+
+
+
             // SU LY SU KIEN CHAT REALTIME
             console.log("User ID:", userId);
 
@@ -353,7 +398,7 @@
             btnClientChat.addEventListener("submit", (e) => {
                 e.preventDefault();
                 const message = document.getElementById("message");
-                console.log(message.value);
+                // console.log(message.value);
 
                 window.axios.post("/api/chat-send", {
                     message: message.value,
@@ -361,10 +406,28 @@
                     receiver_id: null
                 })
                 message.value = '';
+                document.getElementById('char-count').textContent = '0/200';
             });
 
 
         });
+
+        function validateInputMessage() {
+            const chatInput = document.getElementById('message');
+            const charCount = document.getElementById('char-count');
+            const maxChars = 200;
+
+            chatInput.addEventListener('input', () => {
+                if (chatInput.value.length > maxChars) {
+                    // alert("Tin nhắn không được vượt quá 200 ký tự!");
+                    chatInput.value = chatInput.value.substring(0, maxChars);
+                    return;
+                }
+                const currentLength = chatInput.value.length;
+                charCount.textContent = `${currentLength}/${maxChars}`;
+            });
+
+        }
 
         function deleteMessage(userId) {
             window.axios.delete("/api/chat-messages", {
