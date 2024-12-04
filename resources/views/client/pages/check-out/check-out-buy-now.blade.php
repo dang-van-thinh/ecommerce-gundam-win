@@ -92,22 +92,20 @@
                                             <label for="cod">Thanh toán khi nhận hàng</label>
                                         </div>
                                     </div>
-                                    <div class="col-sm-4">
+                                    <div class="col-sm-6">
                                         <div class="payment-box">
                                             <input class="custom-radio me-2" id="momo" type="radio"
                                                 name="payment_method" value="momo">
                                             <label for="momo">Thanh toán qua MOMO</label>
-
                                         </div>
                                     </div>
-                                    <div class="col-sm-4">
+                                    {{-- <div class="col-sm-4">
                                         <div class="payment-box">
                                             <input class="custom-radio me-2" id="vnpay" type="radio"
                                                 name="payment_method" value="vnpay">
                                             <label for="vnpay">Thanh toán qua VNPAY</label>
-
                                         </div>
-                                    </div>
+                                    </div> --}}
                                 </div>
                             </div>
                             <div class="address-option">
@@ -495,7 +493,7 @@
                 const startDate = new Date(voucher.start_date);
                 const endDate = new Date(voucher.end_date);
                 const isInactive = voucher.status !== 'ACTIVE' || now < startDate || now > endDate ||
-                    (voucher.limited_uses && item.used >= voucher.limited_uses )|| voucher.limit == 0 ||
+                    (voucher.limited_uses && item.used >= voucher.limited_uses) || voucher.limit == 0 ||
                     totalAmount < voucher.min_order_value ||
                     totalAmount > voucher.max_order_value;
 
