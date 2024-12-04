@@ -98,7 +98,7 @@
                                             </li>
                                             <li>
                                                 <p>Mã đơn hàng:</p>
-                                                <span>{{ $order->id }}</span>
+                                                <span>{{ $order->code }}</span>
                                             </li>
                                         </ul>
                                     </div>
