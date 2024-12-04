@@ -149,7 +149,7 @@ class ProfileController extends Controller
             $order->save(); // Lưu thay đổi
             // dd($order->toArray());
             // Tăng giá trị cancel_count của người dùng (nếu cần)
-            // $user->increment('cancel_count', 1);
+            $user->increment('cancel_count', 1);
 
             // Thông báo hủy đơn thành công
             sweetalert("Đơn hàng của bạn đã được hủy.", NotificationInterface::INFO, [
@@ -158,7 +158,11 @@ class ProfileController extends Controller
                 'closeButton' => false,
                 'icon' => "success", // Thông báo thành công
             ]);
-
+            // Kiểm tra ngưỡng cancel_count
+            $response = $this->handleCancelThreshold($user);
+            if ($response) {
+                return $response; // Điều hướng nếu tài khoản bị vô hiệu hóa
+            }
             // Quay lại trang trước
             return redirect()->back();
         }
@@ -212,7 +216,7 @@ class ProfileController extends Controller
             ]);
         }
 
-        if ($user->cancel_count >= 5) {
+        if ($user->cancel_count == 5) {
             // Chuyển trạng thái của người dùng thành IN_ACTIVE
             $user->status = 'IN_ACTIVE';
             $user->save();
