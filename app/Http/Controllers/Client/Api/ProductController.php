@@ -206,7 +206,7 @@ class ProductController extends Controller
                 $limitUse = $voucher->limited_uses;
                 $used = $voucher->used;
                 // dd($voucher,$limitUse,$used);
-                if ($totalOrder >= $voucher->min_order_value && $totalOrder <= $voucher->max_order_value && $used != $limitUse) { // hop le ve gia va so lan su dung
+                if ($totalOrder >= $voucher->min_order_value && $totalOrder <= $voucher->max_order_value && ($used != $limitUse || $limitUse == null)) { // hop le ve gia va so lan su dung
                     $discount = $this->calcuDiscountVoucher($voucher, $totalOrder);
                     // dd($discount);
                     // so sanh de lay voucher co gia tri giam cao nhat cao nhat
