@@ -28,7 +28,7 @@
                                         <td scope="row" class="text-center">
                                             {{ $refund->code ?? 'Không có mã đơn hoàn hàng' }}
                                         </td>
-                                        <td class="text-center">{{ number_format($order->total_amount) }}Vnd</td>
+                                        <td class="text-center">{{ number_format($order->total_amount) }} VND</td>
                                         <td class="text-center"> {{ $order->customer_name }}</td>
                                         <td class="text-center">{{ $order->phone }}</td>
                                         <td class="text-center">

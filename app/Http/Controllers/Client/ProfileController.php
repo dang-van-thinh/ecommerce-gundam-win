@@ -35,12 +35,23 @@ class ProfileController extends Controller
     public function orderHistory()
     {
         $userId = Auth::id();
-        // Lấy tất cả các Order cùng với OrderItems và ProductVariants
-        $orders = Order::with('orderItems.productVariant.attributeValues.attribute', 'orderItems.productVariant.product', 'user', 'refund')
-            ->where('user_id', $userId)
-            ->orderBy('id', 'desc')
+
+        // Lấy tất cả các đơn hàng của người dùng, kèm theo các đơn hoàn hàng liên quan
+        $orders = Order::with([
+            'orderItems.productVariant.attributeValues.attribute',
+            'orderItems.productVariant.product',
+            'refund' => function ($query) {
+                $query->select('id', 'order_id', 'status', 'code'); // Chọn các trường cần thiết từ bảng Refund
+            },
+            'refund.refundItem.productVariant.product'
+        ])
+            ->where('user_id', $userId)  // Chỉ lấy các đơn hàng của người dùng hiện tại
+            ->orderBy('id', 'desc')  // Sắp xếp theo ID đơn hàng giảm dần
             ->get();
-        // dd($orders);
+
+        // dd($orders); // Dùng để kiểm tra kết quả nếu cần
+
+        // Trả về view với dữ liệu đơn hàng và đơn hoàn hàng
         return view('client.pages.profile.order', compact('orders'));
     }
     public function feedbackstore(FeedbackRequest $request)
@@ -311,11 +322,6 @@ class ProfileController extends Controller
 
             // Cập nhật trạng thái đơn hàng thành "Đơn hoàn hàng"
             $order = Order::find($request->order_id);
-            if ($order) {
-                $order->update([
-                    'status' => 'REFUND',
-                ]);
-            }
 
             // Lặp qua từng sản phẩm trong mảng 'refund'
             foreach ($request->refund as $key => $item) {
