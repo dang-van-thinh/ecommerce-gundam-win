@@ -92,22 +92,20 @@
                                             <label for="cod">Thanh toán khi nhận hàng</label>
                                         </div>
                                     </div>
-                                    <div class="col-sm-4">
+                                    <div class="col-sm-6">
                                         <div class="payment-box">
                                             <input class="custom-radio me-2" id="momo" type="radio"
                                                 name="payment_method" value="momo">
                                             <label for="momo">Thanh toán qua MOMO</label>
-
                                         </div>
                                     </div>
-                                    <div class="col-sm-4">
+                                    {{-- <div class="col-sm-4">
                                         <div class="payment-box">
                                             <input class="custom-radio me-2" id="vnpay" type="radio"
                                                 name="payment_method" value="vnpay">
                                             <label for="vnpay">Thanh toán qua VNPAY</label>
-
                                         </div>
-                                    </div>
+                                    </div> --}}
                                 </div>
                             </div>
                             <div class="address-option">
