@@ -48,7 +48,7 @@ class CollectionProductController extends Controller
         // Lọc theo danh mục nếu có
         // Sắp xếp mặc định theo ID mới nhất
         $products = $products->latest('products.id')->where('status', 'ACTIVE')->paginate(20);
-
+        // dd($products->toArray());
         // Dữ liệu danh mục, giá, và thuộc tính
         $categories = CategoryProduct::withCount('products')->get();
         $minPrice = ProductVariant::min('price') ?? 0;
@@ -78,7 +78,7 @@ class CollectionProductController extends Controller
                 'products.*',
                 DB::raw('COALESCE(AVG(f.rating), 0) as average_rating'),
                 DB::raw('CASE WHEN SUM(pv.quantity) IS NULL OR SUM(pv.quantity) = 0 THEN 1 ELSE 0 END as is_out_of_stock'), // Kiểm tra hết hàng
-                DB::raw('SUM(pv.quantity) as total_stock') // Tổng số lượng tồn kho
+                DB::raw('SUM(pv.quantity) as totalStock') // Tổng số lượng tồn kho
             )
             ->groupBy('products.id');
 
@@ -100,23 +100,22 @@ class CollectionProductController extends Controller
                 $q->whereBetween('price', [(float)$minPrice, (float)$maxPrice]);
             });
         }
-
+        // dd($query->toSql());
         // Lọc theo trạng thái tồn kho
         if ($stockStatus === 'inStock') {
-            $query->having('total_stock', '>', 0);
-        } elseif ($stockStatus === 'out_of_stock') {
-            $query->having('total_stock', '=', 0);
+            $query->having('totalStock', '>', 0);
+        } elseif ($stockStatus === 'outOfStock') {
+            $query->having('totalStock', '=', 0);
         }
+
 
         // Xử lý sắp xếp
         $query = $this->applySorting($query, $sort);
-
+        // dd($query->toSql());
+        // dd($query->get());
         // Lấy danh sách sản phẩm
         $products = $query->paginate(12)->withQueryString();
-
-        // Render HTML danh sách sản phẩm
-        $view = view('client.pages.collection-product.list', compact('products'))->render();
-
+        // dd($query->toSql());
         $count = $products->total();
 
         // Dữ liệu danh mục, giá, và thuộc tính de hien thi
@@ -190,29 +189,31 @@ class CollectionProductController extends Controller
                 //         ->orderBy('total_sold', 'DESC');
                 //     break;
             case 'best-selling':
-                $query->join('product_variants', 'products.id', '=', 'product_variants.product_id')
-                    ->select('products.*', DB::raw('SUM(product_variants.sold) as total_sold')) // Tính tổng số lượng đã bán
+                $query->select(
+                    'products.*',
+                    DB::raw('CASE WHEN SUM(pv.quantity) IS NULL OR SUM(pv.quantity) = 0 THEN 1 ELSE 0 END as is_out_of_stock'), // Kiểm tra hết hàng
+                    DB::raw('SUM(pv.sold) as total_sold'),
+                    DB::raw('SUM(pv.quantity) as totalStock') // Thêm phần tính tổng số lượng tồn kho
+                ) // Tính tổng số lượng đã bán
                     ->groupBy('products.id') // Nhóm theo ID sản phẩm
                     ->orderBy('total_sold', 'DESC'); // Sắp xếp theo tổng số lượng đã bán
                 break;
 
             case 'least-selling':
-                $subQuery = DB::table('product_variants')
-                    ->select('product_id', DB::raw('SUM(sold) as total_sold')) // Tính tổng số lượng đã bán
-                    ->groupBy('product_id'); // Nhóm theo ID sản phẩm
-
-                $query->joinSub($subQuery, 'sold_counts', function ($join) {
-                    $join->on('products.id', '=', 'sold_counts.product_id');
-                })
-                    ->select('products.*')
-                    ->orderBy('sold_counts.total_sold', 'ASC'); // Sắp xếp theo tổng số lượng đã bán, bán ít nhất trước
+                $query->select(
+                    'products.*',
+                    DB::raw('CASE WHEN SUM(pv.quantity) IS NULL OR SUM(pv.quantity) = 0 THEN 1 ELSE 0 END as is_out_of_stock'), // Kiểm tra hết hàng
+                    DB::raw('SUM(pv.sold) as total_sold'),
+                    DB::raw('SUM(pv.quantity) as totalStock') // Thêm phần tính tổng số lượng tồn kho
+                ) // Tính tổng số lượng đã bán
+                    ->groupBy('products.id') // Nhóm theo ID sản phẩm
+                    ->orderBy('total_sold', 'ASC'); // Sắp xếp theo tổng số lượng đã bán
                 break;
-
             case 'rating-asc':
                 $query->orderBy('average_rating', 'ASC');
                 break;
 
-            case 'rating_desc':
+            case 'rating-desc':
                 $query->orderBy('average_rating', 'DESC');
                 break;
 
