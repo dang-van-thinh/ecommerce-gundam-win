@@ -162,7 +162,7 @@
                                     <div id="coupon-display" style="display: none;" class="mb-2">
                                         <!-- Thẻ hiển thị mã giảm giá -->
                                         <div
-                                            class="border border-success rounded shadow-sm p-2 bg-light d-flex justify-content-between align-items-center">
+                                            class="border-success bg-light d-flex justify-content-between align-items-center rounded border p-2 shadow-sm">
                                             <div>
                                                 <strong id="coupon-name" class="text-dark">Tên mã ở đây</strong>
                                             </div>
@@ -229,8 +229,7 @@
                                                                                 $item->voucher->max_order_value;
                                                                     @endphp
                                                                     <div
-                                                                        class="border rounded shadow-sm p-3 d-flex justify-content-between align-items-center 
-                                                                           {{ $isInactive ? 'border-secondary bg-light' : 'border-primary bg-light' }}">
+                                                                        class="d-flex justify-content-between align-items-center {{ $isInactive ? 'border-secondary bg-light' : 'border-primary bg-light' }} rounded border p-3 shadow-sm">
                                                                         <div>
                                                                             <strong
                                                                                 class="{{ $isInactive ? 'text-muted' : 'text-dark' }}">{{ $item->voucher->name }}</strong>
@@ -358,6 +357,10 @@
         });
     });
     document.addEventListener('DOMContentLoaded', function() {
+        // hien thi voucher sugest
+        let voucherSugest = @json($voucherApply->toArray());
+        console.log("hiii", voucherSugest);
+        showBoxVoucherActive(voucherSugest);
         // Lắng nghe sự kiện nhấn nút "Áp dụng" trong modal
         document.querySelectorAll('.apply-coupon').forEach(button => {
             button.addEventListener('click', function() {
@@ -470,6 +473,44 @@
             document.getElementById('coupon-code-input').style.display = 'block';
         });
     });
+
+    function showBoxVoucherActive(voucherSugggest) {
+        console.log(voucherSugggest);
+        // Hiển thị thẻ mã giảm giá đã áp dụng và ẩn ô input
+        $('#coupon-display').show();
+        $('#coupon-name').text(voucherSugggest.name);
+
+        // Cập nhật voucher_id vào input ẩn
+        $('#voucher-id-input').val(voucherSugggest.id);
+
+        $('#id-input').val(voucherSugggest.id);
+
+        // Cập nhật giảm giá vào tổng giá
+        const totalAmount = parseFloat($('input[name="totalAmount"]')
+            .val());
+        let discountAmount = 0;
+
+        if (voucherSugggest.discount_type === 'PERCENTAGE') {
+            discountAmount = Number((voucherSugggest.discount_value / 100)) * totalAmount;
+        } else {
+            discountAmount = parseFloat(voucherSugggest.discount_value);
+            if (totalAmount <= discountAmount) {
+                discountAmount = totalAmount;
+            }
+        }
+        console.log("giam gia", discountAmount);
+
+        const newTotal = totalAmount - discountAmount;
+
+        // Cập nhật giá trị vào giao diện
+        $('input[name="discount_amount"]').val(discountAmount);
+        $('#discount-amount').text(
+            `- ${discountAmount.toLocaleString()} VND`);
+
+        // Cập nhật tổng tiền
+        $('input[name="total_amount"]').val(newTotal);
+        $('#summary-total').text(`${newTotal.toLocaleString()} VND`);
+    }
 
     function setDefaultAddress(addressId, userId) {
         $.ajax({

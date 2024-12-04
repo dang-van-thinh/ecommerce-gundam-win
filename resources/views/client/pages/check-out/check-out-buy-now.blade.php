@@ -133,7 +133,9 @@
     $(document).ready(function() {
         // lay du lieu san pham mua ngay
         const productStorage = JSON.parse(localStorage.getItem('productBuyNow'));
-        console.log(productStorage);
+        // console.log(productStorage);
+        // lay voucher duoc de xuat
+        // var voucherSugggest = null;
 
         function handleProduct() {
             $.ajax({
@@ -143,7 +145,12 @@
                 success: function(response) {
                     console.log(response);
                     // console.log(response.vouchers);
-                    showProduct(response.productResponse, response.quantity, response.vouchers)
+                    showProduct(response.productResponse, response.quantity, response.vouchers);
+                    if(response.voucherApply != null){
+                        // let totalAmount = response.productResponse.price * response.quantity;
+                        // console.log(totalAmount);
+                        showBoxVoucherActive(response.voucherApply);
+                    }
                 }
             }).then(() => {
                 $(document).ready(function() {
@@ -163,7 +170,7 @@
                         const minAmount = parseFloat($(this).data('min-amount'));
                         const maxAmount = parseFloat($(this).data('max-amount'));
 
-                        const totalAmountOld = $('input[name="total_amount"]').val();
+                        const totalAmountOld = $('input[name="totalAmount"]').val();
                         console.log("xyz", totalAmountOld);
 
                         const startDate = new Date($(this).data('start-date'));
@@ -194,7 +201,6 @@
                             );
                             return;
                         }
-
                         // Hiển thị thẻ mã giảm giá đã áp dụng và ẩn ô input
                         $('#coupon-display').show();
                         $('#coupon-name').text(voucherName);
@@ -225,12 +231,17 @@
                         $('#discount-amount').text(
                             `- ${discountAmount.toLocaleString()} VND`);
 
+                            console.log("gia nghiep",discountAmount);
                         // Cập nhật tổng tiền
                         $('input[name="total_amount"]').val(newTotal);
                         $('#summary-total').text(`${newTotal.toLocaleString()} VND`);
-
                         // Đóng modal sau khi chọn
                         $('#voucherModal').modal('hide');
+
+                        // hien thi div ma giam gia da chonj
+                        // showBoxVoucherActive(voucherName, voucherId, Id, discountValue);
+
+
                     });
 
                     // Xử lý sự kiện click nút "X" để xoá mã giảm giá
@@ -269,6 +280,44 @@
             });
         }
         handleProduct();
+
+        function showBoxVoucherActive(voucherSugggest) {
+            console.log(voucherSugggest);
+            // Hiển thị thẻ mã giảm giá đã áp dụng và ẩn ô input
+            $('#coupon-display').show();
+            $('#coupon-name').text(voucherSugggest.name);
+
+            // Cập nhật voucher_id vào input ẩn
+            $('#voucher-id-input').val(voucherSugggest.id);
+
+            $('#id-input').val(voucherSugggest.id);
+
+            // Cập nhật giảm giá vào tổng giá
+            const totalAmount = parseFloat($('input[name="totalAmount"]')
+                .val());
+            let discountAmount = 0;
+
+            if (voucherSugggest.discount_type === 'PERCENTAGE') {
+                discountAmount = Number((voucherSugggest.discount_value / 100)) * totalAmount;
+            } else {
+                discountAmount = parseFloat(voucherSugggest.discount_value);
+                if (totalAmount <= discountAmount) {
+                    discountAmount = totalAmount;
+                }
+            }
+            console.log("giam gia",discountAmount);
+
+            const newTotal = totalAmount - discountAmount;
+
+            // Cập nhật giá trị vào giao diện
+            $('input[name="discount_amount"]').val(discountAmount);
+            $('#discount-amount').text(
+                `- ${discountAmount.toLocaleString()} VND`);
+
+            // Cập nhật tổng tiền
+            $('input[name="total_amount"]').val(newTotal);
+            $('#summary-total').text(`${newTotal.toLocaleString()} VND`);
+        }
 
         function showProduct(productResponse, quantityP, vouchers) {
             let totalAmount = 0;
