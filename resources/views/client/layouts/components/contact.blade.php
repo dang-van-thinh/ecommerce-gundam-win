@@ -304,7 +304,7 @@
         <p id="char-count"
             style="position: absolute;
                 right: 3.5rem;
-                bottom: 1.75rem;
+                bottom: 1rem;
                 font-size: 14px;
                 ">
             0/200</p>

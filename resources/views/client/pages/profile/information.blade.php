@@ -23,18 +23,18 @@
                     </div>
                     <div class="total-box">
                         <div class="row gy-4">
-                            <div class="col-xl-4">
+                            <div class="col-xl-6">
                                 <div class="totle-contain">
                                     <div class="wallet-point"><img src="/template/client/assets/images/svg-icon/wallet.svg"
                                             alt=""><img class="img-1"
                                             src="/template/client/assets/images/svg-icon/wallet.svg" alt=""></div>
                                     <div class="totle-detail">
-                                        <h6>Balance</h6>
-                                        <h4>$ 84.40 </h4>
+                                        <h6>Tổng tiền đã thanh toán</h6>
+                                        <h4>{{ number_format($dataOfUser['totalPrice'], 0, ',', '.') }} VND</h4>
                                     </div>
                                 </div>
                             </div>
-                            <div class="col-xl-4">
+                            {{-- <div class="col-xl-4">
                                 <div class="totle-contain">
                                     <div class="wallet-point"><img src="/template/client/assets/images/svg-icon/coin.svg"
                                             alt=""><img class="img-1"
@@ -44,15 +44,15 @@
                                         <h4>500</h4>
                                     </div>
                                 </div>
-                            </div>
-                            <div class="col-xl-4">
+                            </div> --}}
+                            <div class="col-xl-6">
                                 <div class="totle-contain">
                                     <div class="wallet-point"><img src="/template/client/assets/images/svg-icon/order.svg"
                                             alt=""><img class="img-1"
                                             src="/template/client/assets/images/svg-icon/order.svg" alt=""></div>
                                     <div class="totle-detail">
-                                        <h6>Total Orders</h6>
-                                        <h4>12</h4>
+                                        <h6>Tổng đơn hàng</h6>
+                                        <h4> {{ $dataOfUser['totalOrder'] }} </h4>
                                     </div>
                                 </div>
                             </div>
