@@ -24,12 +24,25 @@ use Illuminate\Support\Str;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Storage;
 use \App\Http\Requests\Client\refund\RefundRequest;
+use Illuminate\Support\Facades\DB;
 
 class ProfileController extends Controller
 {
     public function infomation()
     {
-        return view('client.pages.profile.information');
+        $dataUser = [];
+
+        // TINH TONG GIA
+        $orderData = Order::where('user_id', Auth::id())
+            ->whereNotIn('status', ['PROCESSING', 'CANCELED'])
+            ->select(
+                DB::raw('COUNT(id) as total_orders'), // Đếm số lượng đơn hàng
+                DB::raw('SUM(total_amount) as total_price') // Tính tổng giá trị của tất cả các đơn hàng
+            )
+            ->first(); // Lấy kết quả duy nhất
+        $dataUser['totalOrder'] = $orderData->total_orders ?? 0; // Tổng số lượng đơn hàng
+        $dataUser['totalPrice'] = $orderData->total_price ?? 0; // Tổng giá trị đơn hàng
+        return view('client.pages.profile.information', ['dataOfUser' => $dataUser]);
     }
 
     public function orderHistory()
@@ -77,12 +90,19 @@ class ProfileController extends Controller
         $voucher = Voucher::where('type', 'SUCCESS')->first();
 
         if ($voucher) {
-            $data = [
-                "user_id" => Auth::id(),
-                "voucher_id" => $voucher->id
-            ];
+            // Kiểm tra xem đã tồn tại bản ghi chưa
+            $existingUsage = VoucherUsage::where('user_id', Auth::id())
+                ->where('voucher_id', $voucher->id)
+                ->first();
 
-            VoucherUsage::create($data);
+            if (!$existingUsage) {
+                // Nếu chưa có thì tạo mới
+                $data = [
+                    "user_id"    => Auth::id(),
+                    "voucher_id" => $voucher->id,
+                ];
+                VoucherUsage::create($data);
+            }
         }
 
         // Thông báo cho người dùng
