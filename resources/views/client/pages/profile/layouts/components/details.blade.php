@@ -320,7 +320,20 @@
                         // console.log(response);
                         window.location.href = response.urlRedirect
                     },
+                    error: function(xhr, status, error) {
+                        // Xử lý khi API gặp lỗi
+                        let response = JSON.parse(xhr.responseText);
+                        console.error('API Error:', response.message);
 
+                        // Thông báo lỗi cho người dùng
+                        if (xhr.status === 500) {
+                            Swal.fire({
+                                title: response.message,
+                                icon: "error",
+                                cancelButtonText: "Đồng ý"
+                            })
+                        }
+                    }
                 });
 
             })

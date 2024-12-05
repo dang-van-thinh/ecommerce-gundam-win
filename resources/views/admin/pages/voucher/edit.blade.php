@@ -107,7 +107,7 @@
                         <div class="form-group">
                             <label for="discount_value" class="form-control-label">Giá trị giảm</label>
                             <input type="number" name="discount_value" value="{{ $voucher->discount_value }}"
-                                placeholder="Giá trị giảm.." class="form-control">
+                                placeholder="Giá trị giảm.." class="form-control" min="1">
                             @if ($errors->has('discount_value'))
                                 <div class="form-text badge text-danger">
                                     {{ $errors->first('discount_value') }}

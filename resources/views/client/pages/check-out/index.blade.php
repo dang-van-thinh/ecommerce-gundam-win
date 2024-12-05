@@ -87,14 +87,14 @@
                             <div class="payment-options">
                                 <h4 class="mb-3">Phương Thức Thanh Toán</h4>
                                 <div class="row gy-3">
-                                    <div class="col-sm-4">
+                                    <div class="col-sm-6">
                                         <div class="payment-box">
                                             <input class="custom-radio me-2" id="cod" type="radio" checked="checked"
                                                 value="cod" name="payment_method">
                                             <label for="cod">Thanh toán khi nhận hàng</label>
                                         </div>
                                     </div>
-                                    <div class="col-sm-4">
+                                    <div class="col-sm-6">
                                         <div class="payment-box">
                                             <input class="custom-radio me-2" id="momo" type="radio"
                                                 name="payment_method" value="momo">
@@ -102,14 +102,14 @@
 
                                         </div>
                                     </div>
-                                    <div class="col-sm-4">
+                                    {{-- <div class="col-sm-4">
                                         <div class="payment-box">
                                             <input class="custom-radio me-2" id="vnpay" type="radio"
                                                 name="payment_method" value="vnpay">
                                             <label for="vnpay">Thanh toán qua VNPAY</label>
 
                                         </div>
-                                    </div>
+                                    </div> --}}
                                 </div>
                             </div>
                             <div class="address-option">
@@ -358,9 +358,12 @@
     });
     document.addEventListener('DOMContentLoaded', function() {
         // hien thi voucher sugest
-        let voucherSugest = @json($voucherApply->toArray());
-        console.log("hiii", voucherSugest);
-        showBoxVoucherActive(voucherSugest);
+        let voucherSugest = @json($voucherApply);
+        // console.log("hiii", voucherSugest);
+        if (voucherSugest != null) {
+            showBoxVoucherActive(voucherSugest);
+        }
+
         // Lắng nghe sự kiện nhấn nút "Áp dụng" trong modal
         document.querySelectorAll('.apply-coupon').forEach(button => {
             button.addEventListener('click', function() {
@@ -475,7 +478,7 @@
     });
 
     function showBoxVoucherActive(voucherSugggest) {
-        console.log(voucherSugggest);
+        // console.log("hiii cc ", voucherSugggest);
         // Hiển thị thẻ mã giảm giá đã áp dụng và ẩn ô input
         $('#coupon-display').show();
         $('#coupon-name').text(voucherSugggest.name);
@@ -498,7 +501,7 @@
                 discountAmount = totalAmount;
             }
         }
-        console.log("giam gia", discountAmount);
+        // console.log("giam gia", discountAmount);
 
         const newTotal = totalAmount - discountAmount;
 
