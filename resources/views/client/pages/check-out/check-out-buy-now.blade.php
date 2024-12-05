@@ -85,7 +85,7 @@
                             <div class="payment-options">
                                 <h4 class="mb-3">Phương Thức Thanh Toán</h4>
                                 <div class="row gy-3">
-                                    <div class="col-sm-4">
+                                    <div class="col-sm-6">
                                         <div class="payment-box">
                                             <input class="custom-radio me-2" id="cod" type="radio" checked="checked"
                                                 value="cod" name="payment_method">

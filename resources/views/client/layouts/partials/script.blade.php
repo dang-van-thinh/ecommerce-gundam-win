@@ -13,3 +13,10 @@
 <script src="/template/client/assets/js/theme-setting.js"></script><!-- Theme js-->
 <script src="/template/client/assets/js/script.js"></script>
 <script src="/template/client/assets/js/dashboard-left-sidebar.js"></script>
+<script>
+    window.addEventListener('pageshow', function (event) {
+        if (event.persisted) {
+            window.location.reload(); // Reload lại trang nếu được load từ cache
+        }
+    });
+</script>
