@@ -149,7 +149,7 @@
                             </ul>
                         </div> --}}
                         <form action="{{ route('check-out') }}" method="get" class="mt-4">
-                            @csrf
+                            
                             <button type="submit" class="btn btn_black w-100 sm rounded" id="submit_checkout">Thanh
                                 toán</button>
                         </form>
@@ -346,14 +346,16 @@
                     productResponse.forEach(item => {
                         const productRoute = `{{ route('product', ':id') }}`;
                         const row = document.createElement('tr');
-                        console.log(item.product.id);
+                        console.log(item.product);
                         // Cột sản phẩm
                         const productCell = document.createElement('td');
                         const cartBox = document.createElement('div');
                         cartBox.className = 'cart-box';
 
                         // Ảnh sản phẩm
-                        const imgLink = document.createElement('a');
+                        const imgLink = document.createElement('a')
+                        const overStock = document.createElement("div")
+                        imgLink.style.position = 'relative';
                         imgLink.href = productRoute.replace(':id', item.product.id);
                         const img = document.createElement('img');
                         img.src = `/storage/${item.product.image}`;
@@ -361,14 +363,42 @@
                         imgLink.appendChild(img);
                         cartBox.appendChild(imgLink);
 
+                        // lop phu khi san pham het hang
+                        overStock.innerHTML = `
+                        <div style="
+                            position: absolute;
+                            top: 0;
+                            left: 0;
+                            width: 100%;
+                            height: 100%;
+                            background-color: rgba(0, 0, 0, 0.6);
+                            display: flex;
+                            justify-content: center;
+                            align-items: center;
+                            color: #fff;
+                            font-size: 11px;
+                            font-weight: bold;
+                            z-index: 10;
+                            ">
+                                    HẾT HÀNG
+                                </div>
+                        `;
+
+                        if (item.product_variant.quantity <= 0) {
+                            imgLink.appendChild(overStock)
+                        }
+
                         // Thông tin sản phẩm
                         const infoDiv = document.createElement('div');
                         const nameLink = document.createElement('a');
                         nameLink.href = productRoute.replace(':id', item.product.id);
+
                         const name = document.createElement('h5');
                         name.textContent = item.product.name;
                         nameLink.appendChild(name);
                         infoDiv.appendChild(nameLink);
+
+
 
                         // Biến thể sản phẩm
                         item.product_variant.attribute_values.forEach(variant => {

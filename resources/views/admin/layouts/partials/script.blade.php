@@ -24,6 +24,13 @@
 <script src="/template/assets/js/init/fullcalendar-init.js"></script>
 
 
+<script>
+    window.addEventListener('pageshow', function (event) {
+        if (event.persisted) {
+            window.location.reload(); // Reload lại trang nếu được load từ cache
+        }
+    });
+</script>
 
 <!--Local Stuff-->
 <script>

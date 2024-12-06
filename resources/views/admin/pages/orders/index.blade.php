@@ -37,8 +37,9 @@
                             <th scope="col">Người dùng</th>
                             <th scope="col">Giá</th>
                             <th scope="col">Phương thức thanh toán</th>
-                            <th scope="col">Trạng thái</th>
+                            <th scope="col">Trạng thái đơn hàng</th>
                             <th scope="col">Ngày đặt</th>
+                            <th scope="col">Trạng thái thanh toán</th>
                             <th scope="col">Thao tác</th>
                         </tr>
                     </thead>
@@ -84,11 +85,13 @@
                                         order.status === 'DELIVERING' ? '<span class="badge bg-primary">Đang giao hàng</span>' :
                                         order.status === 'SHIPPED' ? '<span class="badge bg-primary">Đã giao hàng</span>' :
                                         order.status === 'COMPLETED' ? '<span class="badge bg-success">Đơn hàng hoàn tất</span>' :
-                                        order.status === 'REFUND' ? '<span class="badge bg-danger">Hoàn hàng</span>' :
                                         order.status === 'PROCESSING' ? '<span class="badge bg-danger">Chưa thanh toán</span>' :
                                         '<span class="badge bg-danger">Đơn hàng đã Huỷ</span>'}
                                 </td>
                                 <td>${new Date(order.created_at).toLocaleDateString('vi-VN')}</td>
+                                <td>${ order.payment_status === 'UNPAID' ? '<span class="badge bg-warning">Chưa thanh toán</span>' :
+                                order.payment_status === 'REFUNDED' ? '<span class="badge bg-danger">Hoàn hàng</span>' :
+                                        '<span class="badge bg-success">Đã thanh toán</span>'}</td>
                                 <td><a href="/admin/orders/${order.id}/edit" class="btn btn-primary btn-sm">Cập nhật trạng thái</a></td>
                             </tr>
                         `);
