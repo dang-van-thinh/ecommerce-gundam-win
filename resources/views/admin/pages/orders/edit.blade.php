@@ -116,8 +116,6 @@
                                 @elseif ($order->status === 'DELIVERING')
                                     <button type="submit" name="status" value="SHIPPED" class="btn btn-info">Đã giao
                                         hàng</button>
-                                    <button type="submit" name="status" value="CANCELED" class="btn btn-danger">Huỷ đơn
-                                        hàng</button>
                                     {{-- @elseif ($order->status === 'SHIPPED')
                                     <button type="submit" name="status" value="COMPLETED" class="btn btn-success">Giao
                                         hàng thành công</button> --}}
