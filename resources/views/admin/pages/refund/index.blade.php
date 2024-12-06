@@ -14,7 +14,7 @@
                         <thead>
                             <tr>
                                 <th class="text-center" scope="col">Mã đơn hoàn </th>
-                                <th class="text-center" scope="col">Giá trị đơn hàng</th>
+                                <th class="text-center" scope="col">Giá trị đơn hoàn hàng</th>
                                 <th class="text-center" scope="col">Khách hàng</th>
                                 <th class="text-center" scope="col">Liên hệ</th>
                                 <th class="text-center" scope="col">Trạng thái</th>
@@ -22,49 +22,49 @@
                             </tr>
                         </thead>
                         <tbody>
-                            @foreach ($orders as $order)
-                                @foreach ($order->refund as $refund)
-                                    <tr>
-                                        <td scope="row" class="text-center">
-                                            {{ $refund->code ?? 'Không có mã đơn hoàn hàng' }}
-                                        </td>
-                                        <td class="text-center">{{ number_format($order->total_amount) }} VND</td>
-                                        <td class="text-center"> {{ $order->customer_name }}</td>
-                                        <td class="text-center">{{ $order->phone }}</td>
-                                        <td class="text-center">
-                                            @php
-                                                // Xác định trạng thái hoàn hàng và chuyển đổi thành tiếng Việt
-                                                $statusText = '';
-                                                $statusClass = '';
-                                                switch ($refund->status) {
-                                                    case 'PENDING':
-                                                        $statusText = 'Đang chờ phê duyệt';
-                                                        $statusClass = 'badge bg-warning';
-                                                        break;
-                                                    case 'APPROVED':
-                                                        $statusText = 'Đã được phê duyệt';
-                                                        $statusClass = 'badge bg-success';
-                                                        break;
-                                                    case 'IN_TRANSIT':
-                                                        $statusText = 'Đang vận chuyển';
-                                                        $statusClass = 'badge bg-primary';
-                                                        break;
-                                                    case 'COMPLETED':
-                                                        $statusText = 'Hoàn tất';
-                                                        $statusClass = 'badge bg-success';
-                                                        break;
-                                                }
-                                            @endphp
-                                            <span class="{{ $statusClass }}">{{ $statusText }}</span>
-                                        </td>
-                                        <td class="text-center">
+                            @foreach ($refunds as $refund)
+                                <tr>
+                                    <td scope="row" class="text-center">
+                                        {{ $refund->code ?? 'Không có mã đơn hoàn hàng' }}
+                                    </td>
+                                    <td class="text-center">
+                                        {{ number_format($refund->refund_total_amount, 0, ',', '.') }} VND</td>
+                                    <td class="text-center"> {{ $refund->order->customer_name }}</td>
+                                    <td class="text-center">{{ $refund->order->phone }}</td>
+                                    <td class="text-center">
+                                        @php
+                                            $statusText = '';
+                                            $statusClass = '';
+                                            switch ($refund->status) {
+                                                case 'PENDING':
+                                                    $statusText = 'Đang chờ phê duyệt';
+                                                    $statusClass = 'badge bg-warning';
+                                                    break;
+                                                case 'APPROVED':
+                                                    $statusText = 'Đã được phê duyệt';
+                                                    $statusClass = 'badge bg-success';
+                                                    break;
+                                                case 'IN_TRANSIT':
+                                                    $statusText = 'Đang vận chuyển';
+                                                    $statusClass = 'badge bg-primary';
+                                                    break;
+                                                case 'COMPLETED':
+                                                    $statusText = 'Hoàn tất';
+                                                    $statusClass = 'badge bg-success';
+                                                    break;
+                                            }
+                                        @endphp
+                                        <span class="{{ $statusClass }}">{{ $statusText }}</span>
+                                    </td>
 
-                                            <button type="button" class="btn btn-primary" data-toggle="modal"
-                                                data-target="#refundDetailModal-{{ $order->id }}">
-                                                <i class="fa fa-info-circle"></i>
-                                            </button>
-                                        </td>
-                                    </tr>
+                                    <td class="text-center">
+                                        <button type="button" class="btn btn-primary" data-toggle="modal"
+                                            data-target="#refundDetailModal-{{ $refund->id }}">
+                                            <i class="fa fa-info-circle"></i>
+                                        </button>
+                                    </td>
+                                </tr>
+                                @foreach ($refund->refundItem as $refundItem)
                                     @include('admin.pages.refund.show')
                                 @endforeach
                             @endforeach
@@ -72,7 +72,7 @@
                     </table>
                 </div>
                 <div class="d-flex justify-content-center">
-                    {{ $orders->links() }}
+                    {{ $refunds->links() }}
                 </div>
             </div>
         </div>

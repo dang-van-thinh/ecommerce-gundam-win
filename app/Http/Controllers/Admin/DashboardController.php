@@ -9,6 +9,7 @@ use App\Models\Order;
 use App\Models\OrderItem;
 use App\Models\Product;
 use App\Models\ProductVariant;
+use App\Models\Refund;
 use App\Models\User;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
@@ -18,54 +19,87 @@ class DashboardController extends Controller
 {
     public function index()
     {
+        // Lấy danh sách năm có dữ liệu đơn hàng
+        $availableYears = Order::selectRaw('YEAR(created_at) as year')
+            ->distinct()
+            ->orderBy('year', 'desc')
+            ->pluck('year');
+
+        // Lấy năm được chọn, nếu không chọn thì mặc định là năm hiện tại
+        $selectedYear = request('year', Carbon::now()->year);
+        $selectedMonth = request('month', null);
+        $selectedDay = request('day', null);
+
+        // Hàm tạo điều kiện năm, tháng, ngày cho các truy vấn
+        $filterByDate = function ($query) use ($selectedYear, $selectedMonth, $selectedDay) {
+            $query->whereYear('created_at', $selectedYear);
+            if ($selectedMonth) {
+                $query->whereMonth('created_at', $selectedMonth);
+            }
+            if ($selectedDay) {
+                $query->whereDay('created_at', $selectedDay);
+            }
+        };
+
+        // Tổng số người dùng
         $totalUsers = User::whereHas('roles', function ($query) {
             $query->where('name', 'Client');
         })->count();
 
+        // người dùng mới 
         $oneWeekAgo = Carbon::now()->subWeek()->toDateTimeString();
-
         $newUsers = User::whereHas('roles', function ($query) {
             $query->where('name', 'Client');
         })
             ->where('created_at', '>=', $oneWeekAgo)
             ->count();
 
-        $totalCompleted = Order::where('status', 'COMPLETED')->sum('total_amount');
+        // Tổng doanh thu
+        $totalCompleted = Order::where('status', 'COMPLETED')
+            ->where($filterByDate)
+            ->sum('total_amount');
+        // Tổng giá trị hoàn hàng (dựa trên refund_items và status là 'APPROVED')
+        $totalRefunds = Refund::where($filterByDate)
+            ->with(['refundItem.productVariant.product'])  // Tải quan hệ refundItem và productVariant
+            ->get()  // Lấy tất cả các refund
+            ->sum(function ($refund) {
+                // Tính tổng giá trị hoàn hàng cho mỗi đơn hoàn
+                return $refund->refundItem->filter(function ($item) {
+                    return $item->status == 'APPROVED';  // Lọc ra các item có trạng thái APPROVED
+                })->sum(function ($item) {
+                    // Tính giá trị của mỗi item hoàn hàng
+                    return $item->quantity * $item->productVariant->price;
+                });
+            });
+        $totalRevenue = $totalCompleted - $totalRefunds;
 
+        // Tổng số đơn hàng
+        $totalOrders = Order::where($filterByDate)->count();
 
-        // Đếm tổng số đơn hàng
-        $totalOrders = Order::count();
-
-        // Đếm số đơn hàng có status là "COMPLETED" giao thành công
-        $completedOrders = Order::where('status', 'COMPLETED')->count();
-        // Đếm số đơn hàng có status là "PENDING" đang chờ xử lý
-        $pendingOrders = Order::where('status', 'PENDING')->count();
-        // Đếm số đơn hàng có status là "DELIVERING" đang giao
-        $deliveringOrders = Order::where('status', 'DELIVERING')->count();
-        // Đếm số đơn hàng có status là "SHIPPED" đã giao
-        $shippedOrders = Order::where('status', 'SHIPPED')->count();
-        // Đếm số đơn hàng có status là "CANCELLED" giao thất bại
-        $cancelledOrders = Order::where('status', 'CANCELED')->count();
+        // Trạng thái đơn hàng
+        $completedOrders = Order::where('status', 'COMPLETED')->where($filterByDate)->count();
+        $pendingOrders = Order::where('status', 'PENDING')->where($filterByDate)->count();
+        $deliveringOrders = Order::where('status', 'DELIVERING')->where($filterByDate)->count();
+        $shippedOrders = Order::where('status', 'SHIPPED')->where($filterByDate)->count();
+        $cancelledOrders = Order::where('status', 'CANCELED')->where($filterByDate)->count();
         // Đếm số đơn hàng có status là "REFUND" hoàn trả
-        $refundOrders = Order::where('status', 'REFUND')->count();
+        $refundOrders = Refund::where($filterByDate)->count();
 
         // Tính phần trăm đơn hàng hoàn thành thành công
         $successRate = $totalOrders > 0 ? ($completedOrders / $totalOrders) * 100 : 0;
 
         // Tính tổng số lượng (quantity) của tất cả các biến thể sản phẩm
-        $totalQuantity = ProductVariant::sum('quantity');
-
+        $totalQuantity = ProductVariant::where($filterByDate)->sum('quantity');
         // Tính tổng số lượng đã bán (sold) của tất cả các biến thể sản phẩm
-        $totalSold = ProductVariant::sum('sold');
-
+        $totalSold = ProductVariant::where($filterByDate)->sum('sold');
+        // Tồn kho
         $totalProduct = $totalQuantity - $totalSold;
 
-        // Đếm tổng số bài viết
-        $totalArticles = Article::count();
+        // Tổng số bài viết
+        $totalArticles = Article::where($filterByDate)->count();
 
-
+        // Lấy dữ liệu sản phẩm
         $salesData = Product::with(['productVariants'])->get();
-
         // Tính tổng số lượng bán của từng sản phẩm
         $processedData = $salesData->map(function ($product) {
             return [
@@ -74,7 +108,6 @@ class DashboardController extends Controller
                 'sold' => $product->productVariants->sum('sold') // Tổng số lượng bán
             ];
         });
-
         // Lấy 10 sản phẩm bán nhiều nhất
         $topProducts = $processedData->sortByDesc('sold')->take(12);
 
@@ -84,27 +117,46 @@ class DashboardController extends Controller
         $data = $topProducts->pluck('sold'); // Số lượng bán
 
 
+        // Lấy 10 sản phẩm bán nhiều nhất
+        $topProducts = $processedData->sortByDesc('sold')->take(12);
+        // Tách dữ liệu để truyền vào biểu đồ
+        $codes = $topProducts->pluck('code'); // Mã sản phẩm
+        $labels = $topProducts->pluck('name'); // Tên sản phẩm
+        $data = $topProducts->pluck('sold'); // Số lượng bán
 
-        // tính số lượng tiền thu đc trong 1 tháng
+        // Lấy dữ liệu doanh thu của năm được chọn
         $monthlyRevenue = Order::selectRaw('MONTH(created_at) as month, SUM(total_amount) as total_revenue')
             ->where('status', 'COMPLETED')
-            ->whereYear('created_at', Carbon::now()->year) // Lọc trong năm hiện tại
+            ->whereYear('created_at', $selectedYear)
             ->groupBy('month')
             ->orderBy('month')
             ->get();
-        // Tạo mảng labels và data để truyền vào view
+        // Lấy giá trị hoàn hàng theo tháng
+        $monthlyRefunds = Refund::selectRaw('MONTH(refunds.created_at) as month, SUM(refund_items.quantity * product_variants.price) as total_refund')
+            ->join('refund_items', 'refunds.id', '=', 'refund_items.refund_id')
+            ->join('product_variants', 'refund_items.product_variant_id', '=', 'product_variants.id')
+            ->whereYear('refunds.created_at', $selectedYear)
+            ->where('refund_items.status', 'APPROVED')
+            ->groupBy('month')
+            ->orderBy('month')
+            ->get();
+
+        // Chuẩn bị dữ liệu cho biểu đồ
         $labelsMonthlyRevenue = [];
         $dataMonthlyRevenue = [];
-        // Khởi tạo doanh thu từng tháng là 0
         for ($i = 1; $i <= 12; $i++) {
             $labelsMonthlyRevenue[] = "Tháng $i";
             $dataMonthlyRevenue[] = 0;
         }
-        // Gán doanh thu vào từng tháng theo kết quả truy vấn
-        foreach ($monthlyRevenue as $revenue) {
-            $dataMonthlyRevenue[$revenue->month - 1] = $revenue->total_revenue;
-        }
 
+        // Cập nhật doanh thu theo tháng sau khi trừ giá trị hoàn hàng
+        foreach ($monthlyRevenue as $revenue) {
+            // Tìm giá trị hoàn hàng của tháng này
+            $refundAmount = $monthlyRefunds->firstWhere('month', $revenue->month)->total_refund ?? 0;
+
+            // Tính doanh thu sau khi trừ hoàn hàng
+            $dataMonthlyRevenue[$revenue->month - 1] = $revenue->total_revenue - $refundAmount;
+        }
 
         // Tính doanh thu trong ngày hiện tại
         $todayRevenue = Order::selectRaw('SUM(total_amount) as total_revenue')
@@ -115,7 +167,8 @@ class DashboardController extends Controller
         // Kiểm tra xem có doanh thu hay không, nếu không thì giá trị sẽ là 0
         $totalTodayRevenue = $todayRevenue ? $todayRevenue->total_revenue : 0;
 
-        $feedbackCount = Feedback::whereNull('parent_feedback_id')->count();
+        // Đếm feedback
+        $feedbackCount = Feedback::whereNull('parent_feedback_id')->where($filterByDate)->count();
 
 
         // Sản phẩm hết hàng
@@ -128,11 +181,12 @@ class DashboardController extends Controller
                 return $totalQuantity == 0;
             })
             ->count();
+
         return view(
             'admin.pages.dashboard.index',
             compact(
                 'totalUsers',
-                'totalCompleted',
+                'totalRevenue',
                 'completedOrders',
                 'pendingOrders',
                 'deliveringOrders',
@@ -150,6 +204,10 @@ class DashboardController extends Controller
                 'data',
                 'labelsMonthlyRevenue',
                 'dataMonthlyRevenue',
+                'availableYears',
+                'selectedYear',
+                'selectedMonth',
+                'selectedDay',
                 'totalTodayRevenue',
                 'totalOutOfStockProducts'
             )

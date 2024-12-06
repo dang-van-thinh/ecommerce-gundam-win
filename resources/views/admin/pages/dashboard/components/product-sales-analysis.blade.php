@@ -1,7 +1,6 @@
 <div class="col-sm-12 mb-4">
     <canvas id="salesChart" width="400" height="200"></canvas>
 </div>
-<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 <script>
     var ctx1 = document.getElementById('salesChart').getContext('2d');
 
@@ -21,7 +20,7 @@
         data: {
             labels: @json($codes), // Hiển thị mã sản phẩm dưới trục X
             datasets: [{
-                label: 'Số lượng bán',
+                label: '12 sản phẩm bán chạy nhất',
                 data: @json($data), // Số lượng bán
                 backgroundColor: generateRandomColors(@json($data).length),
             }]
