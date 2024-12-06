@@ -12,7 +12,7 @@ class Refund extends Model
     protected $table = "refunds";
 
     protected $fillable = ['order_id', 'status', 'code'];
-    public $timestamps = false;
+    public $timestamps = true;
 
     public function order()
     {

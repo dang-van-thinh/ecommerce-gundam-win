@@ -92,6 +92,16 @@
                                         <div class="swiper-slide">
                                             <img class="bg-img" src="{{ '/storage/' . $productImage->image_url }}"
                                                 alt="">
+                                            @if ($product->is_out_of_stock)
+                                                <!-- Lớp phủ cho sản phẩm hết hàng -->
+                                                <div
+                                                    style="position: absolute; top: 0; left: 0; width: 100%; height: 100%; 
+                                                    background-color: rgba(0, 0, 0, 0.6); display: flex; 
+                                                    justify-content: center; align-items: center; color: #fff; 
+                                                    font-size: 25px; font-weight: bold; z-index: 10;">
+                                                    HẾT HÀNG
+                                                </div>
+                                            @endif
                                         </div>
                                     @endforeach
                                 </div>
@@ -576,6 +586,16 @@
                                             <img class="bg-img" src="{{ '/storage/' . $firstImage->image_url }}"
                                                 alt="product">
                                         </a>
+                                        @if ($product->is_out_of_stock)
+                                            <!-- Lớp phủ cho sản phẩm hết hàng -->
+                                            <div
+                                                style="position: absolute; top: 0; left: 0; width: 100%; height: 100%; 
+                                                background-color: rgba(0, 0, 0, 0.6); display: flex; 
+                                                justify-content: center; align-items: center; color: #fff; 
+                                                font-size: 25px; font-weight: bold; z-index: 10;">
+                                                HẾT HÀNG
+                                            </div>
+                                        @endif
                                     </div>
                                     <div class="cart-info-icon">
                                     </div>

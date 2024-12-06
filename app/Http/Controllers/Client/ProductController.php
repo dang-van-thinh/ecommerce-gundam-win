@@ -14,7 +14,17 @@ class ProductController extends Controller
 {
     public function index($id)
     {
-        $product = Product::with(['productImages', 'productVariants.attributeValues.attribute', 'categoryProduct'])->findOrFail($id);
+        $product = Product::with([
+            'productImages',
+            'productVariants.attributeValues.attribute',
+            'categoryProduct'
+        ])
+            ->withCount([
+                'productVariants as is_out_of_stock' => function ($query) {
+                    $query->select(DB::raw('CASE WHEN SUM(quantity) IS NULL OR SUM(quantity) = 0 THEN 1 ELSE 0 END'));
+                }
+            ])
+            ->findOrFail($id);
         // dd($product);
         if ($product) {
             // Tăng view mỗi khi sản phẩm được xem
@@ -70,7 +80,11 @@ class ProductController extends Controller
         $relatedProducts = Product::join('product_variants as pv', 'products.id', '=', 'pv.product_id')
             ->leftJoin('order_items as ot', 'pv.id', '=', 'ot.product_variant_id')
             ->leftJoin('feedbacks as f', 'ot.id', '=', 'f.order_item_id')
-            ->select('products.*', DB::raw('AVG(f.rating) as average_rating'))
+            ->select(
+                'products.*',
+                DB::raw('AVG(f.rating) as average_rating'),
+                DB::raw('CASE WHEN SUM(pv.quantity) IS NULL OR SUM(pv.quantity) = 0 THEN 1 ELSE 0 END as is_out_of_stock')
+            ) // Kiểm tra hết hàng)
             ->groupBy('products.id') // Nhóm đầy đủ các cột
             ->where('products.category_product_id', $categoryId) // Lọc cùng danh mục
             ->where('products.id', '!=', $id) // Loại trừ sản phẩm hiện tại

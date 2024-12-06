@@ -80,21 +80,68 @@
         </div> --}}
         <!-- /Widgets -->
 
-
         <div class="col-sm-12 mb-4">
             <div class="row">
+                <div class="col-sm-4">
+                    <label for="yearSelect">Năm:</label>
+                    <select id="yearSelect" class="form-control">
+                        @foreach ($availableYears as $year)
+                            <option value="{{ $year }}" {{ $year == $selectedYear ? 'selected' : '' }}>
+                                {{ $year }}
+                            </option>
+                        @endforeach
+                    </select>
+                </div>
+                <div class="col-sm-4">
+                    <label for="monthSelect">Tháng:</label>
+                    <select id="monthSelect" class="form-control">
+                        <option value="">Tất cả</option>
+                        @for ($i = 1; $i <= 12; $i++)
+                            <option value="{{ $i }}" {{ $i == request('month') ? 'selected' : '' }}>
+                                Tháng {{ $i }}
+                            </option>
+                        @endfor
+                    </select>
+                </div>
+                <div class="col-sm-4">
+                    <label for="daySelect">Ngày:</label>
+                    <select id="daySelect" class="form-control">
+                        <option value="">Tất cả</option>
+                        @for ($i = 1; $i <= 31; $i++)
+                            <option value="{{ $i }}" {{ $i == request('day') ? 'selected' : '' }}>
+                                Ngày {{ $i }}
+                            </option>
+                        @endfor
+                    </select>
+                </div>
+            </div>
+        </div>
+        <div class="col-sm-12 mb-4">
+            <div class="row">
+                {{-- <div class="col-sm-12 mb-4">
+                    <label for="yearSelect">Thống kê theo năm:</label>
+                    <select id="yearSelect" class="form-control" style="width: 200px; display: inline-block;">
+                        @foreach ($availableYears as $year)
+                            <option value="{{ $year }}" {{ $year == $selectedYear ? 'selected' : '' }}>
+                                {{ $year }}
+                            </option>
+                        @endforeach
+                    </select>
+                </div> --}}
+
+                <!-- Phần giao diện của tổng doanh thu -->
                 <div class="col-sm-6 col-lg-3">
                     <div class="card bg-flat-color-1 text-white">
                         <div class="card-body">
-                            <div class="card-left float-left pt-1" style="width:220px;z-index: 10">
+                            <div class="card-left float-left pt-1" style="width:220px; z-index:10">
                                 <h3 class="fw-r mb-0">
-                                    <span>{{ number_format($totalCompleted, 0, ',', '.') }}<span class="currency mr-1 mt-1"
-                                            style="font-size: 12px;">VND</span></span>
+                                    <span>{{ number_format($totalRevenue, 0, ',', '.') }}
+                                        <span class="currency mr-1 mt-1" style="font-size: 12px;">VND</span>
+                                    </span>
                                 </h3>
                                 <p class="text-light m-0 mt-1">Tổng Doanh thu</p>
-                            </div><!-- /.card-left -->
+                            </div>
                         </div>
-
                     </div>
                 </div>
                 <!--/.col-->
@@ -128,7 +175,7 @@
                                     <span>{{ number_format($totalTodayRevenue, 0, ',', '.') }}<span
                                             class="currency mr-1 mt-1" style="font-size: 12px;">VND</span></span>
                                 </h3>
-                                <p class="text-light m-0 mt-1" style="width:250px">Doanh thu trong ngày</p>
+                                <p class="text-light m-0 mt-1" style="width:250px">Doanh thu ngày (hiện tại)</p>
                             </div><!-- /.card-left -->
                         </div>
 
@@ -145,7 +192,6 @@
                                 </h3>
                                 <p class="text-light m-0 mt-1">Người dùng mới</p>
                             </div><!-- /.card-left -->
-
                             <div class="card-right float-right text-right">
                                 <i class="fa fa-user-plus icon fade-5" style="font-size: 3.68em;"></i>
                             </div><!-- /.card-right -->
@@ -161,57 +207,65 @@
         <div class="col-sm-12 mb-4">
             <div class="row">
                 <div class="col-lg-4 col-md-4">
-                    <div class="card">
-                        <div class="card-body">
-                            <div class="stat-widget-four">
-                                <div class="stat-icon me-3">
-                                    <i class="fa fa-cubes text-primary fs-3"></i>
-                                </div>
-                                <div class="stat-content">
-                                    <div class="dib text-left">
-                                        <div class="stat-heading">Số lượng sản phẩm</div>
-                                        <div class="stat-text">Còn hàng: {{ $totalProduct }}</div>
+                    <a href="{{ route('products.index') }}">
+                        <div class="card">
+                            <div class="card-body">
+                                <div class="stat-widget-four">
+                                    <div class="stat-icon me-3">
+                                        <i class="fa fa-cubes text-primary fs-3"></i>
+                                    </div>
+                                    <div class="stat-content">
+                                        <div class="dib text-left">
+                                            <div class="stat-heading">Số lượng sản phẩm</div>
+                                            <div class="stat-text">Còn hàng: {{ $totalProduct }}</div>
+                                        </div>
                                     </div>
                                 </div>
                             </div>
                         </div>
-                    </div>
+                    </a>
                 </div>
 
                 <div class="col-lg-4 col-md-4">
-                    <div class="card">
-                        <div class="card-body">
-                            <div class="stat-widget-four">
-                                <div class="stat-icon me-3">
-                                    <i class="fa fa-cart-arrow-down text-success fs-3"></i>
-                                </div>
-                                <div class="stat-content">
-                                    <div class="dib text-left">
-                                        <div class="stat-heading">Số lượng đơn hàng</div>
-                                        <div class="stat-text">Tổng số: {{ $totalOrders }}</div>
+                    <a href="{{ route('orders.index') }}">
+                        <div class="card">
+                            <div class="card-body">
+                                <div class="stat-widget-four">
+                                    <div class="stat-icon me-3">
+                                        <i class="fa fa-cart-arrow-down text-success fs-3"></i>
+                                    </div>
+                                    <div class="stat-content">
+                                        <div class="dib text-left">
+                                            <div class="stat-heading">Số lượng đơn hàng</div>
+                                            <div class="stat-text">Tổng số: {{ $totalOrders }}</div>
+                                        </div>
                                     </div>
                                 </div>
                             </div>
                         </div>
-                    </div>
+                    </a>
+
                 </div>
 
                 <div class="col-lg-4 col-md-4">
-                    <div class="card">
-                        <div class="card-body">
-                            <div class="stat-widget-four">
-                                <div class="stat-icon me-3">
-                                    <i class="fa fa-comments text-warning fs-3"></i>
-                                </div>
-                                <div class="stat-content">
-                                    <div class="dib text-left">
-                                        <div class="stat-heading">Số lượng đánh giá</div>
-                                        <div class="stat-text">Tổng số: {{ $feedbackCount }}</div>
+                    <a href="{{ route('feedback.index') }}">
+                        <div class="card">
+                            <div class="card-body">
+                                <div class="stat-widget-four">
+                                    <div class="stat-icon me-3">
+                                        <i class="fa fa-comments text-warning fs-3"></i>
+                                    </div>
+                                    <div class="stat-content">
+                                        <div class="dib text-left">
+                                            <div class="stat-heading">Số lượng đánh giá</div>
+                                            <div class="stat-text">Tổng số: {{ $feedbackCount }}</div>
+                                        </div>
                                     </div>
                                 </div>
                             </div>
                         </div>
-                    </div>
+                    </a>
+
                 </div>
 
             </div>
@@ -256,21 +310,24 @@
                 </div>
 
                 <div class="col-lg-4 col-md-4">
-                    <div class="card">
-                        <div class="card-body">
-                            <div class="stat-widget-four">
-                                <div class="stat-icon me-3">
-                                    <i class="fa fa-file-text text-secondary fs-3"></i>
-                                </div>
-                                <div class="stat-content">
-                                    <div class="dib text-left">
-                                        <div class="stat-heading">Số lượng bài viết</div>
-                                        <div class="stat-text">Tổng số: {{ $totalArticles }} </div>
+                    <a href="{{ route('article.index') }}">
+                        <div class="card">
+                            <div class="card-body">
+                                <div class="stat-widget-four">
+                                    <div class="stat-icon me-3">
+                                        <i class="fa fa-file-text text-secondary fs-3"></i>
+                                    </div>
+                                    <div class="stat-content">
+                                        <div class="dib text-left">
+                                            <div class="stat-heading">Số lượng bài viết</div>
+                                            <div class="stat-text">Tổng số: {{ $totalArticles }} </div>
+                                        </div>
                                     </div>
                                 </div>
                             </div>
                         </div>
-                    </div>
+                    </a>
+
                 </div>
 
             </div>
@@ -385,32 +442,58 @@
                     </div>
                 </div>
                 <div class="col-lg-4 col-md-4">
-                    <div class="card">
-                        <div class="card-body">
-                            <div class="stat-widget-one">
-                                <div class="d-flex align-items-center">
-                                    <div class="stat-icon dib"><i class="fa fa-exclamation-triangle text-dark border-dark"
-                                            style="font-size: 15px; padding: 5px;"></i></div>
-                                    <div class="ml-3">
-                                        <div class="stat-heading">Đơn hàng hoàn trả</div>
+                    <a href="{{ route('refund.index') }}">
+                        <div class="card">
+                            <div class="card-body">
+                                <div class="stat-widget-one">
+                                    <div class="d-flex align-items-center">
+                                        <div class="stat-icon dib"><i
+                                                class="fa fa-exclamation-triangle text-dark border-dark"
+                                                style="font-size: 15px; padding: 5px;"></i></div>
+                                        <div class="ml-3">
+                                            <div class="stat-heading">Đơn hàng hoàn trả</div>
+                                        </div>
                                     </div>
-                                </div>
-                                <div class="dib mt-1">
-                                    <div class="stat-text">Tổng số: {{ $refundOrders }}</div>
+                                    <div class="dib mt-1">
+                                        <div class="stat-text">Tổng số: {{ $refundOrders }}</div>
+                                    </div>
                                 </div>
                             </div>
                         </div>
-                    </div>
+                    </a>
+
                 </div>
             </div>
 
         </div>
 
-
+        <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
         @include('admin.pages.dashboard.components.product-sales-analysis')
         @include('admin.pages.dashboard.components.monthly-revenue-chart')
 
-
-
     </div>
+    <script>
+        // Lắng nghe sự kiện thay đổi trên các dropdown
+        const yearSelect = document.getElementById('yearSelect');
+        const monthSelect = document.getElementById('monthSelect');
+        const daySelect = document.getElementById('daySelect');
+
+        function updateURL() {
+            const year = yearSelect.value;
+            const month = monthSelect.value;
+            const day = daySelect.value;
+
+            // Tạo URL mới với các tham số query
+            const queryParams = new URLSearchParams();
+            if (year) queryParams.set('year', year);
+            if (month) queryParams.set('month', month);
+            if (day) queryParams.set('day', day);
+
+            window.location.href = `?${queryParams.toString()}`;
+        }
+
+        yearSelect.addEventListener('change', updateURL);
+        monthSelect.addEventListener('change', updateURL);
+        daySelect.addEventListener('change', updateURL);
+    </script>
 @endsection

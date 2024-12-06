@@ -15,14 +15,21 @@ class RefundController extends Controller
 {
     public function index()
     {
-        $orders = Order::with('orderItems.productVariant.product', 'refund.refundItem.productVariant.product')
-            ->where('status', 'REFUND') // Thêm điều kiện lọc trạng thái refund
+        $refunds = Refund::with('order.orderItems.productVariant.product', 'refundItem.productVariant.product')
             ->orderBy('id', 'desc')
             ->paginate(12);
 
-        // dd($orders);
-        return view('admin.pages.refund.index', compact('orders'));
+        // Tính tổng giá trị hoàn hàng cho từng refund trong trang hiện tại
+        $refunds->getCollection()->transform(function ($refund) {
+            $refund->refund_total_amount = $refund->refundItem->sum(function ($item) {
+                return $item->quantity * $item->productVariant->price;
+            });
+            return $refund;
+        });
+
+        return view('admin.pages.refund.index', compact('refunds'));
     }
+
 
     public function update(Request $request, $refundId)
     {

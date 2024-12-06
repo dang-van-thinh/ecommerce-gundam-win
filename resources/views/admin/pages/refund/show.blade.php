@@ -1,4 +1,4 @@
-<div class="modal fade" id="refundDetailModal-{{ $order->id }}" tabindex="-1" role="dialog"
+<div class="modal fade" id="refundDetailModal-{{ $refund->id }}" tabindex="-1" role="dialog"
     aria-labelledby="refundDetailModalLabel" aria-hidden="true">
     <div class="modal-dialog modal-lg" style="max-width: 50%;" role="document">
         <div class="modal-content">
@@ -35,22 +35,22 @@
                                 <h3 class="text-center">Chi tiết đơn hàng:</h3>
                                 <div>
                                     <strong>Mã đơn hàng: </strong>
-                                    <span>{{ $order->code ?? 'Không có mã order_id' }}</span>
+                                    <span>{{ $refund->order->code ?? 'Không có mã order_id' }}</span>
                                 </div>
                                 <div>
                                     <strong>Địa chỉ: </strong>
-                                    <span>{{ $order->full_address ?? 'Không có địa chỉ' }}</span>
+                                    <span>{{ $refund->order->full_address ?? 'Không có địa chỉ' }}</span>
                                 </div>
                                 <div>
                                     <strong>Khách hàng: </strong>
-                                    <span>{{ $order->customer_name }}</span>
+                                    <span>{{ $refund->order->customer_name }}</span>
                                 </div>
                                 <div>
                                     <strong>Liên hệ: </strong>
-                                    <span>{{ $order->phone }}</span>
+                                    <span>{{ $refund->order->phone }}</span>
                                 </div>
                             </div>
-                            @foreach ($order->orderItems as $item)
+                            @foreach ($refund->order->orderItems as $item)
                                 <div class="d-flex mt-3 rounded border p-2">
                                     <div class="product-img mr-3">
                                         <a href="{{ route('product', $item->productVariant->product->id) }}">
@@ -66,7 +66,7 @@
                                                 {{ $item->product_name }}({{ $item->productVariant->attributeValues->pluck('name')->implode(' - ') }})
                                             </span>
                                         </div>
-                                        <strong>{{ $order->note }}</strong>
+                                        <strong>{{ $item->note }}</strong>
                                         <div>
                                             <strong>Giá: </strong>
                                             <span>{{ number_format($item->product_price) }} Vnd</span>
