@@ -69,6 +69,23 @@ class ProfileController extends Controller
     }
     public function feedbackstore(FeedbackRequest $request)
     {
+        // Kiểm tra xem người dùng đã đánh giá sản phẩm trong đơn hàng này chưa
+        $existingFeedback = Feedback::where('order_item_id', $request->input('order_item_id'))
+                                    ->where('user_id', $request->input('user_id'))
+                                    ->first();
+
+        if ($existingFeedback) {
+            // Nếu đã có đánh giá rồi, trả về thông báo lỗi
+            sweetalert("Bạn đã đánh giá sản phẩm này rồi.", NotificationInterface::ERROR, [
+                'position' => "center",
+                'timeOut' => '',
+                'closeButton' => false,
+                'icon' => "error",
+            ]);
+
+            return back(); // Quay lại trang trước đó
+        }
+
         // Tạo mới feedback
         $feedback = new Feedback();
         $feedback->order_item_id = $request->input('order_item_id');
@@ -106,7 +123,7 @@ class ProfileController extends Controller
         }
 
         // Thông báo cho người dùng
-        sweetalert("Cảm ơn bạn đã đánh giá sản phẩm ", NotificationInterface::INFO, [
+        sweetalert("Cảm ơn bạn đã đánh giá sản phẩm", NotificationInterface::INFO, [
             'position' => "center",
             'timeOut' => '',
             'closeButton' => false,
@@ -123,7 +140,11 @@ class ProfileController extends Controller
             'refund.refundItem.productVariant.product',
         ])->findOrFail($id);
         // dd($order);
-        return view('client.pages.profile.layouts.components.details', compact('order'));
+            // Tính tổng giá trị đơn hàng
+    $totalPrice = $order->orderItems->sum(function($item) {
+        return $item->product_price * $item->quantity;
+    });
+        return view('client.pages.profile.layouts.components.details', compact('order','totalPrice'));
     }
     public function orderCancel(Request $request, $id)
     {
@@ -186,15 +207,6 @@ class ProfileController extends Controller
             // Quay lại trang trước
             return redirect()->back();
         }
-
-        // Thông báo nếu không thể hủy đơn hàng
-        sweetalert("Đơn hàng không thể hủy vì trạng thái không hợp lệ.", NotificationInterface::ERROR, [
-            'position' => "center",
-            'timeOut' => '',
-            'closeButton' => false,
-            'icon' => "error", // Thông báo lỗi
-        ]);
-
         return redirect()->back();
     }
     public function orderDelete($id)
