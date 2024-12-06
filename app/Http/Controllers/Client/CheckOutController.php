@@ -4,6 +4,8 @@ namespace App\Http\Controllers\Client;
 
 use App\Events\OrderToAdminEvent;
 use App\Events\OrderToAdminNotification;
+use App\Exceptions\Order\PaymentException;
+use App\Exceptions\Order\PlaceOrderException;
 use App\Http\Controllers\Client\Api\ProductController;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Client\placeOrder\CreateOrderBuyNow;
@@ -33,70 +35,99 @@ class CheckOutController extends Controller
     }
     public function checkOutByCart()
     {
-        $userId = Auth::id();
-        $productCarts = Cart::with(['productVariant.product', 'productVariant.attributeValues.attribute'])->where('user_id', $userId)->get()->toArray();
-        // dd($productCarts);
-        $productResponse = [];
-        foreach ($productCarts as $key => $value) {
-            $productResponse[$key] = [];
-            foreach ($productCarts as $key => $productCart) {
-                $productResponse[$key]['cart'] = $productCart;
-                $productResponse[$key]['product_variant'] = $productCart['product_variant'];
-                $productResponse[$key]['product'] = $productCart['product_variant']['product'];
-            }
-        }
-        // dd($productResponse, $productCarts);
-        $totalOrder = 0;
+        try {
+            $userId = Auth::id();
+            $productCarts = Cart::with(['productVariant.product', 'productVariant.attributeValues.attribute'])->where('user_id', $userId)->get();
+            // dd($productCarts);
 
-        foreach ($productCarts as $key => $product) {
-            $totalOrder += $product['quantity'] * $product['product_variant']['price'];
-        }
+            // khac thanh toan onlien thi thuc hien tru luon san pham trong kho
+            foreach ($productCarts as $key => $item) {
+                // dd($item->toArray());
+                if ($item->productVariant->quantity > 0 && $item->quantity <= $item->productVariant->quantity) {
 
-        // phan suggest voucher khi thanh toán đon hàng
-        $vouchers = VoucherUsage::join("vouchers as v", 'voucher_usages.voucher_id', '=', 'v.id')
-            ->where([ // check dieu kien voucher hop le
-                ['v.status', '=', 'ACTIVE'],
-                ['user_id', $userId],
-                ['v.start_date', '<=', now()],
-                ['v.end_date', '>=', now()]
-            ])->orderBy('voucher_usages.id', 'desc')
-            ->get();
-
-        $voucherApply = null;
-        $discountMax = 0;
-        // dd($vouchers);
-        foreach ($vouchers as $key => $voucher) { // kiem tra gia tri don hang hop le voi voucher
-            $limitUse = $voucher->limited_uses;
-            $used = $voucher->used;
-            // dd($voucher,$limitUse,$used);
-            if ($totalOrder >= $voucher->min_order_value && $totalOrder <= $voucher->max_order_value && ($used != $limitUse || $limitUse == null)) { // hop le ve gia va so lan su dung
-                $discount = $this->productControllerApi->calcuDiscountVoucher($voucher, $totalOrder);
-                // dd($discount);
-                // so sanh de lay voucher co gia tri giam cao nhat cao nhat
-                if ($discount > $discountMax) {
-                    $discountMax = $discount;
-                    $voucherApply = $voucher;
+                    // $quantity = $item->productVariant->quantity - $item->quantity;
+                    // $sold = $item->productVariant->sold + $item->quantity;
+                    // // dd($item->productVariant->sold);
+                    // // Cập nhật lại số lượng trong bảng product_variants
+                    // $item->productVariant->quantity = $quantity; // cap nhat lai so luong ton kho
+                    // $item->productVariant->sold = $sold; // cap nhat so luong da ban
+                    // $item->productVariant->save();
+                } else {
+                    throw new PlaceOrderException('Số lượng sản phẩm mua không phù hợp với sản phẩm trong kho, vui lòng kiểm tra lại !');
                 }
             }
+            $productCarts = $productCarts->toArray();
+
+            $productResponse = [];
+            foreach ($productCarts as $key => $value) {
+                $productResponse[$key] = [];
+                foreach ($productCarts as $key => $productCart) {
+                    $productResponse[$key]['cart'] = $productCart;
+                    $productResponse[$key]['product_variant'] = $productCart['product_variant'];
+                    $productResponse[$key]['product'] = $productCart['product_variant']['product'];
+                }
+            }
+            // dd($productResponse, $productCarts);
+            $totalOrder = 0;
+
+            foreach ($productCarts as $key => $product) {
+                $totalOrder += $product['quantity'] * $product['product_variant']['price'];
+            }
+
+            // phan suggest voucher khi thanh toán đon hàng
+            $vouchers = VoucherUsage::join("vouchers as v", 'voucher_usages.voucher_id', '=', 'v.id')
+                ->where([ // check dieu kien voucher hop le
+                    ['v.status', '=', 'ACTIVE'],
+                    ['user_id', $userId],
+                    ['v.start_date', '<=', now()],
+                    ['v.end_date', '>=', now()]
+                ])->orderBy('voucher_usages.id', 'desc')
+                ->get();
+
+            $voucherApply = null;
+            $discountMax = 0;
+            // dd($vouchers);
+            foreach ($vouchers as $key => $voucher) { // kiem tra gia tri don hang hop le voi voucher
+                $limitUse = $voucher->limited_uses;
+                $used = $voucher->used;
+                // dd($voucher,$limitUse,$used);
+                if ($totalOrder >= $voucher->min_order_value && $totalOrder <= $voucher->max_order_value && ($used != $limitUse || $limitUse == null)) { // hop le ve gia va so lan su dung
+                    $discount = $this->productControllerApi->calcuDiscountVoucher($voucher, $totalOrder);
+                    // dd($discount);
+                    // so sanh de lay voucher co gia tri giam cao nhat cao nhat
+                    if ($discount > $discountMax) {
+                        $discountMax = $discount;
+                        $voucherApply = $voucher;
+                    }
+                }
+            }
+
+
+            $userAddress = AddressUser::where('user_id', $userId)->get();
+            $provinces = Province::all();
+            $voucher = VoucherUsage::with('voucher')
+                ->where('user_id', $userId)
+                ->latest('id') // Sắp xếp theo id giảm dần
+                ->get();
+
+
+            return view('client.pages.check-out.index', [
+                'productResponse' => $productResponse,
+                'userAddress' => $userAddress,
+                'provinces' => $provinces,
+                'voucher' => $voucher,
+                'voucherApply' => $voucherApply
+            ]);
+        } catch (\Throwable $th) {
+            if ($th instanceof PlaceOrderException) {
+                sweetalert($th->getMessage(), NotificationInterface::ERROR, [
+                    'position' => "center",
+                    'timeOut' => '',
+                    'closeButton' => false
+                ]);
+            }
+            return back();
         }
-
-
-        $userAddress = AddressUser::where('user_id', $userId)->get();
-        $provinces = Province::all();
-        $userId = Auth::id();
-        $voucher = VoucherUsage::with('voucher')
-            ->where('user_id', $userId)
-            ->latest('id') // Sắp xếp theo id giảm dần
-            ->get();
-
-
-        return view('client.pages.check-out.index', [
-            'productResponse' => $productResponse,
-            'userAddress' => $userAddress,
-            'provinces' => $provinces,
-            'voucher' => $voucher,
-            'voucherApply' => $voucherApply
-        ]);
     }
 
     public function checkOutByNow()
@@ -121,16 +152,31 @@ class CheckOutController extends Controller
         try {
             DB::beginTransaction();
 
-            foreach ($productCarts as $key => $item) {
-                $quantity = $item->productVariant->quantity - $item->quantity;
-                $sold = $item->productVariant->sold + $item->quantity;
-                // dd($item->productVariant->sold);
-                // Cập nhật lại số lượng trong bảng product_variants
+            $paymentMethod = null;
+            $statusOrder = '';
+            if ($request->payment_method == 'momo' || $request->payment_method == 'vnpay') {
+                $paymentMethod = "BANK_TRANSFER";
+                $statusOrder = "PROCESSING";
+            } else {
+                $paymentMethod = "CASH";
+                $statusOrder = "PENDING";
 
-                $item->productVariant->quantity = $quantity; // cap nhat lai so luong ton kho
-                $item->productVariant->sold = $sold; // cap nhat so luong da ban
-                $item->productVariant->save();
+                // khac thanh toan onlien thi thuc hien tru luon san pham trong kho
+                foreach ($productCarts as $key => $item) {
+                    if ($item->productVariant->quantity > 0 && $item->quantity <= $item->productVariant->quantity) {
+                        $quantity = $item->productVariant->quantity - $item->quantity;
+                        $sold = $item->productVariant->sold + $item->quantity;
+                        // dd($item->productVariant->sold);
+                        // Cập nhật lại số lượng trong bảng product_variants
+                        $item->productVariant->quantity = $quantity; // cap nhat lai so luong ton kho
+                        $item->productVariant->sold = $sold; // cap nhat so luong da ban
+                        $item->productVariant->save();
+                    } else {
+                        throw new PlaceOrderException('Số lượng sản phẩm mua không phù hợp với sản phẩm trong kho !');
+                    }
+                }
             }
+
 
             // Kiểm tra kết quả sau khi cập nhật
             $productCarts = $productCarts->toArray();
@@ -141,15 +187,6 @@ class CheckOutController extends Controller
             $fullAddress = $addressUser['address_detail'] . " - " . $addressUser['ward']['name']
                 . " - " . $addressUser['district']['name'] . " - " . $addressUser['province']['name'];
 
-            $paymentMethod = null;
-            $statusOrder = '';
-            if ($request->payment_method == 'momo' || $request->payment_method == 'vnpay') {
-                $paymentMethod = "BANK_TRANSFER";
-                $statusOrder = "PROCESSING";
-            } else {
-                $paymentMethod = "CASH";
-                $statusOrder = "PENDING";
-            }
 
 
             // ma don hang
@@ -243,15 +280,21 @@ class CheckOutController extends Controller
         } catch (\Exception $e) {
             // Hủy giao dịch khi có lỗi
             DB::rollBack();
-            //            dd($e);
 
-            // Ghi log lỗi hoặc thông báo lỗi (có thể sử dụng sweetalert để báo lỗi)
-            sweetalert("Đã xảy ra lỗi khi đặt hàng!", NotificationInterface::ERROR, [
-                'position' => "center",
-                'timeOut' => '',
-                'closeButton' => false
-            ]);
-
+            if ($e instanceof PlaceOrderException) {
+                sweetalert($e->getMessage(), NotificationInterface::ERROR, [
+                    'position' => "center",
+                    'timeOut' => '',
+                    'closeButton' => false
+                ]);
+            } else {
+                // Ghi log lỗi hoặc thông báo lỗi (có thể sử dụng sweetalert để báo lỗi)
+                sweetalert("Đã xảy ra lỗi khi đặt hàng!", NotificationInterface::ERROR, [
+                    'position' => "center",
+                    'timeOut' => '',
+                    'closeButton' => false
+                ]);
+            }
             // Quay lại trang trước với thông báo lỗi
             return back()->withErrors(['error' => 'Đã xảy ra lỗi khi đặt hàng. Vui lòng thử lại sau!']);
         }
@@ -265,15 +308,6 @@ class CheckOutController extends Controller
         $productVariant = ProductVariant::with('product')->where('id', $variantId)->first();
         try {
             DB::beginTransaction();
-
-            $quantity = $productVariant->quantity - $request->quantity;
-            $sold = $productVariant->sold + $request->quantity;
-            // Cập nhật lại số lượng trong bảng product_variants
-
-            $productVariant->quantity = $quantity; // cap nhat lai so luong ton kho
-            $productVariant->sold = $sold; // cap nhat so luong da ban
-            $productVariant->save();
-            // Kiểm tra kết quả sau khi cập nhật
             // $productCarts = $productCarts->toArray();
 
             // lay du lieu dia chi nguoi nhan
@@ -290,6 +324,18 @@ class CheckOutController extends Controller
             } else {
                 $paymentMethod = "CASH";
                 $statusOrder = "PENDING";
+
+                if ($productVariant->quantity > 0 && $request->quantity <= $productVariant->quantity) {
+                    $quantity = $productVariant->quantity - $request->quantity;
+                    $sold = $productVariant->sold + $request->quantity;
+                    // Cập nhật lại số lượng trong bảng product_variants
+
+                    $productVariant->quantity = $quantity; // cap nhat lai so luong ton kho
+                    $productVariant->sold = $sold; // cap nhat so luong da ban
+                    $productVariant->save();
+                } else {
+                    throw new PlaceOrderException('Số lượng sản phẩm mua không phù hợp với sản phẩm trong kho !');
+                }
             }
 
             // ma don hang
@@ -380,15 +426,20 @@ class CheckOutController extends Controller
         } catch (\Exception $e) {
             // Hủy giao dịch khi có lỗi
             DB::rollBack();
-            //            dd($e);
-
-            // Ghi log lỗi hoặc thông báo lỗi (có thể sử dụng sweetalert để báo lỗi)
-            sweetalert("Đã xảy ra lỗi khi đặt hàng!", NotificationInterface::ERROR, [
-                'position' => "center",
-                'timeOut' => '',
-                'closeButton' => false
-            ]);
-
+            if ($e instanceof PlaceOrderException) {
+                sweetalert($e->getMessage(), NotificationInterface::ERROR, [
+                    'position' => "center",
+                    'timeOut' => '',
+                    'closeButton' => false
+                ]);
+            } else {
+                // Ghi log lỗi hoặc thông báo lỗi (có thể sử dụng sweetalert để báo lỗi)
+                sweetalert("Đã xảy ra lỗi khi đặt hàng!", NotificationInterface::ERROR, [
+                    'position' => "center",
+                    'timeOut' => '',
+                    'closeButton' => false
+                ]);
+            }
             // Quay lại trang trước với thông báo lỗi
             return back()->withErrors(['error' => 'Đã xảy ra lỗi khi đặt hàng. Vui lòng thử lại sau!']);
         }

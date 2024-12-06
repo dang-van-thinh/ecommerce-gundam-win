@@ -5,7 +5,6 @@ Hạn : 03/07
 OTP : OTP
 SĐT : 0919100100
 
-// pusher realtime
-npm i
-composer require pusher/pusher-php-server
-npm install --save laravel-echo pusher-js
+tài khoản admin: 
+admin@admin.com
+admin12345

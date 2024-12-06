@@ -131,7 +131,7 @@
                                 </ul>
                             </div>
                             <div class="buy-box border-buttom">
-                                <ul>
+                                {{-- <ul>
                                     <li> <span data-bs-toggle="modal" data-bs-target="#size-chart" title="Quick View"
                                             tabindex="0"><i class="iconsax me-2" data-icon="ruler"></i>Bảng kích
                                             thước</span>
@@ -147,7 +147,7 @@
                                             hỏi
                                         </span>
                                     </li>
-                                </ul>
+                                </ul> --}}
                             </div>
                             <div class="d-flex flex-column">
                                 <div class="product-variants">
@@ -556,7 +556,7 @@
                             <div class="product-box-3">
                                 <div class="img-wrapper">
                                     <div class="label-block">
-                                        <span class="lable-1">liên quan</span>
+                                        <span class="lable-1">Liên quan</span>
                                         <a class="label-2 wishlist-icon" data-id="{{ $product->id }}" tabindex="0">
                                             <i class="fa-regular fa-heart"
                                                 style="{{ $product->favorites->isNotEmpty() ? 'display: none;' : '' }}"></i>

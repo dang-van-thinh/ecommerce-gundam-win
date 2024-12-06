@@ -14,7 +14,7 @@ class CheckAbandonedCarts extends Command
 
     public function handle()
     {
-        $abandonedCarts = Cart::where('updated_at', '<', Carbon::now()->subDays(3))
+        $abandonedCarts = Cart::where('created_at', '<', Carbon::now()->subDays(3))
             ->get();
 
         foreach ($abandonedCarts as $cart) {
