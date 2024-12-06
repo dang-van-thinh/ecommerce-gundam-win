@@ -149,7 +149,23 @@ class ProfileController extends Controller
     public function orderCancel(Request $request, $id)
     {
         // Lấy thông tin đơn hàng từ ID
-        $order = Order::findOrFail($id);
+        $order = Order::with('orderItems.productVariant.attributeValues.attribute', 'orderItems.productVariant.product')->findOrFail($id);
+        // dd($order->toArray());
+        // huy thi cong lai so luong san pham lai vao kho
+        $orderItems = $order->orderItems;
+        // dd($orderItems[0]->quantity);
+        foreach ($orderItems as $key => $orderItem) {
+            $quantity = $orderItem->productVariant->quantity;
+            // dd($orderItem['product_variant']);
+
+            $quantityNew = $quantity + $orderItem->quantity;
+            $sold = $orderItem->productVariant->sold - $orderItem->quantity;
+            // dd($item->productVariant->sold);
+            // Cập nhật lại số lượng trong bảng product_variants
+            $orderItem->productVariant->quantity = $quantityNew; // cap nhat lai so luong ton kho
+            $orderItem->productVariant->sold = $sold; // cap nhat so luong da ban
+            $orderItem->productVariant->save();
+        }
         // Lấy thông tin người dùng đang đăng nhập
         $user = Auth::user();
 
