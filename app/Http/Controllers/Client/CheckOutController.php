@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Client;
 
 use App\Events\OrderToAdminEvent;
 use App\Events\OrderToAdminNotification;
+use App\Exceptions\NotFoundException;
 use App\Exceptions\Order\PaymentException;
 use App\Exceptions\Order\PlaceOrderException;
 use App\Http\Controllers\Client\Api\ProductController;
@@ -25,6 +26,7 @@ use Illuminate\Support\Carbon;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Str;
+use Spatie\FlareClient\Http\Exceptions\NotFound;
 
 class CheckOutController extends Controller
 {
@@ -145,13 +147,14 @@ class CheckOutController extends Controller
     public function placeOrder(CreatePlaceOrderRequest $request)
     {
         // dd($request->all());
-        $userId = Auth::id();
-        $productCarts = Cart::with(['productVariant.product', 'productVariant.attributeValues.attribute'])->where('user_id', $userId)->get();
-        // dd($productCarts->toArray());
-        // dd($request->payment_method);
+
         try {
             DB::beginTransaction();
-
+            $userId = Auth::id();
+            $productCarts = Cart::with(['productVariant.product', 'productVariant.attributeValues.attribute'])->where('user_id', $userId)->get();
+            if ($productCarts->isEmpty()) {
+                throw new NotFoundException('Không có sản phẩm nào được chọn !');
+            }
             $paymentMethod = null;
             $statusOrder = '';
             if ($request->payment_method == 'momo' || $request->payment_method == 'vnpay') {
@@ -287,6 +290,13 @@ class CheckOutController extends Controller
                     'timeOut' => '',
                     'closeButton' => false
                 ]);
+            } else if ($e instanceof NotFoundException) {
+                sweetalert($e->getMessage(), NotificationInterface::ERROR, [
+                    'position' => "center",
+                    'timeOut' => '',
+                    'closeButton' => false
+                ]);
+                // return redirect()->route("cart");
             } else {
                 // Ghi log lỗi hoặc thông báo lỗi (có thể sử dụng sweetalert để báo lỗi)
                 sweetalert("Đã xảy ra lỗi khi đặt hàng!", NotificationInterface::ERROR, [
