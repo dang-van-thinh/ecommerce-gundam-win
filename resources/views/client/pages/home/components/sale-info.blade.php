@@ -72,7 +72,7 @@
                                                 style="position: absolute; top: 0; left: 0; width: 100%; height: 100%; 
                                         background-color: rgba(0, 0, 0, 0.6); display: flex; 
                                         justify-content: center; align-items: center; color: #fff; 
-                                        font-size: 25px; font-weight: bold; z-index: 10;">
+                                        font-size: 25px; font-weight: bold; z-index: 5;">
                                                 HẾT HÀNG
                                             </div>
                                         @endif
@@ -81,7 +81,7 @@
                                 <div class="product-detail">
                                     <ul class="rating">
                                         @php
-                                            $rating = $product->average_rating ? $product->average_rating : 0;
+                                            $rating = $product->average_rating ? ceil($product->average_rating) : 0;
                                         @endphp
                                         @for ($i = 1; $i <= 5; $i++)
                                             <li>

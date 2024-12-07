@@ -29,47 +29,66 @@
                     <input type="search" name="text" placeholder="Tôi đang tìm kiếm…" />
                     <button type="submit" data-icon="search-normal-2" class="iconsax"></button>
                 </div>
-            </form>
-            <h4>Bạn Có Thể Thích </h4>
-            <div id="searchResults" class="row gy-4 ratio_square-2 preemptive-search">
-                @isset($products)
-                    @foreach ($products as $product)
-                        <div class="col-xl-2 col-sm-4 col-6">
-                            <div class="product-box-6">
-                                <div class="img-wrapper">
-                                    <div class="product-image"><a href="{{ route('product', $product->id) }}"> <img
-                                                class="bg-img" src="{{ asset('storage/' . $product->image) }}"
-                                                alt="product" /></a>
-                                    </div>
-                                </div>
-                                <div class="product-detail">
-                                    <div><a href="{{ route('product', $product->id) }}">
-                                            <h6>{{ $product->name }}</h6>
-                                        </a>
-                                        <p>
-                                            @if ($product->productVariants->count() === 1)
-                                                {{ number_format($product->productVariants->first()->price, 0, ',', '.') }}₫
-                                            @else
-                                                {{ number_format($product->productVariants->min('price'), 0, ',', '.') }}₫ -
-                                                {{ number_format($product->productVariants->max('price'), 0, ',', '.') }}₫
+                {{-- </form>
+            @dd($products); --}}
+                <h4>Bạn Có Thể Thích </h4>
+                <div id="searchResults" class="row gy-4 ratio_square-2 preemptive-search">
+                    @isset($products)
+                        @foreach ($products as $product)
+                            <div class="col-xl-2 col-sm-4 col-6">
+                                <div class="product-box-6">
+                                    <div class="img-wrapper">
+                                        <div class="product-image" style="position: relative;">
+                                            <a href="{{ route('product', $product->id) }}">
+                                                <img class="bg-img" src="{{ asset('storage/' . $product->image) }}"
+                                                    alt="product" />
+                                            </a>
+                                            @if ($product->is_out_of_stock)
+                                                <!-- Lớp phủ cho sản phẩm hết hàng -->
+                                                <div
+                                                    style="position: absolute; top: 0; left: 0; width: 100%; height: 100%; 
+                                                    background-color: rgba(0, 0, 0, 0.6); display: flex; 
+                                                    justify-content: center; align-items: center; color: #fff; 
+                                                    font-size: 25px; font-weight: bold; z-index: 10;">
+                                                    HẾT HÀNG
+                                                </div>
                                             @endif
-                                        </p>
-                                        <ul class="rating">
-                                            <li><i class="fa-solid fa-star"></i></li>
-                                            <li><i class="fa-solid fa-star"></i></li>
-                                            <li><i class="fa-solid fa-star"></i></li>
-                                            <li><i class="fa-solid fa-star-half-stroke"></i></li>
-                                            <li><i class="fa-regular fa-star"></i></li>
-                                            <li>4+</li>
-                                        </ul>
+                                        </div>
+                                    </div>
+                                    <div class="product-detail">
+                                        <div><a href="{{ route('product', $product->id) }}">
+                                                <h6>{{ $product->name }}</h6>
+                                            </a>
+                                            <p>
+                                                @if ($product->productVariants->count() === 1)
+                                                    {{ number_format($product->productVariants->first()->price, 0, ',', '.') }}₫
+                                                @else
+                                                    {{ number_format($product->productVariants->min('price'), 0, ',', '.') }}₫
+                                                    -
+                                                    {{ number_format($product->productVariants->max('price'), 0, ',', '.') }}₫
+                                                @endif
+                                            </p>
+                                            <ul class="rating">
+                                                @php
+                                                    $rating = $product->average_rating
+                                                        ? ceil($product->average_rating)
+                                                        : 0;
+                                                @endphp
+                                                @for ($i = 1; $i <= 5; $i++)
+                                                    <li>
+                                                        <i class="fa-solid fa-star"
+                                                            style="color: {{ $i <= $rating ? '#f39c12' : '#000' }};"></i>
+                                                    </li>
+                                                @endfor
+                                            </ul>
+                                        </div>
                                     </div>
                                 </div>
                             </div>
-                        </div>
-                    @endforeach
-                @endisset
+                        @endforeach
+                    @endisset
 
-            </div>
+                </div>
         </div>
     </div>
 </div>
@@ -87,54 +106,19 @@
                         body: formData,
                         headers: {
                             'X-CSRF-TOKEN': '{{ csrf_token() }}',
-                            'Accept': 'application/json'
+                            'Accept': 'application/json',
+                        },
+                    })
+                    .then((response) => {
+                        if (!response.ok) {
+                            throw new Error(`HTTP error! Status: ${response.status}`);
                         }
+                        return response.json();
                     })
-                    .then(response => response.json())
-                    .then(products => {
-                        displayProducts(products)
+                    .then((products) => {
+                        displayProducts(products);
                     })
-                    //     .then(products => {
-                    //         const searchResults = document.getElementById('searchResults');
-                    //         searchResults.innerHTML = ''; // Xóa các kết quả hiện tại
-
-                    //         products.forEach(product => {
-                    //             console.log(product)
-                    //             searchResults.innerHTML += `
-                //     <div class="col-xl-2 col-sm-4 col-6">
-                //         <div class="product-box-6">
-                //             <div class="img-wrapper">
-                //                 <div class="product-image" style="text-align: center;">
-                //                     <a href="product.html" class="bg-size">
-                //                         <img width="200px" height="250px" class="bg-img" src="{{ asset('storage/') }}/${product.image}" alt="" />
-                //                     </a>
-                //                 </div>
-                //             </div>
-                //             <div class="product-detail">
-                //                 <div><a href="product.html">
-                //                         <h6>${product.name}</h6>
-                //                     </a>
-                //                     <p> 
-
-                //                         ${new Intl.NumberFormat().format(product.product_variants[0].price)}
-
-                //                     </p>
-                //                     <ul class="rating">
-                //                         <li><i class="fa-solid fa-star"></i></li>
-                //                         <li><i class="fa-solid fa-star"></i></li>
-                //                         <li><i class="fa-solid fa-star"></i></li>
-                //                         <li><i class="fa-solid fa-star-half-stroke"></i></li>
-                //                         <li><i class="fa-regular fa-star"></i></li>
-                //                         <li>4+</li>
-                //                     </ul>
-                //                 </div>
-                //             </div>
-                //         </div>
-                //     </div>
-                // `;
-                    //         });
-                    //     })
-                    .catch(error => {
+                    .catch((error) => {
                         console.error('Có lỗi xảy ra:', error);
                     });
             });
@@ -143,7 +127,15 @@
                 const searchResults = document.getElementById('searchResults');
                 searchResults.innerHTML = ''; // Xóa các kết quả hiện tại
 
-                products.forEach(product => {
+                if (products.length === 0) {
+                    const emptyMessage = document.createElement('p');
+                    emptyMessage.textContent = 'Không tìm thấy sản phẩm nào.';
+                    searchResults.appendChild(emptyMessage);
+                    return;
+                }
+
+                products.forEach((product) => {
+                    // Tạo các phần tử HTML
                     const colDiv = document.createElement('div');
                     colDiv.className = 'col-xl-2 col-sm-4 col-6';
 
@@ -155,7 +147,8 @@
 
                     const productImage = document.createElement('div');
                     productImage.className = 'product-image';
-                    productImage.style.textAlignCenter = 'center';
+                    productImage.style.position = 'relative';
+
                     const anchor = document.createElement('a');
                     anchor.href = `/product/${product.id}`;
 
@@ -166,11 +159,32 @@
 
                     anchor.appendChild(img);
                     productImage.appendChild(anchor);
+
+                    // Thêm lớp phủ nếu hết hàng
+                    if (product.is_out_of_stock) {
+                        const overlay = document.createElement('div');
+                        overlay.style.position = 'absolute';
+                        overlay.style.top = '0';
+                        overlay.style.left = '0';
+                        overlay.style.width = '100%';
+                        overlay.style.height = '100%';
+                        overlay.style.backgroundColor = 'rgba(0, 0, 0, 0.6)';
+                        overlay.style.display = 'flex';
+                        overlay.style.justifyContent = 'center';
+                        overlay.style.alignItems = 'center';
+                        overlay.style.color = '#fff';
+                        overlay.style.fontSize = '25px';
+                        overlay.style.fontWeight = 'bold';
+                        overlay.textContent = 'HẾT HÀNG';
+                        productImage.appendChild(overlay);
+                    }
+
                     imgWrapper.appendChild(productImage);
                     productBox.appendChild(imgWrapper);
 
                     const productDetail = document.createElement('div');
                     productDetail.className = 'product-detail';
+
                     const detailDiv = document.createElement('div');
 
                     const detailAnchor = document.createElement('a');
@@ -183,13 +197,11 @@
                     detailDiv.appendChild(detailAnchor);
 
                     const price = document.createElement('p');
-                    const prices = product.product_variants;
-
-                    if (prices.length === 1) {
-                        price.textContent = `${formatCurrency(prices[0].price)}`;
+                    if (product.product_variants.length === 1) {
+                        price.textContent = `${formatCurrency(product.product_variants[0].price)}`;
                     } else {
-                        const minPrice = Math.min(...prices.map(v => v.price));
-                        const maxPrice = Math.max(...prices.map(v => v.price));
+                        const minPrice = Math.min(...product.product_variants.map((v) => v.price));
+                        const maxPrice = Math.max(...product.product_variants.map((v) => v.price));
                         price.textContent = `${formatCurrency(minPrice)} - ${formatCurrency(maxPrice)}`;
                     }
 
@@ -197,42 +209,32 @@
 
                     const ratingList = document.createElement('ul');
                     ratingList.className = 'rating';
-                    for (let i = 0; i < 4; i++) {
+
+                    const rating = product.average_rating ? Math.ceil(product.average_rating) : 0;
+                    for (let i = 1; i <= 5; i++) {
                         const li = document.createElement('li');
                         const starIcon = document.createElement('i');
                         starIcon.className = 'fa-solid fa-star';
+                        starIcon.style.color = i <= rating ? '#f39c12' : '#000';
                         li.appendChild(starIcon);
                         ratingList.appendChild(li);
                     }
-
-                    const halfStarLi = document.createElement('li');
-                    const halfStarIcon = document.createElement('i');
-                    halfStarIcon.className = 'fa-solid fa-star-half-stroke';
-                    halfStarLi.appendChild(halfStarIcon);
-                    ratingList.appendChild(halfStarLi);
-
-                    const emptyStarLi = document.createElement('li');
-                    const emptyStarIcon = document.createElement('i');
-                    emptyStarIcon.className = 'fa-regular fa-star';
-                    emptyStarLi.appendChild(emptyStarIcon);
-                    ratingList.appendChild(emptyStarLi);
-
-                    const ratingCountLi = document.createElement('li');
-                    ratingCountLi.textContent = '4+'; // Số lượng đánh giá
-                    ratingList.appendChild(ratingCountLi);
 
                     detailDiv.appendChild(ratingList);
                     productDetail.appendChild(detailDiv);
                     productBox.appendChild(productDetail);
                     colDiv.appendChild(productBox);
 
-                    searchResults.appendChild(colDiv); // Thêm phần tử sản phẩm vào kết quả
+                    searchResults.appendChild(colDiv); // Thêm sản phẩm vào kết quả
                 });
             }
 
             // Hàm định dạng giá
             function formatCurrency(amount) {
-                return amount.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ".") + "₫";
+                return amount.toLocaleString('vi-VN', {
+                    style: 'currency',
+                    currency: 'VND'
+                });
             }
         });
     </script>
