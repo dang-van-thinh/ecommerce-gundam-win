@@ -2,11 +2,15 @@
 
 namespace App\Listeners;
 
+use App\Events\CartReminder;
 use App\Events\ForgotPasswordEvent;
+use App\Events\OrderReminder;
 use App\Events\OrderSuccessEvent;
 use App\Events\VerifyEmailEvent;
+use App\Mail\CartReminderMail;
 use App\Mail\FogotPass;
 use App\Mail\OrderCompletedMail;
+use App\Mail\OrderReminderMail;
 use App\Mail\VerifyAccount;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Events\Dispatcher;
@@ -30,7 +34,18 @@ class SendEmailListener implements ShouldQueue
         Log::info(__CLASS__ . __FUNCTION__ . $event->user->email);
         Mail::to($event->user->email)->send(new OrderCompletedMail($event->order));
     }
-
+    public function handleCartReminderEmail(CartReminder $event)
+    {
+        $user = $event->user;
+        // Gửi email
+        Mail::to($user->email)->send(new CartReminderMail($user));
+    }
+    public function handleOrderReminderEmail(OrderReminder $event)
+    {
+        $order = $event->order;
+        // Gửi email nhắc nhở
+        Mail::to($order->user->email)->send(new OrderReminderMail($order));
+    }
     /**
      * Register the listeners for the subscriber.
      */
@@ -40,6 +55,8 @@ class SendEmailListener implements ShouldQueue
             VerifyEmailEvent::class => 'handleVerifyEmail',
             ForgotPasswordEvent::class => 'handleForgotPassword',
             OrderSuccessEvent::class => 'handleOrderSuccess',
+            OrderReminder::class => 'handleOrderReminderEmail',
+            CartReminder::class => 'handleCartReminderEmail',
         ];
     }
 }
