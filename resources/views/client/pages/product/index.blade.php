@@ -227,38 +227,62 @@
                                         tabindex="0"><i class="fa-solid fa-share-nodes me-2"></i>Share</a></li> --}}
                                 </ul>
                             </div>
-                            <div class="sale-box">
-                                <div class="d-flex align-items-center gap-2"><img
-                                        src="/template/client/assets/images/gif/timer.gif" alt="">
-                                    <p>Thời gian có hạn! Nhanh lên, chương trình khuyến mại sắp kết thúc!</p>
-                                </div>
-                                <div class="countdown">
-                                    <ul class="clockdiv1">
-                                        <li>
-                                            <div class="timer">
-                                                <div class="days"></div>
-                                            </div><span class="title">Ngày</span>
-                                        </li>
-                                        <li>:</li>
-                                        <li>
-                                            <div class="timer">
-                                                <div class="hours"></div>
-                                            </div><span class="title">Giờ</span>
-                                        </li>
-                                        <li>:</li>
-                                        <li>
-                                            <div class="timer">
-                                                <div class="minutes"></div>
-                                            </div><span class="title">Phút</span>
-                                        </li>
-                                        <li>:</li>
-                                        <li>
-                                            <div class="timer">
-                                                <div class="seconds"></div>
-                                            </div><span class="title">Giây</span>
-                                        </li>
-                                    </ul>
-                                </div>
+                            <div class="sale-box" style="text-align: start;width: auto;">
+                                <ul class="d-grid gap-3">
+                                    <li class="d-flex">
+                                        <svg width="35px" height="35px" viewBox="0 0 24 24" fill="none"
+                                            xmlns="http://www.w3.org/2000/svg">
+                                            <g id="SVGRepo_bgCarrier" stroke-width="0"></g>
+                                            <g id="SVGRepo_tracerCarrier" stroke-linecap="round" stroke-linejoin="round">
+                                            </g>
+                                            <g id="SVGRepo_iconCarrier">
+                                                <path
+                                                    d="M18.5 18C18.5 19.1046 17.6046 20 16.5 20C15.3954 20 14.5 19.1046 14.5 18M18.5 18C18.5 16.8954 17.6046 16 16.5 16C15.3954 16 14.5 16.8954 14.5 18M18.5 18H21.5M14.5 18H13.5M8.5 18C8.5 19.1046 7.60457 20 6.5 20C5.39543 20 4.5 19.1046 4.5 18M8.5 18C8.5 16.8954 7.60457 16 6.5 16C5.39543 16 4.5 16.8954 4.5 18M8.5 18H13.5M4.5 18C3.39543 18 2.5 17.1046 2.5 16V7.2C2.5 6.0799 2.5 5.51984 2.71799 5.09202C2.90973 4.71569 3.21569 4.40973 3.59202 4.21799C4.01984 4 4.5799 4 5.7 4H10.3C11.4201 4 11.9802 4 12.408 4.21799C12.7843 4.40973 13.0903 4.71569 13.282 5.09202C13.5 5.51984 13.5 6.0799 13.5 7.2V18M13.5 18V8H17.5L20.5 12M20.5 12V18M20.5 12H13.5"
+                                                    stroke="#000000" stroke-width="2" stroke-linecap="round"
+                                                    stroke-linejoin="round"></path>
+                                            </g>
+                                        </svg>
+                                        <div class="ms-3">
+                                            <h6 class="fw-bold">Vận chuyển miễn phí</h6>
+                                            <p>Miễn phí vận chuyển cho tất cả các đơn hàng tại Việt nam</p>
+                                        </div>
+                                    </li>
+                                    <li class="d-flex jus">
+                                        <svg width="35px" height="35px" viewBox="0 0 24 24" fill="none"
+                                            xmlns="http://www.w3.org/2000/svg">
+                                            <g id="SVGRepo_bgCarrier" stroke-width="0"></g>
+                                            <g id="SVGRepo_tracerCarrier" stroke-linecap="round" stroke-linejoin="round">
+                                            </g>
+                                            <g id="SVGRepo_iconCarrier">
+                                                <path
+                                                    d="M14.05 6C15.0268 6.19057 15.9244 6.66826 16.6281 7.37194C17.3318 8.07561 17.8095 8.97326 18 9.95M14.05 2C16.0793 2.22544 17.9716 3.13417 19.4163 4.57701C20.8609 6.01984 21.7721 7.91101 22 9.94M18.5 21C9.93959 21 3 14.0604 3 5.5C3 5.11378 3.01413 4.73086 3.04189 4.35173C3.07375 3.91662 3.08968 3.69907 3.2037 3.50103C3.29814 3.33701 3.4655 3.18146 3.63598 3.09925C3.84181 3 4.08188 3 4.56201 3H7.37932C7.78308 3 7.98496 3 8.15802 3.06645C8.31089 3.12515 8.44701 3.22049 8.55442 3.3441C8.67601 3.48403 8.745 3.67376 8.88299 4.05321L10.0491 7.26005C10.2096 7.70153 10.2899 7.92227 10.2763 8.1317C10.2643 8.31637 10.2012 8.49408 10.0942 8.64506C9.97286 8.81628 9.77145 8.93713 9.36863 9.17882L8 10C9.2019 12.6489 11.3501 14.7999 14 16L14.8212 14.6314C15.0629 14.2285 15.1837 14.0271 15.3549 13.9058C15.5059 13.7988 15.6836 13.7357 15.8683 13.7237C16.0777 13.7101 16.2985 13.7904 16.74 13.9509L19.9468 15.117C20.3262 15.255 20.516 15.324 20.6559 15.4456C20.7795 15.553 20.8749 15.6891 20.9335 15.842C21 16.015 21 16.2169 21 16.6207V19.438C21 19.9181 21 20.1582 20.9007 20.364C20.8185 20.5345 20.663 20.7019 20.499 20.7963C20.3009 20.9103 20.0834 20.9262 19.6483 20.9581C19.2691 20.9859 18.8862 21 18.5 21Z"
+                                                    stroke="#000000" stroke-width="2" stroke-linecap="round"
+                                                    stroke-linejoin="round"></path>
+                                            </g>
+                                        </svg>
+                                        <div class="ms-3">
+                                            <h6 class="fw-bold">Hỗ trợ 24/7</h6>
+                                            <p>Hỗ trợ tư vấn, giải đáp thắc mắc khách hàng 24/7</p>
+                                        </div>
+                                    </li>
+                                    <li class="d-flex">
+                                        <svg width="35px" height="35px" viewBox="0 0 24 24" fill="none"
+                                            xmlns="http://www.w3.org/2000/svg">
+                                            <g id="SVGRepo_bgCarrier" stroke-width="0"></g>
+                                            <g id="SVGRepo_tracerCarrier" stroke-linecap="round" stroke-linejoin="round">
+                                            </g>
+                                            <g id="SVGRepo_iconCarrier">
+                                                <path
+                                                    d="M4 8L3.29289 8.70711L2.58579 8L3.29289 7.29289L4 8ZM9 20C8.44772 20 8 19.5523 8 19C8 18.4477 8.44772 18 9 18L9 20ZM8.29289 13.7071L3.29289 8.70711L4.70711 7.29289L9.70711 12.2929L8.29289 13.7071ZM3.29289 7.29289L8.29289 2.29289L9.70711 3.70711L4.70711 8.70711L3.29289 7.29289ZM4 7L14.5 7L14.5 9L4 9L4 7ZM14.5 20L9 20L9 18L14.5 18L14.5 20ZM21 13.5C21 17.0898 18.0898 20 14.5 20L14.5 18C16.9853 18 19 15.9853 19 13.5L21 13.5ZM14.5 7C18.0899 7 21 9.91015 21 13.5L19 13.5C19 11.0147 16.9853 9 14.5 9L14.5 7Z"
+                                                    fill="#33363F"></path>
+                                            </g>
+                                        </svg>
+                                        <div class="ms-3">
+                                            <h6 class="fw-bold">Hoàn hàng trong 3 ngày</h6>
+                                            <p>Hoàn hàng miễn phí vận chuyển trong thời gian 3 ngày</p>
+                                        </div>
+                                    </li>
+                                </ul>
                             </div>
                             {{-- <div class="dz-info">
                             <ul>
