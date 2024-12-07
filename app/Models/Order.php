@@ -31,7 +31,8 @@ class Order extends Model
         'code',
         'full_address',
         'phone',
-        'customer_name'
+        'customer_name',
+        'payment_status'
     ];
 
     public function orderItems()

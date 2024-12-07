@@ -163,13 +163,13 @@
                                                 <li><i class="iconsax" data-icon="headphones"></i>
                                                     <div>
                                                         <h6>Hỗ trợ 24/7</h6>
-                                                        <p>Miễn phí vận chuyển cho tất cả các đơn hàng tại Việt nam</p>
+                                                        <p>Hỗ trợ tư vấn, giải đáp thắc mắc khách hàng 24/7</p>
                                                     </div>
                                                 </li>
                                                 <li><i class="iconsax" data-icon="exchange"></i>
                                                     <div>
                                                         <h6>Hoàn hàng trong 3 ngày</h6>
-                                                        <p>Miễn phí vận chuyển cho tất cả các đơn hàng tại Việt nam</p>
+                                                        <p>Hoàn hàng miễn phí vận chuyển trong thời gian 3 ngày</p>
                                                     </div>
                                                 </li>
                                             </ul>

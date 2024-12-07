@@ -54,7 +54,7 @@
                 </ul>
             
                 <h5>2. Thời gian áp dụng</h5>
-                <p>Yêu cầu đổi/trả phải được gửi trong vòng <strong>7 ngày kể từ ngày nhận hàng</strong>. Sau thời gian này, chúng tôi xin phép từ chối hỗ trợ hoàn hàng.</p>
+                <p>Yêu cầu đổi/trả phải được gửi trong vòng <strong>3 ngày kể từ ngày nhận hàng</strong>. Sau thời gian này, chúng tôi xin phép từ chối hỗ trợ hoàn hàng.</p>
             
                 <h5>3. Quy trình hoàn hàng</h5>
                 <ol>

@@ -49,22 +49,27 @@ class OrderController extends Controller
             OrderSuccessEvent::dispatch($order);
         }
         if ($order->status === 'CANCELED') {
-        // dd($order->toArray());
-        // huy thi cong lai so luong san pham lai vao kho
-        $orderItems = $order->orderItems;
-        // dd($orderItems[0]->quantity);
-        foreach ($orderItems as $key => $orderItem) {
-            $quantity = $orderItem->productVariant->quantity;
-            // dd($orderItem['product_variant']);
+            // dd($order->toArray());
 
-            $quantityNew = $quantity + $orderItem->quantity;
-            $sold = $orderItem->productVariant->sold - $orderItem->quantity;
-            // dd($item->productVariant->sold);
-            // Cập nhật lại số lượng trong bảng product_variants
-            $orderItem->productVariant->quantity = $quantityNew; // cap nhat lai so luong ton kho
-            $orderItem->productVariant->sold = $sold; // cap nhat so luong da ban
-            $orderItem->productVariant->save();
-        }
+            if ($order->payment_method == "BANK_TRANSFER") {
+                $order->payment_status =  "REFUNDED";
+            }
+
+            // huy thi cong lai so luong san pham lai vao kho
+            $orderItems = $order->orderItems;
+            // dd($orderItems[0]->quantity);
+            foreach ($orderItems as $key => $orderItem) {
+                $quantity = $orderItem->productVariant->quantity;
+                // dd($orderItem['product_variant']);
+
+                $quantityNew = $quantity + $orderItem->quantity;
+                $sold = $orderItem->productVariant->sold - $orderItem->quantity;
+                // dd($item->productVariant->sold);
+                // Cập nhật lại số lượng trong bảng product_variants
+                $orderItem->productVariant->quantity = $quantityNew; // cap nhat lai so luong ton kho
+                $orderItem->productVariant->sold = $sold; // cap nhat so luong da ban
+                $orderItem->productVariant->save();
+            }
         }
 
         toastr("Cập nhật trạng thái đơn hàng thành công!", NotificationInterface::SUCCESS, "Thành công", [

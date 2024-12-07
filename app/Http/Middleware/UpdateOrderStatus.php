@@ -16,9 +16,8 @@ class UpdateOrderStatus
         Order::where('confirm_status', 'IN_ACTIVE')
             ->where('status', 'SHIPPED')
             ->where('updated_at', '<=', $threeDaysAgo)
-            ->update(['status' => 'COMPLETED', 'confirm_status' => 'ACTIVE']);
+            ->update(['status' => 'COMPLETED', 'confirm_status' => 'ACTIVE', 'payment_status' => 'PAID']);
 
         return $next($request);
     }
 }
-
