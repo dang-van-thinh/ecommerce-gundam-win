@@ -14,14 +14,6 @@
                         class="form-horizontal">
                         @csrf
                         @method('PUT')
-                        <!-- Modal hiển thị link ảnh -->
-                        <div class="text-right mb-3">
-                            <button type="button" class="btn btn-success btn-sm" data-toggle="modal"
-                                data-target="#imageDetailModal">
-                                <a>Ảnh bài viết</a>
-                            </button>
-                        </div>
-
                         <div class="row">
                             <div class="row form-group">
                                 <div class="col-12 col-md-12">

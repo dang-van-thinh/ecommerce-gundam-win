@@ -93,7 +93,7 @@
                                                                                 <li>
                                                                                     <p>Giá:</p>
                                                                                     <span>{{ number_format($orderItem->product_price) }}
-                                                                                        Vnd</span>
+                                                                                        VND</span>
                                                                                 </li>
                                                                                 <li>
                                                                                     <p>Số lượng:</p>
