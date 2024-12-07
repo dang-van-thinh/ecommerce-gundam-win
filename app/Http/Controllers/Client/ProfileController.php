@@ -71,8 +71,8 @@ class ProfileController extends Controller
     {
         // Kiểm tra xem người dùng đã đánh giá sản phẩm trong đơn hàng này chưa
         $existingFeedback = Feedback::where('order_item_id', $request->input('order_item_id'))
-                                    ->where('user_id', $request->input('user_id'))
-                                    ->first();
+            ->where('user_id', $request->input('user_id'))
+            ->first();
 
         if ($existingFeedback) {
             // Nếu đã có đánh giá rồi, trả về thông báo lỗi
@@ -140,11 +140,11 @@ class ProfileController extends Controller
             'refund.refundItem.productVariant.product',
         ])->findOrFail($id);
         // dd($order);
-            // Tính tổng giá trị đơn hàng
-    $totalPrice = $order->orderItems->sum(function($item) {
-        return $item->product_price * $item->quantity;
-    });
-        return view('client.pages.profile.layouts.components.details', compact('order','totalPrice'));
+        // Tính tổng giá trị đơn hàng
+        $totalPrice = $order->orderItems->sum(function ($item) {
+            return $item->product_price * $item->quantity;
+        });
+        return view('client.pages.profile.layouts.components.details', compact('order', 'totalPrice'));
     }
     public function orderCancel(Request $request, $id)
     {
@@ -153,6 +153,9 @@ class ProfileController extends Controller
         // dd($order->toArray());
         // huy thi cong lai so luong san pham lai vao kho
         $orderItems = $order->orderItems;
+        if ($order->payment_method == "BANK_TRANSFER") {
+            $order->payment_status =  "REFUNDED";
+        }
         // dd($orderItems[0]->quantity);
         foreach ($orderItems as $key => $orderItem) {
             $quantity = $orderItem->productVariant->quantity;
@@ -288,6 +291,7 @@ class ProfileController extends Controller
         $user = Auth::user();
         $order->status = 'COMPLETED';
         $order->confirm_status = 'ACTIVE';
+        $order->payment_status = "PAID";
         $order->save();
         $user->cancel_count = 0;
         $user->save();

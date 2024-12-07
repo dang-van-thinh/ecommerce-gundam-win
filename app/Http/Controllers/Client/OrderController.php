@@ -69,6 +69,7 @@ class OrderController extends Controller
                     }
 
                     $data->status = 'PENDING';
+                    $data->payment_status = "PAID";
                     $data->save();
 
                     return view('client.pages.order-success.index', compact('data'));
