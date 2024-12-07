@@ -41,7 +41,7 @@
                             <div>
                                 <ul class="rating">
                                     @php
-                                        $rating = $product->average_rating ? $product->average_rating : 0; // Lấy rating từ feedback
+                                        $rating = $product->average_rating ? ceil($product->average_rating) : 0; // Lấy rating từ feedback
                                     @endphp
                                     @for ($i = 1; $i <= 5; $i++)
                                         <li>
@@ -105,7 +105,7 @@
                             <div>
                                 <ul class="rating">
                                     @php
-                                        $rating = $product->average_rating ? $product->average_rating : 0; // Lấy rating từ feedback
+                                        $rating = $product->average_rating ? ceil($product->average_rating) : 0; // Lấy rating từ feedback
                                     @endphp
                                     @for ($i = 1; $i <= 5; $i++)
                                         <li>

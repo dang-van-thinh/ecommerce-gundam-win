@@ -104,7 +104,7 @@ class ProductController extends Controller
         $feedbackCount = $feedbacks->count();
 
         // tính giá trị đánh giá trung bình của sản phẩm trả về giá trị làm tròn (1.0)
-        $averageRating = ceil($feedbacks->avg('rating'));
+        $averageRating = $feedbacks->avg('rating');
 
         $averageRating = round($averageRating, 1);
 
