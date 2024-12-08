@@ -38,7 +38,7 @@
                 <form action="{{ route('feedback.store') }}" method="POST">
                     @csrf
                     <input type="hidden" name="parent_feedback_id" value="{{ $feedback->id }}">
-                    <input type="hidden" name="user_id" value="{{ $feedback->user_id }}">
+                    <input type="hidden" name="user_id" value="{{ Auth::id() }}">
                     <input type="hidden" name="order_item_id" value="{{ $feedback->order_item_id }}">
                     <label for="" class="form-control-label">Phản Hồi Khách hàng</label>
                     <textarea class="form-control mt-3" name="comment" cols="30" rows="5"
