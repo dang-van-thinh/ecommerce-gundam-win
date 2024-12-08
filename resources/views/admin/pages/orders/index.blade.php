@@ -23,7 +23,6 @@
                         <option value="SHIPPED">Đã giao hàng</option>
                         <option value="COMPLETED">Đơn hàng hoàn tất</option>
                         <option value="CANCELED">Đơn hàng đã Huỷ</option>
-                        <option value="REFUND">Hoàn hàng</option>
                         <option value="PROCESSING">Chưa thanh toán</option>
                     </select>
                 </div>

@@ -77,13 +77,30 @@ class CheckOutController extends Controller
             }
 
             // phan suggest voucher khi thanh toán đon hàng
+            // $vouchers = VoucherUsage::join("vouchers as v", 'voucher_usages.voucher_id', '=', 'v.id')
+            //     ->where([ // check dieu kien voucher hop le
+            //         ['v.status', '=', 'ACTIVE'],
+            //         ['user_id', $userId],
+            //         ['v.start_date', '<=', now()],
+            //         ['v.end_date', '>=', now()],
+            //         ['v.limit', '>', 0],
+            //         ['voucher_usages.used', '<=','v.limited_uses'] // so lan 1 nguoi dung phai nho hon hoac bang so lan voucher cho phep
+            //     ])->orderBy('voucher_usages.id', 'desc')
+            //     ->get();
+
             $vouchers = VoucherUsage::join("vouchers as v", 'voucher_usages.voucher_id', '=', 'v.id')
-                ->where([ // check dieu kien voucher hop le
+                ->where([
                     ['v.status', '=', 'ACTIVE'],
                     ['user_id', $userId],
                     ['v.start_date', '<=', now()],
-                    ['v.end_date', '>=', now()]
-                ])->orderBy('voucher_usages.id', 'desc')
+                    ['v.end_date', '>=', now()],
+                    ['v.limit', '>', 0]
+                ])
+                ->where(function ($query) {
+                    $query->whereNull('v.limited_uses')
+                        ->orWhereColumn('voucher_usages.used', '<=', 'v.limited_uses');
+                })
+                ->orderBy('voucher_usages.id', 'desc')
                 ->get();
 
             $voucherApply = null;
@@ -246,11 +263,15 @@ class CheckOutController extends Controller
                 $voucher = Voucher::find($request->voucher_id);
                 $voucherUsage = VoucherUsage::find($request->id_voucherUsage);
                 if ($voucher && $voucherUsage) {
-                    // Giảm số lượng limit và tăng số lượng voucher_used
-                    $voucher->update([
-                        'limit' => $voucher->limit - 1,       // Giảm số lần có thể sử dụng
-                        'voucher_used' => $voucher->voucher_used + 1, // Tăng số lần đã sử dụng
-                    ]);
+                    if ($voucher->limit > 0) {
+                        // Giảm số lượng limit và tăng số lượng voucher_used
+                        $voucher->update([
+                            'limit' => $voucher->limit - 1,       // Giảm số lần có thể sử dụng
+                            'voucher_used' => $voucher->voucher_used + 1, // Tăng số lần đã sử dụng
+                        ]);
+                    } else {
+                        throw new PlaceOrderException("Voucher đã hết !");
+                    }
 
                     $voucherUsage->update([
                         'used' => $voucherUsage->used + 1
@@ -382,11 +403,15 @@ class CheckOutController extends Controller
                 $voucher = Voucher::find($request->voucher_id);
                 $voucherUsage = VoucherUsage::find($request->id_voucherUsage);
                 if ($voucher && $voucherUsage) {
-                    // Giảm số lượng limit và tăng số lượng voucher_used
-                    $voucher->update([
-                        'limit' => $voucher->limit - 1,       // Giảm số lần có thể sử dụng
-                        'voucher_used' => $voucher->voucher_used + 1, // Tăng số lần đã sử dụng
-                    ]);
+                    if ($voucher->limit > 0) {
+                        // Giảm số lượng limit và tăng số lượng voucher_used
+                        $voucher->update([
+                            'limit' => $voucher->limit - 1,       // Giảm số lần có thể sử dụng
+                            'voucher_used' => $voucher->voucher_used + 1, // Tăng số lần đã sử dụng
+                        ]);
+                    } else {
+                        throw new PlaceOrderException("Voucher đã hết !");
+                    }
 
                     $voucherUsage->update([
                         'used' => $voucherUsage->used + 1
