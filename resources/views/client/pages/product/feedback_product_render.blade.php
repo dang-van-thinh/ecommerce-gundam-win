@@ -56,7 +56,7 @@
                 @csrf
                 <input type="hidden" name="parent_feedback_id" value="{{ $feedback->id }}">
                 <input type="hidden" name="order_item_id" value="{{ $feedback->order_item_id }}">
-                <input type="hidden" name="user_id" value="{{ $feedback->user_id }}">
+                <input type="hidden" name="user_id" value="{{ Auth::id() }}">
                 <textarea class="form-control" name="comment" rows="2" cols="100" required
                     placeholder="Nhập nội dung bình luận..."></textarea>
                 <div class="text-end">
