@@ -18,13 +18,16 @@
                         {{-- @dd($products) --}}
                         <div class="custom-accordion theme-scrollbar left-box">
                             <div class="left-accordion">
-                                <h5>Back </h5><i class="back-button fa-solid fa-xmark"></i>
+                                <h5>Quay lại</h5>
+                                <i class="back-button fa-solid fa-xmark" id="back-filter-menu">
+
+                                </i>
                             </div>
                             <div class="accordion" id="accordionPanelsStayOpenExample">
                                 <div class="accordion-item">
                                     <!-- Danh mục -->
                                     <h2 class="accordion-header">
-                                        <button class="accordion-button" data-bs-toggle="collapse"
+                                        <button class="accordion-button" type="button" data-bs-toggle="collapse"
                                             data-bs-target="#panelsStayOpen-collapseTwo">
                                             <span>Danh mục</span>
                                         </button>
@@ -48,7 +51,7 @@
 
                                     <!-- Thuộc tính -->
                                     <h2 class="accordion-header">
-                                        <button class="accordion-button" type="button" data-bs-toggle="collapse"
+                                        <button class="accordion-button" type="button" type="button" data-bs-toggle="collapse"
                                             data-bs-target="#panelsStayOpen-collapseOne">
                                             <span>Thuộc tính</span>
                                         </button>
@@ -76,7 +79,7 @@
                                     </div>
                                     <!-- Lọc giá -->
                                     <h2 class="accordion-header">
-                                        <button class="accordion-button" type="button" data-bs-toggle="collapse"
+                                        <button class="accordion-button" type="button" type="button" data-bs-toggle="collapse"
                                             data-bs-target="#panelsStayOpen-collapseFour">
                                             <span>Giá</span>
                                         </button>
@@ -106,7 +109,7 @@
 
                                     <!-- Tình trạng -->
                                     <h2 class="accordion-header">
-                                        <button class="accordion-button" type="button" data-bs-toggle="collapse"
+                                        <button class="accordion-button" type="button" type="button" data-bs-toggle="collapse"
                                             data-bs-target="#panelsStayOpen-collapseSix">
                                             <span>Tình trạng</span>
                                         </button>
@@ -147,7 +150,7 @@
 
                                 <div class="accordion-item">
                                     <h2 class="accordion-header tags-header"><button type="button"
-                                            class="accordion-button"><span>Vận
+                                            class="accordion-button" type="button"><span>Vận
                                                 chuyển
                                                 &
                                                 Giao hàng</span><span></span></button></h2>
@@ -182,7 +185,6 @@
                     <div class="col-xl-9">
                         <div class="sticky">
                             <div style="width: 115%;
-                                        padding-left: 44rem ;
                                         display: flex;
                                         justify-content: end;
                                         width: 115%;
@@ -190,7 +192,7 @@
                                 class="top-filter-menu">
                                 <div>
                                     <a class="filter-button btn">
-                                        <h6> <i class="iconsax" data-icon="filter"></i>Filter Menu </h6>
+                                        <h6 id="filter-menu"> <i class="iconsax" data-icon="filter"></i>Menu lọc</h6>
                                     </a>
                                     <div class="category-dropdown">
                                         <label for="cars">Sắp xếp :</label>
@@ -273,9 +275,34 @@
 
         </div>
     </section>
+@endsection
 
+@push('scripts')
     <script>
         document.addEventListener("DOMContentLoaded", function() {
+            var isOpenGlobal = false;
+            // responsive filter menu
+            // open filter
+            document.getElementById("filter-menu").addEventListener("click", function() {
+                toogleFilterMenu();
+            })
+            // close filter
+            document.getElementById("back-filter-menu").addEventListener("click", function() {
+                toogleFilterMenu();
+            })
+
+            function toogleFilterMenu() {
+                var isOpen = isOpenGlobal;
+                console.log(isOpen, isOpenGlobal)
+                if (isOpen) {
+                    document.querySelector(".left-box").classList.remove('open');
+                    isOpenGlobal = false;
+                } else {
+                    document.querySelector(".left-box").classList.add('open');
+                    isOpenGlobal = true
+                }
+            }
+
             //dat lai cac gia tri
             document.getElementById("reset").addEventListener("click", function(e) {
 
@@ -312,4 +339,4 @@
 
         });
     </script>
-@endsection
+@endpush
