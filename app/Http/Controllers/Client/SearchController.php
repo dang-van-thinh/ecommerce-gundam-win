@@ -27,6 +27,7 @@ class SearchController extends Controller
                 DB::raw('COALESCE(CEIL(AVG(f.rating)), 0) as average_rating'),
                 DB::raw('CASE WHEN SUM(pv.quantity) IS NULL OR SUM(pv.quantity) = 0 THEN 1 ELSE 0 END as is_out_of_stock') // Kiểm tra hết hàng
             )
+            ->where('products.status', 'ACTIVE')
             ->where(function ($query) use ($searchText) {
                 $query->where('name', 'LIKE', "%$searchText%")  // Tìm kiếm theo tên sản phẩm
                     ->orWhere('code', 'LIKE', "%$searchText%"); // Tìm kiếm theo mã sản phẩm
