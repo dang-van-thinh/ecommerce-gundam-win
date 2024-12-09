@@ -86,6 +86,7 @@ class ProductController extends Controller
                 DB::raw('CASE WHEN SUM(pv.quantity) IS NULL OR SUM(pv.quantity) = 0 THEN 1 ELSE 0 END as is_out_of_stock')
             ) // Kiểm tra hết hàng)
             ->groupBy('products.id') // Nhóm đầy đủ các cột
+            ->where('products.status', 'ACTIVE')
             ->where('products.category_product_id', $categoryId) // Lọc cùng danh mục
             ->where('products.id', '!=', $id) // Loại trừ sản phẩm hiện tại
             ->orderBy('products.created_at', 'desc') // Sắp xếp từ mới đến cũ
