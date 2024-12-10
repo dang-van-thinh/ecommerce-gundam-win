@@ -92,8 +92,17 @@
                                         <div class="swiper-slide">
                                             <img class="bg-img" src="{{ '/storage/' . $productImage->image_url }}"
                                                 alt="">
-                                            @if ($product->is_out_of_stock)
+                                            @if ($product->status === 'IN_ACTIVE')
                                                 <!-- Lớp phủ cho sản phẩm hết hàng -->
+                                                <div
+                                                    style="position: absolute; top: 0; left: 0; width: 100%; height: 100%; 
+                                                    background-color: rgba(0, 0, 0, 0.6); display: flex; 
+                                                    justify-content: center; align-items: center; color: #fff; 
+                                                    font-size: 25px; font-weight: bold; z-index: 5;">
+                                                    NGƯNG BÁN
+                                                </div>
+                                            @elseif ($product->is_out_of_stock)
+                                                <!-- Lớp phủ cho sản phẩm ngưng bán -->
                                                 <div
                                                     style="position: absolute; top: 0; left: 0; width: 100%; height: 100%; 
                                                     background-color: rgba(0, 0, 0, 0.6); display: flex; 
@@ -102,6 +111,7 @@
                                                     HẾT HÀNG
                                                 </div>
                                             @endif
+
                                         </div>
                                     @endforeach
                                 </div>
@@ -159,56 +169,66 @@
                                     </li>
                                 </ul> --}}
                             </div>
-                            <div class="d-flex flex-column">
-                                <div class="product-variants">
-                                    {{-- hien thi bien the san pham --}}
-                                    @foreach ($productAttribute as $index => $variant)
-                                        <div class="d-flex flex-row">
-                                            <h5 class=""> {{ $variant['name'] }} </h5>
-                                            <div class="box">
-                                                <ul class="variant" id="variant-options">
-                                                    @foreach ($variant['value'] as $key => $item)
-                                                        {{-- @dd($item) --}}
-                                                        <button class="variant-option" data-variant="{{ $variant['name'] }}"
-                                                            data-value="{{ $item['id'] }}" data-quantity="">
-                                                            {{ $item['name'] }}
-                                                        </button>
-                                                    @endforeach
-                                                </ul>
+                            @if ($product->status !== 'IN_ACTIVE')
+                                <div class="d-flex flex-column">
+                                    <div class="product-variants">
+                                        {{-- hien thi bien the san pham --}}
+                                        @foreach ($productAttribute as $index => $variant)
+                                            <div class="d-flex flex-row">
+                                                <h5 class=""> {{ $variant['name'] }} </h5>
+                                                <div class="box">
+                                                    <ul class="variant" id="variant-options">
+                                                        @foreach ($variant['value'] as $key => $item)
+                                                            {{-- @dd($item) --}}
+                                                            <button class="variant-option"
+                                                                data-variant="{{ $variant['name'] }}"
+                                                                data-value="{{ $item['id'] }}" data-quantity="">
+                                                                {{ $item['name'] }}
+                                                            </button>
+                                                        @endforeach
+                                                    </ul>
+                                                </div>
                                             </div>
+                                        @endforeach
+
+                                        <div>
+                                            <h5 class="fw-bold">Số lượng :
+                                                <span class="fw-bold fs-6" id="variant-quantity"></span>
+                                            </h5>
                                         </div>
-                                    @endforeach
-                                    <div>
-                                        <h5 class="fw-bold">Số lượng :
-                                            <span class="fw-bold fs-6" id="variant-quantity"></span>
-                                        </h5>
                                     </div>
                                 </div>
-                            </div>
-                            <div class="quantity-box d-flex align-items-center gap-3">
-                                <div class="quantity">
-                                    <button class="minus" type="button">
-                                        <i class="fa-solid fa-minus"></i>
-                                    </button>
-                                    <input type="number" value="1" min="1" max=""
-                                        id="quantity_variant">
-                                    <button class="plus" type="button">
-                                        <i class="fa-solid fa-plus"></i>
-                                    </button>
+
+                                <div class="quantity-box d-flex align-items-center gap-3">
+                                    <div class="quantity">
+                                        <button class="minus" type="button">
+                                            <i class="fa-solid fa-minus"></i>
+                                        </button>
+                                        <input type="number" value="1" min="1" max=""
+                                            id="quantity_variant">
+                                        <button class="plus" type="button">
+                                            <i class="fa-solid fa-plus"></i>
+                                        </button>
+                                    </div>
+
+                                    <div class="d-flex align-items-center w-100 gap-3">
+                                        <button type="button" id="btn_add_to_cart" class="btn btn_black sm"
+                                            data-bs-toggle="offcanvas" data-bs-target="#offcanvasRight"
+                                            aria-controls="offcanvasRight">
+                                            Thêm Vào Giỏ Hàng
+                                        </button>
+                                        <button type="button" id="btn_buy_now" class="btn btn_black sm"
+                                            data-bs-toggle="offcanvas" data-bs-target="#offcanvasRight"
+                                            aria-controls="offcanvasRight">
+                                            Mua ngay
+                                        </button>
+                                    </div>
                                 </div>
-                                <div class="d-flex align-items-center w-100 gap-3">
-                                    <button type="button" id="btn_add_to_cart" class="btn btn_black sm"
-                                        data-bs-toggle="offcanvas" data-bs-target="#offcanvasRight"
-                                        aria-controls="offcanvasRight">
-                                        Thêm Vào Giỏ Hàng
-                                    </button>
-                                    <button type="button" id="btn_buy_now" class="btn btn_black sm"
-                                        data-bs-toggle="offcanvas" data-bs-target="#offcanvasRight"
-                                        aria-controls="offcanvasRight">
-                                        Mua ngay
-                                    </button>
+                            @else
+                                <div class="quantity-box d-flex align-items-center gap-3">
+                                    <h3 class="text-danger">Sản phẩm hiện ngưng bán</h3>
                                 </div>
-                            </div>
+                            @endif
                             <div class="buy-box">
                                 <ul>
                                     <li>

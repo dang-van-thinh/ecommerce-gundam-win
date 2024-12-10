@@ -149,7 +149,7 @@
                             </ul>
                         </div> --}}
                         <form action="{{ route('check-out') }}" method="get" class="mt-4">
-                            
+
                             <button type="submit" class="btn btn_black w-100 sm rounded" id="submit_checkout">Thanh
                                 toán</button>
                         </form>
@@ -363,29 +363,54 @@
                         imgLink.appendChild(img);
                         cartBox.appendChild(imgLink);
 
-                        // lop phu khi san pham het hang
                         overStock.innerHTML = `
-                        <div style="
-                            position: absolute;
-                            top: 0;
-                            left: 0;
-                            width: 100%;
-                            height: 100%;
-                            background-color: rgba(0, 0, 0, 0.6);
-                            display: flex;
-                            justify-content: center;
-                            align-items: center;
-                            color: #fff;
-                            font-size: 11px;
-                            font-weight: bold;
-                            z-index: 10;
+                            <div style="
+                                position: absolute;
+                                top: 0;
+                                left: 0;
+                                width: 100%;
+                                height: 100%;
+                                background-color: rgba(0, 0, 0, 0.6);
+                                display: flex;
+                                justify-content: center;
+                                align-items: center;
+                                color: #fff;
+                                font-size: 11px;
+                                font-weight: bold;
+                                z-index: 10;
                             ">
-                                    HẾT HÀNG
-                                </div>
+                                HẾT HÀNG
+                            </div>
                         `;
 
-                        if (item.product_variant.quantity <= 0) {
-                            imgLink.appendChild(overStock)
+                        // Lớp phủ khi sản phẩm ngưng bán
+                        let overInactive = document.createElement('div');
+                        overInactive.innerHTML = `
+                            <div style="
+                                position: absolute;
+                                top: 0;
+                                left: 0;
+                                width: 100%;
+                                height: 100%;
+                                background-color: rgba(0, 0, 0, 0.6);
+                                display: flex;
+                                justify-content: center;
+                                align-items: center;
+                                color: #fff;
+                                font-size: 11px;
+                                font-weight: bold;
+                                z-index: 10;
+                            ">
+                                NGƯNG BÁN
+                            </div>
+                        `;
+
+                        // Kiểm tra nếu sản phẩm ngưng bán (ưu tiên trạng thái ngưng bán)
+                        if (item.product.status === 'IN_ACTIVE') {
+                            imgLink.appendChild(overInactive);
+                        } else if (item.product_variant.quantity <= 0) {
+                            // Kiểm tra nếu sản phẩm hết hàng (chỉ hiển thị khi không phải là ngưng bán)
+                            imgLink.appendChild(overStock);
                         }
 
                         // Thông tin sản phẩm
