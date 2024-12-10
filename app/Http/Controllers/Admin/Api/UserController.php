@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Admin\Api;
 use App\Http\Controllers\Controller;
 use App\Models\User;
 use Illuminate\Http\Request;
+use Illuminate\Validation\ValidationException;
 use PhpParser\Node\Expr\Throw_;
 
 class UserController extends Controller
@@ -13,10 +14,22 @@ class UserController extends Controller
 
     public function filter(Request $request)
     {
-        $search = $request->search;
-        $status = $request->status;
-
+       
         try {
+            $rules = [
+                'status' => 'required',
+                'search' => 'required'
+            ];
+            $message = [
+                'status.required' => 'Không được để trống trường trạng thái !',
+                'search.required' => 'Không được để trống từ khóa !'
+            ];
+
+            $search = $request->search;
+            $status = $request->status;
+    
+
+            $request->validate($rules, $message);
             $query = User::with('roles')->latest('id');  // Sử dụng 'roles' thay vì 'role'
 
             // Tìm kiếm theo tên hoặc email
@@ -46,6 +59,11 @@ class UserController extends Controller
                 'message' => 'Không tìm thấy tài khoản.',
             ]);
         } catch (\Exception $e) {
+            if ($e instanceof ValidationException) {
+                return response()->json([
+                    'message' => $e->errors()
+                ], status: 400);
+            }
             return response()->json([
                 'error' => 'Có lỗi xảy ra: ' . $e->getMessage(),
             ], 500);
@@ -65,6 +83,11 @@ class UserController extends Controller
                 'status' => $newStatus,
             ]);
         } catch (\Exception $e) {
+            if ($e instanceof ValidationException) {
+                return response()->json([
+                    'message' => $e->errors()
+                ], status: 400);
+            }
             return response()->json([
                 'error' => 'Có lỗi xảy ra: ' . $e->getMessage(),
             ], 500);
