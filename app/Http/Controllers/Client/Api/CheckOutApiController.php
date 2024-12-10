@@ -21,58 +21,56 @@ class CheckOutApiController extends Controller
     public function continueCheckOut(Request $request)
     {
         try {
-            $orderId = $request->input("orderId");
-            $data = Order::with('orderItems.productVariant.attributeValues.attribute', 'orderItems.productVariant.product')->findOrFail($orderId);
-            $ordered = $data->toArray();
+            // Validate dữ liệu đầu vào
+            $validated = $request->validate([
+                'orderId' => 'required|integer|exists:orders,id',
+            ], [
+                'orderId.required' => 'Id đơn hàng là bắt buộc.',
+                'orderId.integer' => 'Id đơn hàng phải là một số nguyên.',
+                'orderId.exists' => 'Đơn hàng không tồn tại.',
+            ]);
 
-            $orderItems = $data->orderItems;
-            // dd($orderItems);
-            foreach ($orderItems as $key => $orderItem) {
+            // Lấy thông tin đơn hàng từ ID
+            $orderId = $validated['orderId'];
+            $data = Order::with('orderItems.productVariant.attributeValues.attribute', 'orderItems.productVariant.product')->findOrFail($orderId);
+
+            // Kiểm tra số lượng sản phẩm
+            foreach ($data->orderItems as $orderItem) {
                 $quantity = $orderItem->productVariant->quantity;
-                // dd($orderItem['product_variant']);
-                if ($quantity > 0 && $orderItem->quantity <= $quantity) {
-                    Log::info("okee");
-                } else {
-                    throw new PlaceOrderException('Số lượng sản phẩm trong kho đã thay đổi , vui lòng kiểm tra lại !');
+                if ($quantity <= 0 || $orderItem->quantity > $quantity) {
+                    throw new PlaceOrderException('Số lượng sản phẩm trong kho đã thay đổi, vui lòng kiểm tra lại!');
                 }
             }
-            // dd($ordered);
-            // vi la thanh toan online nen phia momo yeu cau la moio giao dich se co order id khac nhau nen ko su dung duoc order id cu nua 
-            // nen se tao order id theo cau truc : orderId cu + time()
-            $orderIdNew = $ordered["code"] . "-" . time();
-            // dd($orderIdNew);
+
+            // Tạo mã đơn hàng mới và xử lý thanh toán
+            $orderIdNew = $data->code . "-" . time();
             $dataOrder = [
                 "code" => $orderIdNew,
-                "total_amount" => (int)$ordered['total_amount']
+                "total_amount" => (int)$data->total_amount
             ];
-            // dd($dataOrder);
-
             $urlRedirect = route('order-success', $orderId);
-
             $url = $this->checkOutController->payMomo($dataOrder, $urlRedirect);
-            // dd($url);
+
             if ($url) {
-                // Log::debug("Payment");
                 return response()->json([
                     "urlRedirect" => $url
                 ]);
             } else {
-                Log::error("Error Payment checkout continue");
                 return response()->json([
-                    "message" => "Không thể tiếp tục thanh toán !"
+                    "message" => "Không thể tiếp tục thanh toán!"
                 ], 500);
             }
         } catch (\Throwable $th) {
             if ($th instanceof PlaceOrderException) {
-                Log::error($th->getMessage());
                 return response()->json([
                     "message" => $th->getMessage()
                 ], 500);
             }
-            Log::error($th->getMessage());
+
             return response()->json([
                 "message" => $th->getMessage()
             ], 500);
         }
     }
+
 }
