@@ -24,16 +24,16 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
-Route::prefix('')->middleware(['authApi'])->group(function () {
+Route::prefix('')->group(function () {
 
     // ajax them moi anh bai viet
-    Route::post('/image-blog', [ImageBlogApiController::class, 'store'])->name('api.image');
+    // Route::post('/image-blog', [ImageBlogApiController::class, 'store'])->name('api.image');
 
-    Route::post('/add-cart', [ProductController::class, 'addToCart'])->name('api.add-cart');
-    Route::delete('/delete-cart', [ProductController::class, 'deleteToCart'])->name('api.delete-cart');
-    Route::put('/update-cart', [ProductController::class, 'updateToCart'])->name('api.update-cart');
+    Route::post('/add-cart', [ProductController::class, 'addToCart'])->name('api.add-cart'); ///
+    Route::delete('/delete-cart', [ProductController::class, 'deleteToCart'])->name('api.delete-cart');///
+    Route::put('/update-cart', [ProductController::class, 'updateToCart'])->name('api.update-cart');///
 
-    Route::post('/buy-now', [ProductController::class, 'productBuyNow'])->name('api.buy-now');
+    Route::post('/buy-now', [ProductController::class, 'productBuyNow'])->name('api.buy-now'); //
     Route::post('/product/buy-now', [ProductController::class, 'getPrductVariant'])->name('api.product-variant');
     Route::post('/check-out/continue', [CheckOutApiController::class, 'continueCheckOut'])->name('api.check-out-continue');
     // api dia chi tinh thanh viet nam
@@ -44,16 +44,16 @@ Route::prefix('')->middleware(['authApi'])->group(function () {
     Route::post('/toggle-favorite', [WishListController::class, 'toggleFavorite'])->name('toggle.favorite');
     Route::delete('/remove-favorite', [WishListController::class, 'removeFavorite'])->name('remove.favorite');
     Route::post('/voucher/check', [VoucherController::class, 'checkVoucher']);
-    Route::post('/voucher/apply', [VoucherController::class, 'applyVoucher']);
-    Route::post('voucher/usage-check', [VoucherController::class, 'checkVoucherUsage']);
+    // Route::post('/voucher/apply', [VoucherController::class, 'applyVoucher']);
+    // Route::post('voucher/usage-check', [VoucherController::class, 'checkVoucherUsage']);
 });
 
 
-Route::prefix('admin')->middleware(['authApi'])->group(function () {
-    Route::get('/orders/filter', [OrderController::class, 'filter']);
-    Route::get('/users/filter', [UserController::class, 'filter']);
-    Route::get('/products/filter', [AdminProductController::class, 'filter']);
-    Route::patch('/users/{user}/status', [UserController::class, 'changeStatus']);
+Route::prefix('admin')->group(function () {
+    Route::get('/orders/filter', [OrderController::class, 'filter']); ///
+    Route::get('/users/filter', [UserController::class, 'filter']); ///
+    Route::get('/products/filter', [AdminProductController::class, 'filter']); ///
+    Route::patch('/users/{user}/status', [UserController::class, 'changeStatus']); ///
 });
 Route::get("/chat/search-user", [UserController::class, "searchUserChat"]);
 // notification public channel

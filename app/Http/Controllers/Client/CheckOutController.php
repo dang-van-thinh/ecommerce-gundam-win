@@ -45,8 +45,12 @@ class CheckOutController extends Controller
             // khac thanh toan onlien thi thuc hien tru luon san pham trong kho
             foreach ($productCarts as $key => $item) {
                 // dd($item->toArray());
-                if ($item->productVariant->quantity > 0 && $item->quantity <= $item->productVariant->quantity) {
+                if ($item->productVariant->product->status === 'IN_ACTIVE') {
+                    throw new PlaceOrderException('Tồn tại sản phẩm đã ngừng bán và không thể đặt hàng. Vui lòng kiểm tra lại');
+                }
 
+                if ($item->productVariant->quantity > 0 && $item->quantity <= $item->productVariant->quantity) {
+                    
                     // $quantity = $item->productVariant->quantity - $item->quantity;
                     // $sold = $item->productVariant->sold + $item->quantity;
                     // // dd($item->productVariant->sold);

@@ -5,15 +5,26 @@ namespace App\Http\Controllers\Admin\Api;
 use App\Http\Controllers\Controller;
 use App\Models\Order;
 use Illuminate\Http\Request;
+use Illuminate\Validation\ValidationException;
 
 class OrderController extends Controller
 {
     public function filter(Request $request)
     {
-        $status = $request->status;
-        $search = $request->search;
-
         try {
+            $rules = [
+                'status' => 'required',
+                'search' => 'required'
+            ];
+            $message = [
+                'status.required' => 'Không được để trống trường trạng thái !',
+                'search.required' => 'Không được để trống từ khóa !'
+            ];
+
+            $request->validate($rules, $message);
+            $status = $request->status;
+            $search = $request->search;
+
             $query = Order::with('user')->latest('id');
 
             // Áp dụng bộ lọc trạng thái nếu có
@@ -43,6 +54,11 @@ class OrderController extends Controller
                 ]
             ]);
         } catch (\Exception $e) {
+            if ($e instanceof ValidationException) {
+                return response()->json([
+                    'message' => $e->errors()
+                ], status: 400);
+            }
             return response()->json([
                 'error' => 'Có lỗi xảy ra: ' . $e->getMessage()
             ], 500);

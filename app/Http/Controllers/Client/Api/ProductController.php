@@ -12,6 +12,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Carbon;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Log;
+use Illuminate\Validation\ValidationException;
 use PhpParser\Builder\Class_;
 
 use function PHPUnit\Framework\throwException;
@@ -25,46 +26,77 @@ class ProductController extends Controller
     //}
     public function addToCart(Request $request)
     {
-        $userId = $request->input('userId');
-        $quantity = $request->input('quantity');
-        $variantId = $request->input('variantId');
+        try {
+            $rules = [
+                'userId' => 'required|integer|exists:users,id',
+                'quantity' => 'required|integer|min:1',
+                'variantId' => 'required|integer'
+            ];
+            $messages = [
+                'userId.required' => 'Id không được để trống !',
+                'userId.integer' => 'Id không đúng định dạng !',
+                'userId.exists' => 'Người dùng không tồn tại trong hệ thống!',
+                'quantity.required' => 'Số lượng không được để trống!',
+                'quantity.integer' => 'Số lượng phải là số nguyên hợp lệ!',
+                'quantity.min' => 'Số lượng phải lớn hơn hoặc bằng 1!',
+                'variantId.required' => 'Id biến thể sản phẩm không được để trống!',
+                'variantId.integer' => 'Id biến thể sản phẩm phải là số nguyên hợp lệ!'
+            ];
 
-        // tao moi data them moi
-        $cart = [
-            'user_id' => $userId,
-            'product_variant_id' => $variantId,
-            'quantity' => $quantity
-        ];
-
-        // check trung
-        $carted = Cart::with('productVariant')->where('user_id', $userId)->where([
-            ['user_id', '=', $userId],
-            ['product_variant_id', '=', $variantId]
-        ])->first();
-        // dd($carted->toArray());
+            $request->validate($rules, $messages);
 
 
-        if ($carted) {
-            $quantityNew = $carted->quantity + $quantity;
-            if ($quantityNew >  $carted->toArray()['product_variant']['quantity']) {
-                return response()->json([
-                    'message' => "Số lượng sản phẩm trong giỏ hàng lớn hơn số sản phẩm tồn kho !"
-                ], 400);
+            $userId = $request->input('userId');
+            $quantity = $request->input('quantity');
+            $variantId = $request->input('variantId');
+
+            // tao moi data them moi
+            $cart = [
+                'user_id' => $userId,
+                'product_variant_id' => $variantId,
+                'quantity' => $quantity
+            ];
+
+            // check trung
+            $carted = Cart::with('productVariant')->where('user_id', $userId)->where([
+                ['user_id', '=', $userId],
+                ['product_variant_id', '=', $variantId]
+            ])->first();
+            // dd($carted->toArray());
+
+
+            if ($carted) {
+                $quantityNew = $carted->quantity + $quantity;
+                if ($quantityNew >  $carted->toArray()['product_variant']['quantity']) {
+                    return response()->json([
+                        'message' => "Số lượng sản phẩm trong giỏ hàng lớn hơn số sản phẩm tồn kho !"
+                    ], 400);
+                }
+                // dd($quantity);
+                $carted->update([
+                    'quantity' => $quantityNew
+                ]);
+            } else {
+                Cart::query()->create($cart);
             }
-            // dd($quantity);
-            $carted->update([
-                'quantity' => $quantityNew
-            ]);
-        } else {
-            Cart::query()->create($cart);
-        }
 
-        $cartResponse = Cart::where('user_id', $userId)->count('*');
-        return response()->json([
-            'message' => [
-                'numberCart' => $cartResponse
-            ]
-        ]);
+            $cartResponse = Cart::where('user_id', $userId)->count('*');
+            return response()->json([
+                'message' => [
+                    'numberCart' => $cartResponse
+                ]
+            ]);
+        } catch (\Exception $th) {
+            if ($th instanceof ValidationException) {
+                return response()->json([
+                    'message' => $th->errors()
+                ], status: 400);
+            }
+
+            return response()->json([
+                'message' => $th
+            ], status: 500);
+        }
     }
 
     //input = {
@@ -74,6 +106,21 @@ class ProductController extends Controller
     public function deleteToCart(Request $request)
     {
         try {
+            $rules = [
+                'userId' => 'required|integer|exists:users,id',
+                'cartId' => 'required|integer',
+            ];
+            $messages = [
+                'userId.required' => 'Id người dùng không được để trống!',
+                'userId.integer' => 'Id người dùng phải là số nguyên hợp lệ!',
+                'userId.exists' => 'Id người dùng không tồn tại trong hệ thống!',
+                'cartId.required' => 'Id giỏ hàng không được để trống!',
+                'cartId.integer' => 'Id giỏ hàng phải là số nguyên hợp lệ!',
+            ];
+
+            $request->validate($rules, $messages);
+
+
             $cartId = $request->input('cartId'); // nay la id cart
             $userId = $request->input('userId');
             if (Cart::query()->findOrFail($cartId)->delete()) {
@@ -102,6 +149,11 @@ class ProductController extends Controller
                 'message' => "Xóa thành công"
             ], 400);
         } catch (\Throwable $th) {
+            if ($th instanceof ValidationException) {
+                return response()->json([
+                    'message' => $th->errors()
+                ], status: 400);
+            }
             Log::error($th->getMessage());
             return response()->json([
                 "message" => $th->getMessage()
@@ -117,6 +169,28 @@ class ProductController extends Controller
     public function updateToCart(Request $request)
     {
         try {
+            $rules = [
+                'userId' => 'required|integer|exists:users,id',
+                'cartId' => 'required|integer|exists:carts,id',
+                'quantity' => 'required|integer|min:1',
+            ];
+
+            $messages = [
+                'userId.required' => 'Id người dùng không được để trống!',
+                'userId.integer' => 'Id người dùng phải là số nguyên hợp lệ!',
+                'userId.exists' => 'Id người dùng không tồn tại trong hệ thống!',
+
+                'cartId.required' => 'Id giỏ hàng không được để trống!',
+                'cartId.integer' => 'Id giỏ hàng phải là số nguyên hợp lệ!',
+                'cartId.exists' => 'Id giỏ hàng không tồn tại trong hệ thống!',
+
+                'quantity.required' => 'Số lượng không được để trống!',
+                'quantity.integer' => 'Số lượng phải là số nguyên hợp lệ!',
+                'quantity.min' => 'Số lượng phải lớn hơn hoặc bằng 1!',
+            ];
+            $request->validate($rules, $messages);
+
+
             $cartId =  $request->input('cartId');
             $newQuantity = $request->input('quantity');
 
@@ -133,6 +207,11 @@ class ProductController extends Controller
                 'message' => 'Thay đổi số lượng thành công'
             ]);
         } catch (\Throwable $exception) {
+            if ($exception instanceof ValidationException) {
+                return response()->json([
+                    'message' => $exception->errors()
+                ], status: 400);
+            }
             Log::error($exception->getMessage());
             return response()->json([
                 "message" => $exception->getMessage()

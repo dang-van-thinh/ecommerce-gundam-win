@@ -89,7 +89,7 @@
                                 </td>
                                 <td>${new Date(order.created_at).toLocaleDateString('vi-VN')}</td>
                                 <td>${ order.payment_status === 'UNPAID' ? '<span class="badge bg-warning">Chưa thanh toán</span>' :
-                                order.payment_status === 'REFUNDED' ? '<span class="badge bg-danger">Hoàn tiền</span>' :
+                                order.payment_status === 'REFUNDED' ? '<span class="badge bg-danger">Đang hoàn tiền</span>' :
                                         '<span class="badge bg-success">Đã thanh toán</span>'}</td>
                                 <td><a href="/admin/orders/${order.id}/edit" class="btn btn-primary btn-sm">Cập nhật trạng thái</a></td>
                             </tr>
