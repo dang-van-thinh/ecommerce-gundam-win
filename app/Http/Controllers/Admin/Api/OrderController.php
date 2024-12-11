@@ -12,16 +12,6 @@ class OrderController extends Controller
     public function filter(Request $request)
     {
         try {
-            $rules = [
-                'status' => 'required',
-                'search' => 'required'
-            ];
-            $message = [
-                'status.required' => 'Không được để trống trường trạng thái !',
-                'search.required' => 'Không được để trống từ khóa !'
-            ];
-
-            $request->validate($rules, $message);
             $status = $request->status;
             $search = $request->search;
 
@@ -54,11 +44,6 @@ class OrderController extends Controller
                 ]
             ]);
         } catch (\Exception $e) {
-            if ($e instanceof ValidationException) {
-                return response()->json([
-                    'message' => $e->errors()
-                ], status: 400);
-            }
             return response()->json([
                 'error' => 'Có lỗi xảy ra: ' . $e->getMessage()
             ], 500);

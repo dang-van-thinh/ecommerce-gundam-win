@@ -50,7 +50,7 @@ class CheckOutController extends Controller
                 }
 
                 if ($item->productVariant->quantity > 0 && $item->quantity <= $item->productVariant->quantity) {
-                    
+
                     // $quantity = $item->productVariant->quantity - $item->quantity;
                     // $sold = $item->productVariant->sold + $item->quantity;
                     // // dd($item->productVariant->sold);
@@ -109,7 +109,7 @@ class CheckOutController extends Controller
 
             $voucherApply = null;
             $discountMax = 0;
-            // dd($vouchers);
+            
             foreach ($vouchers as $key => $voucher) { // kiem tra gia tri don hang hop le voi voucher
                 $limitUse = $voucher->limited_uses;
                 $used = $voucher->used;
@@ -125,14 +125,13 @@ class CheckOutController extends Controller
                 }
             }
 
-
+            // dd($voucherApply);
             $userAddress = AddressUser::where('user_id', $userId)->get();
             $provinces = Province::all();
             $voucher = VoucherUsage::with('voucher')
                 ->where('user_id', $userId)
                 ->latest('id') // Sắp xếp theo id giảm dần
                 ->get();
-
 
             return view('client.pages.check-out.index', [
                 'productResponse' => $productResponse,
@@ -200,8 +199,7 @@ class CheckOutController extends Controller
                     }
                 }
             }
-
-
+            
             // Kiểm tra kết quả sau khi cập nhật
             $productCarts = $productCarts->toArray();
 
@@ -210,8 +208,6 @@ class CheckOutController extends Controller
 
             $fullAddress = $addressUser['address_detail'] . " - " . $addressUser['ward']['name']
                 . " - " . $addressUser['district']['name'] . " - " . $addressUser['province']['name'];
-
-
 
             // ma don hang
             $code = $this->codeOrder();

@@ -12,18 +12,6 @@ class ProductController extends Controller
     public function filter(Request $request)
     {
         try {
-            $rules = [
-                'status' => 'required',
-                'search' => 'required',
-                'category' => 'required'
-            ];
-            $message = [
-                'status.required' => 'Không được để trống trường trạng thái !',
-                'search.required' => 'Không được để trống từ khóa !',
-                'category.required' => 'Không được để trống danh mục sản phẩm !'
-            ];
-
-            $request->validate($rules, $message);
 
             $category = $request->category;
             $search = $request->search;
@@ -74,11 +62,6 @@ class ProductController extends Controller
                 ],
             ]);
         } catch (\Exception $e) {
-            if ($e instanceof ValidationException) {
-                return response()->json([
-                    'message' => $e->errors()
-                ], status: 400);
-            }
             return response()->json([
                 'error' => 'Có lỗi xảy ra: ' . $e->getMessage(),
             ], 500);

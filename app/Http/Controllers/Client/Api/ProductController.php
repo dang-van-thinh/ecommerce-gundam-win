@@ -162,24 +162,19 @@ class ProductController extends Controller
     }
 
     // input : {
-    //    "userId":2,
     //    "cartId":132,
     //    "quantity": 2
     //}
     public function updateToCart(Request $request)
     {
+        // dd($request->all());
         try {
             $rules = [
-                'userId' => 'required|integer|exists:users,id',
                 'cartId' => 'required|integer|exists:carts,id',
                 'quantity' => 'required|integer|min:1',
             ];
 
             $messages = [
-                'userId.required' => 'Id người dùng không được để trống!',
-                'userId.integer' => 'Id người dùng phải là số nguyên hợp lệ!',
-                'userId.exists' => 'Id người dùng không tồn tại trong hệ thống!',
-
                 'cartId.required' => 'Id giỏ hàng không được để trống!',
                 'cartId.integer' => 'Id giỏ hàng phải là số nguyên hợp lệ!',
                 'cartId.exists' => 'Id giỏ hàng không tồn tại trong hệ thống!',
@@ -192,7 +187,7 @@ class ProductController extends Controller
 
 
             $cartId =  $request->input('cartId');
-          
+
             $newQuantity = $request->input('quantity');
 
             $cartOfUser = Cart::with('productVariant')->where('id', $cartId)->first();
@@ -276,8 +271,9 @@ class ProductController extends Controller
     //    "quantity":2,
     //    "variantId":99
     //}
-    public function getPrductVariant(Request $request)
+    public function getProductVariant(Request $request)
     {
+        // dd($request->all());
         try {
             // Thực hiện validate dữ liệu đầu vào
             $validated = $request->validate([

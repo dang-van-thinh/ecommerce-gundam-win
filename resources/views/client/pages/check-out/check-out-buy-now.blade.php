@@ -146,7 +146,7 @@
                     console.log(response);
                     // console.log(response.vouchers);
                     showProduct(response.productResponse, response.quantity, response.vouchers);
-                    if(response.voucherApply != null){
+                    if (response.voucherApply != null) {
                         // let totalAmount = response.productResponse.price * response.quantity;
                         // console.log(totalAmount);
                         showBoxVoucherActive(response.voucherApply);
@@ -156,6 +156,7 @@
                 $(document).ready(function() {
                     // Lắng nghe sự kiện nhấn nút "Áp dụng" trong modal
                     $('.apply-coupon').on('click', function() {
+                        // alert("kslajdka")
                         // Lấy mã giảm giá từ nút được nhấn
                         const voucherName = $(this).data('voucher-name');
                         // console.log(voucherName);
@@ -231,7 +232,7 @@
                         $('#discount-amount').text(
                             `- ${discountAmount.toLocaleString()} VND`);
 
-                            console.log("gia nghiep",discountAmount);
+                        console.log("gia nghiep", discountAmount);
                         // Cập nhật tổng tiền
                         $('input[name="total_amount"]').val(newTotal);
                         $('#summary-total').text(`${newTotal.toLocaleString()} VND`);
@@ -282,7 +283,7 @@
         handleProduct();
 
         function showBoxVoucherActive(voucherSugggest) {
-            console.log(voucherSugggest);
+            console.log("voucher sugget", voucherSugggest);
             // Hiển thị thẻ mã giảm giá đã áp dụng và ẩn ô input
             $('#coupon-display').show();
             $('#coupon-name').text(voucherSugggest.name);
@@ -305,7 +306,7 @@
                     discountAmount = totalAmount;
                 }
             }
-            console.log("giam gia",discountAmount);
+            console.log("giam gia", discountAmount);
 
             const newTotal = totalAmount - discountAmount;
 
@@ -320,6 +321,7 @@
         }
 
         function showProduct(productResponse, quantityP, vouchers) {
+            // console.log("show product", vouchers)
             let totalAmount = 0;
             const price = parseFloat(productResponse.price); // Giá sản phẩm
             const quantity = quantityP; // Số lượng sản phẩm
@@ -504,6 +506,7 @@
 
             couponBox.append(hiddenInput, hiddenInputUsage, hiddenInputIdUser);
 
+            // console.log("show product", vouchers)
             // tạo modal
             const modalHtml = `
             <div class="modal fade" id="voucherModal" tabindex="-1" aria-labelledby="voucherModalLabel" aria-hidden="true">
@@ -534,9 +537,10 @@
             // Thêm tất cả vào giỏ hàng
             cartListing.append(productList, couponBox, summaryTotal, totalDiv, orderButtonDiv);
             // Chèn dữ liệu từ vouchers vào trong modal
+            // console.log("show product", vouchers)
             vouchers.forEach(item => {
-                const voucher = item.voucher;
-
+                const voucher = item;
+                // console.log("show product", voucher)
                 // Kiểm tra điều kiện ngày và trạng thái
                 const now = new Date();
                 const startDate = new Date(voucher.start_date);
@@ -550,7 +554,7 @@
                 const discountValue = voucher.discount_type === 'PERCENTAGE' ?
                     `${parseInt(voucher.discount_value)}%` :
                     `${parseFloat(voucher.discount_value).toLocaleString('vi-VN')} VND`;
-
+                // console.log("show product", discountValue)
                 // Tạo HTML voucher với đầy đủ dữ liệu
                 const voucherHtml = `
                 <div class="col-6 mb-3">

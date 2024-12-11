@@ -399,8 +399,10 @@ class ProfileController extends Controller
                 "progressBar" => true,
                 "timeOut" => "3000",
             ]);
-
-            return view('client.pages.profile.layouts.components.details', compact('order'));
+            $totalPrice = $order->orderItems->sum(function ($item) {
+                return $item->product_price * $item->quantity;
+            });
+            return view('client.pages.profile.layouts.components.details', compact('order', 'totalPrice'));
         } else {
             // Thông báo thất bại
             toastr("Tạo đơn hoàn hàng thất bại", NotificationInterface::ERROR, "Thất bại", [
