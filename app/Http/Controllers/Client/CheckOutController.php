@@ -135,7 +135,7 @@ class CheckOutController extends Controller
                 ->where('user_id', $userId)
                 ->latest('id') // Sắp xếp theo id giảm dần
                 ->get();
-// dd($voucher->toArray());
+            // dd($voucher->toArray());
             return view('client.pages.check-out.index', [
                 'productResponse' => $productResponse,
                 'userAddress' => $userAddress,
@@ -202,12 +202,15 @@ class CheckOutController extends Controller
                 "voucher" => $request->voucher_id,
                 "voucherUsage" => $request->id_voucherUsage,
             ];
-// dd($dataOrder);
+            // dd($dataOrder);
             if ($paymentMethod === "BANK_TRANSFER") {
                 // dd($dataOrder);
                 if ($dataOrder['total_amount'] < 0) {
                     throw new PlaceOrderException('Thanh toán online không hỗ trợ thanh toán cho đơn nhỏ hơn 0 VND');
                 }
+                // Lưu đường dẫn de treo ve khi thanh toan loi trước khi thanh toán
+                $dataOrder['urlFail'] = url()->previous();
+
 
                 $urlRedirect = route('confirmCheckout');
                 $paymentUrl = $this->payMomo($dataOrder, $urlRedirect);
@@ -281,6 +284,10 @@ class CheckOutController extends Controller
                         throw new PlaceOrderException('Thanh toán online không hỗ trợ thanh toán cho đơn nhỏ hơn 0 VND');
                     }
 
+                    // Lưu đường dẫn trước khi thanh toán
+                    $dataOrder['urlFail'] = url()->previous();
+                    // dd($dataOrder);
+
                     $urlRedirect = route('confirmCheckout');
                     $paymentUrl = $this->payMomo($dataOrder, $urlRedirect);
 
@@ -319,6 +326,7 @@ class CheckOutController extends Controller
         $requestData = $request->all();
         if (count($requestData) != 0) {
 
+            $url = null;
             // Kiểm tra và xác thực chữ ký (signature)
             $signature = $requestData['signature'];
             unset($requestData['signature']); // Xóa chữ ký khỏi dữ liệu
@@ -350,7 +358,6 @@ class CheckOutController extends Controller
             if ($requestData['resultCode']  == 0) { // ==0 thi la dung , khac 0 cho cook
                 $dataExtract = json_decode($requestData['extraData'], true);
 
-                // dd($dataExtract);
                 $dataOrder = [
                     "user_id" => $dataExtract['user_id'],
                     "total_amount" => $dataExtract['total_amount'],
@@ -367,7 +374,7 @@ class CheckOutController extends Controller
                     "voucher" => $dataExtract['voucher'],
                     "voucherUsage" => $dataExtract['voucherUsage'],
                 ];
-                if (!isset($dataExtract['productVariant']) ) { // neu nhu khong phai don mua ngay thi...
+                if (!isset($dataExtract['productVariant'])) { // neu nhu khong phai don mua ngay thi...
                     $userId = $dataExtract['user_id'];
                     $productCarts = Cart::with(['productVariant.product', 'productVariant.attributeValues.attribute'])
                         ->where('user_id', $userId)
@@ -390,7 +397,11 @@ class CheckOutController extends Controller
                 'timeOut' => '',
                 'closeButton' => false
             ]);
-            return back(); // cho tro ve trang cu
+
+            $dataExtract = json_decode($requestData['extraData'], true);
+            $url = $dataExtract['urlFail']; // lay duong dan trang cu
+            // dd($dataExtract,$url);
+            return redirect($url); // cho tro ve trang cu
         }
     }
 
@@ -476,7 +487,7 @@ class CheckOutController extends Controller
 
                 // dd($dataOrder['voucher'] , $dataOrder['voucherUsage']);
                 $voucher = Voucher::find($dataOrder['voucher']);
-                $voucherUsage = VoucherUsage::find( $dataOrder['voucherUsage'] );
+                $voucherUsage = VoucherUsage::find($dataOrder['voucherUsage']);
                 // dd($voucher->toArray() ,  $voucherUsage->toArray());
                 if ($voucher && $voucherUsage) {
                     if ($voucher->limit > 0) {

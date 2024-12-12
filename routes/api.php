@@ -24,7 +24,7 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
-Route::prefix('')->group(function () {
+Route::prefix('')->middleware('authApi')->group(function () {
 
     // ajax them moi anh bai viet
     // Route::post('/image-blog', [ImageBlogApiController::class, 'store'])->name('api.image');
@@ -51,7 +51,7 @@ Route::prefix('')->group(function () {
 });
 
 
-Route::prefix('admin')->group(function () {
+Route::prefix('admin')->middleware('authApi')->group(function () {
     Route::get('/orders/filter', [OrderController::class, 'filter']);
     Route::get('/users/filter', [UserController::class, 'filter']);
     Route::get('/products/filter', [AdminProductController::class, 'filter']);
