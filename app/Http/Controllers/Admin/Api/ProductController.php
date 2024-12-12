@@ -5,16 +5,17 @@ namespace App\Http\Controllers\Admin\Api;
 use App\Http\Controllers\Controller;
 use App\Models\Product;
 use Illuminate\Http\Request;
+use Illuminate\Validation\ValidationException;
 
 class ProductController extends Controller
 {
     public function filter(Request $request)
     {
-        $category = $request->category;
-        $search = $request->search;
-        $status = $request->status;
-
         try {
+
+            $category = $request->category;
+            $search = $request->search;
+            $status = $request->status;
             $query = Product::with(['productImages', 'categoryProduct', 'productVariants'])->latest('id');
 
             // Lọc theo danh mục

@@ -5,15 +5,16 @@ namespace App\Http\Controllers\Admin\Api;
 use App\Http\Controllers\Controller;
 use App\Models\Order;
 use Illuminate\Http\Request;
+use Illuminate\Validation\ValidationException;
 
 class OrderController extends Controller
 {
     public function filter(Request $request)
     {
-        $status = $request->status;
-        $search = $request->search;
-
         try {
+            $status = $request->status;
+            $search = $request->search;
+
             $query = Order::with('user')->latest('id');
 
             // Áp dụng bộ lọc trạng thái nếu có

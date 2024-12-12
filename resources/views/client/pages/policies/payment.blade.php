@@ -83,9 +83,13 @@
 
                 <ul>
                     <li><strong>Đảm bảo tài khoản MOMO của bạn có đủ số dư:</strong> Trước khi thanh toán, hãy kiểm tra tài khoản MOMO để tránh giao dịch thất bại.</li>
+                    <li>
+                        <strong>Đối với đơn hàng thanh toán online được hủy:</strong> 
+                        Nếu đơn hàng bị hủy trong thời gian cho phép thì sẽ đợi trong 2 ngày làm việc.
+                    </li>
                 </ul>
 
-                <h5>3/ Mua Hàng thành toán bằng VNPAY</h5>
+                {{-- <h5>3/ Mua Hàng thành toán bằng VNPAY</h5>
                 <p><strong>Thanh toán qua VNPAY:</strong> Bạn có thể thanh toán trực tiếp qua cổng thanh toán điện tử VNPAY bằng cách sử dụng thẻ ngân hàng hoặc ví điện tử hỗ trợ VNPAY.</p>
     
                 <p><strong>Quy trình thanh toán:</strong> Sau khi chọn phương thức VNPAY, bạn sẽ được chuyển đến trang thanh toán của VNPAY. Bạn chỉ cần chọn phương thức thanh toán phù hợp (thẻ ATM, thẻ tín dụng, hoặc ví điện tử) và xác nhận giao dịch.</p>
@@ -95,7 +99,7 @@
                 <h5>Lưu ý:</h5>
                 <ul>
                     <li><strong>Kiểm tra lại thông tin thanh toán:</strong> Trước khi xác nhận giao dịch, hãy kiểm tra lại tất cả thông tin thanh toán để đảm bảo không có sai sót trong quá trình giao dịch.</li>
-                </ul>
+                </ul> --}}
             </div>
         </div>
     </section>

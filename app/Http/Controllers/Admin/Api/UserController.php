@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Admin\Api;
 use App\Http\Controllers\Controller;
 use App\Models\User;
 use Illuminate\Http\Request;
+use Illuminate\Validation\ValidationException;
 use PhpParser\Node\Expr\Throw_;
 
 class UserController extends Controller
@@ -13,10 +14,11 @@ class UserController extends Controller
 
     public function filter(Request $request)
     {
-        $search = $request->search;
-        $status = $request->status;
-
+       
         try {
+            $search = $request->search;
+            $status = $request->status;
+    
             $query = User::with('roles')->latest('id');  // Sử dụng 'roles' thay vì 'role'
 
             // Tìm kiếm theo tên hoặc email

@@ -102,7 +102,7 @@ Route::prefix('')->middleware(['auth', 'checkAccountStatus', 'updateOrderStatus'
     Route::get('/cart', [CartController::class, 'index'])->name('cart');
     Route::get('/check-out', [CheckOutController::class, 'checkOutByCart'])->name('check-out');
     Route::get('/check-out-now', [CheckOutController::class, 'checkOutByNow'])->name('check-out-now');
-
+    Route::get("confirm-check-out",[CheckOutController::class,"confirmCheckout"])->name("confirmCheckout");
     Route::post("/place-order", [CheckOutController::class, 'placeOrder'])->name('place-order');
     Route::post("/place-order/buy-now", [CheckOutController::class, 'placeOrderBuyNow'])->name('place-order-buy-now');
     Route::get('/order-success/{id}', [OrderController::class, 'index'])->name('order-success');
