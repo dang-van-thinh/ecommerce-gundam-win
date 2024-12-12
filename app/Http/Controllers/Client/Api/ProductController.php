@@ -317,6 +317,27 @@ class ProductController extends Controller
                         ->orWhereColumn('voucher_usages.used', '<=', 'v.limited_uses');
                 })
                 ->orderBy('voucher_usages.id', 'desc')
+                ->select([
+                    'voucher_usages.id as id',
+                    'voucher_usages.user_id',
+                    'voucher_usages.voucher_id',
+                    'voucher_usages.used',
+                    'v.id as voucher_id', // Alias cho `vouchers.id`
+                    'v.code',
+                    'v.description',
+                    'v.limit',
+                    'v.name',
+                    'v.discount_type',
+                    'v.discount_value',
+                    'v.min_order_value',
+                    'v.max_order_value',
+                    'v.status',
+                    'v.voucher_used',
+                    'v.start_date',
+                    'v.end_date',
+                    'v.type',
+                    'v.limited_uses'
+                ])
                 ->get();
 
             // Tìm voucher áp dụng tốt nhất
@@ -352,7 +373,6 @@ class ProductController extends Controller
             ], 500);
         }
     }
-
 
     public function calcuDiscountVoucher($voucher, $totalOrder)
     { // tinh ra gia tri voucher giam duoc

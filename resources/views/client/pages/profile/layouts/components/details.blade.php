@@ -60,7 +60,7 @@ Chi tiết đơn hàng
                             @php
                                 // Danh sách các trạng thái và tên tab tương ứng
                                 $tabs = [
-                                    'PROCESSING' => 'Chờ thanh toán',
+                                    // 'PROCESSING' => 'Chờ thanh toán',
                                     'PENDING' => 'Đang chờ xử lý',
                                     'DELIVERING' => 'Đang giao hàng',
                                     'SHIPPED' => 'Đã giao hàng',

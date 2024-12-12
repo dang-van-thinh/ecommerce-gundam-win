@@ -289,7 +289,7 @@
             $('#coupon-name').text(voucherSugggest.name);
 
             // Cập nhật voucher_id vào input ẩn
-            $('#voucher-id-input').val(voucherSugggest.id);
+            $('#voucher-id-input').val(voucherSugggest.voucher_id);
 
             $('#id-input').val(voucherSugggest.id);
 

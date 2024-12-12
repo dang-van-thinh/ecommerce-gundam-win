@@ -478,13 +478,13 @@
     });
 
     function showBoxVoucherActive(voucherSugggest) {
-        // console.log("hiii cc ", voucherSugggest);
+        console.log("hiii cc ", voucherSugggest);
         // Hiển thị thẻ mã giảm giá đã áp dụng và ẩn ô input
         $('#coupon-display').show();
         $('#coupon-name').text(voucherSugggest.name);
 
         // Cập nhật voucher_id vào input ẩn
-        $('#voucher-id-input').val(voucherSugggest.id);
+        $('#voucher-id-input').val(voucherSugggest.voucher_id);
 
         $('#id-input').val(voucherSugggest.id);
 
