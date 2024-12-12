@@ -20,7 +20,7 @@
         data: {
             labels: @json($codes), // Hiển thị mã sản phẩm dưới trục X
             datasets: [{
-                label: '12 sản phẩm bán chạy nhất',
+                label: '15 sản phẩm bán chạy nhất',
                 data: @json($data), // Số lượng bán
                 backgroundColor: generateRandomColors(@json($data).length),
             }]
@@ -50,7 +50,7 @@
                 x: {
                     title: {
                         display: true,
-                        text: 'Mã sản phẩm (Top 10)'
+                        text: 'Mã sản phẩm (Top 15)'
                     }
                 }
             }

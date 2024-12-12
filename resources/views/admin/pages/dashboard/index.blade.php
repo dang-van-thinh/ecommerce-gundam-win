@@ -81,54 +81,24 @@
         <!-- /Widgets -->
 
         <div class="col-sm-12 mb-4">
-            <div class="row">
-                <div class="col-sm-4">
-                    <label for="yearSelect">Năm:</label>
-                    <select id="yearSelect" class="form-control">
-                        @foreach ($availableYears as $year)
-                            <option value="{{ $year }}" {{ $year == $selectedYear ? 'selected' : '' }}>
-                                {{ $year }}
-                            </option>
-                        @endforeach
-                    </select>
+            <div class="row d-flex align-items-center">
+                <div class="form-group col-sm-5">
+                    <label for="startDate">Thời gian bắt đầu:</label>
+                    <input type="date" value="{{ request('start_date', '') }}" id="startDate" class="form-control" />
                 </div>
-                <div class="col-sm-4">
-                    <label for="monthSelect">Tháng:</label>
-                    <select id="monthSelect" class="form-control">
-                        <option value="">Tất cả</option>
-                        @for ($i = 1; $i <= 12; $i++)
-                            <option value="{{ $i }}" {{ $i == request('month') ? 'selected' : '' }}>
-                                Tháng {{ $i }}
-                            </option>
-                        @endfor
-                    </select>
+                <div class="form-group col-sm-5">
+                    <label for="endDate">Thời gian kết thúc:</label>
+                    <input type="date" value="{{ request('end_date', '') }}" id="endDate" class="form-control" />
                 </div>
-                <div class="col-sm-4">
-                    <label for="daySelect">Ngày:</label>
-                    <select id="daySelect" class="form-control">
-                        <option value="">Tất cả</option>
-                        @for ($i = 1; $i <= 31; $i++)
-                            <option value="{{ $i }}" {{ $i == request('day') ? 'selected' : '' }}>
-                                Ngày {{ $i }}
-                            </option>
-                        @endfor
-                    </select>
+                <div class="col-sm-2">
+                    <button id="filterButton" class="btn btn-primary mt-3">Lọc dữ liệu</button>
                 </div>
             </div>
         </div>
+
+
         <div class="col-sm-12 mb-4">
             <div class="row">
-                {{-- <div class="col-sm-12 mb-4">
-                    <label for="yearSelect">Thống kê theo năm:</label>
-                    <select id="yearSelect" class="form-control" style="width: 200px; display: inline-block;">
-                        @foreach ($availableYears as $year)
-                            <option value="{{ $year }}" {{ $year == $selectedYear ? 'selected' : '' }}>
-                                {{ $year }}
-                            </option>
-                        @endforeach
-                    </select>
-                </div> --}}
-
                 <!-- Phần giao diện của tổng doanh thu -->
                 <div class="col-sm-6 col-lg-3">
                     <div class="card bg-flat-color-1 text-white">
@@ -139,7 +109,7 @@
                                         <span class="currency mr-1 mt-1" style="font-size: 12px;">VND</span>
                                     </span>
                                 </h3>
-                                <p class="text-light m-0 mt-1">Tổng Doanh thu</p>
+                                <p class="text-light m-0 mt-1">Tổng doanh thu</p>
                             </div>
                         </div>
                     </div>
@@ -154,7 +124,7 @@
                                     <span class="count float-left">{{ $successRate }}</span>
                                     <span>%</span>
                                 </h3>
-                                <p class="text-light m-0 mt-1" style="width:250px">Tỷ lệ đơn hàng thành công </p>
+                                <p class="text-light m-0 mt-1" style="width:250px">Tỷ lệ giao hàng thành công </p>
                             </div><!-- /.card-left -->
 
                             <div class="card-right float-right text-right">
@@ -470,30 +440,33 @@
         <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
         @include('admin.pages.dashboard.components.product-sales-analysis')
         @include('admin.pages.dashboard.components.monthly-revenue-chart')
+        @include('admin.pages.dashboard.components.dayly-revenue-chart')
 
     </div>
     <script>
-        // Lắng nghe sự kiện thay đổi trên các dropdown
-        const yearSelect = document.getElementById('yearSelect');
-        const monthSelect = document.getElementById('monthSelect');
-        const daySelect = document.getElementById('daySelect');
+        document.getElementById('filterButton').addEventListener('click', function() {
+            const startDate = document.getElementById('startDate').value;
+            const endDate = document.getElementById('endDate').value;
 
-        function updateURL() {
-            const year = yearSelect.value;
-            const month = monthSelect.value;
-            const day = daySelect.value;
+            // Kiểm tra nếu người dùng chưa chọn cả hai ngày
+            if (!startDate || !endDate) {
+                alert('Vui lòng chọn cả ngày bắt đầu và ngày kết thúc.');
+                return;
+            }
 
-            // Tạo URL mới với các tham số query
+            // Kiểm tra nếu ngày bắt đầu lớn hơn ngày kết thúc
+            if (new Date(startDate) > new Date(endDate)) {
+                alert('Ngày bắt đầu không thể lớn hơn ngày kết thúc.');
+                return;
+            }
+
+            // Gửi yêu cầu đến server với các giá trị ngày
             const queryParams = new URLSearchParams();
-            if (year) queryParams.set('year', year);
-            if (month) queryParams.set('month', month);
-            if (day) queryParams.set('day', day);
+            queryParams.set('start_date', startDate);
+            queryParams.set('end_date', endDate);
 
+            // Điều hướng đến URL với các tham số query
             window.location.href = `?${queryParams.toString()}`;
-        }
-
-        yearSelect.addEventListener('change', updateURL);
-        monthSelect.addEventListener('change', updateURL);
-        daySelect.addEventListener('change', updateURL);
+        });
     </script>
 @endsection
