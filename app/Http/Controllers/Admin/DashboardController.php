@@ -17,9 +17,9 @@ use Illuminate\Support\Facades\DB;
 
 class DashboardController extends Controller
 {
-    public function index()
+    public function index(Request $request)
     {
-        // Lấy danh sách năm có dữ liệu đơn hàng
+        //Lấy danh sách năm có dữ liệu đơn hàng
         $availableYears = Order::selectRaw('YEAR(created_at) as year')
             ->distinct()
             ->orderBy('year', 'desc')
@@ -27,20 +27,21 @@ class DashboardController extends Controller
 
         // Lấy năm được chọn, nếu không chọn thì mặc định là năm hiện tại
         $selectedYear = request('year', Carbon::now()->year);
-        $selectedMonth = request('month', null);
-        $selectedDay = request('day', null);
+        // $selectedDay = request('day', null);
 
-        // Hàm tạo điều kiện năm, tháng, ngày cho các truy vấn
-        $filterByDate = function ($query) use ($selectedYear, $selectedMonth, $selectedDay) {
-            $query->whereYear('created_at', $selectedYear);
-            if ($selectedMonth) {
-                $query->whereMonth('created_at', $selectedMonth);
+        // thời gian bắt đầu và kết thúc
+        $startDate = $request->query('start_date');
+        $endDate = $request->query('end_date');
+
+        // Điều kiện lọc ngày
+        $filterByDate = function ($query) use ($startDate, $endDate) {
+            if ($startDate) {
+                $query->where('created_at', '>=', $startDate);
             }
-            if ($selectedDay) {
-                $query->whereDay('created_at', $selectedDay);
+            if ($endDate) {
+                $query->where('created_at', '<=', $endDate);
             }
         };
-
         // Tổng số người dùng
         $totalUsers = User::whereHas('roles', function ($query) {
             $query->where('name', 'Client');
@@ -48,10 +49,13 @@ class DashboardController extends Controller
 
         // người dùng mới 
         $oneWeekAgo = Carbon::now()->subWeek()->toDateTimeString();
+        $now = Carbon::now()->toDateTimeString();
+        // dd($now);
         $newUsers = User::whereHas('roles', function ($query) {
             $query->where('name', 'Client');
         })
             ->where('created_at', '>=', $oneWeekAgo)
+            ->where('created_at', '<=', $now)
             ->count();
 
         // Tổng doanh thu
@@ -75,7 +79,6 @@ class DashboardController extends Controller
 
         // Tổng số đơn hàng
         $totalOrders = Order::where($filterByDate)->count();
-
         // Trạng thái đơn hàng
         $completedOrders = Order::where('status', 'COMPLETED')->where($filterByDate)->count();
         $pendingOrders = Order::where('status', 'PENDING')->where($filterByDate)->count();
@@ -108,17 +111,9 @@ class DashboardController extends Controller
                 'sold' => $product->productVariants->sum('sold') // Tổng số lượng bán
             ];
         });
-        // Lấy 10 sản phẩm bán nhiều nhất
-        $topProducts = $processedData->sortByDesc('sold')->take(12);
+        // Lấy 15 sản phẩm bán nhiều nhất
+        $topProducts = $processedData->sortByDesc('sold')->take(15);
 
-        // Tách dữ liệu để truyền vào biểu đồ
-        $codes = $topProducts->pluck('code'); // Mã sản phẩm
-        $labels = $topProducts->pluck('name'); // Tên sản phẩm
-        $data = $topProducts->pluck('sold'); // Số lượng bán
-
-
-        // Lấy 10 sản phẩm bán nhiều nhất
-        $topProducts = $processedData->sortByDesc('sold')->take(12);
         // Tách dữ liệu để truyền vào biểu đồ
         $codes = $topProducts->pluck('code'); // Mã sản phẩm
         $labels = $topProducts->pluck('name'); // Tên sản phẩm
@@ -164,8 +159,20 @@ class DashboardController extends Controller
             ->whereDate('created_at', Carbon::today()) // Lọc theo ngày hiện tại
             ->first();
 
+        $todayRefunds = Refund::whereDate('created_at', Carbon::today()) // Lọc theo ngày hiện tại
+            ->with(['refundItem.productVariant.product'])  // Tải quan hệ refundItem và productVariant
+            ->get()  // Lấy tất cả các refund
+            ->sum(function ($refund) {
+                // Tính tổng giá trị hoàn hàng cho mỗi đơn hoàn
+                return $refund->refundItem->filter(function ($item) {
+                    return $item->status == 'APPROVED';  // Lọc ra các item có trạng thái APPROVED
+                })->sum(function ($item) {
+                    // Tính giá trị của mỗi item hoàn hàng
+                    return $item->quantity * $item->productVariant->price;
+                });
+            });
         // Kiểm tra xem có doanh thu hay không, nếu không thì giá trị sẽ là 0
-        $totalTodayRevenue = $todayRevenue ? $todayRevenue->total_revenue : 0;
+        $totalTodayRevenue = $todayRevenue ? $todayRevenue->total_revenue - $todayRefunds : 0;
 
         // Đếm feedback
         $feedbackCount = Feedback::whereNull('parent_feedback_id')->where($filterByDate)->count();
@@ -182,9 +189,55 @@ class DashboardController extends Controller
             })
             ->count();
 
+
+        // thống kê từng ngày trong tháng
+        // Thống kê từng ngày trong tháng
+        $selectedDayliMonth = request()->query('daily_month', now()->month);
+        $selectedDayliYear = request()->query('daily_year', now()->year);
+
+        // Lấy danh sách ngày trong tháng đã chọn
+        $daysInMonth = cal_days_in_month(CAL_GREGORIAN, $selectedDayliMonth, $selectedDayliYear);
+        $labelsDailyRevenue = range(1, $daysInMonth);
+
+        // Lấy dữ liệu doanh thu theo ngày, bao gồm cả phần giảm trừ hoàn tiền
+        $dataDailyRevenue = [];
+
+        foreach ($labelsDailyRevenue as $day) {
+            $date = sprintf('%04d-%02d-%02d', $selectedDayliYear, $selectedDayliMonth, $day);
+
+            // Tính doanh thu hoàn tất trong ngày
+            $dailyRevenue = DB::table('orders')
+                ->where('status', 'COMPLETED') // Chỉ tính đơn đã hoàn thành
+                ->whereDate('created_at', $date)
+                ->sum('total_amount');
+
+            // Tính hoàn tiền trong ngày
+            $dailyRefunds = Refund::whereDate('created_at', $date)
+                ->with(['refundItem.productVariant.product']) // Load các quan hệ cần thiết
+                ->get()
+                ->sum(function ($refund) {
+                    // Tính tổng giá trị hoàn tiền trong mỗi refund
+                    return $refund->refundItem->filter(function ($item) {
+                        return $item->status == 'APPROVED'; // Chỉ lấy các mục hoàn tiền đã được duyệt
+                    })->sum(function ($item) {
+                        // Tính giá trị của từng item hoàn tiền
+                        return $item->quantity * $item->productVariant->price;
+                    });
+                });
+
+            // Tổng doanh thu trong ngày = Doanh thu - Giá trị hoàn tiền
+            $dataDailyRevenue[] = $dailyRevenue - $dailyRefunds;
+        }
+
         return view(
             'admin.pages.dashboard.index',
             compact(
+                'availableYears',
+                'selectedYear',
+                'labelsDailyRevenue',
+                'dataDailyRevenue',
+                'selectedDayliMonth',
+                'selectedDayliYear',
                 'totalUsers',
                 'totalRevenue',
                 'completedOrders',
@@ -204,10 +257,6 @@ class DashboardController extends Controller
                 'data',
                 'labelsMonthlyRevenue',
                 'dataMonthlyRevenue',
-                'availableYears',
-                'selectedYear',
-                'selectedMonth',
-                'selectedDay',
                 'totalTodayRevenue',
                 'totalOutOfStockProducts'
             )
