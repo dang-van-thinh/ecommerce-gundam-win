@@ -128,6 +128,8 @@
                                     @endphp
                                     {{-- @dd($productResponse) --}}
                                     @foreach ($productResponse as $key => $item)
+                                    {{-- @dd($item['cart']) --}}
+                                    <input type="hidden" name="carts_selected[]" value="{{$item['cart']['id']}}">
                                         @php
                                             $totalAmount +=
                                                 $item['product_variant']['price'] * $item['cart']['quantity'];
