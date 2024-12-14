@@ -37,14 +37,19 @@ class CheckOutController extends Controller
     {
         $this->productControllerApi = $productControllerApi;
     }
-    public function checkOutByCart()
+    public function checkOutByCart(Request $request)
     {
+        // dd($request->all());
         try {
             $userId = Auth::id();
-            $productCarts = Cart::with(['productVariant.product', 'productVariant.attributeValues.attribute'])->where('user_id', $userId)->get();
-            // dd($productCarts);
+            $selectedCarts = $request->query('selected_carts');
+            if(empty($selectedCarts)){
+                throw new PlaceOrderException("Vui lòng chọn sản phẩm để tiêp tục !");
+            }
+            $productCarts = Cart::with(['productVariant.product', 'productVariant.attributeValues.attribute'])->whereIn('id', $selectedCarts)->get();
+            // dd($productCarts->toArray());
 
-            // khac thanh toan onlien thi thuc hien tru luon san pham trong kho
+            // check dieu kien san pham hong het hang hoac ngung ban
             foreach ($productCarts as $key => $item) {
                 // dd($item->toArray());
                 if ($item->productVariant->product->status === 'IN_ACTIVE') {
@@ -173,8 +178,10 @@ class CheckOutController extends Controller
             // dd($request->all());
             DB::beginTransaction();
             $userId = Auth::id();
+            $cartSelected = $request->input('carts_selected');
+            // dd($cartSelected);
             $productCarts = Cart::with(['productVariant.product', 'productVariant.attributeValues.attribute'])
-                ->where('user_id', $userId)
+                ->whereIn('id', $cartSelected)
                 ->get();
             // dd($productCarts->toArray());
             if ($productCarts->isEmpty()) {
@@ -227,7 +234,7 @@ class CheckOutController extends Controller
 
             DB::commit();
 
-            $this->sendNotificationToAdmin($order);
+            // $this->sendNotificationToAdmin($order);
 
             sweetalert("Đơn hàng đã được đặt!", NotificationInterface::SUCCESS, [
                 'position' => "center",
@@ -303,7 +310,7 @@ class CheckOutController extends Controller
 
                 DB::commit();
 
-                $this->sendNotificationToAdmin($order);
+                // $this->sendNotificationToAdmin($order);
 
                 sweetalert("Đơn hàng đã được đặt!", NotificationInterface::SUCCESS, [
                     'position' => "center",
@@ -389,7 +396,7 @@ class CheckOutController extends Controller
                     $order = $this->createOrder(null, $productVariant, $dataOrder);
                 }
 
-                $this->sendNotificationToAdmin($order);
+               
                 return redirect()->route('order-success', $order->id);
             }
             sweetalert("Tạo đơn hàng thât bại !", NotificationInterface::ERROR, [
@@ -506,6 +513,7 @@ class CheckOutController extends Controller
                 }
             }
             DB::commit();
+            $this->sendNotificationToAdmin($order);
             return $order;
         } catch (\Throwable $th) {
             DB::rollBack();

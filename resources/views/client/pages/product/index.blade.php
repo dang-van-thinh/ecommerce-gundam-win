@@ -1100,8 +1100,20 @@
 
                 },
                 error: function(error) {
-                    Swal.fire("Có lỗi xảy ra, vui lòng thử lại sau!", "", "error");
-                    console.error(error);
+                    Swal.fire({
+                        title: error.responseJSON.message,
+                        icon: "error",
+                        confirmButtonText: "OK",
+                        // showCancelButton: true,
+                        // cancelButtonText: "Hủy"
+                    }).then((result) => {
+                        console.log(result);
+                        if (result.isConfirmed) {
+                           location.reload(true); // load lai trang bo qua cache
+                        }
+                    });
+                    // Swal.fire(error.responseJSON.message, "", "error");
+                    console.error(error.responseJSON);
                 }
             });
         }
@@ -1119,8 +1131,20 @@
                     Swal.fire("Thêm vào giỏ hàng thành công!", "", "success");
                 },
                 error: function(error) {
-                    Swal.fire(error.responseJSON.message, "", "error");
-                    console.error(error.responseJSON.message);
+                    Swal.fire({
+                        title: error.responseJSON.message,
+                        icon: "error",
+                        confirmButtonText: "OK",
+                        // showCancelButton: true,
+                        // cancelButtonText: "Hủy"
+                    }).then((result) => {
+                        console.log(result);
+                        if (result.isConfirmed) {
+                           location.reload(true); // load lai trang bo qua cache
+                        }
+                    });
+                    // Swal.fire(error.responseJSON.message, "", "error");
+                    console.error(error.responseJSON);
                 }
             });
         }

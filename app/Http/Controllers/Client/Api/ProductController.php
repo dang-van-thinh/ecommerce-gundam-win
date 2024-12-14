@@ -2,6 +2,8 @@
 
 namespace App\Http\Controllers\Client\Api;
 
+use App\Exceptions\CustomValidateException;
+use App\Exceptions\NotFoundException;
 use App\Http\Controllers\Controller;
 use App\Models\Cart;
 use App\Models\ProductVariant;
@@ -50,6 +52,14 @@ class ProductController extends Controller
             $quantity = $request->input('quantity');
             $variantId = $request->input('variantId');
 
+            // check so luong them moi so voi trong kho 
+            $productVariant = ProductVariant::findOrFail($variantId);
+
+            // dd($productVariant);
+            if ($quantity > $productVariant->quantity) {
+                throw new NotFoundException("Số lượng sản phẩm thêm phải nhỏ hơn số lượng trong kho . Vui lòng tải lại trang !");
+            }
+
             // tao moi data them moi
             $cart = [
                 'user_id' => $userId,
@@ -92,9 +102,14 @@ class ProductController extends Controller
                     'message' => $th->errors()
                 ], status: 400);
             }
+            if ($th instanceof NotFoundException) {
+                return response()->json([
+                    'message' => $th->getMessage()
+                ], status: 400);
+            }
 
             return response()->json([
-                'message' => $th
+                'message' => $th->getMessage()
             ], status: 500);
         }
     }
@@ -242,11 +257,12 @@ class ProductController extends Controller
 
             // Tìm kiếm biến thể sản phẩm
             $productVariant = ProductVariant::find($validated['variantId']);
-
+            // dd($productVariant->quantity,(int)$validated['quantity']);
+            if ((int)$validated['quantity'] > $productVariant->quantity) {
+                throw new CustomValidateException("Số lượng sản phẩm thêm phải nhỏ hơn số lượng trong kho . Vui lòng tải lại trang !");
+            }
             if (!$productVariant) {
-                return response()->json([
-                    'message' => 'Không tìm thấy bản ghi phù hợp!',
-                ], 404);
+                throw new NotFoundException("Không tìm thấy sản phẩm phù hợp !");
             }
 
             // Trả về kết quả
@@ -258,10 +274,24 @@ class ProductController extends Controller
         } catch (\Exception $exception) {
             // Ghi log lỗi
             Log::error('Lỗi trong quá trình xử lý Buy Now: ' . $exception->getMessage());
-
+            if ($exception instanceof NotFoundException) {
+                return response()->json([
+                    'message' => $exception->getMessage()
+                ], status: 404);
+            }
+            if ($exception instanceof CustomValidateException) {
+                return response()->json([
+                    'message' => $exception->getMessage()
+                ], status: 404);
+            }
+            if ($exception instanceof ValidationException) {
+                return response()->json([
+                    'message' => $exception->errors()
+                ], status: 400);
+            }
             // Trả về lỗi chi tiết
             return response()->json([
-                'error' => $exception->errors(),
+                'error' => $exception->getMessage(),
             ], 500);
         }
     }
