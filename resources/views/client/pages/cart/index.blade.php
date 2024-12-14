@@ -28,33 +28,39 @@
     <section class="section-b-space pt-0">
         <div class="custom-container container">
             <div id="item_not_product"> </div>
-            <div class="row g-4" id="item_has_product">
-                <div class="col-12">
-                    <div class="cart-countdown"><img src="../assets/images/gif/fire-2.gif" alt="">
-                        <h6>Xin hãy nhanh chân! Có người đã đặt hàng một trong những mặt hàng bạn có trong giỏ hàng. Chúng
-                            tôi sẽ giữ hàng cho bạn trong <span id="countdown"></span> phút.</h6>
-                    </div>
-                </div>
-                <div class="col-xxl-9 col-xl-8">
-                    <div class="cart-table">
-                        <div class="table-title">
-                            {{-- <h5>Giỏ hàng<span id="cartTitle"></span></h5><button id="clearAllButton">Clear All</button> --}}
+            <form action="{{ route('check-out') }}" method="get" class="mt-4">
+                <div class="row g-4" id="item_has_product">
+
+                    <div class="col-12">
+                        <div class="cart-countdown"><img src="../assets/images/gif/fire-2.gif" alt="">
+                            <h6>Xin hãy nhanh chân! Có người đã đặt hàng một trong những mặt hàng bạn có trong giỏ hàng.
+                                Chúng
+                                tôi sẽ giữ hàng cho bạn trong <span id="countdown"></span> phút.</h6>
                         </div>
-                        <div class="table-responsive theme-scrollbar">
-                            <table class="table" id="cart-table">
-                                <thead>
-                                    <tr>
-                                        <th
-                                            style="white-space: nowrap; overflow: hidden; text-overflow: ellipsis; max-width: 150px;">
-                                            Sản phẩm </th>
-                                        <th>Giá </th>
-                                        <th>Số lượng</th>
-                                        <th>Tổng tiền</th>
-                                        <th></th>
-                                    </tr>
-                                </thead>
-                                <tbody id="show-product">
-                                    {{-- @foreach ($productResponse as $key => $item)
+                    </div>
+                    <div class="col-xxl-9 col-xl-8">
+                        <div class="cart-table">
+                            <div class="table-title">
+                                {{-- <h5>Giỏ hàng<span id="cartTitle"></span></h5><button id="clearAllButton">Clear All</button> --}}
+                            </div>
+                            <div class="table-responsive theme-scrollbar">
+                                <table class="table" id="cart-table">
+                                    <thead>
+                                        <tr>
+                                            <th width="40px">
+                                                <input type="checkbox" name="selected_all">
+                                            </th>
+                                            <th
+                                                style="white-space: nowrap; overflow: hidden; text-overflow: ellipsis; max-width: 150px;">
+                                                Sản phẩm </th>
+                                            <th>Giá </th>
+                                            <th>Số lượng</th>
+                                            <th>Tổng tiền</th>
+                                            <th></th>
+                                        </tr>
+                                    </thead>
+                                    <tbody id="show-product">
+                                        {{-- @foreach ($productResponse as $key => $item)
                                         <tr>
                                             <td>
                                                 <div class="cart-box">
@@ -96,17 +102,17 @@
                                             </td>
                                         </tr>
                                     @endforeach --}}
-                                </tbody>
-                            </table>
-                        </div>
-                        <div id="data-nothing">
+                                    </tbody>
+                                </table>
+                            </div>
+                            <div id="data-nothing">
 
+                            </div>
                         </div>
                     </div>
-                </div>
-                <div class="col-xxl-3 col-xl-4">
-                    <div class="cart-items">
-                        {{-- <div class="cart-progress">
+                    <div class="col-xxl-3 col-xl-4">
+                        <div class="cart-items">
+                            {{-- <div class="cart-progress">
                             <div class="progress">
                                 <div class="progress-bar progress-bar-striped" role="progressbar" style="width: 43%"
                                     aria-valuenow="50" aria-valuemin="0" aria-valuemax="100"><span> <i class="iconsax"
@@ -114,7 +120,7 @@
                             </div>
                             <p>Almost there, add <span>$267.00 </span>more to get <span>FREE Shipping !! </span></p>
                         </div> --}}
-                        {{-- <div class="cart-body mt-0">
+                            {{-- <div class="cart-body mt-0">
                             <h6>Chi tiết giá </h6>
                             <ul>
                                 <li>
@@ -128,14 +134,14 @@
                                 </li>
                             </ul>
                         </div> --}}
-                        <div class="cart-bottom">
-                            {{-- <p><i class="iconsax me-1" data-icon="tag-2"></i>Khuyến mãi đặc biệt (-$1.49) </p> --}}
-                            <h6>Tổng cộng
-                                <span id="cart_total">0 </span>
-                            </h6>
-                            <span>Thuế và phí vận chuyển được tính khi thanh toán</span>
-                        </div>
-                        {{-- <div class="coupon-box">
+                            <div class="cart-bottom">
+                                {{-- <p><i class="iconsax me-1" data-icon="tag-2"></i>Khuyến mãi đặc biệt (-$1.49) </p> --}}
+                                <h6>Tổng cộng
+                                    <span id="cart_total">0 </span>
+                                </h6>
+                                <span>Thuế và phí vận chuyển được tính khi thanh toán</span>
+                            </div>
+                            {{-- <div class="coupon-box">
                             <h6>Mã giảm giá</h6>
                             <ul>
                                 <li>
@@ -148,16 +154,17 @@
                                 </li>
                             </ul>
                         </div> --}}
-                        <form action="{{ route('check-out') }}" method="get" class="mt-4">
 
-                            <button type="submit" class="btn btn_black w-100 sm rounded" id="submit_checkout">Thanh
-                                toán</button>
-                        </form>
+                            <div>
+                                <button type="submit" class="btn btn_black w-100 sm rounded" id="submit_checkout">Thanh
+                                    toán</button>
 
+                            </div>
+
+                        </div>
                     </div>
                 </div>
-
-            </div>
+            </form>
         </div>
     </section>
 @endsection
@@ -242,13 +249,35 @@
                 let totalPrice = document.querySelectorAll(".totalPrice");
                 const plusMinus = document.querySelectorAll('.quantity');
                 const inputVariants = document.querySelectorAll('.input_variant');
+                const cartsCheckboxes = document.querySelectorAll('input[name="selected_carts[]"]:not([disabled])');
 
+                // xu ly su kien selected_all
+                const selectedAll = document.querySelector("input[name=selected_all]");
+                selectedAll.addEventListener("change", function() {
+                    if (selectedAll.checked) {
+                        cartsCheckboxes.forEach(check => {
+                            check.checked = true;
+                        })
+                    } else {
+                        cartsCheckboxes.forEach(check => {
+                            check.checked = false;
+                        })
+                    }
+                    showCartTotalPrice()
+                })
+
+                // Lặp qua tất cả checkbox và thêm sự kiện click
+                cartsCheckboxes.forEach(checkbox => {
+                    checkbox.addEventListener('change', function() {
+                        showCartTotalPrice()
+                    });
+                });
 
                 inputVariants.forEach((inputVariant, index) => {
                     inputVariant.addEventListener('change', function() {
                         let max = parseInt(this.getAttribute('max'));
-                        console.log(oldQuantity);
-                        if (inputVariant.value > 0 && inputVariant.value < max) {
+                        console.log(this.value);
+                        if (this.value > 0 && this.value < max) {
                             let data = {
                                 'cartId': inputVariant.dataset.id,
                                 'quantity': inputVariant.value
@@ -260,27 +289,48 @@
                             totalPrice[index].innerHTML =
                                 `${new Intl.NumberFormat("vi-VN").format(total)} VND`;
                         } else {
-                            alert("Khong duocj ")
+                            if (this.value < 0) {
+                                Swal.fire({
+                                    title: "Số lượng sản phẩm mua không được nhỏ hơn 1 !",
+                                    icon: "warning",
+                                    confirmButtonText: "OK"
+                                })
+                                this.value = 1
+                                let data = {
+                                    'cartId': inputVariant.dataset.id,
+                                    'quantity': 1
+                                };
+                                updateQuantity(data);
+                            } else if (this.value > max) {
+                                Swal.fire({
+                                    title: `Số lượng sản phẩm mua không được lớn hơn số lượng trong kho hiện tại là ${max} !`,
+                                    icon: "warning",
+                                    confirmButtonText: "OK"
+                                })
+                                this.value = max
+                                let data = {
+                                    'cartId': inputVariant.dataset.id,
+                                    'quantity': max
+                                };
+                                updateQuantity(data);
+                            }
+
                         }
 
                     })
                 })
 
                 plusMinus.forEach((element, index) => {
-
                     const addButton = element.querySelector('.plus');
                     const subButton = element.querySelector('.minus');
-                    const inputQuantity = document.querySelector("input[type='number']");
-                    inputQuantity.addEventListener("input", function() {
-                        if (inputQuantity.value < 0) {
-                            alert("deo")
-                        }
-                    });
 
                     addButton?.addEventListener('click', function() {
+
                         let selectedVariant = document.querySelector('.variant-option.selected');
-                        const maxQuantity = parseInt(document.querySelector("#quantity_variant")
+                        const maxQuantity = parseInt(this.parentNode.querySelector(
+                                ".quantity_variant")
                             .getAttribute('max'));
+                        // console.log("max : ",maxQuantity)
                         const inputEl = this.parentNode.querySelector("input[type='number']");
 
                         if (inputEl.value < maxQuantity) {
@@ -290,6 +340,7 @@
                                 'quantity': inputEl.value
                             };
                             updateQuantity(data)
+
                             // thay doi hien thị tổng tiền
                             let total = Number(addButton.dataset.price * inputEl.value)
                             console.log(total);
@@ -297,7 +348,6 @@
                                 ' VND';
                             showCartTotalPrice()
                         }
-
                     });
 
                     subButton?.addEventListener('click', function() {
@@ -321,18 +371,38 @@
             }
 
             function showCartTotalPrice() {
-                const cartTotal = document.querySelector("#cart_total"); // hiển thị tổng giá giỏ hàng
-                let priceItemCart = document.querySelectorAll(".totalPrice");
-                let cartTotalPrice = 0;
+                const cartsCheckboxes = document.querySelectorAll('input[name="selected_carts[]"]:checked');
+                const allCheckboxes = document.querySelectorAll('input[name="selected_carts[]"]:not([disabled])');
+                let parentCheckbox = document.querySelector("input[name=selected_all]");
+                // console.log(cartsCheckboxes.length, allCheckboxes.length, parentCheckbox.checked);
+                let totalSelectedPrice = 0;
 
-                priceItemCart.forEach(element => {
-                    // Loại bỏ tất cả ký tự không phải số và chuyển sang số nguyên
-                    let price = element.textContent.trim().replace(/[^0-9]/g, '');
-                    cartTotalPrice += parseInt(price, 10); // Chuyển sang số nguyên
+                // Lặp qua tất cả checkbox để tính tổng giá trị của những checkbox đã chọn
+                allCheckboxes.forEach(checkbox => {
+                    // xu ly su kien check box het
+                    if (allCheckboxes.length === cartsCheckboxes.length && allCheckboxes.length > 0) {
+                        // console.log(cartsCheckboxes.length);
+                        parentCheckbox.checked = true;
+                    } else {
+                        parentCheckbox.checked = false;
+                        // console.log(cartsCheckboxes.length);
+                    }
+
+                    if (checkbox.checked) {
+                        let priceOfCartItem = checkbox.closest("tr").querySelector(".totalPrice")
+                            .textContent.trim().replace(/[^0-9]/g, '');
+                        console.log(priceOfCartItem);
+                        totalSelectedPrice += parseFloat(priceOfCartItem); // Lấy giá trị từ data-price
+                    }
                 });
 
-                // Hiển thị tổng cộng tiền có trong giỏ được định dạng
-                cartTotal.innerText = `${Intl.NumberFormat('vi-VN').format(cartTotalPrice)} VND`;
+                // Hiển thị tổng giá trị của các sản phẩm đã chọn
+                console.log('Tổng giá trị các sản phẩm đã chọn:', totalSelectedPrice);
+
+                // Nếu bạn muốn hiển thị tổng giá trị ở đâu đó trên giao diện
+                document.querySelector("#cart_total").innerText =
+                    `${Intl.NumberFormat('vi-VN').format(totalSelectedPrice)} VND`;
+                // let totalSelectedPrice = 0;
             }
 
             function showTable() {
@@ -346,7 +416,20 @@
                     productResponse.forEach(item => {
                         const productRoute = `{{ route('product', ':id') }}`;
                         const row = document.createElement('tr');
-                        console.log(item.product);
+                        console.log(item.cart);
+
+                        // cột checkbox 
+                        const checkboxCell = document.createElement('td');
+                        const checkbox = document.createElement('input');
+                        checkbox.type = 'checkbox';
+                        checkbox.name = 'selected_carts[]';
+                        checkbox.value = item.cart.id;
+                        // checkbox.className = '';
+
+                        checkbox.dataset.id = item.cart.id; // Gán ID sản phẩm vào data attribute nếu cần
+                        checkboxCell.appendChild(checkbox);
+                        row.appendChild(checkboxCell); // Thêm cột checkbox vào hàng
+
                         // Cột sản phẩm
                         const productCell = document.createElement('td');
                         const cartBox = document.createElement('div');
@@ -408,9 +491,11 @@
                         // Kiểm tra nếu sản phẩm ngưng bán (ưu tiên trạng thái ngưng bán)
                         if (item.product.status === 'IN_ACTIVE') {
                             imgLink.appendChild(overInactive);
+                            checkbox.disabled = true;
                         } else if (item.product_variant.quantity <= 0) {
                             // Kiểm tra nếu sản phẩm hết hàng (chỉ hiển thị khi không phải là ngưng bán)
                             imgLink.appendChild(overStock);
+                            checkbox.disabled = true;
                         }
 
                         // Thông tin sản phẩm
@@ -450,6 +535,7 @@
 
                         const minusButton = document.createElement('button');
                         minusButton.className = 'minus';
+                        minusButton.type = 'button';
                         minusButton.dataset.id = item.cart.id;
                         minusButton.dataset.price = item.product_variant.price
                         minusButton.innerHTML = '<i class="fa-solid fa-minus"></i>';
@@ -457,16 +543,18 @@
 
                         const quantityInput = document.createElement('input');
                         quantityInput.type = 'number';
-                        quantityInput.id = 'quantity_variant';
-                        quantityInput.className = 'input_variant';
+                        // quantityInput.id = '';
+                        quantityInput.className = 'input_variant quantity_variant';
                         quantityInput.dataset.id = item.cart.id;
                         quantityInput.value = item.cart.quantity;
                         quantityInput.min = 1;
-                        quantityInput.max = item.product_variant.quantity;
+                        quantityInput.max = item.product_variant.quantity < 1 ? 1 : item.product_variant
+                            .quantity; // so luong trong kho la 0 thi gan tam max la 1 , vi thuoc tinh cua the input nó sa bao loi
                         quantityDiv.appendChild(quantityInput);
 
                         const plusButton = document.createElement('button');
                         plusButton.className = 'plus';
+                        plusButton.type = 'button';
                         plusButton.dataset.id = item.cart.id;
                         plusButton.dataset.price = item.product_variant.price
                         plusButton.innerHTML = '<i class="fa-solid fa-plus"></i>';
@@ -497,7 +585,7 @@
                         // Thêm hàng vào bảng
                         tableBody.appendChild(row);
                         document.querySelector("#cart_total").innerText =
-                            `${new Intl.NumberFormat().format(cartTotalPrice) } VND`;
+                            `0 VND`;
                     });
                 } else {
                     console.log(productResponse);
