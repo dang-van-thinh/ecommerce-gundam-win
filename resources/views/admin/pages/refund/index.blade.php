@@ -58,15 +58,10 @@
                                     </td>
 
                                     <td class="text-center">
-                                        <button type="button" class="btn btn-primary" data-toggle="modal"
-                                            data-target="#refundDetailModal-{{ $refund->id }}">
-                                            <i class="fa fa-info-circle"></i>
-                                        </button>
+                                        <a class="btn btn-primary" href="{{ route('refund.edit', $refund->id) }}">Cập nhật
+                                            trạng thái</a>
                                     </td>
                                 </tr>
-                                @foreach ($refund->refundItem as $refundItem)
-                                    @include('admin.pages.refund.show')
-                                @endforeach
                             @endforeach
                         </tbody>
                     </table>

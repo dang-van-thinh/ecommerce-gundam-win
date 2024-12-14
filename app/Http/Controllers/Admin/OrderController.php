@@ -39,8 +39,20 @@ class OrderController extends Controller
      */
     public function update(Request $request, string $id)
     {
+        $validStatuses = ['PENDING', 'DELIVERING', 'SHIPPED', 'COMPLETED', 'CANCELED'];
+
+        if (!in_array($request->status, $validStatuses)) {
+            toastr("Cập nhật trạng thái đơn hàng thất bại!", NotificationInterface::ERROR, "Thất bại", [
+                "closeButton" => true,
+                "progressBar" => true,
+                "timeOut" => "3000",
+                "color" => "red"
+            ]);
+            return back();
+        }
         $order = Order::with('orderItems.productVariant.attributeValues.attribute', 'orderItems.productVariant.product')->findOrFail($id);
         // dd($order->toArray());
+
         $order->update($request->all());
 
         // Gửi email nếu trạng thái là SHIPPED
