@@ -379,13 +379,15 @@
                                                                     <div class="order-detail-left"
                                                                         style="flex: 1; min-width: 250px; padding-right: 15px;">
                                                                         <h5>Hoàn hàng( {{ $statusMessage }} )</h5>
+                                                                        <p>Mã đơn hoàn hàng:
+                                                                            {{ $order->refund->first()->code }}</p>
                                                                         <p>Ngày đặt đơn:
                                                                             {{ date('d/m/Y', strtotime($order->created_at)) }}
                                                                         </p>
                                                                         <p>Người nhận: {{ $order->customer_name }}</p>
                                                                         <p>Số điện thoại: {{ $order->phone }}</p>
                                                                     </div>
-                                                                    <div class="order-detail-right"
+                                                                    <div class="order-detail-right mt-4"
                                                                         style="flex: 1; min-width: 250px;">
                                                                         <p>Địa chỉ giao hàng:
                                                                             {{ $order->full_address }}
