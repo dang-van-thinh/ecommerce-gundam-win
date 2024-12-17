@@ -12,6 +12,7 @@ use App\Models\ProductVariant;
 use Flasher\Prime\Notification\NotificationInterface;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Storage;
 
 class ProductController extends Controller
@@ -281,31 +282,33 @@ class ProductController extends Controller
      */
     public function destroy(Product $product)
     {
+        DB::beginTransaction(); // Bắt đầu transaction
         try {
-            // xóa sản phẩm
-            $product->delete();
-
-            // Xóa ảnh chính của sản phẩm (nếu có)
-            if ($product->image &&  Storage::exists($product->image)) {
-                Storage::delete($product->image);
-            }
-
-            // Xóa các ảnh album liên quan
-            if ($product->productImages &&  Storage::exists($product->image)) {
-                foreach ($product->productImages as $productImage) {
-                    Storage::delete($productImage->image_url); // Xóa ảnh album khỏi storage
-                    $productImage->delete(); // Xóa bản ghi trong DB
-                }
-            }
-
-            // Xóa các biến thể sản phẩm (product variants)
+            // Xóa các biến thể sản phẩm
             foreach ($product->productVariants as $variant) {
-                // Xóa các giá trị thuộc tính (attribute values) liên quan đến biến thể
                 $variant->attributeValues()->detach();
                 $variant->delete();
             }
 
+            // Xóa các ảnh album liên quan
+            foreach ($product->productImages as $productImage) {
+                if (Storage::exists($productImage->image_url)) {
+                    Storage::delete($productImage->image_url);
+                }
+                $productImage->delete();
+            }
 
+            // Xóa ảnh chính của sản phẩm (nếu có)
+            if ($product->image && Storage::exists($product->image)) {
+                Storage::delete($product->image);
+            }
+
+            // Xóa sản phẩm
+            $product->delete();
+
+            DB::commit(); // Xác nhận transaction nếu không có lỗi
+
+            // Toastr thông báo thành công
             toastr("Sản phẩm đã được xóa thành công!", NotificationInterface::SUCCESS, "Thành công", [
                 "closeButton" => true,
                 "progressBar" => true,
@@ -313,7 +316,13 @@ class ProductController extends Controller
                 "color" => "red"
             ]);
         } catch (\Throwable $th) {
-            toastr("Sản phẩm đã được xóa không thành công!", NotificationInterface::ERROR, "Thất bại", [
+            DB::rollBack(); // Hoàn tác tất cả thay đổi nếu có lỗi xảy ra
+
+            // Ghi log lỗi
+            Log::error("Lỗi xóa sản phẩm: " . $th->getMessage());
+
+            // Toastr thông báo thất bại
+            toastr("Sản phẩm xóa không thành công!", NotificationInterface::ERROR, "Thất bại", [
                 "closeButton" => true,
                 "progressBar" => true,
                 "timeOut" => "3000",

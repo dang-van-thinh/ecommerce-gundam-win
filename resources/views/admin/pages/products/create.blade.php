@@ -8,7 +8,7 @@
     <div class="card">
         <div class="card-header"><strong>Thêm mới sản phẩm</strong></div>
         <div class="card-body card-block">
-            <form action="{{ route('products.store') }}" method="post" enctype="multipart/form-data">
+            <form action="{{ route('products.store') }}" method="post" enctype="multipart/form-data" id="submitForm">
                 @csrf
                 <div class="row">
                     <div class="col-8">
@@ -101,7 +101,7 @@
                     <div class="d-flex">
                         <button type="button" id="generate-auto" class="btn btn-secondary btn-sm">Tạo tự động</button>
                         <button type="button" id="add-variant" class="btn btn-secondary btn-sm mx-1">Tạo thủ công</button>
-                        <button type="button" id="check-duplicates" class="btn btn-warning btn-sm">Check Trùng Lặp</button>
+                        {{-- <button type="button" id="check-duplicates" class="btn btn-warning btn-sm">Check Trùng Lặp</button> --}}
                     </div>
                     <hr>
                     {{-- KHU VỰC CHỌN GIÁ TRỊ THUỘC TÍNH CỦA TẠO TỰ ĐỘNG --}}
@@ -304,15 +304,23 @@
                 $(this).closest('.variant').remove(); // Xóa biến thể
             });
 
-            $('#check-duplicates').on('click', function() {
-                const variants = []; // Mảng lưu trữ các biến thể để kiểm tra trùng lặp
-                const duplicateVariants = []; // Mảng lưu trữ thông tin các biến thể trùng lặp
+            $("#submitForm").on("submit", function(event) {
+                if (checkDuplicate()) {
+                    event.preventDefault();
+                    // alert("Có biến thể trùng lắp")
+                }
+            });
+
+            function checkDuplicate() {
+                const variants = []; // Lưu trữ các biến thể để kiểm tra trùng lặp
+                const duplicateVariants = []; // Lưu thông tin trùng lặp
+                let attributeCounts = new Set(); // Đếm số lượng thuộc tính của mỗi biến thể
 
                 // Duyệt qua tất cả các biến thể
                 $('.variant').each(function(index) {
                     const attributes = [];
 
-                    // Duyệt qua tất cả các thuộc tính của biến thể
+                    // Lấy thuộc tính và giá trị của biến thể hiện tại
                     $(this).find('.variant-select').each(function() {
                         const attributeId = $(this).data('attribute-id');
                         const valueId = $(this).val();
@@ -322,35 +330,39 @@
                         });
                     });
 
-                    // Chuỗi JSON của tổ hợp thuộc tính cho biến thể
+                    // Kiểm tra số lượng thuộc tính
+                    attributeCounts.add(attributes.length);
+
+                    // Chuyển tổ hợp thuộc tính thành chuỗi JSON để kiểm tra trùng lặp
                     const attributesString = JSON.stringify(attributes);
 
-                    // Kiểm tra nếu biến thể đã tồn tại trong mảng
+                    // Kiểm tra biến thể trùng lặp
                     const duplicateIndex = variants.indexOf(attributesString);
                     if (duplicateIndex !== -1) {
-                        // Nếu trùng lặp, lưu lại thông tin biến thể bị trùng
                         duplicateVariants.push({
-                            current: index + 1, // Vị trí của biến thể hiện tại
-                            duplicateWith: duplicateIndex + 1 // Vị trí của biến thể trùng
+                            current: index + 1,
+                            duplicateWith: duplicateIndex + 1
                         });
                     } else {
-                        // Nếu không trùng lặp, thêm tổ hợp thuộc tính vào mảng
                         variants.push(attributesString);
                     }
                 });
 
-                // Hiển thị thông báo
-                if (duplicateVariants.length > 0) {
-                    let message = 'Các biến thể sau bị trùng lặp:\n';
-                    duplicateVariants.forEach(dup => {
-                        message +=
-                            `- Biến thể ${dup.current} trùng với biến thể ${dup.duplicateWith}\n`;
-                    });
-                    alert(message);
-                } else {
-                    alert('Không có biến thể nào bị trùng lặp.');
+                // Kiểm tra nếu số lượng thuộc tính không đồng nhất
+                if (attributeCounts.size > 1) {
+                    alert("Tất cả các biến thể phải có cùng số lượng thuộc tính!");
+                    return true; // Ngăn không cho submit form
                 }
-            });
+
+                // Hiển thị thông báo nếu có biến thể trùng lặp
+                if (duplicateVariants.length > 0) {
+                    alert("Có biến thể bị trùng lặp.");
+                    return true; // Ngăn form submit
+                }
+
+                return false; // Cho phép submit nếu không có lỗi
+            }
+
 
             function toggleAutoAttributeSelection() {
                 $('.auto-attribute-select').each(function() {

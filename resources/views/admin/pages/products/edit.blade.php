@@ -8,7 +8,7 @@
     <div class="card">
         <div class="card-header"><strong>Cập nhật sản phẩm: </strong>{{ $product->name }}</div>
         <div class="card-body card-block">
-            <form action="{{ route('products.update', $product) }}" method="post" enctype="multipart/form-data">
+            <form action="{{ route('products.update', $product) }}" method="post" enctype="multipart/form-data" id="submitForm">
                 @csrf
                 @method('put')
 
@@ -104,7 +104,7 @@
                         @foreach ($attributes as $item)
                             <div class="form-check mx-2">
                                 <input type="checkbox" class="form-check-input attribute-checkbox"
-                                    data-id="{{ $item->id }}"
+                                    data-id="{{ $item->id }}" disabled
                                     {{ $product->productVariants->pluck('attributeValues.*.attribute_id')->flatten()->unique()->contains($item->id)? 'checked': '' }}>
                                 <label class="form-check-label">{{ $item->name }}</label>
                             </div>
@@ -112,7 +112,7 @@
                     </div><br>
                     <div class="d-flex">
                         <button type="button" id="add-variant" class="btn btn-secondary btn-sm mx-1">Tạo thủ công</button>
-                        <button type="button" id="check-duplicates" class="btn btn-warning btn-sm">Check Trùng Lặp</button>
+                        {{-- <button type="button" id="check-duplicates" class="btn btn-warning btn-sm">Check Trùng Lặp</button> --}}
                     </div>
                     <hr>
 
@@ -182,7 +182,7 @@
 
                 <div class="mt-3">
                     <a class="btn btn-primary" href="{{ route('products.index') }}">Quay lại</a>
-                    <button type="submit" class="btn btn-success">Lưu thay đổi</button>
+                    <button type="submit" class="btn btn-success" id="check-duplicates">Lưu thay đổi</button>
                 </div>
             </form>
         </div>
@@ -308,7 +308,57 @@
                 $('#variants').append(newVariant);
             });
 
-            $('#check-duplicates').on('click', function() {
+            // $('#check-duplicates').on('click', function() {
+            //     const variants = []; // Mảng lưu trữ các biến thể để kiểm tra trùng lặp
+            //     const duplicateVariants = []; // Mảng lưu trữ thông tin các biến thể trùng lặp
+
+            //     // Duyệt qua tất cả các biến thể
+            //     $('.variant').each(function(index) {
+            //         const attributes = [];
+
+            //         // Duyệt qua tất cả các thuộc tính của biến thể
+            //         $(this).find('.variant-select').each(function() {
+            //             const attributeId = $(this).data('attribute-id');
+            //             const valueId = $(this).val();
+            //             attributes.push({
+            //                 attributeId,
+            //                 valueId
+            //             });
+            //         });
+
+            //         // Chuỗi JSON của tổ hợp thuộc tính cho biến thể
+            //         const attributesString = JSON.stringify(attributes);
+
+            //         // Kiểm tra nếu biến thể đã tồn tại trong mảng
+            //         const duplicateIndex = variants.indexOf(attributesString);
+            //         if (duplicateIndex !== -1) {
+            //             // Nếu trùng lặp, lưu lại thông tin biến thể bị trùng
+            //             duplicateVariants.push({
+            //                 current: index + 1, // Vị trí của biến thể hiện tại
+            //                 duplicateWith: duplicateIndex + 1 // Vị trí của biến thể trùng
+            //             });
+            //         } else {
+            //             // Nếu không trùng lặp, thêm tổ hợp thuộc tính vào mảng
+            //             variants.push(attributesString);
+            //         }
+            //     });
+
+            //     // Hiển thị thông báo
+            //     if (duplicateVariants.length > 0) {
+            //         alert('Có biến thể bị trùng lặp');
+            //     } else {
+            //         // alert('Không có biến thể nào bị trùng lặp.');
+            //     }
+            // });
+            $("#submitForm").on("submit", function(event) {
+                if(checkDuplicate()){
+                    event.preventDefault();
+                    alert("Có biến thể trùng lắp")
+                }
+            });
+
+            function checkDuplicate() {
+                // alert(e);
                 const variants = []; // Mảng lưu trữ các biến thể để kiểm tra trùng lặp
                 const duplicateVariants = []; // Mảng lưu trữ thông tin các biến thể trùng lặp
 
@@ -345,11 +395,13 @@
 
                 // Hiển thị thông báo
                 if (duplicateVariants.length > 0) {
-                    alert('Có biến thể bị trùng lặp');
+                    // alert('Có biến thể bị trùng lặp');
+                    return true;
                 } else {
-                    alert('Không có biến thể nào bị trùng lặp.');
+                    // alert('Không có biến thể nào bị trùng lặp.');
+                    return false;
                 }
-            });
+            }
         });
     </script>
 @endpush
