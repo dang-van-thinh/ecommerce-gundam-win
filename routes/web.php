@@ -65,7 +65,7 @@ Route::prefix('/admin')->middleware(['auth', 'checkAccountStatus', 'role:Admin',
     Route::get("/test", [Controller::class, 'test'])->name("test");
 });
 
-Route::get("admin/chat", [ChatController::class, 'showViewAdmin'])->name("chat");
+
 
 // admin
 Route::prefix('admin')->middleware(['auth', 'checkAccountStatus', 'checkRole:Admin|Staff'])->group(function () {
@@ -89,6 +89,7 @@ Route::prefix('admin')->middleware(['auth', 'checkAccountStatus', 'checkRole:Adm
     Route::put('new-role/assign-permissions/{id}', [NewroleController::class, 'assignPermissions'])->name('role.assign-permissions');
 
     Route::resource('new-user', NewUserController::class)->middleware('permission:users');
+    Route::get("chat", [ChatController::class, 'showViewAdmin'])->name("chat");
 
     Route::fallback(function () { // 404 admin
         return response()->view('errors.404', [], 404);

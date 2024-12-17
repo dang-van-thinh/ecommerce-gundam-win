@@ -122,10 +122,10 @@
                 <div class="col-lg-6">
                     <div class="product-detail-box">
                         <div class="product-option">
-                            <div class="move-fast-box d-flex align-items-center gap-1"><img
+                            {{-- <div class="move-fast-box d-flex align-items-center gap-1"><img
                                     src="/template/client/assets/images/gif/fire.gif" alt="">
                                 <p>Move fast!</p>
-                            </div>
+                            </div> --}}
                             <h3>{{ $product->name }}</h3>
                             <p id="variant-price">
                                 @if ($product->productVariants->count() === 1)
