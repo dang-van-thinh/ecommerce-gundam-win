@@ -578,6 +578,7 @@ class CheckOutController extends Controller
         $extraData = json_encode($dataOrder);
         $requestId = $dataOrder['code'];
         $requestType = "payWithATM";
+        // captureWallet
 
         //before sign HMAC SHA256 signature
         $rawHash = "accessKey=" . $accessKey . "&amount=" . $amount . "&extraData=" . $extraData . "&ipnUrl=" . $ipnUrl . "&orderId=" . $orderId . "&orderInfo=" . $orderInfo . "&partnerCode=" . $partnerCode . "&redirectUrl=" . $redirectUrl . "&requestId=" . $requestId . "&requestType=" . $requestType;

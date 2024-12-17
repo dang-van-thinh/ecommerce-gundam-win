@@ -8,7 +8,8 @@
     <div class="card">
         <div class="card-header"><strong>Cập nhật người dùng: {{ $user->full_name }}</strong></div>
         <div class="card-body card-block">
-            <form action="{{ route('new-user.update', $user->id) }}" method="POST" enctype="multipart/form-data" id="updateUserForm">
+            <form action="{{ route('new-user.update', $user->id) }}" method="POST" enctype="multipart/form-data"
+                id="updateUserForm">
                 @method('PUT')
                 @csrf
                 <div class="row">
@@ -17,7 +18,7 @@
                         <div class="mb-3">
                             <label for="full_name" class="form-label">Họ và tên</label>
                             <input type="text" class="form-control" id="full_name" name="full_name"
-                                placeholder="Nhập họ và tên" value="{{ $user->full_name }}" >
+                                placeholder="Nhập họ và tên" value="{{ $user->full_name }}">
                             @error('full_name')
                                 <p class="text-danger">{{ $message }}</p>
                             @enderror
@@ -37,7 +38,7 @@
                         <div class="mb-3">
                             <label for="email" class="form-label">Email</label>
                             <input type="email" class="form-control" id="email" name="email"
-                                placeholder="Nhập email" value="{{ $user->email }}" >
+                                placeholder="Nhập email" value="{{ $user->email }}">
                             @error('email')
                                 <p class="text-danger">{{ $message }}</p>
                             @enderror
@@ -45,8 +46,7 @@
 
                         <!-- Mật khẩu -->
                         <div class="mb-3">
-                            <label for="password" class="form-label">Mật khẩu</label>
-                            <input type="password" class="form-control" id="password" name="password"
+                            <input type="password" class="form-control" id="password" hidden name="password"
                                 placeholder="Nhập mật khẩu" value="{{ $user->password }}">
                             @error('password')
                                 <p class="text-danger">{{ $message }}</p>
@@ -60,7 +60,8 @@
                             <label for="status" class="form-label">Trạng thái</label>
                             <select class="form-select" id="status" name="status">
                                 <option value="ACTIVE" {{ $user->status == 'ACTIVE' ? 'selected' : '' }}>Hoạt động</option>
-                                <option value="IN_ACTIVE" {{ $user->status == 'IN_ACTIVE' ? 'selected' : '' }}>Ngưng hoạt động</option>
+                                <option value="IN_ACTIVE" {{ $user->status == 'IN_ACTIVE' ? 'selected' : '' }}>Ngưng hoạt
+                                    động</option>
                             </select>
                             @error('status')
                                 <p class="text-danger">{{ $message }}</p>
@@ -92,7 +93,7 @@
                             @error('image')
                                 <p class="text-danger">{{ $message }}</p>
                             @enderror
-                            <img src="{{ '/Storage/'. $user->image }}" alt="" width="70px">
+                            <img src="{{ '/Storage/' . $user->image }}" alt="" width="70px">
                         </div>
                     </div>
                 </div>
@@ -108,7 +109,7 @@
 
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
     <script>
-        document.getElementById('saveButtonRoles').addEventListener('click', function () {
+        document.getElementById('saveButtonRoles').addEventListener('click', function() {
             Swal.fire({
                 title: 'Bạn có chắc chắn?',
                 text: "Vai trò người dùng sẽ được thay đổi!",

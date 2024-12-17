@@ -226,6 +226,13 @@ class ProfileController extends Controller
             // Quay lại trang trước
             return redirect()->back();
         }
+         // Thông báo hủy đơn thành công
+         sweetalert("Trạng thái đơn hàng không hợp lệ !", NotificationInterface::WARNING, [
+            'position' => "center",
+            'timeOut' => '',
+            'closeButton' => false,
+            'icon' => "warning", // Thông báo không thành công
+        ]);
         return redirect()->back();
     }
     public function orderDelete($id)

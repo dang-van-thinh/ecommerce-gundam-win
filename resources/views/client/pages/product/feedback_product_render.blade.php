@@ -29,7 +29,7 @@
                 <img width="70px" src="{{ '/storage/' . $feedback->file_path }}" alt="">
             </div>
 
-            @if (Auth::id())
+            {{-- @if (Auth::id())
                 @php
                     // Lấy role_id từ bảng model_has_roles
                     $roleIds = \DB::table('model_has_roles')
@@ -37,7 +37,7 @@
                         ->pluck('role_id')
                         ->toArray();
                 @endphp
-                @if (!empty(array_intersect([1, 2], $roleIds)))
+                 @if (!empty(array_intersect([1, 2], $roleIds)))
                     <!-- Kiểm tra nếu user có role_id 1 hoặc 2 -->
                     <a href="javascript:void(0);" class="reply-btn mt-2" data-feedback-id="{{ $feedback->id }}">
                         <span>
@@ -46,7 +46,7 @@
                         </span>
                     </a>
                 @endif
-            @endif
+            @endif --}}
 
         </div>
         <div class="comment-text">

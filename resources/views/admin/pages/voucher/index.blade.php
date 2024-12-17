@@ -18,7 +18,7 @@
                     <tr class="text-center">
                         <th scope="col"># Mã voucher</th>
                         <th scope="col">Tên voucher</th>
-                        <th scope="col">Số lượng</th>
+                        <th scope="col">Số lượng còn</th>
                         <th scope="col">Loại voucher</th>
                         <th scope="col">Giá trị giảm</th>
                         <th scope="col">Trạng thái</th>
@@ -74,7 +74,7 @@
                                             @csrf
                                             @method('delete')
                                             <button class="btn btn-danger"
-                                                onclick="return confirm('Bạn có chắc muốn xóa mã giảm giá này không ?')">
+                                                onclick="return confirm('Bạn có chắc muốn loại bỏ mã giảm giá này không ?')">
                                                 <i class="fa fa-trash" aria-hidden="true"></i>
                                             </button>
                                         </form>

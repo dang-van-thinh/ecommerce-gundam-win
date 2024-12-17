@@ -2,8 +2,10 @@
 
 namespace App\Http\Controllers\Client;
 
+use App\Events\OrderToAdminEvent;
 use App\Http\Controllers\Controller;
 use App\Models\Feedback;
+use App\Models\Notification;
 use App\Models\Product;
 use Flasher\Prime\Notification\NotificationInterface;
 // use Flasher\Laravel\Http\Request;
@@ -158,6 +160,17 @@ class ProductController extends Controller
             'order_item_id' => $request->order_item_id,
             'comment' => $request->comment,
         ]);
+
+        // giao dichj thanh cong tien hanh them thong bao cho admin
+        $notiMessage = "Bạn có phản hồi mới !";
+        $notiData = [
+            "title" => "Bạn có phản hồi mới ! ",
+            "message" => $notiMessage,
+            "redirect_url" => route('home'),
+            "user_id" => 1 // mac dinh dang de la id admin , sau ma co nhieu hon 1 admin thi them sau
+        ];
+        $newNoti = Notification::create($notiData);
+        broadcast(new OrderToAdminEvent($newNoti));
 
 
         if ($feedback) {
